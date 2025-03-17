@@ -3,23 +3,13 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import { RxCrossCircled } from "react-icons/rx";
-import Box from "@mui/material/Box";
-import Rating from "@mui/material/Rating";
-import StarIcon from "@mui/icons-material/Star";
 
 function Mybooking(props) {
     const router = useRouter();
     const [bookingsData, setBookingsData] = useState([]);
     const [expandedBookingId, setExpandedBookingId] = useState(null);
-    const [showReviews, setShowReviews] = useState(false);
-    const [reviewsData, setReviewsData] = useState({
-        description: "",
-        reviews: 0,
-    });
-    const [productId, setProductId] = useState("");
-    const [reviews, setReviews] = useState("product");
-    const [sellerId, setSellerId] = useState("");
+   
+  
 
     useEffect(() => {
         getBookingsByUser();
@@ -46,55 +36,7 @@ function Mybooking(props) {
         setExpandedBookingId(expandedBookingId === id ? null : id);
     };
 
-    const openReviewModal = (id) => {
-        setProductId(id);
-        setShowReviews(true);
-    };
-
-    const createProductReview = (e) => {
-        e.preventDefault();
-        if (reviewsData?.reviews === 0) {
-            props.toaster({ type: "success", message: "Rating is required" });
-            return;
-        }
-
-        let data = {
-            description: reviewsData?.description,
-            rating: reviewsData?.reviews,
-        };
-
-        if (reviews === "product") {
-            data.product = productId;
-        } else {
-            data.seller = sellerId;
-        }
-
-        console.log(data);
-        props.loader(true);
-        Api("post", "giverate", data, router).then(
-            (res) => {
-                props.loader(false);
-                console.log("res================>", res);
-                if (res.status) {
-                    setShowReviews(false);
-                    setReviewsData({
-                        description: "",
-                        reviews: 0,
-                    });
-                    setProductId("");
-                    setSellerId("");
-                    props.toaster({ type: "success", message: res.data?.message });
-                } else {
-                    props.toaster({ type: "error", message: res?.data?.message });
-                }
-            },
-            (err) => {
-                props.loader(false);
-                console.log(err);
-                props.toaster({ type: "error", message: err?.message });
-            }
-        );
-    };
+ 
 
     function formatDate(date) {
         if (!date) return null; // Handle null or undefined dates
@@ -130,7 +72,7 @@ function Mybooking(props) {
                                                {sr}
                                             </div>
                                             <div className="flex items-center">
-                                                <button 
+                                                {/* <button 
                                                     className="bg-custom-green text-white px-4 py-2 rounded-md mr-4 text-sm"
                                                     onClick={(e) => {
                                                         e.stopPropagation();
@@ -138,7 +80,7 @@ function Mybooking(props) {
                                                     }}
                                                 >
                                                     Review
-                                                </button>
+                                                </button> */}
                                                 {expandedBookingId === booking._id ? (
                                                     <IoIosArrowUp className="text-2xl text-black" />
                                                 ) : (
@@ -164,19 +106,7 @@ function Mybooking(props) {
                                                 <p className="text-black text-base font-bold">
                                                     {booking?.productDetail?.product?.name || "Product Name"}
                                                 </p>
-                                                {/* {booking?.productDetail?.color && (
-                                                    <div className="flex justify-start items-center pt-[6px]">
-                                                        <p className="text-gray-600 text-xs font-bold">
-                                                            Color:
-                                                        </p>
-                                                        <p
-                                                            className="h-[10px] w-[10px] text-gray-600 rounded-full border border-black ml-2"
-                                                            style={{
-                                                                backgroundColor: booking?.productDetail?.color,
-                                                            }}
-                                                        ></p>
-                                                    </div>
-                                                )} */}
+                                              
                                                 <p className="text-gray-600 text-xs font-bold pt-[6px]">
                                                     Quantity: {booking?.productDetail?.qty || 1}
                                                 </p>
@@ -204,108 +134,7 @@ function Mybooking(props) {
                 </div>
             </div>
 
-            {/* {showReviews && (
-                <div className="fixed top-0 left-0 w-screen h-screen bg-black/30 flex justify-center items-center z-50">
-                    <div className="relative w-[300px] md:w-[360px] h-auto bg-white rounded-[15px] m-auto">
-                        <div
-                            className="absolute top-2 right-2 p-1 rounded-full text-black w-8 h-8 cursor-pointer"
-                            onClick={() => {
-                                setShowReviews(false);
-                            }}
-                        >
-                            <RxCrossCircled className="h-full w-full font-semibold" />
-                        </div>
-
-                        <form className="px-5 py-5" onSubmit={createProductReview}>
-                            <p className="text-black font-bold text-2xl mb-5">Reviews</p>
-
-                            <div className="flex justify-center items-center mb-5 gap-5">
-                                <button
-                                    type="button"
-                                    className={`h-[30px] w-32 rounded-[5px] text-black font-semibold text-sm ${
-                                        reviews === "product"
-                                            ? "underline underline-offset-8"
-                                            : ""
-                                    } `}
-                                    onClick={() => {
-                                        setReviews("product");
-                                    }}
-                                >
-                                    Product
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`h-[30px] w-32 rounded-[5px] text-black font-semibold text-sm ${
-                                        reviews === "product"
-                                            ? ""
-                                            : "underline underline-offset-8"
-                                    }`}
-                                    onClick={() => {
-                                        setReviews("seller");
-                                    }}
-                                >
-                                    Seller
-                                </button>
-                            </div>
-
-                            <div className="flex flex-col justify-center items-center border border-custom-newGray rounded-[10px] py-3 mb-5">
-                                <Box
-                                    sx={{
-                                        width: 200,
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    <Rating
-                                        name="text-feedback"
-                                        value={reviewsData?.reviews}
-                                        onChange={(e, value) => {
-                                            console.log(e, value);
-                                            setReviewsData({ ...reviewsData, reviews: value });
-                                        }}
-                                        precision={0.5}
-                                        emptyIcon={
-                                            <StarIcon
-                                                style={{ opacity: 0.55 }}
-                                                fontSize="inherit"
-                                            />
-                                        }
-                                    />
-                                </Box>
-                                <p className="text-custom-newGrayColors font-bold text-center text-base mt-2">
-                                    Rated {Number(reviewsData?.reviews || 0)?.toFixed(1)}/5.0
-                                </p>
-                            </div>
-
-                            <div className="w-full">
-                                <textarea
-                                    className="bg-white md:w-full w-full px-5 py-2 rounded-[10px] border border-custom-newGray font-normal text-base text-black outline-none md:my-5 my-3"
-                                    rows={4}
-                                    placeholder="Description"
-                                    value={reviewsData.description}
-                                    onChange={(e) => {
-                                        setReviewsData({
-                                            ...reviewsData,
-                                            description: e.target.value,
-                                        });
-                                    }}
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex md:justify-start justify-center">
-                                <button
-                                    className="bg-custom-purple w-full md:h-[50px] h-[40px] rounded-[5px] text-white font-normal text-base"
-                                    type="submit"
-                                >
-                                    Submit
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )} */}
+         
         </>
     );
 }

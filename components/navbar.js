@@ -41,10 +41,24 @@ const Navbar = (props) => {
     const [deliveryPartnerTip, setDeliveryPartnerTip] = useState(0);
     const [mainTotal, setMainTotal] = useState(0);
     const [productList, SetProductList] = useState([]);
+
     const [pickupOption, setPickupOption] = useState('orderPickup');
 
     const handleOptionChange = (event) => {
         setPickupOption(event.target.value);
+    };
+
+    const [date, setDate] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+
+
+    const handleIconClick = () => {
+        setIsOpen(!isOpen);
+    };
+
+    const handleDateChange = (date) => {
+        setDate(date);
+        setIsOpen(false);
     };
 
     const [shippingAddressData, setShippingAddressData] = useState({
@@ -174,6 +188,7 @@ const Navbar = (props) => {
         let cart = localStorage.getItem("addCartDetail");
 
         let d = JSON.parse(cart);
+    
         d.forEach((element) => {
             data.push({
                 product: element?._id,
@@ -185,14 +200,21 @@ const Navbar = (props) => {
                 seller_id: element.userid,
             });
         });
+
+        
+        const isOrderPickup = pickupOption === 'orderPickup';
+        const isDriveUp = pickupOption === 'driveUp';
+        const dateOfDelivery = isDriveUp && date ? date : null;
+        
         let newData = {
             productDetail: data,
             total: CartTotal.toFixed(2),
             shipping_address: shippingAddressData,
-            dateOfDelivery:date || Date.now()
+            dateOfDelivery: dateOfDelivery,
+            isOrderPickup: isOrderPickup,
+            isDriveUp: isDriveUp,
         };
 
-        
         props.loader && props.loader(true);
         Api("post", "createProductRquest", newData, router).then(
             (res) => {
@@ -201,6 +223,7 @@ const Navbar = (props) => {
                     setCartData([]);
                     setCartTotal(0);
                     setShowcart(false);
+                    setDate('')
                     localStorage.removeItem("addCartDetail");
                     props.toaster && props.toaster({ type: "success", message: res.data?.message });
                     router.push("/Mybooking");
@@ -214,19 +237,6 @@ const Navbar = (props) => {
             }
         );
     };
-
-    const [date, setDate] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
-    
-
-    const handleIconClick = () => {
-        setIsOpen(!isOpen); // Toggle date picker visibility
-    };
-
-    const handleDateChange = (date) => {
-        setDate(date);
-        setIsOpen(false); // Close date picker after selection
-    };
     return (
         <>
             <header className="flex  justify-between items-center p-4 bg-white shadow-md">
@@ -234,7 +244,7 @@ const Navbar = (props) => {
                 <div className="md:ms-20 ms-0 flex items-center">
                     <img
                         src="/logo.png"
-                        alt="Tropicana logo with palm tree and text 'Tropicana' in green and 'Freshness' in blue"
+                        alt="Grocery logo with palm tree and text 'Tropicana' in green and 'Freshness' in blue"
                         className="object-contain cursor-pointer"
                         width="150"
                         height="50"
@@ -247,13 +257,13 @@ const Navbar = (props) => {
                     <input
                         type="text"
                         placeholder="Search for Products"
-                        className="text-[5px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none"
+                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none"
                         value={serchData}
                         onChange={handleInputChange}
                         ref={inputRef2}
                     />
                     <button
-                        className="py-[3px] md:py-[11px] md:px-4 px-1 bg-custom-green text-white rounded-r-md"
+                        className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green text-white rounded-r-md"
                         onClick={() => {
                             if (serchData) {
                                 getproductBySearchCategory(serchData);
@@ -269,9 +279,10 @@ const Navbar = (props) => {
                 <div className="hidden md:flex items-center space-x-4 mr-20">
                     {user?.token === undefined ? (
                         <>
-                            <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-black flex justify-center items-center" href="#">
+                            <productList className="text-white border-2 rounded-full w-[40px] h-[40px] cursor-pointer border-black flex justify-center items-center"
+                             onClick={() => router.push('/signIn')}>
                                 <IoPersonOutline className="text-black text-xl" />
-                            </a>
+                            </productList>
                             <div className="text-black flex items-center w-14 cursor-pointer">
                                 <span onClick={() => router.push('/signIn')}>Sign in</span>
                             </div>
@@ -511,8 +522,8 @@ const Navbar = (props) => {
                                                 <DatePicker
                                                     selected={date}
                                                     onChange={handleDateChange}
-                                                    inline 
-                                                    onClickOutside={() => setIsOpen(false)} 
+                                                    inline
+                                                    onClickOutside={() => setIsOpen(false)}
                                                 />
                                             </div>
                                         )}
@@ -535,7 +546,7 @@ const Navbar = (props) => {
                             </div>
                         ) : (
                             <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
-                                {/* <MdOutlineShoppingCart className="text-green-500 text-5xl mx-auto mb-4" /> */}
+                               
                                 <img src="/image77.png"
                                     className="w-20 h-20" />
                                 <p className="text-black  text-[18px]">

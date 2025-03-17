@@ -33,9 +33,9 @@ const Testimonials = () => {
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.
                     </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 md:mx-0 mx-10 md:gap-8 gap-20 pt-8 ">
+                <div className="grid grid-cols-1 md:grid-cols-3 justify-center items-center md:mx-0 mx-3.5 md:gap-8 gap-16 pt-8 ">
                     {testimonialsData.map((testimonial, index) => (
-                        <div key={index} className="relative bg-[url('/backgound12.png')] bg-cover rounded-lg flex flex-col  justify-center items-center h-[254px] md:h-[319px] md:w-[416px] w-[330px]">
+                        <div key={index} className="relative bg-[url('/backgound12.png')] bg-cover rounded-lg flex flex-col  justify-center items-center h-[254px] md:h-[329px] md:w-[416px] w-[330px]">
                             <img
                                 alt={`Portrait of ${testimonial.name}`}
                                 className="absolute top-[-45px] md:left-40 left-32 md:w-24 w-20 h-20 md:h-24 rounded-full mx-auto mb-8 "

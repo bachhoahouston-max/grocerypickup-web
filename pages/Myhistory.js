@@ -27,7 +27,7 @@ function Myhistory(props) {
 
     const getHistoryByUser = async () => {
         props.loader(true);
-        Api("get", "getProductRequestbyUser", "", router).then(
+        Api("get", "getStatusCompletedProducts", "", router).then(
             (res) => {
                 props.loader(false);
                 console.log("res================>", res);

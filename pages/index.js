@@ -16,19 +16,17 @@ export default function Home(props) {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [productList, setProductList] = useState([]);
   const [iscatdata, setIscatdata] = useState(false);
+  
   useEffect(() => {
     fetchCategories();
     fetchProducts();
   }, []);
-
-
 
   const fetchCategories = () => {
     props.loader(true);
     Api("get", "getCategory", null, router).then(
       (res) => {
         props.loader(false);
-
         setCategory(res.data);
       },
       (err) => {
@@ -41,14 +39,13 @@ export default function Home(props) {
   // New function to fetch all products
   const fetchProducts = () => {
     props.loader(true);
-    Api("get", "getProducts", null, router).then(
+    Api("get", "getProduct", null, router).then(
       (res) => {
         props.loader(false);
         if (res.data && Array.isArray(res.data)) {
           console.log("All products", res.data);
-          // setProductsData(res.data);
-
           setProductList(res.data);
+          setIscatdata(false); // Ensure iscatdata is false to show all products initially
         } else {
           console.error("Unexpected response format:", res);
           props.toaster({ type: "error", message: "Unexpected response format" });
@@ -67,7 +64,6 @@ export default function Home(props) {
     fetchProductsByCategory(categoryId);
   };
 
-
   const fetchProductsByCategory = async (categoryId) => {
     props.loader(true);
     let url = `getProductbycategory/${categoryId}`;
@@ -79,7 +75,7 @@ export default function Home(props) {
         if (res.data && Array.isArray(res.data)) {
           console.log("Category products", res.data);
           setProductsData(res.data);
-          setIscatdata(true)
+          setIscatdata(true);
         } else {
           console.error("Unexpected response format:", res);
           props.toaster({ type: "error", message: "Unexpected response format" });
@@ -95,13 +91,13 @@ export default function Home(props) {
 
   const handleCategoryClick1 = (path) => {
     router.push(path);
+    setSelectedCategory('all');
+    setIscatdata(false);
   };
-
-
 
   return (
     <div className="">
-      <MainHeader />
+       <MainHeader />
       <div className="container mx-auto bg-white max-w-7xl md:px-0 px-6">
         <div className="text-center mb-8 flex flex-col items-center justify-center">
           <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">Categories</h1>
@@ -114,7 +110,9 @@ export default function Home(props) {
             <div>
               <div className="">
                 {category.slice(0, 4).map((category, index) => (
-                  <div key={index} className="mb-4 bg-[#F7F7F8] flex flex-col py-[18px] cursor-pointer rounded-sm justify-center items-center">
+                  <div key={index} className="mb-4 bg-[#F7F7F8] flex flex-col py-[18px] cursor-pointer rounded-sm justify-center items-center"
+                  onClick={() => { router.push(`/categories/${category?.slug}`) }}
+                  >
                     <p className="text-custom-black mb-2 font-semibold text-[16px]">
                       {category.name}
                     </p>
@@ -151,6 +149,7 @@ export default function Home(props) {
         </div>
       </div>
 
+
       <div className="bg-white w-full">
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
           <div className="container mx-auto px-6 md:px-0 xl:w-full md:max-w-7xl">
@@ -172,7 +171,7 @@ export default function Home(props) {
                     <span>View All</span>
                     <FaArrowRight />
                   </li>
-                  {category.map((cat, index) => (
+                  {category.slice(0, 4).map((cat, index) => (
                     <li
                       key={index}
                       onClick={() => handleCategoryClick(cat._id)}
@@ -200,7 +199,7 @@ export default function Home(props) {
                       <GroceryCatories key={i} item={item} i={i} url={`/product-details/${item?.slug}`} />
                     ))
                   ) : (
-                    <div className="text-center text-gray-500">No products available.</div>
+                    <div className="text-center text-gray-500">No products available in this category.</div>
                   )
                 ) : (
                   productList.length > 0 ? (
@@ -217,7 +216,6 @@ export default function Home(props) {
           </div>
         </section>
       </div>
-
       <div className="container mx-auto max-w-7xl py-12 md:px-4 px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-12 ">
           <div className="bg-white p-4 shadow-md text-center">

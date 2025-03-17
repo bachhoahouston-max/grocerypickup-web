@@ -219,7 +219,7 @@ function ProductDetails(props) {
                             onClick={() => { setSelectedPrice(data); setPriceIndex(i); }}
                             className={`bg-custom-lightPurple cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
                                         ${priceIndex == i
-                                ? "bg-custom-lightPurple"
+                                ? "bg-[#FFF5CB]"
                                 : "bg-white"
                               }
                             `}
@@ -361,6 +361,7 @@ function ProductDetails(props) {
                           value: priceSlot[priceIndex]?.value,
                           unit: priceSlot[priceIndex]?.unit,
                           percentageDifference: percentageDifference.toFixed(2),
+
                         });
 
                       });
@@ -372,6 +373,7 @@ function ProductDetails(props) {
                       const nextState = produce(cartData, (draft) => {
                         const existingItem = draft.find((item) => item._id === c._id);
                         existingItem.qty += productsId.qty;
+                        
                         existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
                       });
                       setCartData(nextState);
