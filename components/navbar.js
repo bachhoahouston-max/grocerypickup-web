@@ -188,7 +188,7 @@ const Navbar = (props) => {
         let cart = localStorage.getItem("addCartDetail");
 
         let d = JSON.parse(cart);
-    
+
         d.forEach((element) => {
             data.push({
                 product: element?._id,
@@ -201,11 +201,11 @@ const Navbar = (props) => {
             });
         });
 
-        
+
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
         const dateOfDelivery = isDriveUp && date ? date : null;
-        
+
         let newData = {
             productDetail: data,
             total: CartTotal.toFixed(2),
@@ -280,7 +280,7 @@ const Navbar = (props) => {
                     {user?.token === undefined ? (
                         <>
                             <productList className="text-white border-2 rounded-full w-[40px] h-[40px] cursor-pointer border-black flex justify-center items-center"
-                             onClick={() => router.push('/signIn')}>
+                                onClick={() => router.push('/signIn')}>
                                 <IoPersonOutline className="text-black text-xl" />
                             </productList>
                             <div className="text-black flex items-center w-14 cursor-pointer">
@@ -412,10 +412,7 @@ const Navbar = (props) => {
                             <button
                                 className="text-white font-medium text-[16px] bg-black rounded-[12px] px-4 py-3"
                                 onClick={() => {
-                                    // Get the drawer element reference
                                     const drawerElement = document.querySelector('.MuiDrawer-paper');
-
-                                    // Set up SweetAlert
                                     Swal.fire({
                                         text: "Are you sure you want to empty your cart?",
                                         showCancelButton: true,
@@ -436,7 +433,7 @@ const Navbar = (props) => {
                                         width: '320px',
                                         target: drawerElement,
                                         didOpen: () => {
-                                            // Add custom styling to position the alert within the drawer
+
                                             const swalContainer = document.querySelector('.swal2-drawer-container');
                                             if (swalContainer) {
                                                 swalContainer.style.position = 'absolute';
@@ -546,7 +543,7 @@ const Navbar = (props) => {
                             </div>
                         ) : (
                             <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
-                               
+
                                 <img src="/image77.png"
                                     className="w-20 h-20" />
                                 <p className="text-black  text-[18px]">
@@ -579,11 +576,13 @@ const Navbar = (props) => {
                                             {item?.name}
                                         </p>
                                         <p className="text-gray-500 font-normal text-sm pt-2">
-                                            <span className="pl-3">{item?.price_slot && item?.price_slot[0]?.value}</span>{" "}
+                                            <span className="pl-3">
+                                                {item?.qty * item?.value}
+                                            </span>{" "}
                                             <span>{item?.price_slot && item?.price_slot[0]?.unit}</span>
                                         </p>
                                     </div>
-                                    <div className="flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-2 md:hidden">
+                                    <div className="flex md:justify-center justify-center md:items-center items-center col-span-3 md:mt-0 mt-2 md:hidden">
                                         <p className="text-custom-black font-semibold text-base">
                                             ₹{item?.our_price}
                                             <del className="text-red-500 font-normal text-xs ml-2">
@@ -649,7 +648,7 @@ const Navbar = (props) => {
 
                                 <div className="md:flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-5 hidden">
                                     <p className="text-custom-black font-semibold text-base">
-                                        ₹{item?.total}
+                                        ₹{item?.our_price}
                                         <del className="text-red-500 font-normal text-xs ml-2">
                                             ₹{item?.other_price}
                                         </del>

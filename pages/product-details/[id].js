@@ -259,7 +259,7 @@ function ProductDetails(props) {
                       {selectedPrice?.other_price}
                     </span>{" "}
                     <span className="text-sm text-custom-black">
-                      {/* {percentageDifference?.toFixed(2)}% */}
+                     
                       {(((selectedPrice?.other_price - selectedPrice?.our_price) / selectedPrice?.other_price) * 100).toFixed(2)}%
                     </span>
                   </p>
