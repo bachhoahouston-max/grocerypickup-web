@@ -36,7 +36,7 @@ const Category = (props) => {
             <div key={index} className="rounded-lg h-full flex flex-col justify-center cursor-pointer items-center"
             onClick={() => { router.push(`/categories/${cat?.slug}`) }}
             >
-              <div className='bg-[#EFFAEC] p-4 rounded-[12px] h-36 md:h-[207px] md:w-[241px] w-[145px]'>
+              <div className='bg-custom-green p-4 rounded-[12px] h-36 md:h-[207px] md:w-[241px] w-[145px]'>
                 <img alt={cat.label} className="w-full md:h-36 h-24 object-cover mb-2" src={cat.image} />
               </div>
               <p className="text-center text-black text-md md:text-[21px] font-semibold mt-4 w-[60%] mb-4">{cat.name}</p>

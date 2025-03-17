@@ -26,14 +26,14 @@ const testimonialsData = [
 const Testimonials = () => {
     return (
         <div className="bg-white md:mt-4 mt-12 md:mb-6 mb-12">
-            <div className="container mx-auto px-4 md:p-16">
+            <div className="container mx-auto max-w-7xl md:py-12 py-0">
                 <div className="text-center mb-12 flex flex-col items-center justify-center">
                     <h2 className="text-[20px] md:text-[24px] mb-2 font-bold text-black ">Great Words From People</h2>
-                    <p className="text-[#6B6B6B] w-full md:w-[50%] text-[13px] md:text-[15px] text-center italic">
+                    <p className="text-[#6B6B6B] w-[90%] md:w-[50%] text-[13px] md:text-[15px] text-center italic">
                         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.
                     </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 md:gap-8 gap-20 pt-8 ">
+                <div className="grid grid-cols-1 md:grid-cols-3 md:mx-0 mx-10 md:gap-8 gap-20 pt-8 ">
                     {testimonialsData.map((testimonial, index) => (
                         <div key={index} className="relative bg-[url('/backgound12.png')] bg-cover rounded-lg flex flex-col  justify-center items-center h-[254px] md:h-[319px] md:w-[416px] w-[330px]">
                             <img

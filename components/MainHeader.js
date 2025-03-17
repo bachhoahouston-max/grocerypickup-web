@@ -9,7 +9,7 @@ function MainHeader(props) {
     <div className="bg-[url('/image88.png')] bg-cover bg-no-repeat md:h-[580px] md:p-0 ">
       <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5 max-w-7xl mx-auto h-full px-4 md:px-5">
         <div className="flex flex-col justify-center items-start py-10 md:py-0">
-          <p className="text-black mb-6 mt-0 md:mt-6 md:mb-12 font-semibold text-[13px] md:text-[15px]"><span className="text-custom-green font-semibold"> 100% </span> Organic Fruits </p>
+          <p className="text-black mb-4 mt-16 md:mt-6 md:mb-12 font-semibold text-[13px] md:text-[15px]"><span className="text-custom-gold font-semibold"> 100% </span> Organic Fruits </p>
           <h1 className="text-2xl md:text-4xl lg:text-[55px] font-bold text-custom-purple leading-tight md:leading-[60px] text-black">
             Explore fresh<br />juicy Fruits.
           </h1>

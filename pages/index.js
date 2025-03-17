@@ -102,7 +102,7 @@ export default function Home(props) {
   return (
     <div className="">
       <MainHeader />
-      <div className="container mx-auto bg-white px-14">
+      <div className="container mx-auto bg-white max-w-7xl md:px-0 px-6">
         <div className="text-center mb-8 flex flex-col items-center justify-center">
           <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">Categories</h1>
           <p className="text-gray-600 mt-4 w-full md:w-[50%] text-center text-[13px] md:text-[16px] italic">
@@ -110,7 +110,7 @@ export default function Home(props) {
           </p>
         </div>
         <div className="flex flex-col md:flex-row justify-center items-start md:space-x-4">
-          <div className="mb-4 md:mb-0 w-full md:w-1/3 ms-0 md:ms-8  cursor-pointer">
+          <div className="mb-4 md:mb-0 w-full md:w-1/3 ms-0 md:ms-4  cursor-pointer">
             <div>
               <div className="">
                 {category.slice(0, 4).map((category, index) => (
@@ -161,7 +161,7 @@ export default function Home(props) {
               </p>
             </div>
 
-            <div className="flex md:flex-row flex-col">
+            <div className="flex md:flex-row flex-col ">
               {/* Sidebar */}
               <div className="md:w-1/5 lg:w-1/4 w-full">
                 <ul className="rounded-lg p-4 space-y-2">
@@ -193,7 +193,7 @@ export default function Home(props) {
               </div>
 
               {/* Product Grid */}
-              <div className="w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-1 gap-4 mx-auto md:mx-4 md:space-x-2">
+              <div className="w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-1 gap-4 mx-auto md:mx-4 md:space-x-2 md:px-0 px-12 ">
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData.map((item, i) => (
@@ -218,8 +218,8 @@ export default function Home(props) {
         </section>
       </div>
 
-      <div className="container mx-auto py-8 px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-12 xl:px-14">
+      <div className="container mx-auto max-w-7xl py-12 md:px-4 px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-12 ">
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faBoxOpen} className="text-xl text-[#FEC200] mb-2" />
             <h3 className="text-[16px] md:text-[18px] md:text-lg font-semibold text-black">Product Package</h3>

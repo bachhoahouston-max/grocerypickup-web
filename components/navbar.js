@@ -17,6 +17,10 @@ import { Api } from "@/services/service";
 import Swal from "sweetalert2";
 import { IoIosArrowForward } from "react-icons/io";
 import GroceryCatories from "../components/GroceryCatories"
+import DatePicker from 'react-datepicker';
+import { FaRegCalendarAlt } from "react-icons/fa"
+import 'react-datepicker/dist/react-datepicker.css';
+
 const Navbar = (props) => {
     const router = useRouter();
     const [serchData, setSearchData] = useState("");
@@ -37,8 +41,12 @@ const Navbar = (props) => {
     const [deliveryPartnerTip, setDeliveryPartnerTip] = useState(0);
     const [mainTotal, setMainTotal] = useState(0);
     const [productList, SetProductList] = useState([]);
+    const [pickupOption, setPickupOption] = useState('orderPickup');
 
-    
+    const handleOptionChange = (event) => {
+        setPickupOption(event.target.value);
+    };
+
     const [shippingAddressData, setShippingAddressData] = useState({
         firstName: "",
         address: "",
@@ -181,8 +189,10 @@ const Navbar = (props) => {
             productDetail: data,
             total: CartTotal.toFixed(2),
             shipping_address: shippingAddressData,
+            dateOfDelivery:date || Date.now()
         };
 
+        
         props.loader && props.loader(true);
         Api("post", "createProductRquest", newData, router).then(
             (res) => {
@@ -205,6 +215,18 @@ const Navbar = (props) => {
         );
     };
 
+    const [date, setDate] = useState(null);
+    const [isOpen, setIsOpen] = useState(false);
+    
+
+    const handleIconClick = () => {
+        setIsOpen(!isOpen); // Toggle date picker visibility
+    };
+
+    const handleDateChange = (date) => {
+        setDate(date);
+        setIsOpen(false); // Close date picker after selection
+    };
     return (
         <>
             <header className="flex  justify-between items-center p-4 bg-white shadow-md">
@@ -243,7 +265,7 @@ const Navbar = (props) => {
                     </button>
                 </div>
 
-              
+
                 <div className="hidden md:flex items-center space-x-4 mr-20">
                     {user?.token === undefined ? (
                         <>
@@ -285,7 +307,7 @@ const Navbar = (props) => {
                                                 </div>
                                                 <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
-                                            
+
                                             <li className="px-3 shadow-inner py-2 flex justify-between">
                                                 <div
                                                     className="block px-5 py-1 pl-0 text-black text-left font-semibold text-[16px]"
@@ -362,7 +384,7 @@ const Navbar = (props) => {
 
             {/* Cart Drawer */}
             <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
-                <div className={`md:w-[700px] w-[330px] relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : ""}`}>
+                <div className={`md:w-[750px] w-[430px]  relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : "h-full"}`}>
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
                         <div
                             className="flex justify-start items-center gap-1 cursor-pointer"
@@ -371,13 +393,13 @@ const Navbar = (props) => {
                             }}
                         >
                             <IoIosArrowBack className="md:w-[38px] w-[28px] md:h-[31px] h-[21px] text-black" />
-                            <p className="text-black md:text-[24px] text-[20px] font-bold">
+                            <p className="text-black md:text-[18px] text-[17px] font-bold">
                                 Your Cart
                             </p>
                         </div>
                         {cartData.length > 0 && (
                             <button
-                                className="text-white font-medium text-lg bg-black rounded-[12px] px-4 py-3"
+                                className="text-white font-medium text-[16px] bg-black rounded-[12px] px-4 py-3"
                                 onClick={() => {
                                     // Get the drawer element reference
                                     const drawerElement = document.querySelector('.MuiDrawer-paper');
@@ -422,14 +444,93 @@ const Navbar = (props) => {
                         )}
                     </div>
 
+
+                    {cartData.length > 0 && (
+                        <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5 flex items-center justify-center ">
+                            <div className="rounded-lg p-4 flex items-center justify-center gap-10 w-full max-w-4xl">
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id="orderPickup"
+                                        name="pickupOption"
+                                        value="orderPickup"
+                                        className="form-radio h-5 w-5 text-gray-600"
+                                        checked={pickupOption === 'orderPickup'}
+                                        onChange={handleOptionChange}
+                                    />
+                                    <label htmlFor="orderPickup" className="ml-2">
+                                        <span className="font-semibold text-[15px]">Order Pickup</span>
+                                        <br />
+                                        <span className="text-gray-500 text-[13px] w-full">Pick it up inside the store</span>
+                                    </label>
+                                </div>
+                                <div className="text-gray-500 text-[14px]">Free</div>
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id="driveUp"
+                                        name="pickupOption"
+                                        value="driveUp"
+                                        className="form-radio h-5 w-5 text-green-600"
+                                        checked={pickupOption === 'driveUp'}
+                                        onChange={handleOptionChange}
+                                    />
+                                    <label htmlFor="driveUp" className="ml-2">
+                                        <span className="font-semibold text-[15px]">Drive up</span>
+                                        <br />
+                                        <span className="text-gray-500 text-[13px]">We bring it out to your car</span>
+                                    </label>
+                                </div>
+                                <div className="text-gray-500 text-[14px]">Free</div>
+                            </div>
+                        </div>
+                    )}
+
+                    {cartData.length > 0 && pickupOption === 'driveUp' && (
+                        <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
+                            <div className="flex items-center justify-center">
+                                <div className="text-center">
+                                    <h1 className="text-lg font-semibold mb-4">Select Date of Delivery</h1>
+                                    <div className="relative inline-block">
+                                        <input
+                                            type="text"
+                                            value={date ? date.toLocaleDateString() : ''}
+                                            placeholder="Select date"
+                                            className="border rounded-full py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            readOnly
+                                            onClick={handleIconClick}
+                                        />
+                                        <span
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
+                                            onClick={handleIconClick}
+                                        >
+                                            <FaRegCalendarAlt />
+                                        </span>
+                                        {isOpen && (
+                                            <div className="absolute z-10 mt-1">
+                                                <DatePicker
+                                                    selected={date}
+                                                    onChange={handleDateChange}
+                                                    inline 
+                                                    onClickOutside={() => setIsOpen(false)} 
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
                         {cartData && cartData.length > 0 ? (
                             <div className="flex justify-start items-center gap-5">
-                                <div className="w-[50px] h-[39px] rounded-[8px] bg-custom-green flex justify-center items-center">
-                                    <GoClock className="text-white w-[38px] h-[29px]" />
+                                <div className="w-[45px] h-[35px] rounded-[8px] bg-custom-green flex justify-center items-center">
+                                    <GoClock className="text-white w-[30px] h-[24px]" />
                                 </div>
-                                <p className="text-black font-semibold text-xl">
-                                Delivery in 8 mins
+                                <p className="text-black font-semibold text-[18px]">
+                                    Delivery in 8 mins
                                 </p>
                             </div>
                         ) : (
@@ -595,7 +696,7 @@ const Navbar = (props) => {
 
                     {cartData.length > 0 && (
                         <button
-                            className="bg-black h-[50px] rounded-[12px] w-full font-semibold text-white text-base text-center mt-5"
+                            className="bg-black h-[50px] rounded-[12px] w-full font-semibold text-white text-base text-center mt-5 mb-6"
                             onClick={() => {
                                 if (cartData?.length === 0) {
                                     props.toaster && props.toaster({
