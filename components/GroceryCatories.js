@@ -22,7 +22,10 @@ const GroceryCatories = ({ item, i, url }) => {
                 selectedColor: item?.varients[0],
                 image: item?.varients[0]?.image[0],
                 total: price,
+                our_price:item?.price_slot[0]?.our_price,
+                other_price:item?.price_slot[0]?.other_price,
                 price:price,
+                value:item?.price_slot[0]?.value,
                 qty: 1,
             };
             updatedCart.push(newItem);

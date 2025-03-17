@@ -237,6 +237,7 @@ const Navbar = (props) => {
             }
         );
     };
+
     return (
         <>
             <header className="flex  justify-between items-center p-4 bg-white shadow-md">
@@ -395,7 +396,7 @@ const Navbar = (props) => {
 
             {/* Cart Drawer */}
             <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
-                <div className={`md:w-[750px] w-[430px]  relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : "h-full"}`}>
+                <div className={`md:w-[750px] w-[350px]  relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : "h-full"}`}>
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
                         <div
                             className="flex justify-start items-center gap-1 cursor-pointer"
@@ -607,7 +608,7 @@ const Navbar = (props) => {
                                                     const nextState = produce(cartData, (draft) => {
                                                         draft[i].qty -= 1;
                                                         draft[i].total = (
-                                                            parseFloat(draft[i].price_slot && draft[i].price_slot[0]?.our_price) *
+                                                            parseFloat(draft[i].price_slot && draft[i].price_slot[i]?.our_price) *
                                                             draft[i].qty
                                                         ).toFixed(2);
                                                     });
@@ -630,7 +631,7 @@ const Navbar = (props) => {
                                                 const nextState = produce(cartData, (draft) => {
                                                     draft[i].qty += 1;
                                                     draft[i].total = (
-                                                        parseFloat(draft[i].price_slot && draft[i].price_slot[0]?.our_price) *
+                                                        parseFloat(draft[i].price_slot && draft[i].price_slot[i]?.our_price) *
                                                         draft[i].qty
                                                     ).toFixed(2);
                                                 });
