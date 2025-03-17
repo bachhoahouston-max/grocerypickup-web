@@ -49,17 +49,17 @@ const GroceryCatories = ({ item, i, url }) => {
                 key={i} 
                 className="bg-white w-[280px] md:w-full h-full md:h-[389px] rounded-lg p-2 hover:translate-y-[-10px] transition-all duration-500 border items-center flex flex-col mt-2 relative"
             >
-                <div className='bg-gray-200 p-2 relative'>
+                <div className=' relative'>
                     <img
                         src={item.varients[0].image[0]}
                         alt="Product image"
-                        className="w-full h-44 object-cover rounded cursor-pointer"
+                        className="w-full p-1 h-44 object-cover rounded cursor-pointer"
                         onClick={() => {
                             router.push(url);
                         }}
                     />
                     <div className=''>
-                        <img src="bag2.png" alt="Bag" className="absolute bottom-[-55px] left-1/2 transform -translate-x-1/2 flex justify-center w-[65px] h-[90px] p-2"/>
+                        <img src="/bag2.png" alt="Bag" className="absolute bottom-[-55px] left-1/2 transform -translate-x-1/2 flex justify-center w-[65px] h-[90px] p-2"/>
                     </div>
                 </div>
                 

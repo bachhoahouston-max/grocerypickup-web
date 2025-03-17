@@ -396,7 +396,7 @@ const Navbar = (props) => {
 
             {/* Cart Drawer */}
             <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
-                <div className={`md:w-[750px] w-[350px]  relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : "h-full"}`}>
+                <div className={`md:w-[750px] w-[360px]  relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : "h-full"}`}>
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
                         <div
                             className="flex justify-start items-center gap-1 cursor-pointer"
@@ -456,7 +456,7 @@ const Navbar = (props) => {
 
                     {cartData.length > 0 && (
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5 flex items-center justify-center ">
-                            <div className="rounded-lg p-4 flex items-center justify-center gap-10 w-full max-w-4xl">
+                            <div className="rounded-lg p-4 flex items-center justify-center gap-3 md:gap-10 w-full max-w-4xl">
                                 <div className="flex items-center">
                                     <input
                                         type="radio"

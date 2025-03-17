@@ -199,7 +199,7 @@ export default function Home(props) {
                       <GroceryCatories key={i} item={item} i={i} url={`/product-details/${item?.slug}`} />
                     ))
                   ) : (
-                    <div className="text-center text-gray-500">No products available in this category.</div>
+                    <div className="text-center text-gray-500 ">No products available in this category.</div>
                   )
                 ) : (
                   productList.length > 0 ? (
