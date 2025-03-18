@@ -244,9 +244,9 @@ function Account(props) {
     };
 
     return (
-        <div className={`w-full px-2 md:mt-8 mt-8 pb-4 `}>
-            <div className='flex justify-start mx-auto max-w-7xl  items-center gap-4'>
-            <div className="flex md:m-0 ms-4 flex-col justify-center items-center">
+        <div className={`w-full px-2 md:mt-8 mt-9 pb-4 `}>
+            <div className='flex justify-center mx-auto  max-w-7xl  items-center gap-3'>
+            <div className="flex md:m-0 ms-4 flex-col justify-between items-center">
                     <h1 className="text-center  text-[30px] md:text-[45px] font-semibold mb-2 text-black">
                         My
                         <span className="ml-2 text-[30px] md:text-[45px] font-semibold  text-custom-green">
@@ -314,6 +314,7 @@ function Account(props) {
                     </div>
                 )}
             </div>
+            {user?.username && (
             <div className="mx-auto max-w-7xl py-6 md:py-12">
                
                 <div className="md:m-0 m-1  mt-5 bg-white rounded-lg border-2 border-gray-200 shadow-lg">
@@ -384,6 +385,7 @@ function Account(props) {
                     </div>
                 </div>
             </div>
+            )}
         </div>
     )
 }

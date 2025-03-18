@@ -41,7 +41,7 @@ const Navbar = (props) => {
     const [deliveryPartnerTip, setDeliveryPartnerTip] = useState(0);
     const [mainTotal, setMainTotal] = useState(0);
     const [productList, SetProductList] = useState([]);
-
+    const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState('orderPickup');
 
     const handleOptionChange = (event) => {
@@ -150,6 +150,11 @@ const Navbar = (props) => {
         setOpenCart(false);
     };
 
+
+    useEffect(() => {
+        getProductById();
+    }, []);
+
     useEffect(() => {
         const sumWithInitial = cartData?.reduce(
             (accumulator, currentValue) =>
@@ -245,15 +250,25 @@ const Navbar = (props) => {
         if (isNaN(date.getTime())) {
             return "Invalid date";
         }
-    
+
         const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
         const year = date.getFullYear();
-    
+
         return `${day}/${month}/${year}`;
     }
-    
-   
+
+    const getProductById = async () => {
+        Api("get", "getFavourite", "", router).then(
+            (res) => {
+                setProductsId(res.data);
+                console.log("fgh",res.data)
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+    };
     return (
         <>
             <header className="flex  justify-between items-center p-4 bg-white shadow-md">
@@ -399,13 +414,25 @@ const Navbar = (props) => {
                             setMobileMenu(!mobileMenu);
                         }}
                     >
-                        <FiLock className="md:text-3xl text-black text-lg cursor-pointer" />
+                        
+                        <FiLock className="relative md:text-3xl text-black text-lg cursor-pointer" />
+                        {cartData.length > 0 && (
+                            <div className="absolute bg-red-500 text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11 md:right-13 right-11 md:text-[9px] text-[7px] ">
+                                {cartData.length} 
+                            </div>
+                        )}
                     </div>
+
                     <div
                         className="cursor-pointer"
                         onClick={() => router.push("/Favourite")}
                     >
-                        <CiHeart className="text-black md:text-3xl text-lg cursor-pointer" />
+                        <CiHeart className="relative text-black text-2xl md:text-3xl  cursor-pointer" />
+                        {productsId.length > 0 && (
+                            <div className="absolute bg-red-500 text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11  md:text-[9px] text-[7px] right-4 ">
+                                {productsId.length} 
+                            </div>
+                        )}
                     </div>
                 </div>
             </header>
@@ -589,10 +616,12 @@ const Navbar = (props) => {
                                         alt={item?.name}
                                     />
                                     <div className="pt-2 flex justify-start items-start">
-                                        <p className="text-custom-black md:w-[80%] w-[60%] font-semibold md:text-[16px] text-[13px] pl-3">
+                                        <div className="flex justify-center items-center"> 
+                                        <p className=" text-custom-black md:w-[80%] w-[60%] font-semibold md:text-[16px] text-[13px] pl-3">
                                             {item?.name}
                                         </p>
-                                        <p className="text-gray-500 w-full md:w-[100px] font-normal text-[11px] md:text-sm pt-4">
+                                        </div>
+                                        <p className="text-gray-500 w-full md:w-[100px] font-normal text-[11px] md:text-sm md:pt-7 pt-4">
                                             <span className="pl-3">
                                                 {item?.qty * item?.value}
                                             </span>{" "}
@@ -651,7 +680,7 @@ const Navbar = (props) => {
                                                         }
                                                     }
                                                 });
-                                            
+
                                                 setCartData(nextState);
                                                 localStorage.setItem("addCartDetail", JSON.stringify(nextState));
                                             }}

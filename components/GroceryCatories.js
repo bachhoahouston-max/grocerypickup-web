@@ -1,19 +1,24 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
 import { useRouter } from "next/router";
-import { cartContext, openCartContext } from "@/pages/_app";
+import { userContext, cartContext, openCartContext } from "@/pages/_app";
 import { produce } from "immer";
+import { FaRegHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa6";
+import { Api } from '@/services/service';
 
-const GroceryCatories = ({ item, i, url }) => {
+const GroceryCatories = ({ item, i, url },props) => {
     const router = useRouter();
     const [cartData, setCartData] = useContext(cartContext);
     const [openCart, setOpenCart] = useContext(openCartContext);
+    const [productsId, setProductsId] = useState([]);
+    const [user, setUser ] = useContext(userContext);
+    const [isFavorite, setIsFavorite] = useState(false);
 
     const handleAddToCart = (item) => {
         let updatedCart = [...cartData];
         const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
-
         const price = parseFloat(item?.price_slot[0]?.our_price);
 
         if (existingItemIndex === -1) {
@@ -38,66 +43,110 @@ const GroceryCatories = ({ item, i, url }) => {
         }
 
         setCartData(updatedCart);
-        console.log(updatedCart)
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
         setOpenCart(true);
     };
 
-    return (
-        <>
-            <div
-                key={i}
-                className="bg-white w-full max-w-[350px] h-full md:h-[389px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 border items-center flex flex-col mt-2 relative"
-            >
-                <div className='relative'>
-                    <img
-                        src={item.varients[0].image[0]}
-                        alt="Product image"
-                        className="w-full p-1 h-44 object-cover rounded cursor-pointer"
-                        onClick={() => {
-                            router.push(url);
-                        }}
-                    />
-                    <div className=''>
-                        <img src="/bag2.png" alt="Bag" className="absolute md:bottom-[-55px]  bottom-[-42px] left-1/2 transform -translate-x-1/2 flex justify-center md:w-[65px] w-[55px] md:h-[90px] h-[80px] p-2" />
-                    </div>
-                </div>
+    useEffect(() => {
+        getProductById();
+    }, []);
 
-                <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
-                    {item.categoryName}
-                </h2>
-                <p className="text-sm md:text-base text-black font-semibold pt-1">
-                    {item.name}
-                </p>
-                <div className='flex flex-row md:flex-col justify-between gap-3'>
-                <div className="flex justify-between items-center pt-1">
-                    <p className="text-custom-gold text-lg md:text-xl font-semibold">
-                        ${item.price_slot[0].our_price}
-                        <del className="font-medium text-sm text-custom-black ml-2">
-                            ${item.price_slot[0].other_price}
-                        </del>
-                    </p>
-                </div>
-                <button
-                    className="font-bold  w-[90px] rounded-[2px] text-[14px] md:text-[16px] text-black flex justify-center items-center"
-                    onClick={() => handleAddToCart(item)}
+    useEffect(() => {
+        const isProductFavorite = productsId.some((product) => product.product._id === item._id);
+        setIsFavorite(isProductFavorite);
+    }, [productsId, item._id]);
+
+    const getProductById = async () => {
+        Api("get", "getFavourite", "", router).then(
+            (res) => {
+                setProductsId(res.data);
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+    };
+
+    const addremovefavourite = () => {
+        if (!user?.token) {
+            return;
+        }
+        let data = {
+            product: item?._id,
+        };
+
+        Api("post", "addremovefavourite", data, router).then(
+            (res) => {
+                
+                if (res.status) {
+                    getProductById();
+                }
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+    };
+
+    return (
+        <div
+            key={i}
+            className="bg-white w-full max-w-[350px] h-full md:h-[389px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 border items-center flex flex-col mt-2 relative"
+        >
+            <div className='relative'>
+                <img
+                    src={item.varients[0].image[0]}
+                    alt="Product image"
+                    className="w-full p-1 h-44 object-cover rounded cursor-pointer"
+                    onClick={() => {
+                        router.push(url);
+                    }}
+                />
+                <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 w-[45px] h-[45px] flex justify-center items-center md:mb-1 mb-2'
+                    onClick={addremovefavourite}
                 >
-                    <FiShoppingCart className="w-[18px] h-[18px] text-custom-gold mr-2 font-bold" />
-                    Add
-                </button>
-                </div>
-                <div className="flex items-center text-black mt-2">
-                    <div className="flex items-center mr-2">
-                        <FaStar className="text-yellow-500 text-xl" />
-                        <FaStar className="text-yellow-500 text-xl" />
-                        <FaStar className="text-yellow-500 text-xl" />
-                        <FaStar className="text-yellow-500 text-xl" />
-                        <FaStar className="text-yellow-500 text-xl" />
-                    </div>
-                    <span className="text-sm">(4.5)</span>
+                    {isFavorite ? (
+                        <FaHeart className="text-red-700 w-[23px] h-[23px]" />
+                    ) : (
+                        <FaRegHeart className="text-black w-[23px] h-[23px]" />
+                    )}
                 </div>
             </div>
-        </>
+
+            <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
+                {item.categoryName}
+            </h2>
+            <p className="text-sm md:text-base text-black font-semibold pt-1">
+                {item.name}
+            </p>
+
+            <div className="flex justify-between items-center pt-1">
+                <p className="text-custom-gold text-lg md:text-xl font-semibold">
+                    ${item.price_slot[0].our_price}
+                    <del className="font-medium text-sm text-custom-black ml-2">
+                        ${item.price_slot[0].other_price}
+                    </del>
+                </p>
+            </div>
+            <button
+                className="font-bold bg-custom-gold w-[90px] mt-2 rounded-[6px] px-4 py-2 text-[14px] md:text-[16px] text-black flex justify-center items-center"
+                onClick={() => handleAddToCart(item)}
+            >
+                <FiShoppingCart className="w-[18px] h-[18px] text-custom-black mr-2 font-bold" />
+                Add
+            </button>
+
+            <div className="flex items-center text-black mt-2">
+                <div className="flex items-center mr-2">
+                    <FaStar className="text-yellow-500 text-xl" />
+                    <FaStar className="text-yellow-500 text-xl" />
+                    <FaStar className="text-yellow-500 text-xl" />
+                    <FaStar className="text-yellow-500 text-xl" />
+                    <FaStar className="text-yellow-500 text-xl" />
+                </div>
+                <span className="text-sm">(4.5)</span>
+            </div>
+        </div>
     );
 };
 

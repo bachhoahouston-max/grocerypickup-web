@@ -183,6 +183,7 @@ function ProductDetails(props) {
                   <p className="text-black md:text-[32px] text-2xl font-semibold">
                     {productsId?.name}
                   </p>
+
                   <div
                     className="w-[46px] h-[46px] bg-custom-offWhite rounded-full flex justify-center items-center cursor-pointer"
                     onClick={addremovefavourite}
@@ -193,7 +194,9 @@ function ProductDetails(props) {
                     {productsId?.favourite && (
                       <FaHeart className="text-red-700 w-[23px] h-[23px]" />
                     )}
+                    
                   </div>
+
                 </div>
 
                 <div className="flex text-gray-400 mt-1 mb-1 " >
@@ -335,7 +338,12 @@ function ProductDetails(props) {
                   className="bg-custom-gold w-[96px] h-[32px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4"
                   onClick={() => {
                     const d = cartData?.length > 0 ? cartData : [];
-                    const c = d.find((f) => f._id === productsId?._id);
+                    // const c = d.find((f) => f._id === productsId?._id);
+                    // const c = d.find((f) => f._id === productsId?._id && f.qty === productsId?.qty);
+                    const c = d.find((f) => 
+                      f._id === productsId?._id && 
+                      f.our_price === productsId?.our_price
+                  )
                     console.log(c);
 
                     const price = parseFloat(priceSlot[priceIndex]?.price);
@@ -369,7 +377,13 @@ function ProductDetails(props) {
                     }
                     else {
                       const nextState = produce(cartData, (draft) => {
-                        const existingItem = draft.find((item) => item._id === c._id);
+                        // const existingItem = draft.find((item) => item._id === c._id);
+                        // const existingItem = draft.find((item) => item._id === c._id && item.qty === c.qty);
+                        const existingItem = draft.find((item) => 
+                          item._id === c._id && 
+                          item.our_price === c.our_price
+                      );
+                      
                         existingItem.qty += productsId.qty;
                         
                         existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);

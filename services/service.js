@@ -27,7 +27,7 @@ function Api(method, url, data, router, params) {
           if (err?.response?.status === 401) {
             if (typeof window !== "undefined") {
               localStorage.removeItem("userDetail");
-              router.push("/sign-in");
+              router.push("/signIn");
             }
           }
           reject(err.response.data);

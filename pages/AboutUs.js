@@ -19,7 +19,7 @@ const AboutUs = () => {
 
     return (
         <>
-            <div className="w-full bg-green-100 mx-auto flex flex-col md:flex-row justify-center items-center">
+            <div className="w-full bg-[#FFF5CB] mx-auto flex flex-col md:flex-row justify-center items-center">
                 <div className="md:py-14 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
                     <nav className="mb-4 mt-8 md:mt-12 text-[12px]">
                         <span className="text-gray-600 mr-1">Home /</span>
@@ -44,23 +44,43 @@ const AboutUs = () => {
                     />
                 </div>
             </div>
-            <div className="bg-gray-100">
+            <div className="bg-[#fbeeba]">
                 <div className="container mx-auto py-12 px-4 md:px-20">
                     <h2 className="text-2xl font-bold mb-8 text-black">Why work with us</h2>
                     <div className="flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-8">
-                        {['Lorem Ipsum', 'Lorem Ipsum', 'Lorem Ipsum'].map((title, index) => (
-                            <div key={index} className="bg-white md:px-8 px-4 py-6 md:py-12 rounded-lg shadow-lg">
-                                <div className={`bg-${index === 0 ? 'purple' : index === 1 ? 'red' : 'green'}-100 text-${index === 0 ? 'purple' : index === 1 ? 'red' : 'green'}-600 px-8 py-2 rounded-full inline-block mb-4`}>
-                                    {title}
+                        <div className="mb-4">
+                            <div className="bg-white md:px-8 px-4 py-6 md:py-12 rounded-lg shadow-lg">
+                                <div className={`bg-red-100 text-purple-600 px-8 py-2 rounded-full inline-block mb-4`}>
+                                    Lorem Ipsum
                                 </div>
-                                <h3 className="text-xl font-semibold mb-4 text-black">{title}</h3>
+                                <h3 className="text-xl font-semibold mb-4 text-black">Lorem Ipsum</h3>
                                 <p className="text-gray-600 w-[90%]">Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
                             </div>
-                        ))}
+                        </div>
+
+                        <div className="mb-4">
+                            <div className="bg-white md:px-8 px-4 py-6 md:py-12 rounded-lg shadow-lg">
+                                <div className={`bg-red-100 text-orange-800 px-8 py-2 rounded-full inline-block mb-4`}>
+                                    Lorem Ipsum
+                                </div>
+                                <h3 className="text-xl font-semibold mb-4 text-black">Lorem Ipsum</h3>
+                                <p className="text-gray-600 w-[90%]">Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                            </div>
+                        </div>
+
+                        <div className="mb-4">
+                            <div className="bg-white md:px-8 px-4 py-6 md:py-12 rounded-lg shadow-lg">
+                                <div className={`bg-orange-200 text-orange-400 px-8 py-2 rounded-full inline-block mb-4`}>
+                                    Lorem Ipsum
+                                </div>
+                                <h3 className="text-xl font-semibold mb-4 text-black">Lorem Ipsum</h3>
+                                <p className="text-gray-600 w-[90%]">Lorem ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div className="bg-green-100 mx-auto h-full">
+            <div className="bg-[#FFF5CB] mx-auto h-full">
                 <div className="px-4 md:px-24 rounded-lg flex flex-col md:flex-row gap-4 md:gap-20">
                     <div className="md:w-1/3">
                         <img

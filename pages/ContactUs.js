@@ -6,7 +6,7 @@ const FeedbackForm = (props) => {
         fullName: '',
         email: '',
         phoneNumber: '',
-        store: '',
+        query: '',
         message: ''
     });
 
@@ -26,13 +26,13 @@ const FeedbackForm = (props) => {
             (res) => {
                 props.loader(false);
                 if (res?.status) {
-                    props.toaster({ type: "success", message: "Feedback submitted successfully" });
+                    props.toaster({ type: "success", message: "Query submitted successfully" });
                     // Reset form
                     setFormData({
                         fullName: '',
                         email: '',
                         phoneNumber: '',
-                        store: '',
+                        query: '',
                         message: ''
                     });
                 } else {
@@ -49,13 +49,13 @@ const FeedbackForm = (props) => {
     return (
         <div className="relative">
             <img
-                src="./returnpolicy.png"
+                src="./image12345.png"
                 alt="Return Policy"
                 className="h-24 md:h-full w-full"
             />
             <div className="absolute top-[44px] md:top-14 left-1/2 transform -translate-x-1/2 flex justify-center items-center ">
                 <p className="text-black font-bold text-[15px] md:text-[28px] p-2 bg-opacity-75 rounded lg:mt-3 ">
-                Feedback for Our Stores
+                    Contact Us
                 </p>
             </div>
             <div className="container mx-auto py-4 md:py-16 ">
@@ -63,64 +63,64 @@ const FeedbackForm = (props) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
                             <label className="block text-gray-700">Full Name</label>
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 name="fullName"
                                 value={formData.fullName}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border bg-[#F9F9F9] outline-none rounded-md" 
-                                placeholder="Vaibhav" 
+                                className="w-full mt-2 p-2 border bg-[#F9F9F9] outline-none rounded-md"
+                                placeholder="Vaibhav"
                             />
                         </div>
                         <div>
                             <label className="block text-[16px] text-gray-700">Email</label>
-                            <input 
-                                type="email" 
+                            <input
+                                type="email"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md outline-none" 
-                                placeholder="Vaibhavmehrotra84@gmail.com" 
+                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md outline-none"
+                                placeholder="Vaibhavmehrotra84@gmail.com"
                             />
                         </div>
                         <div>
                             <label className="block text-gray-700 text-[16px]">Phone number</label>
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 name="phoneNumber"
                                 value={formData.phoneNumber}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md outline-none" 
-                                placeholder="987846447874" 
+                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md outline-none"
+                                placeholder="987846447874"
                             />
                         </div>
-                        <div>
-                            <label className="block text-gray-700 text-[16px]">My Store *</label>
-                            <select 
-                                name="store"
-                                value={formData.store}
-                                onChange={handleChange}
-                                className="text-black w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md"
-                            >
-                                <option value="">Select Location</option>
-                                <option value="store1">Store 1</option>
-                                <option value="store2">Store 2</option>
-                                <option value="store3">Store 3</option>
-                            </select>
-                        </div>
+
                         <div className="">
-                            <label className="block text-gray-700 text-[16px]">Message *</label>
-                            <textarea 
+                            <label className="block text-gray-700 text-[16px]">Message </label>
+                            <input
                                 name="message"
                                 value={formData.message}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md" 
+                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700 text-[16px]">My Query *</label>
+                            <textarea
+                                name="store"
+                                type="text"
                                 rows="4"
-                            ></textarea>
+                                value={formData.query}
+                                onChange={handleChange}
+                                className="text-black w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md"
+                            >
+                            </textarea>
+
+
                         </div>
                     </div>
                     <div className="text-center mt-6">
-                        <button type="submit" className="bg-gray-800 text-white py-2 px-6 rounded-md">Save</button>
+                        <button type="submit" className="bg-gray-800 text-white py-2 px-6 rounded-md">Send Query</button>
                     </div>
                 </form>
             </div>
