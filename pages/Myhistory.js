@@ -144,7 +144,7 @@ function Myhistory(props) {
                                 <div className={expandedHistoryId === booking._id ? "block mt-4" : "hidden"}>
                                     <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-white p-3 rounded-[10px] border border-gray-200">
                                         <div className="col-span-2 flex gap-5"
-                                            onClick={() => { router.push(`/myorder/${booking?._id}?product_id=${booking?.productDetail?._id}`) }}
+                                            // onClick={() => { router.push(`/myorder/${booking?._id}?product_id=${booking?.productDetail?._id}`) }}
                                         >
                                             <img
                                                 className="w-20 h-20 text-gray-600 rounded-[10px] object-contain border border-gray-200"

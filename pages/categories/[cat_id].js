@@ -189,8 +189,8 @@ function Categories(props) {
                             </div>
                         </div>
 
-                        <div className='col-span-4 md:mt-0 mt-5'>
-                            <div className="grid md:grid-cols-4 grid-cols-1 md:gap-0 gap-5 mx-10 md:mx-0 mb-6  space-x-2  justify-between">
+                        <div className='col-span-4 '>
+                            <div className="grid md:grid-cols-4 grid-cols-1 md:gap-0 gap-2 mx-6 md:mx-0 mb-6 space-x-2  justify-between">
                                 {productList.length > 0 ? (
                                     productList.map((item, i) => (
                                         <div key={i} className='p-2 w-full md:mb-5 mb-2'>

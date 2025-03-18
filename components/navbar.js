@@ -168,6 +168,7 @@ const Navbar = (props) => {
 
     const emptyCart = async () => {
         setCartData([]);
+        setDate([])
         localStorage.removeItem("addCartDetail");
     };
 
@@ -238,6 +239,21 @@ const Navbar = (props) => {
         );
     };
 
+    function formatDate(dateString) {
+
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return "Invalid date";
+        }
+    
+        const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const year = date.getFullYear();
+    
+        return `${day}/${month}/${year}`;
+    }
+    
+   
     return (
         <>
             <header className="flex  justify-between items-center p-4 bg-white shadow-md">
@@ -396,7 +412,7 @@ const Navbar = (props) => {
 
             {/* Cart Drawer */}
             <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
-                <div className={`md:w-[750px] w-[360px]  relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : "h-full"}`}>
+                <div className={`md:w-[750px] w-[360px]  relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : ""}`}>
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
                         <div
                             className="flex justify-start items-center gap-1 cursor-pointer"
@@ -503,7 +519,7 @@ const Navbar = (props) => {
                                     <div className="relative inline-block">
                                         <input
                                             type="text"
-                                            value={date ? date.toLocaleDateString() : ''}
+                                            value={formatDate(date)}
                                             placeholder="Select date"
                                             className="border rounded-full py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             readOnly
@@ -535,8 +551,8 @@ const Navbar = (props) => {
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
                         {cartData && cartData.length > 0 ? (
                             <div className="flex justify-start items-center gap-5">
-                                <div className="w-[45px] h-[35px] rounded-[8px] bg-custom-green flex justify-center items-center">
-                                    <GoClock className="text-white w-[30px] h-[24px]" />
+                                <div className="md:w-[45px] w-[35px] h-[30px] md:h-[35px] rounded-[8px] bg-custom-green flex justify-center items-center">
+                                    <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
                                 </div>
                                 <p className="text-black font-semibold text-[18px]">
                                     Delivery in 8 mins
@@ -564,26 +580,26 @@ const Navbar = (props) => {
                         {cartData?.map((item, i) => (
                             <div
                                 key={i}
-                                className="grid md:grid-cols-9 grid-cols-1 w-full md:gap-5 mt-5"
+                                className="grid md:grid-cols-9 grid-cols-1 w-full md:gap-5 gap-0 mt-5"
                             >
                                 <div className="flex justify-start items-start col-span-4 md:gap-0 gap-2">
                                     <img
-                                        className="md:w-[135px] md:h-[94px] w-[50px] h-[50px] object-contain"
+                                        className="md:w-[135px] md:h-[94px] w-[80px] h-[60px] object-contain"
                                         src={item?.selectedImage || item?.image}
                                         alt={item?.name}
                                     />
                                     <div className="pt-2 flex justify-start items-start">
-                                        <p className="text-custom-black font-semibold text-base pl-3">
+                                        <p className="text-custom-black md:w-[80%] w-[60%] font-semibold md:text-[16px] text-[13px] pl-3">
                                             {item?.name}
                                         </p>
-                                        <p className="text-gray-500 font-normal text-sm pt-2">
+                                        <p className="text-gray-500 w-full md:w-[100px] font-normal text-[11px] md:text-sm pt-4">
                                             <span className="pl-3">
                                                 {item?.qty * item?.value}
                                             </span>{" "}
                                             <span>{item?.price_slot && item?.price_slot[0]?.unit}</span>
                                         </p>
                                     </div>
-                                    <div className="flex md:justify-center justify-center md:items-center items-center col-span-3 md:mt-0 mt-2 md:hidden">
+                                    <div className="flex  justify-center items-center col-span-3 md:mt-0 mt-5 md:hidden">
                                         <p className="text-custom-black font-semibold text-base">
                                             ₹{item?.our_price}
                                             <del className="text-red-500 font-normal text-xs ml-2">
@@ -599,7 +615,7 @@ const Navbar = (props) => {
                                     </div>
                                 </div>
 
-                                <div className="flex md:justify-center justify-start md:items-center items-start col-span-3 md:mt-0 mt-5">
+                                <div className="flex justify-center items-center  col-span-3 md:mt-0 mt-5">
                                     <div className="bg-gray-100 w-[153px] h-[39px] rounded-[8px] flex justify-center items-center">
                                         <div
                                             className="h-[39px] w-[51px] bg-custom-green cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
@@ -607,9 +623,7 @@ const Navbar = (props) => {
                                                 if (item.qty > 1) {
                                                     const nextState = produce(cartData, (draft) => {
                                                         draft[i].qty -= 1;
-                                                        draft[i].total = (
-                                                            parseFloat(draft[i].price_slot && draft[i].price_slot[i]?.our_price) *
-                                                            draft[i].qty
+                                                        draft[i].total = (parseFloat(draft[i].our_price * draft[i].qty)
                                                         ).toFixed(2);
                                                     });
                                                     setCartData(nextState);
@@ -629,17 +643,17 @@ const Navbar = (props) => {
                                             className="h-[39px] w-[51px] bg-custom-green cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                                             onClick={() => {
                                                 const nextState = produce(cartData, (draft) => {
-                                                    draft[i].qty += 1;
-                                                    draft[i].total = (
-                                                        parseFloat(draft[i].price_slot && draft[i].price_slot[i]?.our_price) *
-                                                        draft[i].qty
-                                                    ).toFixed(2);
+                                                    if (draft[i]) {
+                                                        draft[i].qty += 1;
+                                                        const price = draft[i].our_price
+                                                        if (price) {
+                                                            draft[i].total = (parseFloat(price) * draft[i].qty).toFixed(2);
+                                                        }
+                                                    }
                                                 });
+                                            
                                                 setCartData(nextState);
-                                                localStorage.setItem(
-                                                    "addCartDetail",
-                                                    JSON.stringify(nextState)
-                                                );
+                                                localStorage.setItem("addCartDetail", JSON.stringify(nextState));
                                             }}
                                         >
                                             <IoAddSharp className="h-[30px] w-[30px] text-white" />

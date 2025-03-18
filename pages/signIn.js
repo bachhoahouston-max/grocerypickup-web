@@ -63,7 +63,7 @@ const SignIn = (props) => {
                             <img src="/image-10.png" alt="Sign In" className="w-[590px] h-[566px]" />
                         </div>
                         <form onSubmit={submit} className="border-[2px] mx-4 rounded-xl border-black md:px-12 px-3 flex flex-col justify-center items-center md:mb-8 mb-20">
-                            <h3 className="text-black md:text-[40px] text-[28px] font-bold text-center md:mb-8 mb-4 mt-4">Sign In</h3>
+                            <h3 className="text-black md:text-[40px] text-[28px] font-bold text-center md:mb-8 mb-4 mt-4">Sign in</h3>
                             
                             <div className="relative flex items-center w-full md:mb-14 mb-8">
                                 <label className="text-gray-800 text-[16px] md:text-[20px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px]">Email</label>

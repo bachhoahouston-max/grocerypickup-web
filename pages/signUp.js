@@ -74,7 +74,7 @@ const SignUp = (props) => {
             className="md:h-[756px] h-[550px] border-[2px] rounded-xl border-black px-2.5 md:px-12 flex flex-col justify-center items-center md:m-0 m-4 py-4 md:py-0"
             onSubmit={submitSignUp}
           >
-            <h3 className="text-black text-[28px] md:text-[40px] font-bold text-center md:mb-12 mb-8">Sign Up</h3>
+            <h3 className="text-black text-[28px] md:text-[40px] font-bold text-center md:mb-12 mb-8">Sign up</h3>
 
             <div className="relative flex items-center w-full mb-8 md:mb-10">
               <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[16px] md:text-[20px]">Name</label>
@@ -140,7 +140,7 @@ const SignUp = (props) => {
                 type="submit" 
                 className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-black text-[16px] md:text-[20px] bg-custom-green focus:outline-none"
               >
-                Sign Up
+                Sign up
               </button>
             </div>
 
@@ -150,7 +150,7 @@ const SignUp = (props) => {
                 className="text-custom-green text-[14px] font-semibold hover:underline ml-1 whitespace-nowrap cursor-pointer"
                 onClick={() => router.push('/signIn')}
               > 
-                Sign In
+                Sign in
               </span>
             </p>
           </form>

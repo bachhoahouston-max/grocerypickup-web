@@ -192,7 +192,7 @@ export default function Home(props) {
               </div>
 
               {/* Product Grid */}
-              <div className="w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-1 gap-4 mx-auto md:mx-4 md:space-x-2 md:px-0 px-12 ">
+              <div className="w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-1 gap-4 mx-auto md:mx-4 md:space-x-2 md:px-0 px-6 ">
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData.map((item, i) => (

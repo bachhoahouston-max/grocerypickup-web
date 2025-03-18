@@ -346,8 +346,6 @@ function ProductDetails(props) {
                       : 0;
 
                     if (!c) {
-
-
                       const nextState = produce(cartData, (draft) => {
                         draft.push({
                           ...productsId,
