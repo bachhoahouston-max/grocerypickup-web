@@ -68,7 +68,7 @@ const FeedbackForm = (props) => {
                                 name="fullName"
                                 value={formData.fullName}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border bg-[#F9F9F9] outline-none rounded-md"
+                                className="w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] outline-none rounded-md"
                                 placeholder="Vaibhav"
                             />
                         </div>
@@ -79,7 +79,7 @@ const FeedbackForm = (props) => {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md outline-none"
+                                className="w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] rounded-md outline-none"
                                 placeholder="Vaibhavmehrotra84@gmail.com"
                             />
                         </div>
@@ -90,7 +90,7 @@ const FeedbackForm = (props) => {
                                 name="phoneNumber"
                                 value={formData.phoneNumber}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md outline-none"
+                                className="w-full mt-2 p-2 text-gray-700 border bg-[#F9F9F9] rounded-md outline-none"
                                 placeholder="987846447874"
                             />
                         </div>
@@ -101,18 +101,18 @@ const FeedbackForm = (props) => {
                                 name="message"
                                 value={formData.message}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md"
+                                className="w-full mt-2 p-2 border text-gray-700 bg-[#F9F9F9] rounded-md"
                             />
                         </div>
                         <div>
                             <label className="block text-gray-700 text-[16px]">My Query *</label>
                             <textarea
-                                name="store"
+                                name="query"
                                 type="text"
                                 rows="4"
                                 value={formData.query}
                                 onChange={handleChange}
-                                className="text-black w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md"
+                                className="text-gray-700  w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md"
                             >
                             </textarea>
 
