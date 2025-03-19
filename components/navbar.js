@@ -12,7 +12,7 @@ import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
 import { GoClock } from "react-icons/go";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { produce } from "immer";
-import { cartContext, openCartContext, userContext,favoriteProductContext } from "@/pages/_app";
+import { cartContext, openCartContext, userContext, favoriteProductContext } from "@/pages/_app";
 import { Api } from "@/services/service";
 import Swal from "sweetalert2";
 import { IoIosArrowForward } from "react-icons/io";
@@ -62,14 +62,23 @@ const Navbar = (props) => {
         setIsOpen(false);
     };
 
-    const [shippingAddressData, setShippingAddressData] = useState({
-        firstName: "",
+
+    const [localAddress, setLocalAddress] = useState({
+        dateOfDelivery: "",
         address: "",
-        pinCode: "",
+        name: "",
         phoneNumber: "",
-        city: "",
-        country: "",
     });
+
+    const handleDateChange1 = (date) => {
+        setLocalAddress({ ...localAddress, dateOfDelivery: date });
+        setIsOpen(false);
+    };
+
+    const handleInputChange1 = (e) => {
+        const { name, value } = e.target;
+        setLocalAddress({ ...localAddress, [name]: value });
+    };
 
     const timeoutRef = useRef(null);
 
@@ -189,7 +198,7 @@ const Navbar = (props) => {
     };
 
     const createProductRquest = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
 
         let data = [];
         let cart = localStorage.getItem("addCartDetail");
@@ -208,7 +217,7 @@ const Navbar = (props) => {
             });
         });
 
-
+        const isLocalDelivery = pickupOption === 'localDelivery';
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
         const dateOfDelivery = isDriveUp && date ? date : null;
@@ -216,10 +225,11 @@ const Navbar = (props) => {
         let newData = {
             productDetail: data,
             total: CartTotal.toFixed(2),
-            shipping_address: shippingAddressData,
+            Local_address: localAddress,
             dateOfDelivery: dateOfDelivery,
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
+            isLocalDelivery:isLocalDelivery
         };
 
         props.loader && props.loader(true);
@@ -229,10 +239,20 @@ const Navbar = (props) => {
                 if (res.status) {
                     setCartData([]);
                     setCartTotal(0);
-                    setShowcart(false);
+                    // setShowcart(false);
+                    setOpenCart(false);
                     setDate('')
                     localStorage.removeItem("addCartDetail");
-                    props.toaster && props.toaster({ type: "success", message: res.data?.message });
+                    
+                    const data = res.data.orders
+                    const isOrderPickup = data.map((data)=>data.isOrderPickup === true)
+
+                    if(isOrderPickup){
+                        props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });
+                    }else{
+                        props.toaster && props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly"});
+                    }
+                   
                     router.push("/Mybooking");
                 } else {
                     props.toaster && props.toaster({ type: "error", message: res?.data?.message });
@@ -263,7 +283,7 @@ const Navbar = (props) => {
         Api("get", "getFavourite", "", router).then(
             (res) => {
                 setProductsId(res.data);
-                console.log("fgh",res.data)
+                console.log("fgh", res.data)
             },
             (err) => {
                 console.log(err);
@@ -415,11 +435,11 @@ const Navbar = (props) => {
                             setMobileMenu(!mobileMenu);
                         }}
                     >
-                        
+
                         <FiLock className="relative md:text-3xl text-black text-lg cursor-pointer" />
                         {cartData.length > 0 && (
                             <div className="absolute bg-red-500 text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11 md:right-13 right-11 md:text-[9px] text-[7px] ">
-                                {cartData.length} 
+                                {cartData.length}
                             </div>
                         )}
                     </div>
@@ -431,7 +451,7 @@ const Navbar = (props) => {
                         <CiHeart className="relative text-black text-2xl md:text-3xl  cursor-pointer" />
                         {Favorite.length > 0 && (
                             <div className="absolute bg-red-500 text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11  md:text-[9px] text-[7px] right-4 ">
-                                {Favorite.length} 
+                                {Favorite.length}
                             </div>
                         )}
                     </div>
@@ -517,7 +537,7 @@ const Navbar = (props) => {
                                         <span className="text-gray-500 text-[13px] w-full">Pick it up inside the store</span>
                                     </label>
                                 </div>
-                                <div className="text-gray-500 text-[14px]">Free</div>
+
                                 <div className="flex items-center">
                                     <input
                                         type="radio"
@@ -534,7 +554,22 @@ const Navbar = (props) => {
                                         <span className="text-gray-500 text-[13px]">We bring it out to your car</span>
                                     </label>
                                 </div>
-                                <div className="text-gray-500 text-[14px]">Free</div>
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id="localDelivery"
+                                        name="pickupOption"
+                                        value="localDelivery"
+                                        className="form-radio h-5 w-5 text-green-600"
+                                        checked={pickupOption === 'localDelivery'}
+                                        onChange={handleOptionChange}
+                                    />
+                                    <label htmlFor="driveUp" className="ml-2">
+                                        <span className="font-semibold text-[15px]">Local Delivery</span>
+                                        <br />
+                                        <span className="text-gray-500 text-[13px]">We bring it to your Home</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -549,7 +584,7 @@ const Navbar = (props) => {
                                             type="text"
                                             value={formatDate(date)}
                                             placeholder="Select date"
-                                            className="border rounded-full py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             readOnly
                                             onClick={handleIconClick}
                                         />
@@ -570,6 +605,67 @@ const Navbar = (props) => {
                                             </div>
                                         )}
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {cartData.length > 0 && pickupOption === 'localDelivery' && (
+                        <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
+                            <div className="flex items-center justify-center">
+                                <div className="text-center">
+                                    <h1 className="text-lg font-semibold mb-4">Delivery Info</h1>
+                                    <div className="relative inline-block">
+                                        <input
+                                            type="text"
+                                            value={formatDate(localAddress.dateOfDelivery)}
+                                            placeholder="Select date"
+                                            className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            readOnly
+                                            onClick={handleIconClick}
+                                        />
+                                        <span
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
+                                            onClick={handleIconClick}
+                                        >
+                                            <FaRegCalendarAlt />
+                                        </span>
+                                        {isOpen && (
+                                            <div className="absolute z-10 mt-1">
+                                                <DatePicker
+                                                    selected={localAddress.dateOfDelivery}
+                                                    onChange={handleDateChange1}
+                                                    inline
+                                                    onClickOutside={() => setIsOpen(false)}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        placeholder="Name"
+                                        value={localAddress.name}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                   
+                                    <input
+                                        type="text"
+                                        name="phoneNumber"
+                                        placeholder="Phone Number"
+                                        value={localAddress.phoneNumber}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                     <input
+                                        type="text"
+                                        name="address"
+                                        placeholder="Address"
+                                        value={localAddress.address}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -617,10 +713,10 @@ const Navbar = (props) => {
                                         alt={item?.name}
                                     />
                                     <div className="pt-2 flex justify-start items-start">
-                                        <div className="flex justify-center items-center"> 
-                                        <p className=" text-custom-black md:w-[80%] w-[60%] font-semibold md:text-[16px] text-[13px] pl-3">
-                                            {item?.name}
-                                        </p>
+                                        <div className="flex justify-center items-center">
+                                            <p className=" text-custom-black md:w-[80%] w-[60%] font-semibold md:text-[16px] text-[13px] pl-3">
+                                                {item?.name}
+                                            </p>
                                         </div>
                                         <p className="text-gray-500 w-full md:w-[100px] font-normal text-[11px] md:text-sm md:pt-7 pt-4">
                                             <span className="pl-3">
@@ -760,8 +856,9 @@ const Navbar = (props) => {
                                     });
                                     return;
                                 } else {
-                                    setShowcart(true);
-                                    setOpenCart(false);
+                                    createProductRquest();
+                                    // setShowcart(true);
+                                    // setOpenCart(false);
                                 }
                             }}
                         >

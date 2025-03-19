@@ -104,7 +104,9 @@ const HeaderFirst = (props) => {
                 </div>
                 <div className="hidden lg:flex items-center space-x-2 mr-8">
                     <BiPhoneCall className="text-[#FEC200] text-3xl" />
-                    <span className="text-custom-black font-semibold">+(402) 54646</span>
+                    <a href="tel:6393274099" className="text-custom-black cursor-pointer font-semibold">+(402) 54646</a>
+
+                   
                 </div>
             </div>
         </nav>

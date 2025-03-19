@@ -156,7 +156,7 @@ const forgotPassword = (props) => {
                                         <button 
                                             type="button" 
                                             onClick={sendOtp}
-                                            className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[20px] bg-custom-green focus:outline-none md:mb-16 mb-8">
+                                            className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-black text-[20px] bg-custom-green focus:outline-none md:mb-16 mb-8">
                                             Send OTP
                                         </button>
                                     </div>
@@ -180,7 +180,7 @@ const forgotPassword = (props) => {
                                         <button 
                                             type="button" 
                                             onClick={verifyOtp}
-                                            className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[20px] bg-custom-green focus:outline-none mb-16">
+                                            className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-black text-[20px] bg-custom-green focus:outline-none mb-16">
                                             Verify
                                         </button>
                                     </div>
@@ -223,7 +223,7 @@ const forgotPassword = (props) => {
                                         <button 
                                             type="button" 
                                             onClick={Submit}
-                                            className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[20px] bg-custom-green focus:outline-none mb-16">
+                                            className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-black text-[20px] bg-custom-green focus:outline-none mb-16">
                                             Submit
                                         </button>
                                     </div>
