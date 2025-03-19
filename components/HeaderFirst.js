@@ -9,6 +9,7 @@ const HeaderFirst = (props) => {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState('home');
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [category, setCategory] = useState([]);
     const dropdownRef = useRef(null);
 
     // Close dropdown when clicking outside
@@ -26,7 +27,7 @@ const HeaderFirst = (props) => {
         };
     }, []);
 
-    const [category, setCategory] = useState([]);
+    
     const CategoryData = () => {
         props.loader(true);
 
@@ -61,12 +62,13 @@ const HeaderFirst = (props) => {
                             onClick={() => { router.push('/AllCategory'); setSelectedTab('AllCategory'); }}
                         >
                             Categories
-                            <IoIosArrowDown className="text-2xl ml-1 text-black" 
+                            
+                        </button>
+                        <IoIosArrowDown className="text-2xl cursor-pointer ml-1 text-black" 
                              onClick={() => {
                                 setDropdownOpen(prev => !prev); // Toggle 
                             }}
                             />
-                        </button>
                         {dropdownOpen && (
                             <div className="absolute top-full left-0 mt-4 bg-custom-gold shadow-lg rounded-xl w-[241px] overflow-hidden z-20 pt-3 pb-4">
                                 {category.slice(0, 6).map((category, index) => (

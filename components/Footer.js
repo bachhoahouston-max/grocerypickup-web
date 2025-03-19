@@ -7,6 +7,7 @@ import { FaYoutube } from "react-icons/fa";
 import { IoCall } from "react-icons/io5";
 import { MdOutlineMail } from "react-icons/md";
 import { useRouter } from 'next/router';
+
 const Footer = () => {
   const router = useRouter();
   return (<>

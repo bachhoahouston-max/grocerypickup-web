@@ -2,19 +2,20 @@ import React, { useContext, useState, useEffect } from 'react';
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
 import { useRouter } from "next/router";
-import { userContext, cartContext, openCartContext } from "@/pages/_app";
+import { userContext, cartContext, openCartContext, favoriteProductContext } from "@/pages/_app";
 import { produce } from "immer";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { Api } from '@/services/service';
 
-const GroceryCatories = ({ item, i, url },props) => {
+const GroceryCatories = ({ item, i, url, toaster, loader }) => {
     const router = useRouter();
     const [cartData, setCartData] = useContext(cartContext);
     const [openCart, setOpenCart] = useContext(openCartContext);
     const [productsId, setProductsId] = useState([]);
-    const [user, setUser ] = useContext(userContext);
+    const [user] = useContext(userContext);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [Favorite, setFavorite] = useContext(favoriteProductContext);
 
     const handleAddToCart = (item) => {
         let updatedCart = [...cartData];
@@ -57,12 +58,16 @@ const GroceryCatories = ({ item, i, url },props) => {
     }, [productsId, item._id]);
 
     const getProductById = async () => {
+        // loader(true);
         Api("get", "getFavourite", "", router).then(
             (res) => {
+                // loader(false);
                 setProductsId(res.data);
             },
             (err) => {
+                // loader(false);
                 console.log(err);
+                // toaster({ type: "error", message: err?.message });
             }
         );
     };
@@ -74,16 +79,25 @@ const GroceryCatories = ({ item, i, url },props) => {
         let data = {
             product: item?._id,
         };
-
+        // loader(true);
         Api("post", "addremovefavourite", data, router).then(
             (res) => {
-                
+                // loader(false);
                 if (res.status) {
-                    getProductById();
+                    if (isFavorite) {
+                        setFavorite((prevFavorites) => 
+                            prevFavorites.filter(fav => fav._id !== item._id)
+                        );
+                    } else {
+                        setFavorite((prevFavorites) => [...prevFavorites, item]);
+                    }
+                    getProductById(); // Refresh the favorite products
                 }
             },
             (err) => {
+                // loader(false);
                 console.log(err);
+                // toaster({ type: "error", message: err?.message });
             }
         );
     };

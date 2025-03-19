@@ -196,7 +196,13 @@ export default function Home(props) {
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData.map((item, i) => (
-                      <GroceryCatories key={i} item={item} i={i} url={`/product-details/${item?.slug}`} />
+                      <GroceryCatories 
+                      {...props}
+                      key={i} 
+                      item={item}
+                      i={i} 
+                      url={`/product-details/${item?.slug}`} 
+                      />
                     ))
                   ) : (
                     <div className="text-center text-gray-500 ">No products available in this category.</div>

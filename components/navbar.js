@@ -12,7 +12,7 @@ import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
 import { GoClock } from "react-icons/go";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { produce } from "immer";
-import { cartContext, openCartContext, userContext } from "@/pages/_app";
+import { cartContext, openCartContext, userContext,favoriteProductContext } from "@/pages/_app";
 import { Api } from "@/services/service";
 import Swal from "sweetalert2";
 import { IoIosArrowForward } from "react-icons/io";
@@ -37,6 +37,7 @@ const Navbar = (props) => {
     const [CartItem, setCartItem] = useState(0);
     const [cartData, setCartData] = useContext(cartContext);
     const [showcart, setShowcart] = useState(false);
+    const [Favorite, setFavorite] = useContext(favoriteProductContext);
     const [deliveryCharge, setDeliveryCharge] = useState(0);
     const [deliveryPartnerTip, setDeliveryPartnerTip] = useState(0);
     const [mainTotal, setMainTotal] = useState(0);
@@ -428,9 +429,9 @@ const Navbar = (props) => {
                         onClick={() => router.push("/Favourite")}
                     >
                         <CiHeart className="relative text-black text-2xl md:text-3xl  cursor-pointer" />
-                        {productsId.length > 0 && (
+                        {Favorite.length > 0 && (
                             <div className="absolute bg-red-500 text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11  md:text-[9px] text-[7px] right-4 ">
-                                {productsId.length} 
+                                {Favorite.length} 
                             </div>
                         )}
                     </div>

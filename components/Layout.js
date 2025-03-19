@@ -7,6 +7,7 @@ import { useEffect, useState, useContext, useCallback } from "react"
 import { IoList } from "react-icons/io5";
 import { userContext } from "@/pages/_app.js"
 import MobileFooter from "./MobileFooter.js"
+import GroceryCatories from "./GroceryCatories.js"
 
 const Layout = ({ children, loader, toaster, constant }) => {
   const [user, setUser] = useContext(userContext);
@@ -68,7 +69,7 @@ const Layout = ({ children, loader, toaster, constant }) => {
     });
     loader(false);
   }, []);
-  //console.log(router.pathname === '/demo')
+  
 
   const handleClose = () => {
     setOpen(false);
@@ -81,20 +82,20 @@ const Layout = ({ children, loader, toaster, constant }) => {
 
   const onScroll = useCallback(event => {
     const { pageYOffset, scrollY, screen } = window;
-    // console.log("yOffset", pageYOffset, "scrollY", scrollY, screen.availHeight);
+  
     let per = (61 * 70)
     if (scrollY > 100) {
       setOpens(false)
     } else {
       setOpens(true)
     }
-    // setScrollY(window.pageYOffset);
+
   }, []);
 
   useEffect(() => {
     //add eventlistener to window
     window.addEventListener("scroll", onScroll, { passive: true });
-    // remove event on unmount to prevent a memory leak with the cleanup
+ 
     return () => {
       window.removeEventListener("scroll", onScroll, { passive: true });
     }
@@ -102,10 +103,10 @@ const Layout = ({ children, loader, toaster, constant }) => {
 
   return (
     <>
-      {!mobile && router.route.includes('myProfile') && <div className="md:h-screen flex sm:flex-1 flex-col" onScroll={(event) => {
+      {!mobile && router.route.includes('editProfile') && <div className="md:h-screen flex sm:flex-1 flex-col" onScroll={(event) => {
         console.log(event)
       }}>
-        {router.route !== "/" && router.route !== "/signup" && (
+        {router.route !== "/" && router.route !== "/signUp" && (
           <header className={`bg-black fixed top-0 w-full h-16 flex  font-semibold uppercase shadow-lg z-30 ${toggleDrawer ? "ml-60" : "ml-0"}`}>
             <div className="flex justify-center items-center  ">
               {mobile && (
@@ -195,7 +196,7 @@ const Layout = ({ children, loader, toaster, constant }) => {
           <main
             className={
               router.route !== "/" &&
-                router.route !== "/signup" &&
+                router.route !== "/signUp" &&
                 toggleDrawer &&
                 user?.id !== "6450e9bef4d2cc08c2ec0431"
                 ? " md:pl-60 md:w-full  md:pt-16"
@@ -207,7 +208,7 @@ const Layout = ({ children, loader, toaster, constant }) => {
         </div>
       </div>}
       {/* || !router.route.includes('myProfile')  */}
-      {(mobile || !router.route.includes('myProfile')) && <div>
+      {(mobile || !router.route.includes('editProfile')) && <div>
         <div className=" flex-1 flex-col bg-white relative">
           <div className="!z-50 fixed w-full top-0 bg-white">
             {
@@ -225,7 +226,6 @@ const Layout = ({ children, loader, toaster, constant }) => {
             }
           </div>
           <div className="z-0 md:pt-[145px] pt-[67px] max-w-screen overflow-x-hidden" >
-            {/* md:min-h-screen  */}
             <main className={"flex-1"}>{children}</main>
           </div>
         </div>
