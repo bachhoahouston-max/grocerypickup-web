@@ -102,7 +102,7 @@ export default function MyOrder(props) {
                             </div>
                         </div>
 
-                        <div className='w-full mt-8
+                        {/* <div className='w-full mt-8
                         '>
                             <p className='text-black font-bold text-2xl md:mb-0 mb-2 md:mt-0 mt-5'>{("Shipping Address")}</p>
                             <div className='grid grid-cols-2 w-full  justify-center items-center'>
@@ -119,7 +119,7 @@ export default function MyOrder(props) {
                                 <p className='text-black text-base font-normal md:pt-5 pt-3'>{("Country")}</p>
                                 <p className='text-black text-base font-normal md:pt-5 pt-3'>{userAddress?.country}</p>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </section>
             </div>

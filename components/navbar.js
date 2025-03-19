@@ -43,7 +43,7 @@ const Navbar = (props) => {
     const [mainTotal, setMainTotal] = useState(0);
     const [productList, SetProductList] = useState([]);
     const [productsId, setProductsId] = useState([]);
-    const [pickupOption, setPickupOption] = useState('orderPickup');
+    const [pickupOption, setPickupOption] = useState("orderPickup");
 
     const handleOptionChange = (event) => {
         setPickupOption(event.target.value);
@@ -184,6 +184,8 @@ const Navbar = (props) => {
     const emptyCart = async () => {
         setCartData([]);
         setDate([])
+        setLocalAddress([])
+        setPickupOption("orderPickup")
         localStorage.removeItem("addCartDetail");
     };
 
@@ -229,7 +231,7 @@ const Navbar = (props) => {
             dateOfDelivery: dateOfDelivery,
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
-            isLocalDelivery:isLocalDelivery
+            isLocalDelivery: isLocalDelivery
         };
 
         props.loader && props.loader(true);
@@ -238,21 +240,22 @@ const Navbar = (props) => {
                 props.loader && props.loader(false);
                 if (res.status) {
                     setCartData([]);
+                    setLocalAddress([])
                     setCartTotal(0);
                     // setShowcart(false);
                     setOpenCart(false);
                     setDate('')
                     localStorage.removeItem("addCartDetail");
-                    
-                    const data = res.data.orders
-                    const isOrderPickup = data.map((data)=>data.isOrderPickup === true)
 
-                    if(isOrderPickup){
+                    const data = res.data.orders
+                    const isOrderPickup = data.map((data) => data.isOrderPickup === true)
+
+                    if (isOrderPickup) {
                         props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });
-                    }else{
-                        props.toaster && props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly"});
+                    } else {
+                        props.toaster && props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly" });
                     }
-                   
+
                     router.push("/Mybooking");
                 } else {
                     props.toaster && props.toaster({ type: "error", message: res?.data?.message });
@@ -564,7 +567,7 @@ const Navbar = (props) => {
                                         checked={pickupOption === 'localDelivery'}
                                         onChange={handleOptionChange}
                                     />
-                                    <label htmlFor="driveUp" className="ml-2">
+                                    <label htmlFor="localDelivery" className="ml-2">
                                         <span className="font-semibold text-[15px]">Local Delivery</span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">We bring it to your Home</span>
@@ -582,7 +585,7 @@ const Navbar = (props) => {
                                     <div className="relative inline-block">
                                         <input
                                             type="text"
-                                            value={formatDate(date)}
+                                            value={formatDate(date) || "Select date"}
                                             placeholder="Select date"
                                             className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             readOnly
@@ -600,6 +603,7 @@ const Navbar = (props) => {
                                                     selected={date}
                                                     onChange={handleDateChange}
                                                     inline
+                                                    minDate={new Date()} 
                                                     onClickOutside={() => setIsOpen(false)}
                                                 />
                                             </div>
@@ -618,7 +622,7 @@ const Navbar = (props) => {
                                     <div className="relative inline-block">
                                         <input
                                             type="text"
-                                            value={formatDate(localAddress.dateOfDelivery)}
+                                            value={formatDate(localAddress.dateOfDelivery) || "Select date"}
                                             placeholder="Select date"
                                             className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             readOnly
@@ -637,6 +641,7 @@ const Navbar = (props) => {
                                                     onChange={handleDateChange1}
                                                     inline
                                                     onClickOutside={() => setIsOpen(false)}
+                                                    minDate={new Date()} // This will disable all dates before today
                                                 />
                                             </div>
                                         )}
@@ -649,7 +654,7 @@ const Navbar = (props) => {
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                   
+
                                     <input
                                         type="text"
                                         name="phoneNumber"
@@ -658,7 +663,7 @@ const Navbar = (props) => {
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                     <input
+                                    <input
                                         type="text"
                                         name="address"
                                         placeholder="Address"
@@ -714,7 +719,7 @@ const Navbar = (props) => {
                                     />
                                     <div className="pt-2 flex justify-start items-start">
                                         <div className="flex justify-center items-center">
-                                            <p className=" text-custom-black md:w-[80%] w-[60%] font-semibold md:text-[16px] text-[13px] pl-3">
+                                            <p className=" text-custom-black md:w-[80%] w-[60%] font-semibold md:text-[16px] text-[13px] ">
                                                 {item?.name}
                                             </p>
                                         </div>

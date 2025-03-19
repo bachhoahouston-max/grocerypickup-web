@@ -54,7 +54,9 @@ const Footer = () => {
               <p className="pb-2"><a className=" cursor-pointer text-[16px] md:text-[19px]" 
               onClick={() => router.push('/AboutUs')}
               >About Us</a></p>
-              
+               <p className="pb-2"><a className=" cursor-pointer text-[16px] md:text-[19px]" 
+              onClick={() => router.push('/ContactUs')}
+              >Contact</a></p>
             </ul>
           </div>
 

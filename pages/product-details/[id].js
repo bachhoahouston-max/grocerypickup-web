@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useRouter } from "next/router";
-import { cartContext, openCartContext, userContext } from "../_app";
+import { cartContext, openCartContext, userContext,favoriteProductContext } from "../_app";
 import { Api } from "@/services/service";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -29,6 +29,8 @@ function ProductDetails(props) {
   const [priceSlot, setPriceSlote] = useState([]);
   const [priceIndex, setPriceIndex] = useState(0);
   const [selectedPrice, setSelectedPrice] = useState({});
+  const [Favorite, setFavorite] = useContext(favoriteProductContext);
+  const [isFavorite, setIsFavorite] = useState(false);
   console.log(selectedPrice)
 
   useEffect(() => {
@@ -139,15 +141,23 @@ function ProductDetails(props) {
     console.log(data);
     props.loader(true);
     Api("post", "addremovefavourite", data, router).then(
-      (res) => {
+      (res) => {  
         props.loader(false);
         console.log("res================>", res);
         if (res.status) {
-          props.toaster({ type: "success", message: res.data?.message });
-          getProductById();
-        } else {
-          props.toaster({ type: "error", message: res?.data?.message });
-        }
+          if (isFavorite) {
+             props.toaster({ type: "success", message: res.data?.message });
+              setFavorite((prevFavorites) => 
+                  prevFavorites.filter(fav => fav._id !== productsId._id)
+              );
+          } else {
+              setFavorite((prevFavorites) => [...prevFavorites, productsId]);
+          } 
+          getProductById(); // Refresh the favorite products
+      }
+      else{
+        props.toaster({ type: "error", message: res.data?.message });
+      }
       },
       (err) => {
         props.loader(false);
