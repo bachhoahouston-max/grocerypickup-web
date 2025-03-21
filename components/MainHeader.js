@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { useRouter } from "next/router";
 
 function MainHeader(props) {
-  
+  const router = useRouter();
   
   return (
     <div className="bg-[url('/image88.png')] bg-cover bg-no-repeat md:h-[580px] md:p-0 ">
@@ -18,7 +19,9 @@ function MainHeader(props) {
         <p className="text-[#6B6B6B] text-center md:text-start font-medium text-[13px] md:text-[15px] mt-4 italic md:mt-12 max-w-md w-[90%]">
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
         </p>
-        <button className="flex justify-center md:justify-start bg-[#FEC200] text-white px-6 py-3 rounded-lg text-[13px] md:text-[15px] mt-6 md:mt-12 items-center">
+        <button className="flex justify-center md:justify-start bg-[#FEC200] text-white px-6 py-3 rounded-lg text-[13px] md:text-[15px] mt-6 md:mt-12 items-center"
+        onClick={()=>router.push("/categories/all")}
+        >
             Shop Now
             <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
         </button>

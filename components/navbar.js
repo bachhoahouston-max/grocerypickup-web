@@ -486,7 +486,7 @@ const Navbar = (props) => {
                         </div>
                         {cartData.length > 0 && (
                             <button
-                                className="text-white font-medium text-[16px] bg-black rounded-[12px] px-4 py-3"
+                                className="text-black font-bold cursor-pointer text-[18px] rounded-[12px] px-4 py-3"
                                 onClick={() => {
                                     const drawerElement = document.querySelector('.MuiDrawer-paper');
                                     Swal.fire({
@@ -715,7 +715,7 @@ const Navbar = (props) => {
                                     className=" text-custom-green border-2 border-custom-green text-[20px] font-medium rounded-[18px] md:w-[180px] w-full mt-2 py-2 px-1"
                                     onClick={() => {
                                         setOpenCart(false);
-                                        router.push("/");
+                                        router.push("/categories/all")
                                     }}
                                 >
                                     Browse Products

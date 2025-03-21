@@ -45,7 +45,7 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
 
         setCartData(updatedCart);
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-        setOpenCart(true);
+        // setOpenCart(true);
     };
 
     useEffect(() => {

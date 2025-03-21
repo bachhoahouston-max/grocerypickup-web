@@ -19,10 +19,11 @@ const Footer = () => {
           <div className="w-full mb-6 md:mb-0">
             <img
               alt="Tropicano logo"
-              className="mb-4"
+              className="mb-4 cursor-pointer"
               height="50"
               src="/logo.png"
               width="150"
+              onClick={() => router.push('/')}
             />
             <p className="text-[16px] md:text-[19px] text-black">Your digital partner for personal and professional growth</p>
             <div className="flex space-x-4 mt-4">

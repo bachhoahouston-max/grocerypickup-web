@@ -33,7 +33,7 @@ const Category = (props) => {
         <h2 className="md:text-3xl text-xl font-semibold text-gray-800 mb-8">All Categories</h2>
         <div className="mb-8 grid md:grid-cols-4 grid-cols-2">
           {category.map((cat, index) => (
-            <div key={index} className="rounded-lg h-full flex flex-col justify-center cursor-pointer items-center"
+            <div key={index} className="rounded-lg h-full flex flex-col  cursor-pointer "
             onClick={() => { router.push(`/categories/${cat?.slug}`) }}
             >
               <div className='bg-custom-green p-4 rounded-[12px] h-36 md:h-[207px] md:w-[241px] w-[145px]'>

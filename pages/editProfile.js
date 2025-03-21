@@ -41,7 +41,7 @@ const EditProfile = (props) => {
         Api("get", "getProfile", null).then(
             (res) => {
                 props.loader(false);
-                console.log("=>----",res.data)
+                console.log("=>----",res.data);
                 if (res?.status) {
                     setProfileData({
                         username: res.data.username || '',
@@ -255,13 +255,23 @@ const EditProfile = (props) => {
                 </p>
             </div>
             <div className="md:m-0 m-5 mt-5 bg-white rounded-lg border-2 border-gray-200 shadow-lg">
-                <img src="/Rectangle123.png" className="w-full h-full" alt="Profile banner" />
-                <div className="p-6 flex items-center">
-                    <img
-                        alt="Profile picture of a person"
-                        className="w-16 h-16 rounded-full mr-4"
-                        src={user?.profileImage || "./avtar.jpg"}
+                <div className="w-full relative h-48">
+                    <img 
+                        src="/Rectangle123.png" 
+                        alt="Profile banner"
+                        layout="fill"
+                        objectFit="cover"
                     />
+                </div>
+                <div className="p-6 flex items-center">
+                    <div className="w-16 h-16 relative rounded-full overflow-hidden mr-4">
+                        <img
+                            alt="Profile picture of a person"
+                            src={user?.profileImage || "/avtar.jpg"}
+                            layout="fill"
+                            objectFit="cover"
+                        />
+                    </div>
                     <div>
                         <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User Name"}</h2>
                         <p className="text-gray-600">{user?.email || profileData.email || "user@example.com"}</p>

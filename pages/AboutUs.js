@@ -1,8 +1,9 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
-
+import { useRouter } from 'next/router';
 const AboutUs = () => {
+    const router =useRouter();
     const teamMembers = [
         { name: 'John Peter', role: 'COO', imgSrc: '/Bill.png' },
         { name: 'John Peter', role: 'COO', imgSrc: '/Beverly.png' },
@@ -32,7 +33,9 @@ const AboutUs = () => {
         Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
     </p>
     <div className="flex justify-center md:justify-start mt-6">
-        <p className="bg-[#FEC200] text-white px-6 py-3 rounded-lg text-[15px] inline-flex items-center">
+        <p className="bg-[#FEC200] cursor-pointer text-white px-6 py-3 rounded-lg text-[15px] inline-flex items-center"
+        onClick={()=>router.push("/categories/all")}
+        >
             Shop Now
             <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
         </p>
