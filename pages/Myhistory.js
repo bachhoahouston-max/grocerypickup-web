@@ -46,11 +46,6 @@ function Myhistory(props) {
         setExpandedHistoryId(expandedHistoryId === id ? null : id);
     };
 
-    const openReviewModal = (id) => {
-        setProductId(id);
-        setShowReviews(true);
-    };
-
     const createProductRquest = (e) => {
         e.preventDefault();
         if (reviewsData?.reviews === 0) {
@@ -60,6 +55,7 @@ function Myhistory(props) {
 
         let data = {
             description: reviewsData?.description,
+            product: productId,
             rating: reviewsData?.reviews,
         };
 
@@ -101,7 +97,7 @@ function Myhistory(props) {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         return new Date(date).toLocaleDateString('en-US', options);
     }
-    const sr = 1;
+  
 
     return (
         <>
@@ -121,13 +117,13 @@ function Myhistory(props) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-6 md:mx-auto md:gap-12 gap-8 max-w-6xl">
                     {bookingsData && bookingsData.length > 0 ? (
-                        bookingsData.map((booking) => (
-                            <div key={booking._id} className="bg-white p-4 rounded-md border-2 border-[#999999] h-auto self-start">
+                        bookingsData.map((booking,key) => (
+                            <div key={key} className="bg-white p-4 rounded-md border-2 border-[#999999] h-auto self-start">
                                 <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleBooking(booking._id)}>
                                     <div className="flex flex-col justify-start w-full">
                                         <div className="flex flex-row justify-between items-center mb-4">
                                             <div className="bg-custom-green text-white rounded-full h-[50px] w-[50px] flex items-center justify-center mr-3 text-[24px]">
-                                                {sr}
+                                            {key+1}
                                             </div>
                                             <div className="flex items-center">
                                                 {expandedHistoryId === booking._id ? (
@@ -148,7 +144,7 @@ function Myhistory(props) {
                                         >
                                             <img
                                                 className="w-20 h-20 text-gray-600 rounded-[10px] object-contain border border-gray-200"
-                                                src={booking?.productDetail?.image?.[0] || "/api/placeholder/100/100"}
+                                                src={booking?.productDetail[0]?.image?.[0] || "/api/placeholder/100/100"}
                                                 alt="Product"
                                             />
                                             <div>
@@ -174,7 +170,8 @@ function Myhistory(props) {
                                         className="mt-4 bg-custom-gold text-white px-4 py-2 rounded-md mr-4 text-sm"
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            openReviewModal(booking.productDetail?._id);
+                                            setProductId(booking.productDetail[0]?.product)
+                                            setShowReviews(true);
                                         }}
                                     >
                                         Review

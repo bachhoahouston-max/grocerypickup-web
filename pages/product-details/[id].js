@@ -13,10 +13,14 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa6";
 import { SlArrowRight } from "react-icons/sl";
+import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
+import StarIcon from '@mui/icons-material/Star';
+import moment from 'moment';
 
 function ProductDetails(props) {
   const router = useRouter();
-  console.log(router);
+  // console.log(router);
   const [user, setUser] = useContext(userContext);
   const [productsId, setProductsId] = useState({});
   const [selectedColor, setSelectedColor] = useState("");
@@ -31,11 +35,13 @@ function ProductDetails(props) {
   const [selectedPrice, setSelectedPrice] = useState({});
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
   const [isFavorite, setIsFavorite] = useState(false);
-  console.log(selectedPrice)
+  const [reviews, setReviews] = useState('product');
+  // console.log(selectedPrice)
 
   useEffect(() => {
     if (router?.query?.id) {
       getProductById();
+      // getReview()
     }
   }, [router?.query?.id]);
 
@@ -75,12 +81,7 @@ function ProductDetails(props) {
         console.log("res================>", res);
         res.data.qty = 1;
         res.data.total = (res.data?.our_price * res.data.qty).toFixed(2);
-
-
         setProductsId(res.data);
-
-
-
         console.log(res?.data?.minQuantity);
 
         setSelectedColor(res.data?.varients[0]);
@@ -105,7 +106,23 @@ function ProductDetails(props) {
     );
   };
 
-  console.log("price slot ::", priceSlot);
+
+  const getReview = async () => {
+   
+    props.loader(true);
+    Api("get", "getReview", "", router).then(
+      (res) => {
+        props.loader(false);
+        console.log("===",res.data)
+        setProductReviews(res.data)
+      },
+      (err) => {
+        props.loader(false);
+        console.log(err);
+        props.toaster({ type: "error", message: err?.message });
+      }
+    );
+  };
 
   const getproductByCategory = async (category_id, product_id) => {
     props.loader(true);
@@ -117,7 +134,7 @@ function ProductDetails(props) {
     ).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
+    
         const sameItem = res?.data?.filter((f) => f._id !== router?.query?.id);
         SetProductList(sameItem);
       },
@@ -143,7 +160,6 @@ function ProductDetails(props) {
     Api("post", "addremovefavourite", data, router).then(
       (res) => {  
         props.loader(false);
-        console.log("res================>", res);
         if (res.status) {
           if (isFavorite) {
              props.toaster({ type: "success", message: res.data?.message });
@@ -474,7 +490,7 @@ function ProductDetails(props) {
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:ms-12 ms-4">
             You might also like
           </p>
-          <div className="grid md:grid-cols-5 grid-cols-1 md:gap-0 gap-5">
+          <div className="grid md:grid-cols-5 grid-cols-1 md:gap-0 gap-5 md:ms-14 ms-4">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories
@@ -485,6 +501,54 @@ function ProductDetails(props) {
               </div>
             ))}
           </div>
+        </div>
+
+
+        <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
+                        <p className='text-black text-xl font-bold'>{("Ratings & Reviews")}</p>
+                        <div className='w-full'>
+
+                            <p className='text-black font-bold md:text-2xl text-base'>
+                                {/* {reviews === 'product' ? productsId?.rating : productsId?.seller} */}
+                                <span className='text-black font-normal md:text-base text-xs'>{" 4.5 / 5 "}</span>
+                            </p>
+
+                            {/* Reviews Grid Layout */}
+                            <div className="grid sm:grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[400px] ">
+                                {productReviews?.map((item, i) => (
+                                    <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
+                                        <div className='pt-2 flex justify-start items-center'>
+                                            <div className='w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center'>
+                                                <p className='text-black text-[18px] font-bold'>{item?.posted_by?.username?.charAt(0).toUpperCase()}</p>
+                                            </div>
+                                            <div className='ml-5'>
+                                                <div className='flex'>
+                                                    <p className='text-black font-normal text-[16px]'>{item?.posted_by?.username}</p>
+                                                </div>
+                                                <p className='text-black font-normal text-xs'>
+                                                    {moment(item?.createdAt).format("MMM DD, YYYY")}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <p className='text-black font-normal text-base pt-5'>{item?.description}</p>
+
+                                        <div className='pt-5 flex gap-2'>
+                                            <Box sx={{ width: 200, display: 'flex', alignItems: 'center' }}>
+                                                <Rating
+                                                    name="text-feedback"
+                                                    value={item?.rating}
+                                                    readOnly
+                                                    precision={0.5}
+                                                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                                />
+                                                <Box className='text-black' sx={{ ml: 2 }}>{item?.rating}</Box>
+                                            </Box>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                       </div>
         </div>
 
       </section>

@@ -20,23 +20,25 @@ const AboutUs = () => {
     return (
         <>
             <div className="w-full bg-[#FFF5CB] mx-auto flex flex-col md:flex-row justify-center items-center">
-                <div className="md:py-14 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
-                    <nav className="mb-4 mt-8 md:mt-12 text-[12px]">
-                        <span className="text-gray-600 mr-1">Home /</span>
-                        <span className="text-[#FEC200]">About us</span>
-                    </nav>
-                    <h1 className="md:mt-12 mt-4 text-[29px] md:text-3xl md:leading-[50px] leading-11 font-bold text-gray-800 mb-4">
-                        Lorem Ipsum is simply dummy text of the printing and.
-                    </h1>
-                    <p className="text-gray-600 mb-6 text-[15px] leading-[32px]">
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                    </p>
-                    <p className="mt-6 inline-block bg-[#FEC200] text-white px-6 py-3 rounded-lg text-[15px]">
-                        Shop Now
-                        <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
-                    </p>
-                </div>
-                <div className="w-full md:w-auto">
+            <div className="md:py-14 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
+    <nav className="mb-4 mt-8 md:mt-12 text-[12px] md:text-start text-center">
+        <span className="text-gray-600 mr-1">Home /</span>
+        <span className="text-[#FEC200]">About us</span>
+    </nav>
+    <h1 className="md:mt-12 mt-4 md:text-start text-center text-[25px] md:text-3xl md:leading-[50px] leading-10 font-bold text-gray-800 mb-4">
+        Lorem Ipsum is simply dummy text of the printing and.
+    </h1>
+    <p className="text-gray-600 md:text-start text-center mb-6 text-[15px] leading-[32px]">
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+    </p>
+    <div className="flex justify-center md:justify-start mt-6">
+        <p className="bg-[#FEC200] text-white px-6 py-3 rounded-lg text-[15px] inline-flex items-center">
+            Shop Now
+            <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+        </p>
+    </div>
+</div>
+                <div className="md:flex hidden w-full md:w-auto">
                     <img
                         alt="A bowl of assorted fresh fruits including strawberries, kiwi, blueberries, and watermelon"
                         className="w-full h-auto"
@@ -105,9 +107,9 @@ const AboutUs = () => {
                 <div className="max-w-7xl container mx-auto">
                     <div className="mb-20 md:mx-0 mx-6">
                         <h2 className="text-xl font-semibold mb-16 mt-12 text-black">Our Team</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
                             {teamMembers.map((member, index) => (
-                                <div key={index} className="bg-[#F5F5F5] flex flex-col justify-center items-center p-4 rounded-[20px] w-full h-auto shadow">
+                                <div key={index} className="bg-[#F5F5F5] flex flex-col justify-center items-center px-4  md:py-4 py-2 rounded-[20px] w-full h-auto shadow">
                                     <img alt={`Avatar of ${member.name}`} className="mx-auto mb-2" height="100" src={member.imgSrc} width="100" />
                                     <h3 className="text-center font-semibold mb-2 text-black">{member.name}</h3>
                                     <p className="text-center text-gray-500">{member.role}</p>
@@ -120,11 +122,11 @@ const AboutUs = () => {
                 <div className="bg-[#F5F5F5]">
                     <div className="max-w-7xl container mx-auto ">
                         <h2 className="text-xl font-semibold mb-14 pt-14 text-black md:mx-0 mx-6">Our Services</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-20 md:mx-0 mx-6">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-20 md:mx-0 mx-6">
                             {services.map((service, index) => (
                                 <div key={index} className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-black text-center flex justify-center flex-col items-center">
                                     <img src="icon-3.png" alt={`Icon for ${service.description}`} />
-                                    <p className="text-[19px]">{service.description}</p>
+                                    <p className="md:text-[19px] text-[16px]">{service.description}</p>
                                 </div>
                             ))}
                         </div>

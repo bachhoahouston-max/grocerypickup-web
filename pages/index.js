@@ -113,15 +113,16 @@ export default function Home(props) {
                   <div key={index} className="mb-4 bg-[#F7F7F8] flex flex-col py-[18px] cursor-pointer rounded-sm justify-center items-center"
                   onClick={() => { router.push(`/categories/${category?.slug}`) }}
                   >
-                    <p className="text-custom-black mb-2 font-semibold text-[16px]">
+                    <p className="text-custom-black md:mb-2 mb-1 font-semibold 
+                    md:text-[16px] text-[14px]">
                       {category.name}
                     </p>
-                    <p className="cursor-pointer text-[#767C7D] text-[14px]">(65 items)</p>
+                    <p className="cursor-pointer text-[#767C7D] md:text-[14px] text-[13px]">(65 items)</p>
                   </div>
                 ))}
               </div>
 
-              <div className="mb-4 bg-[#F7F7F8] flex flex-col py-7 cursor-pointer rounded-sm justify-center items-center">
+              <div className="mb-4 bg-[#F7F7F8] flex flex-col py-6 md:py-7 cursor-pointer rounded-sm justify-center items-center">
                 <p className="text-[#FEC200] mb-2 font-semibold text-[16px]"
                   onClick={() => handleCategoryClick1('/categories/all')}
                 >

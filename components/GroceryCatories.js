@@ -49,8 +49,12 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
     };
 
     useEffect(() => {
-        getProductById();
-    }, []);
+        if(user?.token){
+            getProductById();
+        }else{
+            router.push("/")
+        }
+    }, [user]);
 
     useEffect(() => {
         const isProductFavorite = productsId.some((product) => product.product._id === item._id);

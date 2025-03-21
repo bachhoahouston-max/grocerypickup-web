@@ -45,13 +45,14 @@ const Navbar = (props) => {
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
 
+    const [date, setDate] = useState(null);
+    const [parkingNo, setParkingNo] = useState(null)
+    const [isOpen, setIsOpen] = useState(false);
+
+
     const handleOptionChange = (event) => {
         setPickupOption(event.target.value);
     };
-
-    const [date, setDate] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
-
 
     const handleIconClick = () => {
         setIsOpen(!isOpen);
@@ -62,6 +63,10 @@ const Navbar = (props) => {
         setIsOpen(false);
     };
 
+    const handleInputChange2 = (e) => {
+        setParkingNo(e.target.value);
+        // console.log(e.target.value)
+    };
 
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
@@ -185,6 +190,7 @@ const Navbar = (props) => {
         setCartData([]);
         setDate([])
         setLocalAddress([])
+        setParkingNo('')
         setPickupOption("orderPickup")
         localStorage.removeItem("addCartDetail");
     };
@@ -223,6 +229,7 @@ const Navbar = (props) => {
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
         const dateOfDelivery = isDriveUp && date ? date : null;
+        const ParkingNo = isDriveUp && parkingNo ? parkingNo : null;
 
         let newData = {
             productDetail: data,
@@ -231,7 +238,8 @@ const Navbar = (props) => {
             dateOfDelivery: dateOfDelivery,
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
-            isLocalDelivery: isLocalDelivery
+            isLocalDelivery: isLocalDelivery,
+            parkingNo: ParkingNo
         };
 
         props.loader && props.loader(true);
@@ -585,9 +593,9 @@ const Navbar = (props) => {
                                     <div className="relative inline-block">
                                         <input
                                             type="text"
-                                            value={formatDate(date) || "Select date"}
+                                            value={date ? formatDate(date) : "Select date"} // Check if date is valid
                                             placeholder="Select date"
-                                            className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none"
                                             readOnly
                                             onClick={handleIconClick}
                                         />
@@ -603,12 +611,20 @@ const Navbar = (props) => {
                                                     selected={date}
                                                     onChange={handleDateChange}
                                                     inline
-                                                    minDate={new Date()} 
+                                                    minDate={new Date()}
                                                     onClickOutside={() => setIsOpen(false)}
                                                 />
                                             </div>
                                         )}
                                     </div>
+                                    <input
+                                        type="text"
+                                        name="parkingNo"
+                                        placeholder="Designated Parking No"
+                                        value={parkingNo}
+                                        onChange={handleInputChange2}
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -622,7 +638,7 @@ const Navbar = (props) => {
                                     <div className="relative inline-block">
                                         <input
                                             type="text"
-                                            value={formatDate(localAddress.dateOfDelivery) || "Select date"}
+                                            value={date ? formatDate(localAddress.dateOfDelivery) : "Select date"}
                                             placeholder="Select date"
                                             className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             readOnly
@@ -684,7 +700,7 @@ const Navbar = (props) => {
                                     <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
                                 </div>
                                 <p className="text-black font-semibold text-[18px]">
-                                    Delivery in 8 mins
+                                    Delivery in Next Day
                                 </p>
                             </div>
                         ) : (
@@ -725,7 +741,7 @@ const Navbar = (props) => {
                                         </div>
                                         <p className="text-gray-500 w-full md:w-[100px] font-normal text-[11px] md:text-sm md:pt-7 pt-4">
                                             <span className="pl-3">
-                                                {item?.qty * item?.value}
+                                                {item?.value}
                                             </span>{" "}
                                             <span>{item?.price_slot && item?.price_slot[0]?.unit}</span>
                                         </p>

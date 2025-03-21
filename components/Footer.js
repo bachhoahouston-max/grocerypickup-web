@@ -43,82 +43,83 @@ const Footer = () => {
               </a>
             </div>
           </div>
+          <div className='md:flex-row flex w-full'>
+            {/* Useful Links */}
+            <div className="w-1/2 mb-4 md:mb-0 max-w-2xl">
+              <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Useful Links</h3>
+              <ul>
+                <li className="md:pb-2 pb-1"><a className="text-[16px] md:text-[19px]" href=""
+                  onClick={() => router.push('/')}
+                >Home</a></li>
+                <p className="md:pb-2 pb-1"><a className=" cursor-pointer text-[16px] md:text-[19px]"
+                  onClick={() => router.push('/AboutUs')}
+                >About Us</a></p>
+                <p className="md:pb-2 pb-1"><a className=" cursor-pointer text-[16px] md:text-[19px]"
+                  onClick={() => router.push('/ContactUs')}
+                >Contact</a></p>
+              </ul>
+            </div>
 
-          {/* Useful Links */}
-          <div className="w-full mb-6 md:mb-0 max-w-2xl">
-            <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Useful Links</h3>
-            <ul>
-              <li className="pb-2"><a className="text-[16px] md:text-[19px]" href=""
-                onClick={() => router.push('/')}
-              >Home</a></li>
-              <p className="pb-2"><a className=" cursor-pointer text-[16px] md:text-[19px]" 
-              onClick={() => router.push('/AboutUs')}
-              >About Us</a></p>
-               <p className="pb-2"><a className=" cursor-pointer text-[16px] md:text-[19px]" 
-              onClick={() => router.push('/ContactUs')}
-              >Contact</a></p>
-            </ul>
+            {/* Help & Support */}
+            <div className="w-1/2 mb-4 md:mb-0">
+              <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Help & Support</h3>
+              <ul>
+                <p className="pb-2 cursor-pointer"><a className=" text-[16px] md:text-[19px]"
+                  onClick={() => router.push('/ReturnPolicy')}
+                >Return Policy</a></p>
+
+                <p className="pb-2 cursor-pointer"><a className=" text-[16px] md:text-[19px]"
+                  onClick={() => router.push('/Termsandcondition')}
+                >  Terms and condition</a></p>
+
+
+
+                <p className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[19px]"
+                  onClick={() => router.push('/DataPolicy')}
+                >Data Policy</a></p>
+
+              </ul>
+            </div>
           </div>
+          <div className='md:flex-row flex w-full'>
+            {/* Other Links */}
+            <div className="w-1/2 mb-4 md:mb-0">
+              <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Other Links</h3>
+              <ul>
 
-          {/* Help & Support */}
-          <div className="w-full mb-6 md:mb-0">
-            <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Help & Support</h3>
-            <ul>
-              <p className="pb-2 cursor-pointer"><a className=" text-[16px] md:text-[19px]"
-                onClick={() => router.push('/ReturnPolicy')}
-              >Return Policy</a></p>
-             
-              <p className="pb-2 cursor-pointer"><a className=" text-[16px] md:text-[19px]"
-                onClick={() => router.push('/Termsandcondition')}
-              >  Terms and condition</a></p>
+                <p className="md:pb-2 pb-1 cursor-pointer"><a className=" text-[16px] md:text-[19px]"
+                  onClick={() => router.push('/Myhistory')}
+                >  History  </a></p>
 
 
-            
-              <p className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[19px]"
-                onClick={() => router.push('/DataPolicy')}
-              >Data Policy</a></p>
-            
-            </ul>
+                <p className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[19px]"
+                  onClick={() => router.push('/Mybooking')}
+                >  My Bookings  </a></p>
+              </ul>
+            </div>
+
+            <div className="w-1/2 mb-4 md:mb-0">
+              <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">
+                Contact us
+              </h3>
+              <ul>
+                <div className="flex justify-start">
+                  <IoCall className="text-2xl mr-2" />
+                  <li className="md:pb-2 pb-1"><a className=" text-[16px] md:text-[19px]" href="#">
+                    011457966547</a></li>
+                </div>
+              </ul>
+              <ul>
+                <div className="flex ">
+                  <MdOutlineMail className="text-2xl md:text-3xl mr-2" />
+                  <li className="md:pb-2 pb-1"><a className=" text-[16px] md:text-[19px]" href="#">
+                    Support@zeeddo.com</a></li>
+
+                </div>
+              </ul>
+
+            </div>
           </div>
-
-          {/* Other Links */}
-          <div className="w-full mb-6 md:mb-0">
-            <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Other Links</h3>
-            <ul>
-                
-              <p className="pb-2 cursor-pointer"><a className=" text-[16px] md:text-[19px]"
-                onClick={() => router.push('/Myhistory')}
-              >  History  </a></p>
-
-
-              <p className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[19px]"
-                onClick={() => router.push('/Mybooking')}
-              >  My Bookings  </a></p>
-            </ul>
-          </div>
-
-          <div className="w-full mb-6 md:mb-0">
-            <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">
-              Contact us
-            </h3>
-            <ul>
-              <div className="flex justify-start">
-                <IoCall className="text-2xl mr-2" />
-                <li className="pb-2"><a className=" text-[16px] md:text-[19px]" href="#">
-                  011457966547</a></li>
-              </div>
-            </ul>
-            <ul>
-              <div className="flex ">
-                <MdOutlineMail className="text-2xl md:text-3xl mr-2" />
-                <li className="pb-2"><a className=" text-[16px] md:text-[19px]" href="#">
-                  Support@zeeddo.com</a></li>
-
-              </div>
-            </ul>
-
-          </div>
-
         </div>
 
       </div>
