@@ -106,8 +106,8 @@ const Footer = () => {
               <ul>
                 <div className="flex justify-start">
                   <IoCall className="text-2xl mr-2" />
-                  <li className="md:pb-2 pb-1"><a className=" text-[16px] md:text-[19px]" href="#">
-                    011457966547</a></li>
+                 
+                    <a href="tel:6393274099" className="md:pb-2 pb-1 text-[16px] md:text-[19px] text-black cursor-pointer font-semibold">+(402) 54646</a>
                 </div>
               </ul>
               <ul>
