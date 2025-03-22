@@ -59,7 +59,7 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
                     draft[existingItemIndex].qty -= 1;
                     draft[existingItemIndex].total = (price * draft[existingItemIndex].qty).toFixed(2);
                 } else {
-                    // If qty reaches 1 and user clicks (-), remove item from cart
+                   
                     draft.splice(existingItemIndex, 1);
                 }
             });
@@ -79,17 +79,24 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
     }, [user]);
 
     useEffect(() => {
-        const isProductFavorite = productsId.some((product) => product.product._id === item._id);
-        setIsFavorite(isProductFavorite);
-    }, [productsId, item._id]);
+        // Fix: Check if productsId is an array before using .some()
+        if (Array.isArray(productsId)) {
+            const isProductFavorite = productsId.some((product) => product?.product?._id === item?._id);
+            setIsFavorite(isProductFavorite);
+        } else {
+            setIsFavorite(false);
+        }
+    }, [productsId, item?._id]);
 
     const getProductById = async () => {
         Api("get", "getFavourite", "", router).then(
             (res) => {
-                setProductsId(res.data);
+                // Ensure we're setting an array
+                setProductsId(Array.isArray(res.data) ? res.data : []);
             },
             (err) => {
                 console.log(err);
+                setProductsId([]);  // Set empty array on error
             }
         );
     };
@@ -103,11 +110,13 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
         Api("get", url, "", router).then(
             (res) => {
                 // loader(false);
-                setProductsId(res.data);
+                // Ensure we're setting an array
+                setProductsId(Array.isArray(res.data) ? res.data : []);
             },
             (err) => {
                 // loader(false);
                 console.log(err);
+                setProductsId([]);  // Set empty array on error
                 // toaster({ type: "error", message: err?.message });
             }
         );

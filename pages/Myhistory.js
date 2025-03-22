@@ -184,6 +184,18 @@ function Myhistory(props) {
                                     </div> 
                                     </div>
                                 </div>
+                                <div className="flex justify-end"> 
+                                    <button
+                                        className="mt-4 bg-custom-gold text-white px-4 py-2 rounded-md mr-4 text-sm"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setProductId(booking.productDetail[0]?.product)
+                                            setShowReviews(true);
+                                        }}
+                                    >
+                                        Review
+                                    </button>
+                                    </div>
                             </div>
                         ))
                     ) : (
