@@ -74,8 +74,6 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
     useEffect(() => {
         if (user?.token) {
             getProductById();
-        } else {
-            router.push("/");
         }
         
     }, [user]);
