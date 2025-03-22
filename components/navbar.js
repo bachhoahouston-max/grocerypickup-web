@@ -343,10 +343,10 @@ const Navbar = (props) => {
                 <div className="hidden md:flex items-center space-x-4 mr-20">
                     {user?.token === undefined ? (
                         <>
-                            <productList className="text-white border-2 rounded-full w-[40px] h-[40px] cursor-pointer border-black flex justify-center items-center"
+                            <div className="text-white border-2 rounded-full w-[40px] h-[40px] cursor-pointer border-black flex justify-center items-center"
                                 onClick={() => router.push('/signIn')}>
                                 <IoPersonOutline className="text-black text-xl" />
-                            </productList>
+                            </div>
                             <div className="text-black flex items-center w-14 cursor-pointer">
                                 <span onClick={() => router.push('/signIn')}>Sign in</span>
                             </div>
@@ -471,7 +471,9 @@ const Navbar = (props) => {
 
             {/* Cart Drawer */}
             <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
-                <div className={`md:w-[750px] w-[360px]  relative pb-5 bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full" : ""}`}>
+                    <div className={`md:w-[750px] w-[360px]  relative  bg-custom-green  pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""} 
+                    ${cartData.length > 1 ? "pb-8" : "pb-40"} `}>
+
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
                         <div
                             className="flex justify-start items-center gap-1 cursor-pointer"

@@ -473,7 +473,7 @@ function ProductDetails(props) {
           <p className="text-black text-xl font-bold md:mb-10 mb-5">
             Similar Products
           </p>
-          <div className="grid md:grid-cols-5 grid-cols-1 md:gap-0 gap-5">
+          <div className="grid md:grid-cols-5 grid-cols-1 md:gap-2 gap-5">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories
@@ -490,7 +490,7 @@ function ProductDetails(props) {
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:ms-12 ms-4">
             You might also like
           </p>
-          <div className="grid md:grid-cols-5 grid-cols-1 md:gap-0 gap-5 md:ms-14 ms-4">
+          <div className="grid md:grid-cols-5 grid-cols-1 md:gap-2 gap-5 md:ms-14 ms-4">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories
@@ -509,8 +509,8 @@ function ProductDetails(props) {
           <div className='w-full'>
 
             <p className='text-black font-bold md:text-2xl text-base'>
-              {/* {reviews === 'product' ? productsId?.rating : productsId?.seller} */}
-              <span className='text-black font-normal md:text-base text-xs'>{" 4.5 / 5 "}</span>
+              {reviews === 'product' ? productsId?.rating : productsId?.seller}
+              <span className='text-black font-normal md:text-base text-xs'>{" / 5 "}</span>
             </p>
 
             {/* Reviews Grid Layout */}
