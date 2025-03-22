@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react'
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { MdNavigateNext } from "react-icons/md";
-import Stack from '@mui/material/Stack';
-import Pagination from '@mui/material/Pagination';
 import { Api } from '@/services/service';
 import { useRouter } from 'next/router';
 import FormControl from '@mui/material/FormControl';
