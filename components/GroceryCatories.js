@@ -48,7 +48,27 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
         setCartData(updatedCart);
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
     };
+    const handleRemoveFromCart = (item) => {
+        let updatedCart = [...cartData];
+        const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
+        const price = parseFloat(item?.price_slot[0]?.our_price);
 
+        if (existingItemIndex !== -1) {
+            const nextState = produce(updatedCart, (draft) => {
+                if (draft[existingItemIndex].qty > 1) {
+                    draft[existingItemIndex].qty -= 1;
+                    draft[existingItemIndex].total = (price * draft[existingItemIndex].qty).toFixed(2);
+                } else {
+                    // If qty reaches 1 and user clicks (-), remove item from cart
+                    draft.splice(existingItemIndex, 1);
+                }
+            });
+            updatedCart = nextState;
+        }
+
+        setCartData(updatedCart);
+        localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+    };
     useEffect(() => {
         if (user?.token) {
             getProductById();
@@ -104,7 +124,7 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
             (res) => {
                 if (res.status) {
                     if (isFavorite) {
-                        setFavorite((prevFavorites) => 
+                        setFavorite((prevFavorites) =>
                             prevFavorites.filter(fav => fav._id !== item._id)
                         );
                     } else {
@@ -170,7 +190,7 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
                         className=" bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center px-2 py-1.5 items-center"
                         onClick={() => {
                             if (itemQuantity > 1) {
-                                handleAddToCart({ ...item, qty: itemQuantity - 1 });
+                                handleRemoveFromCart(item)
                             }
                         }}
                     >
