@@ -111,7 +111,7 @@ function Myhistory(props) {
                     </h1>
                     <p className="md:px-0 px-12 text-center text-[16px] mb-6 w-full md:w-[40%] text-black">
                         {" "}
-                        View and manage all your bookings in one place. Leave reviews for products you've purchased.
+                        View all your order History in one place. Leave reviews for products you've purchased.
                     </p>
                 </div>
 

@@ -219,7 +219,7 @@ const Navbar = (props) => {
                 image: element.selectedColor?.image,
                 color: element.selectedColor?.color || "",
                 total: element.total,
-                price: element.price,
+                price: element.our_price,
                 qty: element.qty,
                 seller_id: element.userid,
             });
@@ -369,7 +369,7 @@ const Navbar = (props) => {
                                                     className="block px-5 py-1 pl-0 text-black text-left font-semibold text-base"
                                                     onClick={() => { router.push("/Mybooking") }}
                                                 >
-                                                    {"My Booking"}
+                                                    {"My Order"}
                                                 </div>
                                                 <IoIosArrowForward className="text-2xl text-white" />
                                             </li>

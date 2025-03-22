@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useRouter } from "next/router";
-import { cartContext, openCartContext, userContext,favoriteProductContext } from "../_app";
+import { cartContext, openCartContext, userContext, favoriteProductContext } from "../_app";
 import { Api } from "@/services/service";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -108,12 +108,12 @@ function ProductDetails(props) {
 
 
   const getReview = async () => {
-   
+
     props.loader(true);
     Api("get", "getReview", "", router).then(
       (res) => {
         props.loader(false);
-        console.log("===",res.data)
+        console.log("===", res.data)
         setProductReviews(res.data)
       },
       (err) => {
@@ -134,7 +134,7 @@ function ProductDetails(props) {
     ).then(
       (res) => {
         props.loader(false);
-    
+
         const sameItem = res?.data?.filter((f) => f._id !== router?.query?.id);
         SetProductList(sameItem);
       },
@@ -158,22 +158,22 @@ function ProductDetails(props) {
     console.log(data);
     props.loader(true);
     Api("post", "addremovefavourite", data, router).then(
-      (res) => {  
+      (res) => {
         props.loader(false);
         if (res.status) {
           if (isFavorite) {
-             props.toaster({ type: "success", message: res.data?.message });
-              setFavorite((prevFavorites) => 
-                  prevFavorites.filter(fav => fav._id !== productsId._id)
-              );
+            props.toaster({ type: "success", message: res.data?.message });
+            setFavorite((prevFavorites) =>
+              prevFavorites.filter(fav => fav._id !== productsId._id)
+            );
           } else {
-              setFavorite((prevFavorites) => [...prevFavorites, productsId]);
-          } 
+            setFavorite((prevFavorites) => [...prevFavorites, productsId]);
+          }
           getProductById(); // Refresh the favorite products
-      }
-      else{
-        props.toaster({ type: "error", message: res.data?.message });
-      }
+        }
+        else {
+          props.toaster({ type: "error", message: res.data?.message });
+        }
       },
       (err) => {
         props.loader(false);
@@ -220,7 +220,7 @@ function ProductDetails(props) {
                     {productsId?.favourite && (
                       <FaHeart className="text-red-700 w-[23px] h-[23px]" />
                     )}
-                    
+
                   </div>
 
                 </div>
@@ -288,7 +288,7 @@ function ProductDetails(props) {
                       {selectedPrice?.other_price}
                     </span>{" "}
                     <span className="text-sm text-custom-black">
-                     
+
                       {(((selectedPrice?.other_price - selectedPrice?.our_price) / selectedPrice?.other_price) * 100).toFixed(2)}%
                     </span>
                   </p>
@@ -298,7 +298,7 @@ function ProductDetails(props) {
 
                 <div className="bg-custom-offWhite w-[100px] h-[32px] rounded-[8px] md:mt-5 mt-3 flex items-center">
                   <div
-                    className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none	 flex justify-center items-center"
+                    className="h-[31px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none	 flex justify-center items-center"
                     onClick={() => {
                       if (productsId.qty > 1) {
                         productsId.qty = productsId.qty - 1;
@@ -309,13 +309,13 @@ function ProductDetails(props) {
                       }
                     }}
                   >
-                    <IoRemoveSharp className="h-[15px] w-[15px] text-white" />
+                    <IoRemoveSharp className="h-[16px] w-[16px] text-white" />
                   </div>
-                  <p className="text-black md:text-xl text-lg font-medium text-center mx-3">
+                  <p className="text-black md:text-xl text-lg font-medium text-center px-3 border-y-2 border-y-gray-200">
                     {productsId?.qty || 0}
                   </p>
                   <div
-                    className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                    className="h-[31px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                     onClick={() => {
                       productsId.qty = productsId.qty + 1;
                       productsId.total = (
@@ -325,7 +325,7 @@ function ProductDetails(props) {
                       setProductsId({ ...productsId });
                     }}
                   >
-                    <IoAddSharp className="h-[15px] w-[15px] text-white" />
+                    <IoAddSharp className="h-[16px] w-[16px] text-white" />
                   </div>
                 </div>
 
@@ -366,10 +366,10 @@ function ProductDetails(props) {
                     const d = cartData?.length > 0 ? cartData : [];
                     // const c = d.find((f) => f._id === productsId?._id);
                     // const c = d.find((f) => f._id === productsId?._id && f.qty === productsId?.qty);
-                    const c = d.find((f) => 
-                      f._id === productsId?._id && 
+                    const c = d.find((f) =>
+                      f._id === productsId?._id &&
                       f.our_price === productsId?.our_price
-                  )
+                    )
                     console.log(c);
 
                     const price = parseFloat(priceSlot[priceIndex]?.price);
@@ -405,13 +405,13 @@ function ProductDetails(props) {
                       const nextState = produce(cartData, (draft) => {
                         // const existingItem = draft.find((item) => item._id === c._id);
                         // const existingItem = draft.find((item) => item._id === c._id && item.qty === c.qty);
-                        const existingItem = draft.find((item) => 
-                          item._id === c._id && 
+                        const existingItem = draft.find((item) =>
+                          item._id === c._id &&
                           item.our_price === c.our_price
-                      );
-                      
+                        );
+
                         existingItem.qty += productsId.qty;
-                        
+
                         existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
                       });
                       setCartData(nextState);
@@ -505,50 +505,50 @@ function ProductDetails(props) {
 
 
         <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
-                        <p className='text-black text-xl font-bold'>{("Ratings & Reviews")}</p>
-                        <div className='w-full'>
+          <p className='text-black text-xl font-bold'>{("Ratings & Reviews")}</p>
+          <div className='w-full'>
 
-                            <p className='text-black font-bold md:text-2xl text-base'>
-                                {/* {reviews === 'product' ? productsId?.rating : productsId?.seller} */}
-                                <span className='text-black font-normal md:text-base text-xs'>{" 4.5 / 5 "}</span>
-                            </p>
+            <p className='text-black font-bold md:text-2xl text-base'>
+              {/* {reviews === 'product' ? productsId?.rating : productsId?.seller} */}
+              <span className='text-black font-normal md:text-base text-xs'>{" 4.5 / 5 "}</span>
+            </p>
 
-                            {/* Reviews Grid Layout */}
-                            <div className="grid sm:grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[400px] ">
-                                {productReviews?.map((item, i) => (
-                                    <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
-                                        <div className='pt-2 flex justify-start items-center'>
-                                            <div className='w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center'>
-                                                <p className='text-black text-[18px] font-bold'>{item?.posted_by?.username?.charAt(0).toUpperCase()}</p>
-                                            </div>
-                                            <div className='ml-5'>
-                                                <div className='flex'>
-                                                    <p className='text-black font-normal text-[16px]'>{item?.posted_by?.username}</p>
-                                                </div>
-                                                <p className='text-black font-normal text-xs'>
-                                                    {moment(item?.createdAt).format("MMM DD, YYYY")}
-                                                </p>
-                                            </div>
-                                        </div>
+            {/* Reviews Grid Layout */}
+            <div className="grid sm:grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[400px] ">
+              {productReviews?.map((item, i) => (
+                <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
+                  <div className='pt-2 flex justify-start items-center'>
+                    <div className='w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center'>
+                      <p className='text-black text-[18px] font-bold'>{item?.posted_by?.username?.charAt(0).toUpperCase()}</p>
+                    </div>
+                    <div className='ml-5'>
+                      <div className='flex'>
+                        <p className='text-black font-normal text-[16px]'>{item?.posted_by?.username}</p>
+                      </div>
+                      <p className='text-black font-normal text-xs'>
+                        {moment(item?.createdAt).format("MMM DD, YYYY")}
+                      </p>
+                    </div>
+                  </div>
 
-                                        <p className='text-black font-normal text-base pt-5'>{item?.description}</p>
+                  <p className='text-black font-normal text-base pt-5'>{item?.description}</p>
 
-                                        <div className='pt-5 flex gap-2'>
-                                            <Box sx={{ width: 200, display: 'flex', alignItems: 'center' }}>
-                                                <Rating
-                                                    name="text-feedback"
-                                                    value={item?.rating}
-                                                    readOnly
-                                                    precision={0.5}
-                                                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                                                />
-                                                <Box className='text-black' sx={{ ml: 2 }}>{item?.rating}</Box>
-                                            </Box>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                       </div>
+                  <div className='pt-5 flex gap-2'>
+                    <Box sx={{ width: 200, display: 'flex', alignItems: 'center' }}>
+                      <Rating
+                        name="text-feedback"
+                        value={item?.rating}
+                        readOnly
+                        precision={0.5}
+                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                      />
+                      <Box className='text-black' sx={{ ml: 2 }}>{item?.rating}</Box>
+                    </Box>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
       </section>

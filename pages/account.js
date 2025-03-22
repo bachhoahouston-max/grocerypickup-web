@@ -1,4 +1,4 @@
-import React, { useContext, useState,useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { useRouter } from "next/router";
 import { userContext } from './_app';
 import { PiSignOutFill } from 'react-icons/pi'
@@ -17,12 +17,12 @@ function Account(props) {
         country: '',
         mobile: '',
     });
-    
+
     const [passwordData, setPasswordData] = useState({
         password: '',
         confirmPassword: '',
     });
-    
+
 
     useEffect(() => {
         const userDetails = localStorage.getItem('userDetail');
@@ -35,7 +35,7 @@ function Account(props) {
     const getProfileData = () => {
         props.loader(true);
         const token = localStorage.getItem('token');
-        
+
         if (!token) {
             props.toaster({ type: "error", message: "Authentication required" });
             props.loader(false);
@@ -45,7 +45,7 @@ function Account(props) {
         Api("get", "getProfile", null).then(
             (res) => {
                 props.loader(false);
-                console.log("=>----",res.data)
+                console.log("=>----", res.data)
                 if (res?.status) {
                     setProfileData({
                         username: res.data.username || '',
@@ -99,13 +99,13 @@ function Account(props) {
     // Update profile information
     const updateProfile = () => {
         props.loader(true);
-        
+
         Api("post", "updateProfile", profileData).then(
             (res) => {
                 props.loader(false);
                 if (res?.status) {
                     props.toaster({ type: "success", message: "Profile updated successfully" });
-                    
+
                     // Update local storage with new user details if available
                     if (res.data) {
                         const userDetail = JSON.parse(localStorage.getItem('userDetail') || '{}');
@@ -113,7 +113,7 @@ function Account(props) {
                         localStorage.setItem('userDetail', JSON.stringify(updatedUser));
                         setUser(updatedUser);
                     }
-                    
+
                     setIsEditing(false);
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to update profile" });
@@ -127,19 +127,19 @@ function Account(props) {
     };
 
     const changePassword = () => {
-        
+
         if (passwordData.password !== passwordData.confirmPassword) {
             props.toaster({ type: "error", message: "Passwords don't match" });
             return;
         }
-        
+
         if (!passwordData.password) {
             props.toaster({ type: "error", message: "Password cannot be empty" });
             return;
         }
-        
+
         props.loader(true);
-        
+
         Api("post", "profile/changePassword", passwordData).then(
             (res) => {
                 props.loader(false);
@@ -160,7 +160,7 @@ function Account(props) {
         );
     };
 
-    
+
     const renderFormField = (label, name, type, value, placeholder) => {
         if (isEditing) {
             return (
@@ -193,7 +193,7 @@ function Account(props) {
             return (
                 <div>
                     <label className="block text-gray-700">Gender</label>
-                    <select 
+                    <select
                         className="w-full mt-2 text-black p-2 border rounded"
                         name="gender"
                         value={profileData.gender}
@@ -218,7 +218,7 @@ function Account(props) {
         }
     };
 
-    
+
     const renderCountryDropdown = () => {
         if (isEditing) {
             return (
@@ -246,7 +246,7 @@ function Account(props) {
     return (
         <div className={`w-full px-2 md:mt-8 mt-9 pb-4 `}>
             <div className='flex justify-center mx-auto  max-w-7xl  items-center gap-3'>
-            <div className="flex md:m-0 ms-4 flex-col justify-between items-center">
+                <div className="flex md:m-0 ms-4 flex-col justify-between items-center">
                     <h1 className="text-center  text-[30px] md:text-[45px] font-semibold mb-2 text-black">
                         My
                         <span className="ml-2 text-[30px] md:text-[45px] font-semibold  text-custom-green">
@@ -260,7 +260,7 @@ function Account(props) {
                             <button className='bg-custom-green rounded-[20px] h-[40px] w-[120px] text-white text-base font-normal' onClick={() => { router.push('/signIn') }}>
                                 Sign in
                             </button>
-                          
+
                         </div>
                     ) : (
                         <div className='flex items-center'>
@@ -315,76 +315,88 @@ function Account(props) {
                 )}
             </div>
             {user?.username && (
-            <div className="mx-auto max-w-7xl py-6 md:py-12">
-               
-                <div className="md:m-0 m-1  mt-5 bg-white rounded-lg border-2 border-gray-200 shadow-lg">
-                    <img src="/Rectangle123.png" className="w-full h-full" alt="Profile banner" />
-                    <div className="p-6 flex items-center">
-                        <img
-                            alt="Profile picture of a person"
-                            className="md:w-16 w-10 h-10 md:h-16 rounded-full mr-4"
-                            src={user?.profileImage || "./avtar.jpg"}
-                        />
-                        <div>
-                            <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User Name"}</h2>
-                            <p className="text-gray-600 md:text-[16px] text-[13px]">{user?.email || profileData.email || "user@example.com"}</p>
-                        </div>
-                        <button
-                            className={`ml-auto md:px-4 px-3 md:py-2 py-1.5 text-[13px] rounded bg-black text-white`}
-                            onClick={isEditing ? updateProfile : toggleEditMode}
-                        >
-                            {isEditing ? 'Save' : 'Edit'}
-                        </button>
-                    </div>
-                    <div className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {renderFormField("Full Name", "username", "text", profileData.username, "Your Full Name")}
-                            {renderFormField("Email", "email", "email", profileData.email, "Your Email")}
-                            {renderGenderSelect()}
-                            {renderCountryDropdown()}
-                            {renderFormField("Mobile", "mobile", "text", profileData.mobile, "Your Mobile Number")}
+                <div className="mx-auto max-w-7xl py-6 md:py-12">
+
+                    <div className="md:m-0 m-1  mt-5 bg-white rounded-lg border-2 border-gray-200 shadow-lg">
+                      
+                        <div className="w-full h-28 md:h-48 relative">
+                            <img
+                                src="/Rectangle123.png"
+                                alt="Profile banner"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
 
-                        {!isEditing && (
-                            <>
-                                <h3 className="text-lg font-semibold mt-8 mb-4 text-black">Change Password</h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-gray-700">New Password</label>
-                                        <input
-                                            className="w-full text-black mt-2 p-2 border rounded"
-                                            placeholder="Enter New Password"
-                                            type="password"
-                                            name="password"
-                                            value={passwordData.password}
-                                            onChange={handlePasswordChange}
-                                        />
+                        {/* Profile Header */}
+                        <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
+                            <div className="w-16 h-16 relative rounded-full overflow-hidden mb-3 sm:mb-0 sm:mr-4">
+                                <img
+                                    alt="Profile picture"
+                                    src={user?.profileImage || "/avtar.jpg"}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div className="text-center sm:text-left">
+                                <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User Name"}</h2>
+                                <p className="text-gray-600">{user?.email || profileData.email || "user@example.com"}</p>
+                            </div>
+                            <button
+                                className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-black text-white hover:bg-gray-800 transition"
+                                onClick={isEditing ? updateProfile : toggleEditMode}
+                            >
+                                {isEditing ? 'Save' : 'Edit'}
+                            </button>
+                        </div>
+
+                        <div className="p-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {renderFormField("Full Name", "username", "text", profileData.username, "Your Full Name")}
+                                {renderFormField("Email", "email", "email", profileData.email, "Your Email")}
+                                {renderGenderSelect()}
+                                {renderCountryDropdown()}
+                                {renderFormField("Mobile", "mobile", "text", profileData.mobile, "Your Mobile Number")}
+                            </div>
+
+                            {!isEditing && (
+                                <>
+                                    <h3 className="text-lg font-semibold mt-8 mb-4 text-black">Change Password</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-gray-700">New Password</label>
+                                            <input
+                                                className="w-full text-black mt-2 p-2 border rounded"
+                                                placeholder="Enter New Password"
+                                                type="password"
+                                                name="password"
+                                                value={passwordData.password}
+                                                onChange={handlePasswordChange}
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-gray-700">Confirm Password</label>
+                                            <input
+                                                className="w-full text-black mt-2 p-2 border rounded"
+                                                placeholder="Confirm New Password"
+                                                type="password"
+                                                name="confirmPassword"
+                                                value={passwordData.confirmPassword}
+                                                onChange={handlePasswordChange}
+                                            />
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label className="block text-gray-700">Confirm Password</label>
-                                        <input
-                                            className="w-full text-black mt-2 p-2 border rounded"
-                                            placeholder="Confirm New Password"
-                                            type="password"
-                                            name="confirmPassword"
-                                            value={passwordData.confirmPassword}
-                                            onChange={handlePasswordChange}
-                                        />
+                                    <div className="flex justify-end">
+                                        <button
+                                            className="bg-black rounded-lg text-white px-4 py-2 justify-end mt-4"
+                                            onClick={changePassword}
+                                        >
+                                            Change Password
+                                        </button>
                                     </div>
-                                </div>
-                                <div className="flex justify-end">
-                                    <button
-                                        className="bg-black rounded-lg text-white px-4 py-2 justify-end mt-4"
-                                        onClick={changePassword}
-                                    >
-                                        Change Password
-                                    </button>
-                                </div>
-                            </>
-                        )}
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
             )}
         </div>
     )

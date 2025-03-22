@@ -7,6 +7,8 @@ import { produce } from "immer";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { Api } from '@/services/service';
+import { IoRemoveSharp } from "react-icons/io5";
+import { IoAddSharp } from "react-icons/io5";
 
 const GroceryCatories = ({ item, i, url, toaster, loader }) => {
     const router = useRouter();
@@ -45,15 +47,15 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
 
         setCartData(updatedCart);
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-        // setOpenCart(true);
     };
 
     useEffect(() => {
-        if(user?.token){
+        if (user?.token) {
             getProductById();
-        }else{
-            router.push("/")
+        } else {
+            router.push("/");
         }
+        getProductBySlug();
     }, [user]);
 
     useEffect(() => {
@@ -62,8 +64,23 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
     }, [productsId, item._id]);
 
     const getProductById = async () => {
-        // loader(true);
         Api("get", "getFavourite", "", router).then(
+            (res) => {
+                setProductsId(res.data);
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+    };
+
+    const getProductBySlug = async () => {
+        let url = `getProductByslug/${router?.query?.id}`;
+        if (user?.token) {
+            url = `getProductByslug/${router?.query?.id}?user=${user?._id}`;
+        }
+        // loader(true);
+        Api("get", url, "", router).then(
             (res) => {
                 // loader(false);
                 setProductsId(res.data);
@@ -83,10 +100,8 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
         let data = {
             product: item?._id,
         };
-        // loader(true);
         Api("post", "addremovefavourite", data, router).then(
             (res) => {
-                // loader(false);
                 if (res.status) {
                     if (isFavorite) {
                         setFavorite((prevFavorites) => 
@@ -99,12 +114,14 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
                 }
             },
             (err) => {
-                // loader(false);
                 console.log(err);
-                // toaster({ type: "error", message: err?.message });
             }
         );
     };
+
+    // Check if the item is in the cart and get its quantity
+    const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
+    const itemQuantity = cartItem ? cartItem.qty : 0;
 
     return (
         <div
@@ -146,13 +163,40 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
                     </del>
                 </p>
             </div>
-            <button
-                className="font-bold bg-custom-gold w-[90px] mt-2 rounded-[6px] px-4 py-2 text-[14px] md:text-[16px] text-black flex justify-center items-center"
-                onClick={() => handleAddToCart(item)}
-            >
-                <FiShoppingCart className="w-[18px] h-[18px] text-custom-black mr-2 font-bold" />
-                Add
-            </button>
+
+            {itemQuantity > 0 ? (
+                <div className="bg-custom-offWhite w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-2 flex items-center">
+                    <div
+                        className=" bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center px-2 py-1.5 items-center"
+                        onClick={() => {
+                            if (itemQuantity > 1) {
+                                handleAddToCart({ ...item, qty: itemQuantity - 1 });
+                            }
+                        }}
+                    >
+                        <IoRemoveSharp className="h-[23px] w-[25px] text-white" />
+                    </div>
+                    <p className="text-black md:text-xl text-lg font-medium text-center px-3 py-0.5 border-y-2 border-y-gray-200">
+                        {itemQuantity}
+                    </p>
+                    <div
+                        className="px-2 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                        onClick={() => {
+                            handleAddToCart({ ...item, qty: itemQuantity + 1 });
+                        }}
+                    >
+                        <IoAddSharp className="h-[23px] w-[25px] text-white" />
+                    </div>
+                </div>
+            ) : (
+                <button
+                    className="font-bold bg-custom-gold w-[90px] mt-2 rounded-[6px] px-4 py-1.5 text-[14px] md:text-[16px] text-black flex justify-center items-center"
+                    onClick={() => handleAddToCart(item)}
+                >
+                    <FiShoppingCart className="w-[18px] h-[18px] text-custom-black mr-2 font-bold" />
+                    Add
+                </button>
+            )}
 
             <div className="flex items-center text-black mt-2">
                 <div className="flex items-center mr-2">

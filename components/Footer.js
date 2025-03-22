@@ -5,8 +5,8 @@ import { FaInstagram } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
 import { IoCall } from "react-icons/io5";
-import { MdOutlineMail } from "react-icons/md";
 import { useRouter } from 'next/router';
+import { MdEmail } from "react-icons/md";
 
 const Footer = () => {
   const router = useRouter();
@@ -107,14 +107,14 @@ const Footer = () => {
                 <div className="flex justify-start">
                   <IoCall className="text-2xl mr-2" />
                  
-                    <a href="tel:6393274099" className="md:pb-2 pb-1 text-[16px] md:text-[19px] text-black cursor-pointer font-semibold">+(402) 54646</a>
+                    <a href="tel:6393274099" className="md:pb-2 pb-1 text-[16px] md:text-[19px] text-black cursor-pointer ">+(402) 54646</a>
                 </div>
               </ul>
               <ul>
                 <div className="flex ">
-                  <MdOutlineMail className="text-2xl md:text-3xl mr-2" />
+                  <MdEmail className="text-xl md:text-2xl mr-2 " />
                   <li className="md:pb-2 pb-1"><a className=" text-[16px] md:text-[19px]" href="#">
-                    Support@zeeddo.com</a></li>
+                    abc@zeeddo.com</a></li>
 
                 </div>
               </ul>
