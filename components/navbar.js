@@ -256,7 +256,7 @@ const Navbar = (props) => {
                     localStorage.removeItem("addCartDetail");
 
                     const data = res.data.orders
-                    const isOrderPickup = data.map((data) => data.isOrderPickup === true)
+                    const isOrderPickup = data?.map((data) => data.isOrderPickup === true)
 
                     if (isOrderPickup) {
                         props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });

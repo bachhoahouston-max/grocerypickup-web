@@ -97,7 +97,21 @@ function Myhistory(props) {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         return new Date(date).toLocaleDateString('en-US', options);
     }
-  
+
+    const groupedBookings = bookingsData.reduce((acc, booking) => {
+        if (!acc[booking._id]) {
+            acc[booking._id] = {
+                ...booking,
+                products: []
+            };
+        }
+        acc[booking._id].products.push(booking.productDetail);
+        return acc;
+    }, {});
+
+
+    const groupedBookingsArray = Object.values(groupedBookings);
+
 
     return (
         <>
@@ -116,14 +130,14 @@ function Myhistory(props) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-6 md:mx-auto md:gap-12 gap-8 max-w-6xl">
-                    {bookingsData && bookingsData.length > 0 ? (
-                        bookingsData.map((booking,key) => (
+                    {groupedBookingsArray && groupedBookingsArray.length > 0 ? (
+                        groupedBookingsArray.map((booking, key) => (
                             <div key={key} className="bg-white p-4 rounded-md border-2 border-[#999999] h-auto self-start">
                                 <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleBooking(booking._id)}>
                                     <div className="flex flex-col justify-start w-full">
                                         <div className="flex flex-row justify-between items-center mb-4">
                                             <div className="bg-custom-green text-white rounded-full h-[50px] w-[50px] flex items-center justify-center mr-3 text-[24px]">
-                                            {key+1}
+                                                {key + 1}
                                             </div>
                                             <div className="flex items-center">
                                                 {expandedHistoryId === booking._id ? (
@@ -139,43 +153,35 @@ function Myhistory(props) {
 
                                 <div className={expandedHistoryId === booking._id ? "block mt-4" : "hidden"}>
                                     <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-white p-3 rounded-[10px] border border-gray-200">
-                                        <div className="col-span-2 flex gap-5"
+                                        {booking.productDetail.map((product, index) => (
+
+                                            <div className="col-span-2 flex gap-5"
                                             // onClick={() => { router.push(`/myorder/${booking?._id}?product_id=${booking?.productDetail?._id}`) }}
-                                        >
-                                            <img
-                                                className="w-20 h-20 text-gray-600 rounded-[10px] object-contain border border-gray-200"
-                                                src={booking?.productDetail[0]?.image?.[0] || "/api/placeholder/100/100"}
-                                                alt="Product"
-                                            />
-                                            <div>
-                                                <p className="text-black text-base font-bold">
-                                                    {booking?.productDetail?.product?.name || "Product Name"}
-                                                </p>
-                                                <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                    Quantity: {booking?.productDetail?.qty || 1}
-                                                </p>
-                                                <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                    Order ID: {booking?._id}
-                                                </p>
+                                            >
+                                                <img
+                                                    className="w-20 h-20 text-gray-600 rounded-[10px] object-contain border border-gray-200"
+                                                    src={product?.image?.[0] || "/api/placeholder/100/100"}
+                                                    alt="Product"
+                                                />
+                                                <div>
+                                                    <p className="text-black text-base font-bold">
+                                                        {product?.product?.name || "Product Name"}
+                                                    </p>
+                                                    <p className="text-gray-600 text-xs font-bold pt-[6px]">
+                                                        Quantity: {product.qty || 1}
+                                                    </p>
+                                                    <p className="text-gray-600 text-xs font-bold pt-[6px]">
+                                                        Order ID: {booking?._id}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex flex-col justify-center items-end">
-                                            <p className="text-gray-600 text-base font-bold">
-                                                $ {booking?.total || "0.00"}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="flex justify-end"> 
-                                    <button
-                                        className="mt-4 bg-custom-gold text-white px-4 py-2 rounded-md mr-4 text-sm"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setProductId(booking.productDetail[0]?.product)
-                                            setShowReviews(true);
-                                        }}
-                                    >
-                                        Review
-                                    </button>
+                                        ))}
+                                   
+                                    <div className="flex flex-col justify-center items-end">
+                                        <p className="text-gray-600 text-base font-bold">
+                                            Total: $ {booking?.total || "0.00"}
+                                        </p>
+                                    </div> 
                                     </div>
                                 </div>
                             </div>
@@ -228,7 +234,7 @@ function Myhistory(props) {
                                                 }
                                                 icon={<StarIcon sx={{ fontSize: '40px' }} />} // Change the size here for filled stars
                                             />
-                      
+
                                             {/* <Box sx={{ ml: 2 }}>rating</Box> */}
                                         </Box>
 
