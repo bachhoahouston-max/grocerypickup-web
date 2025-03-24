@@ -100,27 +100,7 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
         );
     };
 
-    // const getProductBySlug = async () => {
-    //     let url = `getProductByslug/${router?.query?.id}`;
-    //     if (user?.token) {
-    //         url = `getProductByslug/${router?.query?.id}?user=${user?._id}`;
-    //     }
-    //     // loader(true);
-    //     Api("get", url, "", router).then(
-    //         (res) => {
-    //             // loader(false);
-    //             // Ensure we're setting an array
-    //             setProductsId(Array.isArray(res.data) ? res.data : []);
-    //         },
-    //         (err) => {
-    //             // loader(false);
-    //             console.log(err);
-    //             setProductsId([]);  // Set empty array on error
-    //             // toaster({ type: "error", message: err?.message });
-    //         }
-    //     );
-    // };
-
+  
     const addremovefavourite = () => {
         if (!user?.token) {
             return;

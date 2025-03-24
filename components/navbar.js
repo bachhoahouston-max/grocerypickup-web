@@ -44,7 +44,7 @@ const Navbar = (props) => {
     const [productList, SetProductList] = useState([]);
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
-
+    const [profileData,setProfileData] = useState([])
     const [date, setDate] = useState(null);
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
@@ -167,8 +167,42 @@ const Navbar = (props) => {
 
 
     useEffect(() => {
+        const userDetails = localStorage.getItem('userDetail');
+        if (userDetails) {
+            setUser (JSON.parse(userDetails));
+            getProfileData();
+        }
         getProductById();
     }, []);
+
+     const getProfileData = () => {
+        props.loader(true);
+            const token = localStorage.getItem('token');
+    
+            if (!token) {
+                toaster({ type: "error", message: "Authentication required" });
+                props.loader(false);
+                return;
+            }
+    
+            Api("get", "getProfile", null)
+                .then(res => {
+                    props.loader(false);
+                    if (res?.status) {
+                        setProfileData({
+                            username: res.data.username || '',
+                            mobile: res.data.number || '',
+                            Shiping_address: res.data.Shiping_address || '' // Ensure this is set correctly
+                        });
+                    } else {
+                        props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
+                    }
+                })
+                .catch(err => {
+                    props.loader(false);
+                    props.toaster({ type: "error", message: err?.data?.message || "Failed to load profile" });
+                });
+        };
 
     useEffect(() => {
         const sumWithInitial = cartData?.reduce(
@@ -203,7 +237,7 @@ const Navbar = (props) => {
         });
         setCartData(nextState);
         localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-    };
+    }; 
 
     const createProductRquest = (e) => {
         // e.preventDefault();
@@ -234,7 +268,12 @@ const Navbar = (props) => {
         let newData = {
             productDetail: data,
             total: CartTotal.toFixed(2),
-            Local_address: localAddress,
+            Local_address: {
+                ...localAddress,
+                name : localAddress.name || profileData.username,
+                phoneNumber : localAddress.phoneNumber || profileData.number,
+                address : localAddress.address || profileData.Shiping_address
+                },
             dateOfDelivery: dateOfDelivery,
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
@@ -257,7 +296,7 @@ const Navbar = (props) => {
 
                     const data = res.data.orders
                     const isOrderPickup = data?.map((data) => data.isOrderPickup === true)
-
+                    
                     if (isOrderPickup) {
                         props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });
                     } else {
@@ -599,6 +638,7 @@ const Navbar = (props) => {
                                             placeholder="Select date"
                                             className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none"
                                             readOnly
+                                            required
                                             onClick={handleIconClick}
                                         />
                                         <span
@@ -626,6 +666,7 @@ const Navbar = (props) => {
                                         value={parkingNo}
                                         onChange={handleInputChange2}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none"
+                                        required
                                     />
                                 </div>
                             </div>
@@ -640,11 +681,12 @@ const Navbar = (props) => {
                                     <div className="relative inline-block">
                                         <input
                                             type="text"
-                                            value={date ? formatDate(localAddress.dateOfDelivery) : "Select date"}
+                                            value={localAddress.dateOfDelivery ? formatDate(localAddress.dateOfDelivery) : "Select date"}
                                             placeholder="Select date"
                                             className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             readOnly
                                             onClick={handleIconClick}
+                                            
                                         />
                                         <span
                                             className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
@@ -668,26 +710,29 @@ const Navbar = (props) => {
                                         type="text"
                                         name="name"
                                         placeholder="Name"
-                                        value={localAddress.name}
+                                        value={localAddress.name || profileData.username}
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        required
                                     />
 
                                     <input
                                         type="text"
                                         name="phoneNumber"
                                         placeholder="Phone Number"
-                                        value={localAddress.phoneNumber}
+                                        value={localAddress.phoneNumber || profileData.number}
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        required
                                     />
                                     <input
                                         type="text"
                                         name="address"
                                         placeholder="Address"
-                                        value={localAddress.address}
+                                        value={localAddress.address || profileData.Shiping_address}
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        required
                                     />
                                 </div>
                             </div>
@@ -892,131 +937,7 @@ const Navbar = (props) => {
             </Drawer>
 
             {/* Shipping Form Modal */}
-            {showcart && (
-                <div className="fixed top-0 left-0 w-screen h-screen bg-black/30 flex justify-center items-center z-50">
-                    <div className="relative w-[300px] md:w-[360px] h-auto bg-white rounded-[15px] m-auto">
-                        <div
-                            className="absolute top-2 right-2 p-1 rounded-full text-black w-8 h-8 cursor-pointer"
-                            onClick={() => {
-                                setShowcart(false);
-                            }}
-                        >
-                            <RxCrossCircled className="h-full w-full font-semibold" />
-                        </div>
-
-                        <form className="px-5 py-5" onSubmit={createProductRquest}>
-                            <p className="text-black font-bold text-2xl mb-5">
-                                Shipping Address
-                            </p>
-
-                            <div className="w-full">
-                                <input
-                                    className="bg-white w-full md:h-[50px] h-[40px] px-5 rounded-[10px] border border-gray-300 font-normal text-base text-black outline-none mb-5"
-                                    type="text"
-                                    placeholder="First Name"
-                                    required
-                                    value={shippingAddressData?.firstName}
-                                    onChange={(text) => {
-                                        setShippingAddressData({
-                                            ...shippingAddressData,
-                                            firstName: text.target.value,
-                                        });
-                                    }}
-                                />
-                            </div>
-
-                            <div className="w-full">
-                                <input
-                                    className="bg-white w-full md:h-[50px] h-[40px] px-5 rounded-[10px] border border-gray-300 font-normal text-base text-black outline-none mb-5"
-                                    type="text"
-                                    placeholder="Address"
-                                    required
-                                    value={shippingAddressData?.address}
-                                    onChange={(text) => {
-                                        setShippingAddressData({
-                                            ...shippingAddressData,
-                                            address: text.target.value,
-                                        });
-                                    }}
-                                />
-                            </div>
-
-                            <div className="w-full">
-                                <input
-                                    className="bg-white w-full md:h-[50px] h-[40px] px-5 rounded-[10px] border border-gray-300 font-normal text-base text-black outline-none mb-5"
-                                    type="number"
-                                    placeholder="Pin Code"
-                                    required
-                                    value={shippingAddressData?.pinCode}
-                                    onChange={(text) => {
-                                        setShippingAddressData({
-                                            ...shippingAddressData,
-                                            pinCode: text.target.value,
-                                        });
-                                    }}
-                                />
-                            </div>
-
-                            <div className="w-full">
-                                <input
-                                    className="bg-white w-full md:h-[50px] h-[40px] px-5 rounded-[10px] border border-gray-300 font-normal text-base text-black outline-none mb-5"
-                                    type="number"
-                                    placeholder="Phone number"
-                                    required
-                                    value={shippingAddressData?.phoneNumber}
-                                    onChange={(text) => {
-                                        setShippingAddressData({
-                                            ...shippingAddressData,
-                                            phoneNumber: text.target.value,
-                                        });
-                                    }}
-                                />
-                            </div>
-
-                            <div className="w-full">
-                                <input
-                                    className="bg-white w-full md:h-[50px] h-[40px] px-5 rounded-[10px] border border-gray-300 font-normal text-base text-black outline-none mb-5"
-                                    type="text"
-                                    placeholder="City"
-                                    required
-                                    value={shippingAddressData?.city}
-                                    onChange={(text) => {
-                                        setShippingAddressData({
-                                            ...shippingAddressData,
-                                            city: text.target.value,
-                                        });
-                                    }}
-                                />
-                            </div>
-
-                            <div className="w-full">
-                                <input
-                                    className="bg-white w-full md:h-[50px] h-[40px] px-5 rounded-[10px] border border-gray-300 font-normal text-base text-black outline-none mb-5"
-                                    type="text"
-                                    placeholder="Country"
-                                    required
-                                    value={shippingAddressData?.country}
-                                    onChange={(text) => {
-                                        setShippingAddressData({
-                                            ...shippingAddressData,
-                                            country: text.target.value,
-                                        });
-                                    }}
-                                />
-                            </div>
-
-                            <div className="flex md:justify-start justify-center">
-                                <button
-                                    className="bg-custom-gold w-full md:h-[50px] h-[40px] rounded-[5px] text-white font-normal text-base"
-                                    type="submit"
-                                >
-                                    Place Order
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+           
 
             <Drawer open={showCategory1} anchor="top" onClose={closeDrawer1}>
                 <div className="max-w-7xl  mx-auto w-full  relative">

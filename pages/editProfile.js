@@ -9,28 +9,42 @@ const EditProfile = ({ loader, toaster }) => {
         gender: '',
         country: '',
         mobile: '',
+        Shiping_address: '', // Fixed spelling from 'Shiping_address' to 'shippingAddress'
     });
-    
+
     const [passwordData, setPasswordData] = useState({
         password: '',
         confirmPassword: '',
     });
-    
-    const [user, setUser] = useState(null);
+
+    const handlePasswordChange = (e) => {
+        const { name, value } = e.target;
+        setPasswordData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const [user, setUser ] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
         const userDetails = localStorage.getItem('userDetail');
         if (userDetails) {
-            setUser(JSON.parse(userDetails));
+            setUser (JSON.parse(userDetails));
             getProfileData();
         }
     }, []);
+     
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setProfileData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    }; 
 
     const getProfileData = () => {
         loader(true);
         const token = localStorage.getItem('token');
-        
+
         if (!token) {
             toaster({ type: "error", message: "Authentication required" });
             loader(false);
@@ -47,6 +61,7 @@ const EditProfile = ({ loader, toaster }) => {
                         gender: res.data.gender || '',
                         country: res.data.country || '',
                         mobile: res.data.number || '',
+                        Shiping_address: res.data.Shiping_address || '' // Ensure this is set correctly
                     });
                 } else {
                     toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
@@ -58,34 +73,24 @@ const EditProfile = ({ loader, toaster }) => {
             });
     };
 
-    const handleProfileChange = (e) => {
-        const { name, value } = e.target;
-        setProfileData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handlePasswordChange = (e) => {
-        const { name, value } = e.target;
-        setPasswordData(prev => ({ ...prev, [name]: value }));
-    };
-
     const toggleEditMode = () => setIsEditing(!isEditing);
 
     const updateProfile = () => {
         loader(true);
-        
+
         Api("post", "updateProfile", profileData)
             .then(res => {
                 loader(false);
                 if (res?.status) {
                     toaster({ type: "success", message: "Profile updated successfully" });
-                    
+
                     if (res.data) {
                         const userDetail = JSON.parse(localStorage.getItem('userDetail') || '{}');
-                        const updatedUser = { ...userDetail, ...res.data };
-                        localStorage.setItem('userDetail', JSON.stringify(updatedUser));
-                        setUser(updatedUser);
+                        const updatedUser  = { ...userDetail, ...res.data };
+                        localStorage.setItem('userDetail', JSON.stringify(updatedUser ));
+                        setUser (updatedUser );
                     }
-                    
+
                     setIsEditing(false);
                 } else {
                     toaster({ type: "error", message: res?.data?.message || "Failed to update profile" });
@@ -102,14 +107,14 @@ const EditProfile = ({ loader, toaster }) => {
             toaster({ type: "error", message: "Passwords don't match" });
             return;
         }
-        
+
         if (!passwordData.password) {
             toaster({ type: "error", message: "Password cannot be empty" });
             return;
         }
-        
+
         loader(true);
-        
+
         Api("post", "profile/changePassword", passwordData)
             .then(res => {
                 loader(false);
@@ -136,7 +141,7 @@ const EditProfile = ({ loader, toaster }) => {
                     type={type}
                     name={name}
                     value={value}
-                    onChange={handleProfileChange}
+                    onChange={handleInputChange} // Use handleInputChange for consistency
                 />
             ) : (
                 <div className="text-black w-full p-2 border rounded bg-gray-50">
@@ -158,18 +163,18 @@ const EditProfile = ({ loader, toaster }) => {
                     sint. Velit officia consequat.
                 </p>
             </div>
-            
+
             {/* Profile Card */}
             <div className="bg-white rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden">
                 {/* Banner Image */}
                 <div className="w-full h-28 md:h-48 relative">
-                    <img 
-                        src="/Rectangle123.png" 
+                    <img
+                        src="/Rectangle123.png"
                         alt="Profile banner"
                         className="w-full h-full object-cover"
                     />
                 </div>
-                
+
                 {/* Profile Header */}
                 <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
                     <div className="w-16 h-16 relative rounded-full overflow-hidden mb-3 sm:mb-0 sm:mr-4">
@@ -180,44 +185,44 @@ const EditProfile = ({ loader, toaster }) => {
                         />
                     </div>
                     <div className="text-center sm:text-left">
-                        <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User Name"}</h2>
+                        <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User  Name"}</h2>
                         <p className="text-gray-600">{user?.email || profileData.email || "user@example.com"}</p>
                     </div>
-                    <button 
+                    <button
                         className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-black text-white hover:bg-gray-800 transition"
                         onClick={isEditing ? updateProfile : toggleEditMode}
                     >
                         {isEditing ? 'Save' : 'Edit'}
                     </button>
                 </div>
-                
+
                 {/* Profile Form */}
                 <div className="p-4 md:p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <FormField 
-                            label="Full Name" 
-                            name="username" 
-                            type="text" 
-                            value={profileData.username} 
-                            placeholder="Your Full Name" 
+                        <FormField
+                            label="Full Name"
+                            name="username"
+                            type="text"
+                            value={profileData.username}
+                            placeholder="Your Full Name"
                         />
-                        <FormField 
-                            label="Email" 
-                            name="email" 
-                            type="email" 
-                            value={profileData.email} 
-                            placeholder="Your Email" 
+                        <FormField
+                            label="Email"
+                            name="email"
+                            type="email"
+                            value={profileData.email}
+                            placeholder="Your Email"
                         />
-                        
+
                         {/* Gender Select */}
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Gender</label>
                             {isEditing ? (
-                                <select 
+                                <select
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
                                     name="gender"
                                     value={profileData.gender}
-                                    onChange={handleProfileChange}
+                                    onChange={handleInputChange} // Use handleInputChange for consistency
                                 >
                                     <option value="">Select Gender</option>
                                     <option value="Male">Male</option>
@@ -229,7 +234,7 @@ const EditProfile = ({ loader, toaster }) => {
                                 </div>
                             )}
                         </div>
-                        
+
                         {/* Country Select */}
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Country</label>
@@ -245,13 +250,22 @@ const EditProfile = ({ loader, toaster }) => {
                                 </div>
                             )}
                         </div>
-                        
-                        <FormField 
-                            label="Mobile" 
-                            name="mobile" 
-                            type="text" 
-                            value={profileData.mobile} 
-                            placeholder="Your Mobile Number" 
+
+                        {/* Shipping Address Field */}
+                        <FormField
+                            label="Shipping Address"
+                            name="Shiping_address" // Ensure this matches the state
+                            type="text"
+                            value={profileData.Shiping_address}
+                            placeholder="Shipping Address"
+                        />
+
+                        <FormField
+                            label="Mobile"
+                            name="mobile"
+                            type="text"
+                            value={profileData.mobile}
+                            placeholder="Your Mobile Number"
                         />
                     </div>
 
@@ -284,11 +298,11 @@ const EditProfile = ({ loader, toaster }) => {
                                 </div>
                             </div>
                             <div className="flex justify-end">
-                                <button 
+                                <button
                                     className="bg-black rounded-lg text-white px-4 py-2 hover:bg-gray-800 transition mt-4"
                                     onClick={changePassword}
-                                > 
-                                    Change Password 
+                                >
+                                    Change Password
                                 </button>
                             </div>
                         </div>
