@@ -487,7 +487,7 @@ function ProductDetails(props) {
         </div>
 
         <div className="bg-white  max-w-7xl">
-          <p className="text-black text-xl font-bold md:mb-10 mb-5 md:ms-12 ms-4">
+          <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             You might also like
           </p>
           <div className="grid md:grid-cols-5 grid-cols-1 md:gap-2 gap-5 md:ms-14 ms-4">
@@ -508,13 +508,13 @@ function ProductDetails(props) {
           <p className='text-black text-xl font-bold'>{("Ratings & Reviews")}</p>
           <div className='w-full'>
 
-            <p className='text-black font-bold md:text-2xl text-base'>
-              {reviews === 'product' ? productsId?.rating : productsId?.seller}
+            <p className='text-black  mb-2 mt-2 font-bold md:text-2xl text-base'>
+              {productsId?.rating || "4"}
               <span className='text-black font-normal md:text-base text-xs'>{" / 5 "}</span>
             </p>
 
             {/* Reviews Grid Layout */}
-            <div className="grid sm:grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[400px] ">
+            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 md:w-full w-[400px] ">
               {productReviews?.map((item, i) => (
                 <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
                   <div className='pt-2 flex justify-start items-center'>

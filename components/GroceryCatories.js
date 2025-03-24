@@ -72,11 +72,10 @@ const GroceryCatories = ({ item, i, url, toaster, loader }) => {
     };
 
     useEffect(() => {
-        if (user?.token) {
+        if (user && user.token) {
             getProductById();
         }
-        
-    }, [user]);
+    }, [user?.token]);
 
     useEffect(() => {
         // Fix: Check if productsId is an array before using .some()

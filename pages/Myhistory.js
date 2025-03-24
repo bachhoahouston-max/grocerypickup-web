@@ -59,14 +59,15 @@ function Myhistory(props) {
             rating: reviewsData?.reviews,
         };
 
-        if (reviews === "product") {
-            data.product = productId;
-        } else {
-            data.seller = sellerId;
-        }
+        // if (reviews === "product") {
+        //     data.product = productId;
+        // } else {
+        //     data.seller = sellerId;
+        // }
 
         console.log(data);
         props.loader(true);
+
         Api("post", "giverate", data, router).then(
             (res) => {
                 props.loader(false);
@@ -154,16 +155,13 @@ function Myhistory(props) {
                                 <div className={expandedHistoryId === booking._id ? "block mt-4" : "hidden"}>
                                     <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-white p-3 rounded-[10px] border border-gray-200">
                                         {booking.productDetail.map((product, index) => (
-
-                                            <div className="col-span-2 flex gap-5"
-                                            // onClick={() => { router.push(`/myorder/${booking?._id}?product_id=${booking?.productDetail?._id}`) }}
-                                            >
+                                            <div className="col-span-3 flex md:gap-5 gap-2 " key={index}>
                                                 <img
                                                     className="w-20 h-20 text-gray-600 rounded-[10px] object-contain border border-gray-200"
                                                     src={product?.image?.[0] || "/api/placeholder/100/100"}
                                                     alt="Product"
                                                 />
-                                                <div>
+                                                <div className="flex-grow">
                                                     <p className="text-black text-base font-bold">
                                                         {product?.product?.name || "Product Name"}
                                                     </p>
@@ -174,28 +172,28 @@ function Myhistory(props) {
                                                         Order ID: {booking?._id}
                                                     </p>
                                                 </div>
+                                                <div className=" justify-start items-start">
+                                                    <button
+                                                        className="mt-2 mb-2 bg-custom-gold text-white px-4 py-1.5 rounded-md text-[14px]"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            setProductId(product?.product);
+                                                            console.log("abcd", product?._id);
+                                                            setShowReviews(true);
+                                                        }}
+                                                    >
+                                                        Review
+                                                    </button>
+                                                </div>
                                             </div>
                                         ))}
-                                   
-                                    <div className="flex flex-col justify-center items-end">
-                                        <p className="text-gray-600 text-base font-bold">
-                                            Total: $ {booking?.total || "0.00"}
-                                        </p>
-                                    </div> 
                                     </div>
                                 </div>
-                                <div className="flex justify-end"> 
-                                    <button
-                                        className="mt-4 bg-custom-gold text-white px-4 py-2 rounded-md mr-4 text-sm"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setProductId(booking.productDetail[0]?.product)
-                                            setShowReviews(true);
-                                        }}
-                                    >
-                                        Review
-                                    </button>
-                                    </div>
+                                <div className="flex flex-col justify-end items-end mr-3 mt-2">
+                                    <p className="text-gray-600 text-base font-bold">
+                                        Total: $ {booking?.total || "0.00"}
+                                    </p>
+                                </div>
                             </div>
                         ))
                     ) : (
