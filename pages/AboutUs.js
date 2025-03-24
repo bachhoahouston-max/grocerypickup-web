@@ -2,8 +2,10 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/router';
+import { LuBoomBox } from "react-icons/lu";
+
 const AboutUs = () => {
-    const router =useRouter();
+    const router = useRouter();
     const teamMembers = [
         { name: 'John Peter', role: 'COO', imgSrc: '/Bill.png' },
         { name: 'John Peter', role: 'COO', imgSrc: '/Beverly.png' },
@@ -21,26 +23,26 @@ const AboutUs = () => {
     return (
         <>
             <div className="w-full bg-[#FFF5CB] mx-auto flex flex-col md:flex-row justify-center items-center">
-            <div className="md:py-14 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
-    <nav className="mb-4 mt-8 md:mt-12 text-[12px] md:text-start text-center">
-        <span className="text-gray-600 mr-1">Home /</span>
-        <span className="text-[#FEC200]">About us</span>
-    </nav>
-    <h1 className="md:mt-12 mt-4 md:text-start text-center text-[25px] md:text-3xl md:leading-[50px] leading-10 font-bold text-gray-800 mb-4">
-        Lorem Ipsum is simply dummy text of the printing and.
-    </h1>
-    <p className="text-gray-600 md:text-start text-center mb-6 text-[15px] leading-[32px]">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-    </p>
-    <div className="flex justify-center md:justify-start mt-6">
-        <p className="bg-[#FEC200] cursor-pointer text-white px-6 py-3 rounded-lg text-[15px] inline-flex items-center"
-        onClick={()=>router.push("/categories/all")}
-        >
-            Shop Now
-            <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
-        </p>
-    </div>
-</div>
+                <div className="md:py-14 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
+                    <nav className="mb-4 mt-8 md:mt-12 text-[12px] md:text-start text-center">
+                        <span className="text-gray-600 mr-1">Home /</span>
+                        <span className="text-[#FEC200]">About us</span>
+                    </nav>
+                    <h1 className="md:mt-12 mt-4 md:text-start text-center text-[25px] md:text-3xl md:leading-[50px] leading-10 font-bold text-gray-800 mb-4">
+                        Lorem Ipsum is simply dummy text of the printing and.
+                    </h1>
+                    <p className="text-gray-600 md:text-start text-center mb-6 text-[15px] leading-[32px]">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                    </p>
+                    <div className="flex justify-center md:justify-start mt-6">
+                        <p className="bg-[#FEC200] cursor-pointer text-white px-6 py-3 rounded-lg text-[15px] inline-flex items-center"
+                            onClick={() => router.push("/categories/all")}
+                        >
+                            Shop Now
+                            <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
+                        </p>
+                    </div>
+                </div>
                 <div className="md:flex hidden w-full md:w-auto">
                     <img
                         alt="A bowl of assorted fresh fruits including strawberries, kiwi, blueberries, and watermelon"
@@ -128,7 +130,7 @@ const AboutUs = () => {
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-20 md:mx-0 mx-6">
                             {services.map((service, index) => (
                                 <div key={index} className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-black text-center flex justify-center flex-col items-center">
-                                    <img src="icon-3.png" alt={`Icon for ${service.description}`} />
+                                    <LuBoomBox className='md:text-5xl text-4xl mb-2'/>
                                     <p className="md:text-[19px] text-[16px]">{service.description}</p>
                                 </div>
                             ))}

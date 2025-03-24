@@ -193,7 +193,7 @@ export default function Home(props) {
               </div>
 
               {/* Product Grid */}
-              <div className="w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-1 gap-4 mx-auto md:mx-4 md:space-x-2 md:px-0 px-6 ">
+              <div className="relative w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-1 gap-4 mx-auto md:mx-4 md:space-x-2 md:px-0 px-6 ">
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData.map((item, i) => (
@@ -206,15 +206,15 @@ export default function Home(props) {
                       />
                     ))
                   ) : (
-                    <div className="text-center text-gray-500 ">No products available in this category.</div>
+                    <div className="absolute top-48 left-64 col-span-4 flex justify-center text-[24px] items-center text-gray-500 ">No products available in this category.</div>
                   )
                 ) : (
                   productList.length > 0 ? (
                     productList.map((item, i) => (
-                      <GroceryCatories key={i} item={item} i={i} url={`/product-details/${item?.slug}`} />
+                      <GroceryCatories {...props} key={i} item={item} i={i} url={`/product-details/${item?.slug}`} />
                     ))
                   ) : (
-                    <div className="text-center text-gray-500">No products available.</div>
+                    <div className="flex justify-center text-[24px] items-center text-gray-500">No products available.</div>
                   )
                 )}
               </div>

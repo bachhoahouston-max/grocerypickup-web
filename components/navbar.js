@@ -296,7 +296,7 @@ const Navbar = (props) => {
 
                     const data = res.data.orders
                     const isOrderPickup = data?.map((data) => data.isOrderPickup === true)
-                    
+
                     if (isOrderPickup) {
                         props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });
                     } else {
@@ -410,7 +410,7 @@ const Navbar = (props) => {
                                                 >
                                                     {"My Order"}
                                                 </div>
-                                                <IoIosArrowForward className="text-2xl text-white" />
+                                                <IoIosArrowForward className="text-2xl text-black" />
                                             </li>
                                             <li className="px-3 shadow-inner py-2 flex justify-between">
                                                 <div
@@ -419,7 +419,7 @@ const Navbar = (props) => {
                                                 >
                                                     {"History"}
                                                 </div>
-                                                <IoIosArrowForward className="text-2xl text-white" />
+                                                <IoIosArrowForward className="text-2xl text-black" />
                                             </li>
 
                                             <li className="px-3 shadow-inner py-2 flex justify-between">
@@ -429,7 +429,7 @@ const Navbar = (props) => {
                                                 >
                                                     {"Edit Profile"}
                                                 </div>
-                                                <IoIosArrowForward className="text-2xl text-white" />
+                                                <IoIosArrowForward className="text-2xl text-black" />
                                             </li>
 
                                             <li className="px-3 shadow-inner py-2 flex justify-between">
@@ -466,7 +466,7 @@ const Navbar = (props) => {
                                                 >
                                                     {"Sign out"}
                                                 </div>
-                                                <IoIosArrowForward className="text-2xl text-white" />
+                                                <IoIosArrowForward className="text-2xl text-black" />
                                             </li>
                                         </ul>
                                     </div>

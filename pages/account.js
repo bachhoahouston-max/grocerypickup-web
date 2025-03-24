@@ -16,6 +16,7 @@ function Account(props) {
         gender: '',
         country: '',
         mobile: '',
+        Shiping_address:''
     });
 
     const [passwordData, setPasswordData] = useState({
@@ -53,6 +54,7 @@ function Account(props) {
                         gender: res.data.gender || '',
                         country: res.data.country || '',
                         mobile: res.data.number || '',
+                        Shiping_address:res.data.Shiping_address || '',
                     });
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
@@ -99,8 +101,12 @@ function Account(props) {
     // Update profile information
     const updateProfile = () => {
         props.loader(true);
+        const payload = {
+            ...profileData,
+            number:profileData.mobile, 
+        };
 
-        Api("post", "updateProfile", profileData).then(
+        Api("post", "updateProfile", payload).then(
             (res) => {
                 props.loader(false);
                 if (res?.status) {
@@ -354,6 +360,14 @@ function Account(props) {
                                 {renderFormField("Email", "email", "email", profileData.email, "Your Email")}
                                 {renderGenderSelect()}
                                 {renderCountryDropdown()}
+                                {renderFormField(
+                                "Shipping Address",
+                                "Shiping_address", // Ensure this matches the state
+                                "text",
+                                profileData.Shiping_address,
+                                "Shipping Address")
+                                }
+
                                 {renderFormField("Mobile", "mobile", "text", profileData.mobile, "Your Mobile Number")}
                             </div>
 

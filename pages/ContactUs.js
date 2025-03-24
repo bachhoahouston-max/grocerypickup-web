@@ -10,17 +10,40 @@ const FeedbackForm = (props) => {
         message: ''
     });
 
+    const [errors, setErrors] = useState({});
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
             [name]: value
         });
+        // Clear error for the field being edited
+        setErrors({
+            ...errors,
+            [name]: ''
+        });
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+        Object.keys(formData).forEach((key) => {
+            if (!formData[key]) {
+                newErrors[key] = `${key.charAt(0).toUpperCase() + key.slice(1)} is required`;
+            }
+        });
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0; // Return true if no errors
     };
 
     const submitFeedback = (e) => {
         e.preventDefault();
         props.loader(true);
+
+        if (!validateForm()) {
+            props.loader(false);
+            return; // Stop submission if validation fails
+        }
 
         Api("post", "createFeedback", formData).then(
             (res) => {
@@ -68,9 +91,10 @@ const FeedbackForm = (props) => {
                                 name="fullName"
                                 value={formData.fullName}
                                 onChange={handleChange}
-                                className="w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] outline-none rounded-md"
+                                className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] outline-none rounded-md ${errors.fullName ? 'border-red-500' : ''}`}
                                 placeholder="Vaibhav"
                             />
+                            {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
                         </div>
                         <div>
                             <label className="block text-[16px] text-gray-700">Email</label>
@@ -79,20 +103,24 @@ const FeedbackForm = (props) => {
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] rounded-md outline-none"
+                                className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] rounded-md outline-none ${errors.email ? 'border-red-500' : ''}`}
                                 placeholder="Vaibhavmehrotra84@gmail.com"
                             />
+                            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                         </div>
                         <div>
                             <label className="block text-gray-700 text-[16px]">Phone number</label>
                             <input
-                                type="text"
+                                type="number"
                                 name="phoneNumber"
                                 value={formData.phoneNumber}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 text-gray-700 border bg-[#F9F9F9] rounded-md outline-none"
+                                minLength={10}
+                                maxLength={10}
+                                className={`w-full mt-2 p-2 text-gray-700 border bg-[#F9F9F9] rounded-md outline-none ${errors.phoneNumber ? 'border-red-500' : ''}`}
                                 placeholder="987846447874"
                             />
+                            {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
                         </div>
 
                         <div className="">
@@ -101,22 +129,21 @@ const FeedbackForm = (props) => {
                                 name="message"
                                 value={formData.message}
                                 onChange={handleChange}
-                                className="w-full mt-2 p-2 border text-gray-700 bg-[#F9F9F9] rounded-md"
+                                className={`w-full mt-2 p-2 border text-gray-700 bg-[#F9F9F9] rounded-md ${errors.message ? 'border-red-500' : ''}`}
                             />
+                            {errors.message && <p className="text-red-500 text-sm">{errors.message}</p>}
                         </div>
                         <div>
                             <label className="block text-gray-700 text-[16px]">My Query *</label>
                             <textarea
                                 name="query"
-                                type="text"
                                 rows="4"
                                 value={formData.query}
                                 onChange={handleChange}
-                                className="text-gray-700  w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md"
+                                className={`text-gray-700 w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md ${errors.query ? 'border-red-500' : ''}`}
                             >
                             </textarea>
-
-
+                            {errors.query && <p className="text-red-500 text-sm">{errors.query}</p>}
                         </div>
                     </div>
                     <div className="text-center mt-6">

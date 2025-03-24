@@ -10,7 +10,7 @@ import { Api } from '@/services/service';
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 
-const GroceryCatories = ({ item, i, url, toaster, loader }) => {
+const GroceryCatories = ({ item, i, url}) => {
     const router = useRouter();
     const [cartData, setCartData] = useContext(cartContext);
     const [openCart, setOpenCart] = useContext(openCartContext);

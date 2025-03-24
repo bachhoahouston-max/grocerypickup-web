@@ -35,7 +35,6 @@ function ProductDetails(props) {
   const [selectedPrice, setSelectedPrice] = useState({});
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [reviews, setReviews] = useState('product');
   // console.log(selectedPrice)
 
   useEffect(() => {
@@ -107,23 +106,6 @@ function ProductDetails(props) {
   };
 
 
-  const getReview = async () => {
-
-    props.loader(true);
-    Api("get", "getReview", "", router).then(
-      (res) => {
-        props.loader(false);
-        console.log("===", res.data)
-        setProductReviews(res.data)
-      },
-      (err) => {
-        props.loader(false);
-        console.log(err);
-        props.toaster({ type: "error", message: err?.message });
-      }
-    );
-  };
-
   const getproductByCategory = async (category_id, product_id) => {
     props.loader(true);
     Api(
@@ -169,7 +151,7 @@ function ProductDetails(props) {
           } else {
             setFavorite((prevFavorites) => [...prevFavorites, productsId]);
           }
-          getProductById(); // Refresh the favorite products
+          getProductById(); 
         }
         else {
           props.toaster({ type: "error", message: res.data?.message });
