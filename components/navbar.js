@@ -20,7 +20,7 @@ import GroceryCatories from "../components/GroceryCatories"
 import DatePicker from 'react-datepicker';
 import { FaRegCalendarAlt } from "react-icons/fa"
 import 'react-datepicker/dist/react-datepicker.css';
-import { FaShoppingCart } from "react-icons/fa";
+import { BsCart2 } from "react-icons/bs";
 
 const Navbar = (props) => {
     const router = useRouter();
@@ -487,7 +487,7 @@ const Navbar = (props) => {
                         }}
                     >
 
-                        <FaShoppingCart className="relative md:text-3xl text-black text-lg cursor-pointer" />
+                        <BsCart2 className="relative md:text-3xl text-black text-lg cursor-pointer" />
                         {cartData.length > 0 && (
                             <div className="absolute bg-red-500 text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11 md:right-13 right-11 md:text-[9px] text-[7px] ">
                                 {cartData.length}
