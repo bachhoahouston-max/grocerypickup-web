@@ -45,7 +45,7 @@ const Navbar = (props) => {
     const [productList, SetProductList] = useState([]);
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
-    const [profileData,setProfileData] = useState([])
+    const [profileData, setProfileData] = useState([])
     const [date, setDate] = useState(null);
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
@@ -170,40 +170,40 @@ const Navbar = (props) => {
     useEffect(() => {
         const userDetails = localStorage.getItem('userDetail');
         if (userDetails) {
-            setUser (JSON.parse(userDetails));
+            setUser(JSON.parse(userDetails));
             getProfileData();
         }
         getProductById();
     }, []);
 
-     const getProfileData = () => {
+    const getProfileData = () => {
         props.loader(true);
-            const token = localStorage.getItem('token');
-    
-            if (!token) {
-                toaster({ type: "error", message: "Authentication required" });
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toaster({ type: "error", message: "Authentication required" });
+            props.loader(false);
+            return;
+        }
+
+        Api("get", "getProfile", null)
+            .then(res => {
                 props.loader(false);
-                return;
-            }
-    
-            Api("get", "getProfile", null)
-                .then(res => {
-                    props.loader(false);
-                    if (res?.status) {
-                        setProfileData({
-                            username: res.data.username || '',
-                            mobile: res.data.number || '',
-                            Shiping_address: res.data.Shiping_address || '' // Ensure this is set correctly
-                        });
-                    } else {
-                        props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
-                    }
-                })
-                .catch(err => {
-                    props.loader(false);
-                    props.toaster({ type: "error", message: err?.data?.message || "Failed to load profile" });
-                });
-        };
+                if (res?.status) {
+                    setProfileData({
+                        username: res.data.username || '',
+                        mobile: res.data.number || '',
+                        Shiping_address: res.data.Shiping_address || '' // Ensure this is set correctly
+                    });
+                } else {
+                    props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
+                }
+            })
+            .catch(err => {
+                props.loader(false);
+                props.toaster({ type: "error", message: err?.data?.message || "Failed to load profile" });
+            });
+    };
 
     useEffect(() => {
         const sumWithInitial = cartData?.reduce(
@@ -238,7 +238,7 @@ const Navbar = (props) => {
         });
         setCartData(nextState);
         localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-    }; 
+    };
 
     const createProductRquest = (e) => {
         // e.preventDefault();
@@ -271,10 +271,10 @@ const Navbar = (props) => {
             total: CartTotal.toFixed(2),
             Local_address: {
                 ...localAddress,
-                name : localAddress.name || profileData.username,
-                phoneNumber : localAddress.phoneNumber || profileData.number,
-                address : localAddress.address || profileData.Shiping_address
-                },
+                name: localAddress.name || profileData.username,
+                phoneNumber: localAddress.phoneNumber || profileData.mobile,
+                address: localAddress.address || profileData.Shiping_address
+            },
             dateOfDelivery: dateOfDelivery,
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
@@ -511,7 +511,7 @@ const Navbar = (props) => {
 
             {/* Cart Drawer */}
             <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
-                    <div className={`md:w-[750px] w-[360px]  relative  bg-custom-green  pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""} 
+                <div className={`md:w-[750px] w-[360px]  relative  bg-custom-green  pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""} 
                     ${cartData.length > 1 ? "pb-8" : "pb-40"} `}>
 
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
@@ -687,7 +687,7 @@ const Navbar = (props) => {
                                             className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             readOnly
                                             onClick={handleIconClick}
-                                            
+
                                         />
                                         <span
                                             className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
@@ -721,7 +721,7 @@ const Navbar = (props) => {
                                         type="text"
                                         name="phoneNumber"
                                         placeholder="Phone Number"
-                                        value={localAddress.phoneNumber || profileData.number}
+                                        value={localAddress.phoneNumber || profileData.mobile}
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         required
@@ -938,7 +938,7 @@ const Navbar = (props) => {
             </Drawer>
 
             {/* Shipping Form Modal */}
-           
+
 
             <Drawer open={showCategory1} anchor="top" onClose={closeDrawer1}>
                 <div className="max-w-7xl  mx-auto w-full  relative">
