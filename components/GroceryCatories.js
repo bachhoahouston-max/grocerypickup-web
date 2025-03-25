@@ -140,16 +140,16 @@ const GroceryCatories = ({ item, i, url}) => {
                 <img
                     src={item.varients[0].image[0]}
                     alt="Product image"
-                    className="w-full p-1 h-44 object-cover rounded cursor-pointer"
+                    className="w-full p-1 md:h-44 h-36 object-cover rounded cursor-pointer"
                     onClick={() => {
                         router.push(url);
                     }}
                 />
-                <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 w-[45px] h-[45px] flex justify-center items-center md:mb-1 mb-2'
+                <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[40px] md:h-[45px] h-[40px] flex justify-center items-center md:mb-1 mb-2'
                     onClick={addremovefavourite}
                 >
                     {isFavorite ? (
-                        <FaHeart className="text-red-700 w-[23px] h-[23px]" />
+                        <FaHeart className="text-red-700 md:w-[23px] w-[20px] h-[23px]" />
                     ) : (
                         <FaRegHeart className="text-black w-[23px] h-[23px]" />
                     )}
@@ -163,7 +163,7 @@ const GroceryCatories = ({ item, i, url}) => {
                 {item.name}
             </p>
 
-            <div className="flex justify-between items-center pt-1">
+            <div className="flex justify-between items-center md:pt-1 pt-0">
                 <p className="text-custom-gold text-lg md:text-xl font-semibold">
                     ${item.price_slot[0].our_price}
                     <del className="font-medium text-sm text-custom-black ml-2">
@@ -173,46 +173,46 @@ const GroceryCatories = ({ item, i, url}) => {
             </div>
 
             {itemQuantity > 0 ? (
-                <div className="bg-custom-offWhite w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-2 flex items-center">
+                <div className="bg-custom-offWhite w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
                     <div
-                        className=" bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center px-2 py-1.5 items-center"
+                        className=" bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
                         onClick={() => {
                             if (itemQuantity > 1) {
                                 handleRemoveFromCart(item)
                             }
                         }}
                     >
-                        <IoRemoveSharp className="h-[23px] w-[25px] text-white" />
+                        <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
                     </div>
-                    <p className="text-black md:text-xl text-lg font-medium text-center px-3 py-0.5 border-y-2 border-y-gray-200">
+                    <p className="text-black md:text-xl text-lg font-medium text-center px-3 md:py-0.5 py-0 border-y-2 border-y-gray-200">
                         {itemQuantity}
                     </p>
                     <div
-                        className="px-2 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                        className="md:px-2 px-1 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                         onClick={() => {
                             handleAddToCart({ ...item, qty: itemQuantity + 1 });
                         }}
                     >
-                        <IoAddSharp className="h-[23px] w-[25px] text-white" />
+                        <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
                     </div>
                 </div>
             ) : (
                 <button
-                    className="font-bold bg-custom-gold w-[90px] mt-2 rounded-[6px] px-4 py-1.5 text-[14px] md:text-[16px] text-black flex justify-center items-center"
+                    className="font-bold bg-custom-gold w-[90px] md:mt-2 mt-1 rounded-[6px] md:px-4 px-0 py-1.5 text-[13px] md:text-[16px] text-black flex justify-center items-center"
                     onClick={() => handleAddToCart(item)}
                 >
-                    <FiShoppingCart className="w-[18px] h-[18px] text-custom-black mr-2 font-bold" />
+                    <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-custom-black md:mr-2 mr-1 font-bold" />
                     Add
                 </button>
             )}
 
             <div className="flex items-center text-black mt-2">
                 <div className="flex items-center mr-2">
-                    <FaStar className="text-yellow-500 text-xl" />
-                    <FaStar className="text-yellow-500 text-xl" />
-                    <FaStar className="text-yellow-500 text-xl" />
-                    <FaStar className="text-yellow-500 text-xl" />
-                    <FaStar className="text-yellow-500 text-xl" />
+                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
+                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
+                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
+                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
+                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
                 </div>
                 <span className="text-sm">(4.5)</span>
             </div>

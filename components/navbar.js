@@ -411,7 +411,7 @@ const Navbar = (props) => {
                             }
                         }}
                     >
-                        <FontAwesomeIcon icon={faSearch} className='text-black'/>
+                        <FontAwesomeIcon icon={faSearch} className='text-black' />
                     </button>
                 </div>
 
@@ -1029,11 +1029,11 @@ const Navbar = (props) => {
                                     <p className="md:text-[24px] text-2xl text-black font-normal text-center">
                                         All Products
                                     </p>
-                                    <div className="md:py-4 p-5 grid md:grid-cols-3 grid-cols-1 gap-5 w-full">
+                                    <div className="md:py-4 p-5 grid md:grid-cols-3 grid-cols-1 gap-5 w-full h-full overflow-x-auto overflow-y-auto">
                                         {(productsList.length > 0 ? productsList : allProduct).map((item, i) => (
                                             <div
                                                 key={i}
-                                                className="w-full h-full scroll-auto"
+                                                className="w-full h-full"
                                                 onClick={() => {
                                                     setShowCategory1(false);
                                                     setSearchData("");

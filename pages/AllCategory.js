@@ -29,23 +29,25 @@ const Category = (props) => {
 
   return (
     <>
-      <div className="max-w-7xl md:mt-0 mt-8 md:px-0 px-6 mx-auto bg-white">
-        <h2 className="md:text-3xl text-xl font-semibold text-gray-800 mb-8">All Categories</h2>
-        <div className="mb-8 grid md:grid-cols-4 grid-cols-2">
+      <div className="max-w-7xl md:mt-0 mt-6 md:px-0 px-10 mx-auto bg-white">
+        <h2 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">All Categories</h2>
+        <div className="mb-4 grid md:grid-cols-4 grid-cols-2 md:gap-0 gap-8">
           {category.map((cat, index) => (
-            <div key={index} className="rounded-lg h-full flex flex-col  cursor-pointer "
-            onClick={() => { router.push(`/categories/${cat?.slug}`) }}
+            <div key={index} className="rounded-lg h-full flex flex-col items-center cursor-pointer "
+            
             >
-              <div className='bg-custom-green p-4 rounded-[12px] h-36 md:h-[207px] md:w-[241px] w-[145px]'>
-                <img alt={cat.label} className="w-full md:h-36 h-24 object-cover mb-2" src={cat.image} />
+              <div className='bg-custom-green p-4 rounded-[12px] h-36 md:h-[207px] md:w-[241px] w-[145px] mr-4'
+              onClick={() => { router.push(`/categories/${cat?.slug}`) }}
+              >
+                <img alt={cat.label} className="w-full md:h-36 h-24 object-cover mb-2 " src={cat.image} />
               </div>
-              <p className="text-center text-black text-md md:text-[21px] font-semibold mt-4 w-[60%] mb-4">{cat.name}</p>
+              <p className="text-center text-black text-md md:text-[21px] font-semibold mt-4 md:w-[60%] w-full mb-4">{cat.name}</p>
             </div>
 
           ))}
         </div>
       </div>
-      <section className="w-full md:pt-10 pt-5 pb-5">
+      <section className="w-full md:flex hidden md:pt-10 pt-5 pb-5">
         <ShopFasterTropicana />
       </section>
     </>

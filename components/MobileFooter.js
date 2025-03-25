@@ -16,16 +16,17 @@ function MobileFooter() {
             <div className='flex flex-col justify-center items-center'>
                 <IoHomeOutline className='w-[20px] h-[20px] text-black' onClick={() => { router.push('/') }} />
                 <p className='text-black font-normal text-xs'>Home</p>
-            </div>
-            <div className='flex flex-col justify-center items-center'>
-                <FiShoppingCart className='w-[20px] h-[20px] text-black' onClick={() => { setOpenCart(true); }} />
-                <p className='text-black font-normal text-xs'>Cart</p>
-            </div>
+            </div> 
             <div className='flex flex-col justify-center items-center'>
                 <TbCategory className='w-[20px] h-[20px] text-black' onClick={() => { router.push('/AllCategory') }} />
                 <p className='text-black font-normal text-xs'>Categories</p>
                 {/* onClick={() => { router.push('/categoriesMobileView') }} */}
             </div>
+            <div className='flex flex-col justify-center items-center'>
+                <FiShoppingCart className='w-[20px] h-[20px] text-black' onClick={() => { setOpenCart(true); }} />
+                <p className='text-black font-normal text-xs'>Cart</p>
+            </div>
+           
             <div className='flex flex-col justify-center items-center'>
                 <CgProfile className='w-[20px] h-[20px] text-black' onClick={() => { router.push('/account') }} />
                 <p className='text-black font-normal text-xs'>Account</p>

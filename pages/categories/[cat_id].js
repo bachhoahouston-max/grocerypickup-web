@@ -187,16 +187,16 @@ function Categories(props) {
                         </div>
 
                         <div className='col-span-4 '>
-                            <div className="grid md:grid-cols-4 grid-cols-1 md:gap-0 gap-2 mx-6 md:mx-0 mb-6 space-x-2  justify-between">
+                            <div className="grid md:grid-cols-4 grid-cols-2  mb-6 space-x-2  justify-between">
                                 {productList.length > 0 ? (
                                     productList.map((item, i) => (
-                                        <div key={i} className='p-2 w-full md:mb-5 mb-2'>
+                                        <div key={i} className='p-1 w-full md:mb-5 mb-2'>
                                             <GroceryCatories item={item} i={i} url={`/product-details/${item?.slug}`} />
                                         </div>
                                     ))
                                 ) : (
                                     <div className='flex justify-center items-center h-[200px] md:h-[400px] col-span-4 '>
-                                        <p className='text-black text-center font-semibold text-2xl'>No products available in this category.</p>
+                                        <p className='text-black text-center font-semibold text-xl'>No products available in this category.</p>
                                     </div>
                                 )}
                             </div>

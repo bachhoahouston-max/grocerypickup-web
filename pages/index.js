@@ -98,7 +98,7 @@ export default function Home(props) {
   return (
     <div className="">
        <MainHeader />
-      <div className="container mx-auto bg-white max-w-7xl md:px-0 px-6">
+      <div className="hidden md:flex flex-col container mx-auto bg-white max-w-7xl md:px-0 px-6">
         <div className="text-center mb-8 flex flex-col items-center justify-center">
           <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">Categories</h1>
           <p className="text-gray-600 mt-4 w-full md:w-[50%] text-center text-[13px] md:text-[16px] italic">
@@ -163,7 +163,7 @@ export default function Home(props) {
 
             <div className="flex md:flex-row flex-col ">
               {/* Sidebar */}
-              <div className="md:w-1/5 lg:w-1/4 w-full">
+              <div className=" hidden md:flex flex-col md:w-1/5 lg:w-1/4 w-full">
                 <ul className="rounded-lg p-4 space-y-2">
                   <li
                     onClick={() => handleCategoryClick1('/categories/all')}
@@ -193,7 +193,7 @@ export default function Home(props) {
               </div>
 
               {/* Product Grid */}
-              <div className="relative w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-1 gap-4 mx-auto md:mx-4 md:space-x-2 md:px-0 px-6 ">
+              <div className="relative w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0 ">
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData.map((item, i) => (
@@ -214,7 +214,7 @@ export default function Home(props) {
                       <GroceryCatories {...props} key={i} item={item} i={i} url={`/product-details/${item?.slug}`} />
                     ))
                   ) : (
-                    <div className="flex justify-center text-[24px] items-center text-gray-500">No products available.</div>
+                    <div className="flex justify-center md:text-[24px] items-center text-[18px] text-gray-500">No products available.</div>
                   )
                 )}
               </div>
@@ -223,8 +223,8 @@ export default function Home(props) {
           </div>
         </section>
       </div>
-      <div className="container mx-auto max-w-7xl py-12 md:px-4 px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-12 ">
+      <div className="container mx-auto max-w-7xl py-12 md:px-4 px-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faBoxOpen} className="text-xl text-[#FEC200] mb-2" />
             <h3 className="text-[16px] md:text-[18px] md:text-lg font-semibold text-black">Product Package</h3>

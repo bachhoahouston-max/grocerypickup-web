@@ -42,7 +42,7 @@ function Favourite(props) {
             sint. Velit officia consequat.
           </p>
         </div>
-        <div className="grid md:grid-cols-5 grid-cols-1 md:px-0 px-20 w-full gap-4">
+        <div className="grid md:grid-cols-5 grid-cols-2 md:px-0 px-4 w-full md:gap-4 gap-2">
           {
             favouriteList.length > 0 ? (favouriteList.map((item, i) => (
               <div key={i} className='w-full'>
