@@ -21,6 +21,7 @@ import DatePicker from 'react-datepicker';
 import { FaRegCalendarAlt } from "react-icons/fa"
 import 'react-datepicker/dist/react-datepicker.css';
 import { BsCart2 } from "react-icons/bs";
+import { RxCross2 } from "react-icons/rx";
 
 const Navbar = (props) => {
     const router = useRouter();
@@ -49,7 +50,8 @@ const Navbar = (props) => {
     const [date, setDate] = useState(null);
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
-
+    const [viewPopup, setViewPopup] = useState(false);
+    const [allProduct, setAllProduct] = useState([]);
 
     const handleOptionChange = (event) => {
         setPickupOption(event.target.value);
@@ -109,10 +111,12 @@ const Navbar = (props) => {
         };
     }, []);
 
+
     useEffect(() => {
         if (cartData?.length > 0) {
             getproductByCategory();
         }
+        fetchProducts()
     }, []);
 
     const getproductByCategory = async () => {
@@ -160,6 +164,28 @@ const Navbar = (props) => {
         setTimeout(() => {
             setShowCategory1(false);
         }, 500);
+    };
+
+    const fetchProducts = () => {
+        props.loader(true);
+        Api("get", "getProduct", null, router).then(
+            (res) => {
+                props.loader(false);
+                if (res.data && Array.isArray(res.data)) {
+                    console.log("All products", res.data);
+                    setAllProduct(res.data);
+
+                } else {
+                    console.error("Unexpected response format:", res);
+                    props.toaster({ type: "error", message: "Unexpected response format" });
+                }
+            },
+            (err) => {
+                props.loader(false);
+                console.log(err);
+                props.toaster({ type: "error", message: err?.message });
+            }
+        );
     };
 
     const closeDrawers = async () => {
@@ -341,6 +367,7 @@ const Navbar = (props) => {
             }
         );
     };
+
     return (
         <>
             <header className="flex  justify-between items-center p-4 bg-white shadow-md">
@@ -357,25 +384,34 @@ const Navbar = (props) => {
                 </div>
 
                 {/* Search Bar */}
-                <div className="flex items-center justify-center flex-grow mx-4">
+                <div className="flex items-center justify-center flex-grow mx-4"
+                    onClick={() => setViewPopup(true)}
+                >
                     <input
                         type="text"
-                        placeholder="Search for Products"
-                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none"
-                        value={serchData}
-                        onChange={handleInputChange}
                         ref={inputRef2}
+                        value={serchData}
+                        onChange={(text) => {
+                            setSearchData(text.target.value);
+                            if (text.target.value) {
+                                getproductBySearchCategory(text.target.value);
+                            } else {
+                                setProductsList([]);
+                            }
+                        }}
+                        placeholder="Search for products..."
+                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none"
                     />
                     <button
-                        className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green text-white rounded-r-md"
+                        className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green rounded-r-md"
                         onClick={() => {
                             if (serchData) {
-                                getproductBySearchCategory(serchData);
-                                router.push(`/search-result?query=${serchData}`);
+                                setViewPopup(true); // Open the drawer
+                                // getproductBySearchCategory(serchData);
                             }
                         }}
                     >
-                        <FontAwesomeIcon icon={faSearch} />
+                        <FontAwesomeIcon icon={faSearch} className='text-black'/>
                     </button>
                 </div>
 
@@ -940,84 +976,86 @@ const Navbar = (props) => {
             {/* Shipping Form Modal */}
 
 
-            <Drawer open={showCategory1} anchor="top" onClose={closeDrawer1}>
-                <div className="max-w-7xl  mx-auto w-full  relative">
-                    <div className="flex items-center justify-between border-b border-custom-newLightGray p-5 gap-5">
-                        {/* <p className='text-black text-2xl font-normal AbrilFatface'>Filters</p> */}
-                        <input
-                            type="text"
-                            ref={inputRef2}
-                            value={serchData}
-                            onChange={(text) => {
-                                setSearchData(text.target.value);
-                                if (text.target.value) {
-                                    getproductBySearchCategory(text.target.value);
-                                } else {
+            {/* <Drawer open={showCategory1} anchor="top" onClose={closeDrawer1}> */}
+            {viewPopup && (
+                <div className="fixed md:mt-6 top-0 left-0 w-screen bg-black/30 flex justify-center items-center !z-50">
+                    <div className=' md:absolute top-[50px] w-full md:w-[80%]  md:max-w-[750px] h-auto  bg-white  m-auto !z-50'>
+                        <div className="flex  flex-col md:max-h-[600px]  items-end  md:px-[30px]  overflow-hidden">
+
+                            <div
+                                className=" w-7 h-7 cursor-pointer hidden md:block "
+                                onClick={() => {
+                                    setViewPopup(false);
+                                    setShowCategory1(false);
+                                    setSearchData("");
                                     setProductsList([]);
-                                }
-                            }}
-                            placeholder="Search for products..."
-                            className="bg-custom-lightGray px-5 h-10 w-full rounded-[62px] outline-none  text-black"
-                        />
-                        <IconButton
-                            variant="text"
-                            color="blue-gray"
-                            onClick={() => {
-                                setShowCategory1(false);
-                                setSearchData("");
-                            }}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={2}
-                                stroke="currentColor"
-                                className="h-5 w-5"
+                                }}
                             >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </IconButton>
-                    </div>
-                    <div>
-                        <section className="w-full ">
-                            <div className="max-w-7xl mx-auto w-full md:px-0 px-5 md:py-5 py-5">
-                                <p className="md:text-[48px] text-2xl text-black font-normal text-center">
-                                    Products
-                                </p>
-                                <div className="md:py-10 py-5 grid md:grid-cols-4 grid-cols-1 gap-5 w-full">
-                                    {productsList.map((item, i) => (
-                                        <div
-                                            key={i}
-                                            className="w-full"
-                                            onClick={() => {
-                                                setShowCategory1(false);
-                                                setSearchData("");
-                                                setProductsList([]);
-                                            }}
-                                        >
-                                            <GroceryCatories
-                                                item={item}
-                                                i={i}
-                                                url={`/product-details/${item?.slug}`}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                                {productsList?.length === 0 && (
-                                    <p className="text-2xl text-black font-normal text-center">
-                                        No Products
-                                    </p>
-                                )}
+                                <RxCross2 className="h-7 w-7 font-semibold text-black" />
                             </div>
-                        </section>
+
+                            <div className="w-full flex md:hidden flex-row p-[10px]">
+                                <div
+                                    className="  cursor-pointer border-y-[1px] border-l-[1px] border-black flex justify-center items-center py-[5px] px-[5px]"
+                                    onClick={() => {
+                                        setViewPopup(false);
+                                        setShowCategory1(false);
+                                        setSearchData("");
+                                        setProductsList([]);
+                                    }}
+                                >
+                                    <RxCross2 className="h-7 w-7 font-semibold text-black " />
+                                </div>
+
+                                <input
+                                    className="w-full border-[1px] border-black text-black py-[10px] px-[10px] outline-none "
+                                    value={serchData}
+                                    onChange={(text) => {
+                                        setSearchData(text.target.value);
+                                        if (text.target.value) {
+                                            getproductBySearchCategory(text.target.value);
+                                        } else {
+                                            setProductsList([]);
+                                        }
+                                    }}
+                                    type="search"
+                                    placeholder="Search for product"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <section className="w-full ">
+                                <div className="max-w-7xl mx-auto w-full md:px-0 px-5 md:py-5 py-5">
+                                    <p className="md:text-[24px] text-2xl text-black font-normal text-center">
+                                        All Products
+                                    </p>
+                                    <div className="md:py-4 p-5 grid md:grid-cols-3 grid-cols-1 gap-5 w-full">
+                                        {(productsList.length > 0 ? productsList : allProduct).map((item, i) => (
+                                            <div
+                                                key={i}
+                                                className="w-full h-full scroll-auto"
+                                                onClick={() => {
+                                                    setShowCategory1(false);
+                                                    setSearchData("");
+                                                    setProductsList([]);
+                                                }}
+                                            >
+                                                <GroceryCatories
+                                                    item={item}
+                                                    i={i}
+                                                    url={`/product-details/${item?.slug}`}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </div>
-            </Drawer>
+            )}
+            {/* </Drawer> */}
+
         </>
     );
 };
