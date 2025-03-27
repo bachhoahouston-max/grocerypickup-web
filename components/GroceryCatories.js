@@ -10,7 +10,7 @@ import { Api } from '@/services/service';
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 
-const GroceryCatories = ({ item, i, url ,loader}) => {
+const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
     const router = useRouter();
     const [cartData, setCartData] = useContext(cartContext);
     const [openCart, setOpenCart] = useContext(openCartContext);
@@ -78,7 +78,6 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
     }, [user?.token]);
 
     useEffect(() => {
-        // Fix: Check if productsId is an array before using .some()
         if (Array.isArray(productsId)) {
             const isProductFavorite = productsId.some((product) => product?.product?._id === item?._id);
             setIsFavorite(isProductFavorite);
@@ -88,14 +87,15 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
     }, [productsId, item?._id]);
 
     const getProductById = async () => {
+        loader(true);
         Api("get", "getFavourite", "", router).then(
             (res) => {
-                // Ensure we're setting an array
+                loader(false);
                 setProductsId(Array.isArray(res.data) ? res.data : []);
             },
             (err) => {
                 console.log(err);
-                setProductsId([]);  // Set empty array on error
+                setProductsId([]);  
             }
         );
     };

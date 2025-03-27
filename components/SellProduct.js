@@ -10,7 +10,7 @@ import { Api } from '@/services/service';
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 
-const SellProduct = ({ item, i, url ,loader}) => {
+const SellProduct = ({ item, i, url ,loader,toaster}) => {
     const router = useRouter();
     const [cartData, setCartData] = useContext(cartContext);
     const [openCart, setOpenCart] = useContext(openCartContext);
@@ -90,8 +90,10 @@ const SellProduct = ({ item, i, url ,loader}) => {
     }, [productsId, item?._id]);
 
     const getProductById = async () => {
+        loader(true);
         Api("get", "getFavourite", "", router).then(
             (res) => {
+                loader(false);
                 // Ensure we're setting an array
                 setProductsId(Array.isArray(res.data) ? res.data : []);
             },
@@ -165,9 +167,9 @@ const SellProduct = ({ item, i, url ,loader}) => {
                     src={item.varients[0].image[0]}
                     alt="Product image"
                     className="w-full p-1 md:h-44 h-36 object-cover rounded cursor-pointer"
-                    onClick={() => {
-                        router.push(url);
-                    }}
+                    // onClick={() => {
+                    //     router.push(url);
+                    // }}
                 />
                 <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[40px] md:h-[45px] h-[40px] flex justify-center items-center md:mb-1 mb-2'
                     onClick={addremovefavourite}

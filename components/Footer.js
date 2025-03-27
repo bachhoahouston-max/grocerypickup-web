@@ -47,21 +47,21 @@ const Footer = () => {
           <div className='flex flex-col md:flex-row w-full'>
             {/* Useful Links */}
             <div className="w-full md:w-1/2 mb-4 md:mb-0 max-w-2xl">
-              <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Useful Links</h3>
+              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">Useful Links</h3>
               <ul>
-                <li className="md:pb-2 pb-1"><a className="text-[16px] md:text-[19px]" href="" onClick={() => router.push('/')}>Home</a></li>
-                <li className="md:pb-2 pb-1"><a className="cursor-pointer text-[16px] md:text-[19px]" onClick={() => router.push('/AboutUs')}>About Us</a></li>
-                <li className="md:pb-2 pb-1"><a className="cursor-pointer text-[16px] md:text-[19px]" onClick={() => router.push('/ContactUs')}>Contact</a></li>
+                <li className="md:pb-2 pb-1"><a className="text-[16px] md:text-[17px]" href="" onClick={() => router.push('/')}>Home</a></li>
+                <li className="md:pb-2 pb-1"><a className="cursor-pointer text-[16px] md:text-[17px]" onClick={() => router.push('/AboutUs')}>About Us</a></li>
+                <li className="md:pb-2 pb-1"><a className="cursor-pointer text-[16px] md:text-[17px]" onClick={() => router.push('/ContactUs')}>Contact</a></li>
               </ul>
             </div>
 
             {/* Help & Support */}
             <div className="w-full md:w-1/2 mb-4 md:mb-0">
-              <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Help & Support</h3>
+              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">Help & Support</h3>
               <ul>
-                <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[19px]" onClick={() => router.push('/ReturnPolicy')}>Return Policy</a></li>
-                <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[19px]" onClick={() => router.push('/Termsandcondition')}>Terms and Conditions</a></li>
-                <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[19px]" onClick={() => router.push('/DataPolicy')}>Data Policy</a></li>
+                <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/ReturnPolicy')}>Return Policy</a></li>
+                <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/Termsandcondition')}>Terms and Conditions</a></li>
+                <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/DataPolicy')}>Data Policy</a></li>
               </ul>
             </div>
           </div>
@@ -69,16 +69,16 @@ const Footer = () => {
           <div className='flex flex-col md:flex-row w-full'>
             {/* Other Links */}
             <div className="w-full md:w-1/2 mb-4 md:mb-0">
-              <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Other Links</h3>
+              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">Other Links</h3>
               <ul>
-                <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[19px]" onClick={() => router.push('/Myhistory')}>History</a></li>
-                <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[19px]" onClick={() => router.push('/Mybooking')}>My Order</a></li>
+                <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/Myhistory')}>History</a></li>
+                <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/Mybooking')}>My Order</a></li>
               </ul>
             </div>
 
             {/* Contact Us */}
             <div className="w-full md:w-1/2 mb-4 md:mb-0">
-              <h3 className="font-bold mb-4 xl:text-[22px] lg:text-[19px] text-[18px]">Contact Us</h3>
+              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">Contact Us</h3>
               <ul>
                 <li className="flex items-center mb-2">
                   <IoCall className="text-2xl mr-2" />

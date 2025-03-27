@@ -197,13 +197,13 @@ const EditProfile = ({ loader, toaster }) => {
             {/* Profile Card */}
             <div className="bg-white rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden">
                 {/* Banner Image */}
-                <div className="w-full h-28 md:h-48 relative">
+                {/* <div className="w-full h-28 md:h-48 relative">
                     <img
                         src="/Rectangle123.png"
                         alt="Profile banner"
                         className="w-full h-full object-cover"
                     />
-                </div>
+                </div> */}
 
                 {/* Profile Header */}
                 <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
