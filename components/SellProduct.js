@@ -10,7 +10,7 @@ import { Api } from '@/services/service';
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 
-const GroceryCatories = ({ item, i, url ,loader}) => {
+const SellProduct = ({ item, i, url ,loader}) => {
     const router = useRouter();
     const [cartData, setCartData] = useContext(cartContext);
     const [openCart, setOpenCart] = useContext(openCartContext);
@@ -18,11 +18,12 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
     const [user] = useContext(userContext);
     const [isFavorite, setIsFavorite] = useState(false);
     const [Favorite, setFavorite] = useContext(favoriteProductContext);
+    const [saleData, setSaleData] = useState([])
 
     const handleAddToCart = (item) => {
         let updatedCart = [...cartData];
         const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
-        const price = parseFloat(item?.price_slot[0]?.our_price);
+        const price = parseFloat(sellprice);
 
         if (existingItemIndex === -1) {
             const newItem = {
@@ -30,7 +31,7 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
                 selectedColor: item?.varients[0],
                 image: item?.varients[0]?.image[0],
                 total: price,
-                our_price: item?.price_slot[0]?.our_price,
+                our_price: price,
                 other_price: item?.price_slot[0]?.other_price,
                 price: price,
                 value: item?.price_slot[0]?.value,
@@ -40,7 +41,7 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
         } else {
             const nextState = produce(updatedCart, (draft) => {
                 draft[existingItemIndex].qty += 1;
-                draft[existingItemIndex].total = (price * draft[existingItemIndex].qty).toFixed(2);
+                draft[existingItemIndex].total = (sellprice * draft[existingItemIndex].qty).toFixed(2);
             });
             updatedCart = nextState;
         }
@@ -73,8 +74,9 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
 
     useEffect(() => {
         if (user && user.token) {
-            getProductById();
+            getProductById();  
         }
+        getSale();
     }, [user?.token]);
 
     useEffect(() => {
@@ -100,7 +102,24 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
         );
     };
 
-  
+    const getSale = async () => {
+        loader(true);
+
+        Api("get", "getFlashSale", router).then(
+            (res) => {
+                loader(false);
+                if (res.status) {
+                    setSaleData(res.data)
+                    console.log("dfghj",res.data)
+                }
+            },
+            (err) => {
+                loader(false);
+                console.log(err);
+                // toaster({ type: "error", message: err?.message });
+            }
+        );
+    };
     const addremovefavourite = () => {
         if (!user?.token) {
             return;
@@ -130,7 +149,12 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
     // Check if the item is in the cart and get its quantity
     const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
     const itemQuantity = cartItem ? cartItem.qty : 0;
+    console.log(saleData)
+    const convertedSellPrice = saleData.map((data) => data?.price);
 
+
+    const sellprice = convertedSellPrice.map((price) => Number(price));
+    console.log(sellprice)
     return (
         <div
             key={i}
@@ -165,9 +189,9 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
                 <p className="text-custom-gold text-lg md:text-xl font-semibold">
-                    ${item.price_slot[0].our_price}
+                    ${sellprice}
                     <del className="font-medium text-sm text-custom-black ml-2">
-                        ${item.price_slot[0].other_price}
+                        ${item.price_slot[0].our_price}
                     </del>
                 </p>
             </div>
@@ -220,4 +244,4 @@ const GroceryCatories = ({ item, i, url ,loader}) => {
     );
 };
 
-export default GroceryCatories;
+export default SellProduct;

@@ -188,6 +188,13 @@ const Navbar = (props) => {
         );
     };
 
+    const minDate = (() => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1); // Set to tomorrow
+        return tomorrow;
+    })();
+
     const closeDrawers = async () => {
         setOpenCart(false);
     };
@@ -199,8 +206,10 @@ const Navbar = (props) => {
             setUser(JSON.parse(userDetails));
             getProfileData();
         }
-        getProductById();
-    }, []);
+        if(user?.token){
+            getProductById();
+        }   
+    }, [user?.token]);
 
     const getProfileData = () => {
         props.loader(true);
@@ -280,7 +289,7 @@ const Navbar = (props) => {
                 image: element.selectedColor?.image,
                 color: element.selectedColor?.color || "",
                 total: element.total,
-                price: element.our_price,
+                price: element.total,
                 qty: element.qty,
                 seller_id: element.userid,
             });
@@ -290,7 +299,7 @@ const Navbar = (props) => {
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
         const dateOfDelivery = isDriveUp && date ? date : null;
-        const ParkingNo = isDriveUp && parkingNo ? parkingNo : null;
+        // const ParkingNo = isDriveUp && parkingNo ? parkingNo : null;
 
         let newData = {
             productDetail: data,
@@ -305,7 +314,7 @@ const Navbar = (props) => {
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
             isLocalDelivery: isLocalDelivery,
-            parkingNo: ParkingNo
+            // parkingNo: ParkingNo
         };
 
         props.loader && props.loader(true);
@@ -384,32 +393,28 @@ const Navbar = (props) => {
                 </div>
 
                 {/* Search Bar */}
-                <div className="flex items-center justify-center flex-grow mx-4"
-                    onClick={() => setViewPopup(true)}
-                >
+                <div className="flex items-center justify-center flex-grow mx-4 relative">
                     <input
                         type="text"
                         ref={inputRef2}
                         value={serchData}
                         onChange={(text) => {
                             setSearchData(text.target.value);
-                            if (text.target.value) {
-                                getproductBySearchCategory(text.target.value);
-                            } else {
-                                setProductsList([]);
-                            }
                         }}
                         placeholder="Search for products..."
-                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none"
+                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10" // Added padding-right for the cross icon
                     />
+                    {serchData && ( // Conditionally render the cross icon
+                        <div
+                            onClick={() => setSearchData('')}
+                            className="absolute right-5 md:right-72 pr-2 cursor-pointer" // Positioning the cross icon
+                        >
+                            <RxCross2 className="md:h-4 md:w-4 w-3 h-3 font-bold text-black" />
+                        </div>
+                    )}
                     <button
-                        className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green rounded-r-md"
-                        onClick={() => {
-                            if (serchData) {
-                                setViewPopup(true); // Open the drawer
-                                // getproductBySearchCategory(serchData);
-                            }
-                        }}
+                        className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer rounded-r-md"
+                        onClick={() => { router.push(`/Search/${serchData}`); }}
                     >
                         <FontAwesomeIcon icon={faSearch} className='text-black' />
                     </button>
@@ -690,13 +695,13 @@ const Navbar = (props) => {
                                                     selected={date}
                                                     onChange={handleDateChange}
                                                     inline
-                                                    minDate={new Date()}
+                                                    minDate={minDate}
                                                     onClickOutside={() => setIsOpen(false)}
                                                 />
                                             </div>
                                         )}
                                     </div>
-                                    <input
+                                    {/* <input
                                         type="text"
                                         name="parkingNo"
                                         placeholder="Designated Parking No"
@@ -704,7 +709,7 @@ const Navbar = (props) => {
                                         onChange={handleInputChange2}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none"
                                         required
-                                    />
+                                    /> */}
                                 </div>
                             </div>
                         </div>
@@ -738,7 +743,7 @@ const Navbar = (props) => {
                                                     onChange={handleDateChange1}
                                                     inline
                                                     onClickOutside={() => setIsOpen(false)}
-                                                    minDate={new Date()} // This will disable all dates before today
+                                                    minDate={minDate} // This will disable all dates before today + 1 
                                                 />
                                             </div>
                                         )}
@@ -976,7 +981,7 @@ const Navbar = (props) => {
             {/* Shipping Form Modal */}
 
 
-            {/* <Drawer open={showCategory1} anchor="top" onClose={closeDrawer1}> */}
+            {/* <Drawer open={showCategory1} anchor="top" onClose={closeDrawer1}>
             {viewPopup && (
                 <div className="fixed md:mt-6 top-0 left-0 w-screen bg-black/30 flex justify-center items-center !z-50">
                     <div className=' md:absolute top-[50px] w-full md:w-[80%]  md:max-w-[750px] h-auto  bg-white  m-auto !z-50'>
@@ -1053,7 +1058,7 @@ const Navbar = (props) => {
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
             {/* </Drawer> */}
 
         </>

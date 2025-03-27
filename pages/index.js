@@ -8,18 +8,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBoxOpen, faHeadset, faTruck, faLock } from '@fortawesome/free-solid-svg-icons';
 import { FaArrowRight } from "react-icons/fa6";
 import GroceryCatories from "@/components/GroceryCatories";
-
+import SellProduct from "@/components/SellProduct";
 export default function Home(props) {
   const router = useRouter();
   const [category, setCategory] = useState([]);
   const [productsData, setProductsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [productList, setProductList] = useState([]);
+  const [sellProduct,setSellProduct] = useState([])
   const [iscatdata, setIscatdata] = useState(false);
-  
+
   useEffect(() => {
     fetchCategories();
     fetchProducts();
+    fetchSellProduct();
   }, []);
 
   const fetchCategories = () => {
@@ -36,7 +38,21 @@ export default function Home(props) {
     );
   };
 
-  // New function to fetch all products
+  const fetchSellProduct = () => {
+    props.loader(true);
+    Api("get", "getProductbySale", null, router).then(
+      (res) => {
+        props.loader(false);
+        setSellProduct(res.data); 
+        console.log("====>",res.data)
+      },
+      (err) => {
+        props.loader(false);
+        props.toaster({ type: "error", message: err?.data?.message || "Failed to load categories" });
+      }
+    );
+  };
+
   const fetchProducts = () => {
     props.loader(true);
     Api("get", "getProduct", null, router).then(
@@ -58,13 +74,13 @@ export default function Home(props) {
       }
     );
   };
+  
+const handleCategoryClick = (categoryId) => {
+  setSelectedCategory(categoryId);
+  fetchProductsByCategory(categoryId);
+};
 
-  const handleCategoryClick = (categoryId) => {
-    setSelectedCategory(categoryId);
-    fetchProductsByCategory(categoryId);
-  };
-
-  const fetchProductsByCategory = async (categoryId) => {
+const fetchProductsByCategory = async (categoryId) => {
     props.loader(true);
     let url = `getProductbycategory/${categoryId}`;
     let params = {};
@@ -87,7 +103,7 @@ export default function Home(props) {
         props.toaster({ type: "error", message: err?.message });
       }
     );
-  };
+};
 
   const handleCategoryClick1 = (path) => {
     router.push(path);
@@ -97,7 +113,31 @@ export default function Home(props) {
 
   return (
     <div className="">
-       <MainHeader />
+      <MainHeader />
+      <div className="container mb-8 md:mt-8 mt-4 mx-auto bg-white max-w-7xl md:px-0 px-6">
+    {sellProduct.length > 0 && ( 
+    <>
+      <div className="text-center flex flex-col items-center justify-center">
+        <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">Flash Sale</h1>
+        <p className="text-gray-600 mt-2 w-full md:w-[50%] text-center text-[13px] md:text-[16px] italic">
+          Grab any product at a single price before the sale ends!
+        </p>
+      </div>
+      <div className="md:mt-8 mt-4 relative w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
+        {sellProduct.map((item, i) => (
+          <SellProduct
+            loader={props.loader}
+            key={i}
+            item={item}
+            i={i}
+            url={`/product-details/${item?.slug}`}
+          />
+        ))}
+      </div>
+    </>
+  )}
+      </div>
+
       <div className="hidden md:flex flex-col container mx-auto bg-white max-w-7xl md:px-0 px-6">
         <div className="text-center mb-8 flex flex-col items-center justify-center">
           <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">Categories</h1>
@@ -111,7 +151,7 @@ export default function Home(props) {
               <div className="">
                 {category.slice(0, 4).map((category, index) => (
                   <div key={index} className="mb-4 bg-[#F7F7F8] flex flex-col py-[18px] cursor-pointer rounded-sm justify-center items-center"
-                  onClick={() => { router.push(`/categories/${category?.slug}`) }}
+                    onClick={() => { router.push(`/categories/${category?.slug}`) }}
                   >
                     <p className="text-custom-black md:mb-2 mb-1 font-semibold 
                     md:text-[16px] text-[14px]">
@@ -197,12 +237,12 @@ export default function Home(props) {
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData.map((item, i) => (
-                      <GroceryCatories 
-                      {...props}
-                      key={i} 
-                      item={item}
-                      i={i} 
-                      url={`/product-details/${item?.slug}`} 
+                      <GroceryCatories
+                        loader={props?.loader}
+                        key={i}
+                        item={item}
+                        i={i}
+                        url={`/product-details/${item?.slug}`}
                       />
                     ))
                   ) : (
@@ -211,7 +251,8 @@ export default function Home(props) {
                 ) : (
                   productList.length > 0 ? (
                     productList.map((item, i) => (
-                      <GroceryCatories {...props} key={i} item={item} i={i} url={`/product-details/${item?.slug}`} />
+                      <GroceryCatories {...props} key={i} item={item} i={i}
+                        url={`/product-details/${item?.slug}`} />
                     ))
                   ) : (
                     <div className="flex justify-center md:text-[24px] items-center text-[18px] text-gray-500">No products available.</div>
