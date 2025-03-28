@@ -31,19 +31,19 @@ export default function Home(props) {
     props.loader(true);
 
     Api("get", "getFlashSale", router).then(
-        (res) => {
-            props.loader(false);
-            if (res.status) {
-                setSaleData(res.data)
-            }
-        },
-        (err) => {
-            props.loader(false);
-            console.log(err);
-            props.toaster({ type: "error", message: err?.message });
+      (res) => {
+        props.loader(false);
+        if (res.status) {
+          setSaleData(res.data)
         }
+      },
+      (err) => {
+        props.loader(false);
+        console.log(err);
+        props.toaster({ type: "error", message: err?.message });
+      }
     );
-};
+  };
   const fetchCategories = () => {
     props.loader(true);
     Api("get", "getCategory", null, router).then(
@@ -130,37 +130,43 @@ export default function Home(props) {
     setSelectedCategory('all');
     setIscatdata(false);
   };
+
   useEffect(() => {
-    const calculateCountdown = () => {
-        const newCountdown = saleData.map(sale => {
-            const endDate = new Date(sale.endDateTime).getTime();
-            const now = new Date().getTime();
-            const distance = endDate - now;
+        const calculateCountdown = () => {
+            const newCountdown = saleData.map(sale => {
+                const startDate = new Date(sale.startDateTime).getTime();
+                const endDate = new Date(sale.endDateTime).getTime();
+                const now = new Date().getTime();
 
-            if (distance < 0) {
-                return { ...sale, timeLeft: null }; // Sale has ended
-            }
+                if (now < startDate) {
+                    return { ...sale, timeLeft: { message: "Sale Starts Soon" } }; 
+                }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                if (now > endDate) {
+                    return { ...sale, timeLeft: null }; // Sale has ended
+                }
 
-            return {
-                ...sale,
-                timeLeft: { days, hours, minutes, seconds }
-            };
-        });
+                const distance = endDate - now;
 
-        setCountdown(newCountdown);
-    };
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    calculateCountdown();
-    const interval = setInterval(calculateCountdown, 1000);
+                return {
+                    ...sale,
+                    timeLeft: { days, hours, minutes, seconds }
+                };
+            });
 
-    return () => clearInterval(interval);
-}, [saleData]);
+            setCountdown(newCountdown);
+        };
 
+        calculateCountdown();
+        const interval = setInterval(calculateCountdown, 1000);
+
+        return () => clearInterval(interval);
+    }, [saleData]);
 
   return (
     <div className="">
@@ -174,37 +180,41 @@ export default function Home(props) {
                 Grab any product at a single price before the sale ends!
               </p> */}
               <div>
-              <h1 className="text-black m-2 text-[14px]"> Sale End Soon: </h1>
-              <div className="flex flex-col space-y-4">
-                                {countdown.map((sale, index) => (
-                                    <div key={index} className="p-4 bg-custom-green rounded-lg shadow-sm">
-                                        <h3 className="text-lg font-semibold">{sale.title}</h3>
-                                        {sale.timeLeft ? (
-                                            <div className="flex space-x-3 mt-2">
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-xl text-black  font-bold">{sale.timeLeft.days}</span>
-                                                    <span className="text-sm text-gray-600">Days</span>
-                                                </div>
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-xl text-black font-bold">{sale.timeLeft.hours}</span>
-                                                    <span className="text-sm text-gray-600">Hours</span>
-                                                </div>
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-xl text-black font-bold">{sale.timeLeft.minutes}</span>
-                                                    <span className="text-sm text-gray-600">Minutes</span>
-                                                </div>
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-xl text-black  font-bold">{sale.timeLeft.seconds}</span>
-                                                    <span className="text-sm text-gray-600">Seconds</span>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <p className="text-red-500 mt-2">Sale has ended</p>
-                                        )}
-                                    </div>
-                                ))}
+                <h1 className="text-black m-2 text-[14px]"> Sale End Soon: </h1>
+                <div className="flex flex-col space-y-4">
+                  {countdown.map((sale, index) => (
+                    <div key={index} className="p-4 bg-white rounded-lg shadow-lg">
+                      <h3 className="text-lg font-semibold">{sale.title}</h3>
+                      {sale.timeLeft ? (
+                        sale.timeLeft.message ? (
+                          <p className="text-blue-500 mt-2">{sale.timeLeft.message}</p> 
+                        ) : (
+                          <div className="flex space-x-4 mt-2">
+                            <div className="flex flex-col items-center">
+                              <span className="text-2xl text-black font-bold">{sale.timeLeft.days}</span>
+                              <span className="text-sm text-gray-500">Days</span>
                             </div>
+                            <div className="flex flex-col items-center">
+                              <span className="text-2xl text-black font-bold">{sale.timeLeft.hours}</span>
+                              <span className="text-sm text-gray-500">Hours</span>
                             </div>
+                            <div className="flex flex-col items-center">
+                              <span className="text-2xl text-black font-bold">{sale.timeLeft.minutes}</span>
+                              <span className="text-sm text-gray-500">Minutes</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                              <span className="text-2xl text-black font-bold">{sale.timeLeft.seconds}</span>
+                              <span className="text-sm text-gray-500">Seconds</span>
+                            </div>
+                          </div>
+                        )
+                      ) : (
+                        <p className="text-red-500 mt-2">Sale has ended</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="md:mt-4 mt-4 relative w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
               {sellProduct.map((item, i) => (
