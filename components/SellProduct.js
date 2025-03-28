@@ -122,7 +122,8 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
             }
         );
     };
-    const addremovefavourite = () => {
+
+      const addremovefavourite = () => {
         if (!user?.token) {
             return;
         }
@@ -146,17 +147,17 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                 console.log(err);
             }
         );
-    };
+      };
 
     // Check if the item is in the cart and get its quantity
     const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
     const itemQuantity = cartItem ? cartItem.qty : 0;
-    console.log(saleData)
+    // console.log(saleData)
     const convertedSellPrice = saleData.map((data) => data?.price);
 
-
     const sellprice = convertedSellPrice.map((price) => Number(price));
-    console.log(sellprice)
+    // console.log(sellprice)
+
     return (
         <div
             key={i}
@@ -171,7 +172,7 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                     //     router.push(url);
                     // }}
                 />
-                <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[40px] md:h-[45px] h-[40px] flex justify-center items-center md:mb-1 mb-2'
+                {/* <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[40px] md:h-[45px] h-[40px] flex justify-center items-center md:mb-1 mb-2'
                     onClick={addremovefavourite}
                 >
                     {isFavorite ? (
@@ -179,7 +180,7 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                     ) : (
                         <FaRegHeart className="text-black w-[23px] h-[23px]" />
                     )}
-                </div>
+                </div> */}
             </div>
 
             <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
