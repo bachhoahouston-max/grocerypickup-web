@@ -36,6 +36,7 @@ const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
                 value: item?.price_slot[0]?.value,
                 qty: 1,
             };
+            toaster({ type: "error", message: "item Add To Cart" });
             updatedCart.push(newItem);
         } else {
             const nextState = produce(updatedCart, (draft) => {
@@ -46,6 +47,7 @@ const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
         }
 
         setCartData(updatedCart);
+      
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
     };
 
@@ -102,8 +104,9 @@ const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
 
   
     const addremovefavourite = () => {
+        loader(true);
         if (!user?.token) {
-            return;
+           return toaster({ type: "error", message: "Login required" });
         }
         let data = {
             product: item?._id,
@@ -111,13 +114,17 @@ const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
         Api("post", "addremovefavourite", data, router).then(
             (res) => {
                 if (res.status) {
+                    loader(false);
                     if (isFavorite) {
                         setFavorite((prevFavorites) =>
                             prevFavorites.filter(fav => fav._id !== item._id)
                         );
+                        toaster({ type: "error", message: "item Remove From favourite" });
                     } else {
+                        toaster({ type: "Sucess", message: "item Added to favourite" });
                         setFavorite((prevFavorites) => [...prevFavorites, item]);
                     }
+                   
                     getProductById(); // Refresh the favorite products
                 }
             },
