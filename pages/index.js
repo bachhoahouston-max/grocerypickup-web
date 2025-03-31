@@ -133,35 +133,40 @@ export default function Home(props) {
 
   useEffect(() => {
     const calculateCountdown = () => {
+        
+        const nowIndia = new Date().getTime();
+        
         const newCountdown = saleData.map(sale => {
+            const startDate = new Date(sale.startDateTime).getTime();
             const endDate = new Date(sale.endDateTime).getTime();
-            const now = new Date().getTime();
-
-            if (now < endDate) {
-                // Sale is ongoing, calculate the countdown
-                const distance = endDate - now;
-
+            
+            console.log("Now:", new Date(nowIndia));
+            console.log("Start:", new Date(startDate));
+            console.log("End:", new Date(endDate));
+            
+            if (nowIndia < startDate) {
+                return { ...sale, timeLeft: null, status: 'Sale will start soon' };
+            } else if (nowIndia >= startDate && nowIndia < endDate) {
+                const distance = endDate - nowIndia;
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
                 return {
                     ...sale,
-                    timeLeft: { days, hours, minutes, seconds }
+                    timeLeft: { days, hours, minutes, seconds },
+                    status: 'Sale is live'
                 };
+            } else {
+                return { ...sale, timeLeft: null, status: 'Sale has ended' };
             }
-
-            // If the current time is past the end date
-            return { ...sale, timeLeft: null }; // Sale has ended
         });
-
+        
         setCountdown(newCountdown);
     };
-
+    
     calculateCountdown();
     const interval = setInterval(calculateCountdown, 1000);
-
     return () => clearInterval(interval);
 }, [saleData]);
 
@@ -178,11 +183,11 @@ export default function Home(props) {
                 Grab any product at a single price before the sale ends!
               </p> */}
               <div>
-                <h1 className="text-black m-2 text-[14px]"> Sale End Soon: </h1>
+                <h1 className="text-black m-2 text-[14px]"> Sale Status: </h1>
                 <div className="flex flex-col space-y-4">
                 {countdown.map((sale, index) => (
                                 <div key={index} className="p-4 bg-white rounded-lg shadow-lg">
-                                    <h3 className="text-xl text-black font-semibold"></h3>
+                                    {/* <h3 className="text-xl text-black font-semibold">Status</h3> */}
                                     {sale.timeLeft ? (
                                         <div className="flex space-x-4 mt-2">
                                             <div className="flex flex-col items-center">
@@ -203,7 +208,7 @@ export default function Home(props) {
                                             </div>
                                         </div>
                                     ) : (
-                                        <p className="text-red-500 mt-2">Sale has ended</p>
+                                        <p className="mt-2 text-red-600">{sale.status}</p>
                                     )}
                                 </div>
                             ))}
