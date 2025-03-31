@@ -206,9 +206,9 @@ const Navbar = (props) => {
             setUser(JSON.parse(userDetails));
             getProfileData();
         }
-        if(user?.token){
+        if (user?.token) {
             getProductById();
-        }   
+        }
     }, [user?.token]);
 
     const getProfileData = () => {
@@ -331,12 +331,14 @@ const Navbar = (props) => {
                     localStorage.removeItem("addCartDetail");
 
                     const data = res.data.orders
-                    const isOrderPickup = data?.map((data) => data.isOrderPickup === true)
+                   
+                    const isOrderPickup = data?.some(order => order?.isOrderPickup === true);
+                    const isDriveUp = data?.some(order => order?.isDriveUp === true);
 
                     if (isOrderPickup) {
                         props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });
-                    } else {
-                        props.toaster && props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly" });
+                    } else if (isDriveUp) {
+                        props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
                     }
 
                     router.push("/Mybooking");
