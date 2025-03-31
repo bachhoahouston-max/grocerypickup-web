@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { Api } from '@/services/service';
 
 const FeedbackForm = (props) => {
+ const router = useRouter();
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -58,6 +60,7 @@ const FeedbackForm = (props) => {
                         query: '',
                         message: ''
                     });
+                    router.push("/")
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to submit feedback" });
                 }

@@ -140,10 +140,7 @@ export default function Home(props) {
             const startDate = new Date(sale.startDateTime).getTime();
             const endDate = new Date(sale.endDateTime).getTime();
             
-            console.log("Now:", new Date(nowIndia));
-            console.log("Start:", new Date(startDate));
-            console.log("End:", new Date(endDate));
-            
+           
             if (nowIndia < startDate) {
                 return { ...sale, timeLeft: null, status: 'Sale will start soon' };
             } else if (nowIndia >= startDate && nowIndia < endDate) {

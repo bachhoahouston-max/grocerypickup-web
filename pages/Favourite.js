@@ -2,7 +2,8 @@ import { Api } from "@/services/service";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import GroceryCategories from "@/components/GroceryCatories";
-import ShopFasterTropicana from "@/components/ShopFasterMarketplace";
+import ShopFasterTropicana from "@/components/ShopFasterMarketplace"
+
 function Favourite(props) {
   const router = useRouter();
   const [favouriteList, setFavouriteList] = useState([]);
@@ -46,7 +47,12 @@ function Favourite(props) {
           {
             favouriteList.length > 0 ? (favouriteList.map((item, i) => (
               <div key={i} className='w-full'>
-                <GroceryCategories item={item?.product} i={i} url={`/product-details/${item?.product?.slug}`} />
+                <GroceryCategories 
+                item={item?.product}
+                loader={props.loader}
+                toaster={props.toaster}
+                 i={i} 
+                 url={`/product-details/${item?.product?.slug}`} />
               </div>
             ))) : (
               <div className='flex justify-center items-center col-span-10 h-[200px] md:h-[300px]'>
