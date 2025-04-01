@@ -116,7 +116,7 @@ const forgotPassword = (props) => {
 
                 if (res?.status) {
                     props.toaster({ type: "success", message: res?.data?.message });
-                    router.push("/auth/signIn");
+                    router.push("/signIn");
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message });
                 }

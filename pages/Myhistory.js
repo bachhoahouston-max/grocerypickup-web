@@ -116,7 +116,7 @@ function Myhistory(props) {
 
     return (
         <>
-            <div className="mx-auto max-w-7xl py-12">
+            <div className="mx-auto max-w-7xl py-12 min-h-screen">
                 <div className="flex flex-col justify-center items-center">
                     <h1 className="text-center text-[35px] md:text-[45px] font-semibold text-black mb-2">
                         My
@@ -154,7 +154,7 @@ function Myhistory(props) {
 
                                 <div className={expandedHistoryId === booking._id ? "block mt-4" : "hidden"}>
                                     <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-white p-3 rounded-[10px] border border-gray-200">
-                                        {booking.productDetail.map((product, index) => (
+                                        {booking.products.map((product, index) => (
                                             <div className="col-span-3 flex md:gap-5 gap-2 " key={index}>
                                                 <img
                                                     className="w-20 h-20 text-gray-600 rounded-[10px] object-contain border border-gray-200"
@@ -163,7 +163,7 @@ function Myhistory(props) {
                                                 />
                                                 <div className="flex-grow">
                                                     <p className="text-black text-base font-bold">
-                                                        {product?.product?.name || "Product Name"}
+                                                        {product?.product?.name}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
                                                         Quantity: {product.qty || 1}

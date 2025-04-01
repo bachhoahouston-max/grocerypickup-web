@@ -3,23 +3,18 @@ import { CountryDropdown } from 'react-country-region-selector';
 import { Api } from '@/services/service';
 
 const EditProfile = ({ loader, toaster }) => {
-    // Combined state for user profile data
+    // Combined state for all data
     const [profileData, setProfileData] = useState({
         username: '',
         email: '',
         gender: '',
         country: '',
         mobile: '',
-        shippingAddress: '', // Fixed variable name (was Shiping_address)
-    });
-
-    // Separate state for password management
-    const [passwordData, setPasswordData] = useState({
+        shippingAddress: '',
         password: '',
         confirmPassword: '',
     });
 
-    // User and editing state
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
@@ -32,29 +27,11 @@ const EditProfile = ({ loader, toaster }) => {
         }
     }, []);
      
-    // Properly handle input changes for profile data
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
+    // Improved input handler for each specific field
+    const handleInputChange = (name, value) => {
         setProfileData(prev => ({
             ...prev,
             [name]: value
-        }));
-    }; 
-
-    const handleInputChange1 = (e) => {
-        const { name, value } = e.target;
-        setProfileData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    }; 
-
-    // Handle password input changes
-    const handlePasswordChange = (e) => {
-        const { name, value } = e.target;
-        setPasswordData(prev => ({ 
-            ...prev, 
-            [name]: value 
         }));
     };
 
@@ -73,15 +50,15 @@ const EditProfile = ({ loader, toaster }) => {
             .then(res => {
                 loader(false);
                 if (res?.status) {
-                    // Map API response to our state structure
-                    setProfileData({
+                    setProfileData(prev => ({
+                        ...prev,
                         username: res.data.username || '',
                         email: res.data.email || '',
                         gender: res.data.gender || '',
                         country: res.data.country || '',
                         mobile: res.data.number || '',
-                        shippingAddress: res.data.Shiping_address || '' // Mapping API field to our state
-                    });
+                        shippingAddress: res.data.Shiping_address || ''
+                    }));
                 } else {
                     toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
                 }
@@ -98,12 +75,10 @@ const EditProfile = ({ loader, toaster }) => {
     // Update profile API call
     const updateProfile = () => {
         loader(true);
-
-        // Create payload with properly mapped field names
         const payload = {
             ...profileData,
-            number:profileData.mobile,
-            Shiping_address: profileData.shippingAddress // Map our state field to API expected field
+            number: profileData.mobile,
+            Shiping_address: profileData.shippingAddress
         };
 
         Api("post", "updateProfile", payload)
@@ -111,14 +86,12 @@ const EditProfile = ({ loader, toaster }) => {
                 loader(false);
                 if (res?.status) {
                     toaster({ type: "success", message: "Profile updated successfully" });
-
                     if (res.data) {
                         const userDetail = JSON.parse(localStorage.getItem('userDetail') || '{}');
                         const updatedUser = { ...userDetail, ...res.data };
                         localStorage.setItem('userDetail', JSON.stringify(updatedUser));
                         setUser(updatedUser);
                     }
-
                     setIsEditing(false);
                 } else {
                     toaster({ type: "error", message: res?.data?.message || "Failed to update profile" });
@@ -132,24 +105,32 @@ const EditProfile = ({ loader, toaster }) => {
 
     // Change password API call
     const changePassword = () => {
-        if (passwordData.password !== passwordData.confirmPassword) {
+        if (profileData.password !== profileData.confirmPassword) {
             toaster({ type: "error", message: "Passwords don't match" });
             return;
         }
 
-        if (!passwordData.password) {
+        if (!profileData.password) {
             toaster({ type: "error", message: "Password cannot be empty" });
             return;
         }
 
         loader(true);
+        const passwordData = {
+            password: profileData.password,
+            confirmPassword: profileData.confirmPassword
+        };
 
         Api("post", "profile/changePassword", passwordData)
             .then(res => {
                 loader(false);
                 if (res?.status) {
                     toaster({ type: "success", message: "Password changed successfully" });
-                    setPasswordData({ password: '', confirmPassword: '' });
+                    setProfileData(prev => ({
+                        ...prev,
+                        password: '',
+                        confirmPassword: ''
+                    }));
                 } else {
                     toaster({ type: "error", message: res?.data?.message || "Failed to change password" });
                 }
@@ -160,7 +141,7 @@ const EditProfile = ({ loader, toaster }) => {
             });
     };
 
-    // Reusable form field component
+    // Improved form field component with dedicated onChange handler
     const FormField = ({ label, name, type, value, placeholder }) => (
         <div className="mb-4">
             <label className="block text-gray-700 mb-1">{label}</label>
@@ -171,7 +152,7 @@ const EditProfile = ({ loader, toaster }) => {
                     type={type}
                     name={name}
                     value={value}
-                    onChange={handleInputChange1}
+                    onChange={(e) => handleInputChange(name, e.target.value)}
                 />
             ) : (
                 <div className="text-black w-full p-2 border rounded bg-gray-50">
@@ -196,15 +177,6 @@ const EditProfile = ({ loader, toaster }) => {
 
             {/* Profile Card */}
             <div className="bg-white rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden">
-                {/* Banner Image */}
-                {/* <div className="w-full h-28 md:h-48 relative">
-                    <img
-                        src="/Rectangle123.png"
-                        alt="Profile banner"
-                        className="w-full h-full object-cover"
-                    />
-                </div> */}
-
                 {/* Profile Header */}
                 <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
                     <div className="w-16 h-16 relative rounded-full overflow-hidden mb-3 sm:mb-0 sm:mr-4">
@@ -244,7 +216,7 @@ const EditProfile = ({ loader, toaster }) => {
                             placeholder="Your Email"
                         />
 
-                        {/* Gender Select */}
+                        {/* Gender Select with improved handler */}
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Gender</label>
                             {isEditing ? (
@@ -252,7 +224,7 @@ const EditProfile = ({ loader, toaster }) => {
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
                                     name="gender"
                                     value={profileData.gender}
-                                    onChange={handleInputChange}
+                                    onChange={(e) => handleInputChange('gender', e.target.value)}
                                 >
                                     <option value="">Select Gender</option>
                                     <option value="Male">Male</option>
@@ -265,14 +237,14 @@ const EditProfile = ({ loader, toaster }) => {
                             )}
                         </div>
 
-                        {/* Country Select */}
+                        {/* Country Select with improved handler */}
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Country</label>
                             {isEditing ? (
                                 <CountryDropdown
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
                                     value={profileData.country}
-                                    onChange={(val) => setProfileData(prev => ({ ...prev, country: val }))}
+                                    onChange={(val) => handleInputChange('country', val)}
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
@@ -281,12 +253,11 @@ const EditProfile = ({ loader, toaster }) => {
                             )}
                         </div>
 
-                        {/* Shipping Address Field */}
                         <FormField
                             label="Shipping Address"
-                            name="shippingAddress" // Fixed field name
+                            name="shippingAddress"
                             type="text"
-                            value={profileData.shippingAddress} // Fixed field reference
+                            value={profileData.shippingAddress}
                             placeholder="Shipping Address"
                         />
 
@@ -297,9 +268,23 @@ const EditProfile = ({ loader, toaster }) => {
                             value={profileData.mobile}
                             placeholder="Your Mobile Number"
                         />
+                        <FormField
+                            label="Shipping Address"
+                            name="shippingAddress"
+                            type="text"
+                            value={profileData.shippingAddress}
+                            placeholder="Shipping Address"
+                        />
+                        <FormField
+                            label="Shipping Address"
+                            name="shippingAddress"
+                            type="text"
+                            value={profileData.shippingAddress}
+                            placeholder="Shipping Address"
+                        />
                     </div>
 
-                    {/* Password Change Section - Only shown when not editing */}
+                    {/* Password Change Section with improved handlers */}
                     {!isEditing && (
                         <div className="mt-8">
                             <h3 className="text-lg font-semibold mb-4 text-black">Change Password</h3>
@@ -311,8 +296,8 @@ const EditProfile = ({ loader, toaster }) => {
                                         placeholder="Enter New Password"
                                         type="password"
                                         name="password"
-                                        value={passwordData.password}
-                                        onChange={handlePasswordChange}
+                                        value={profileData.password}
+                                        onChange={(e) => handleInputChange('password', e.target.value)}
                                     />
                                 </div>
                                 <div className="mb-4">
@@ -322,8 +307,8 @@ const EditProfile = ({ loader, toaster }) => {
                                         placeholder="Confirm New Password"
                                         type="password"
                                         name="confirmPassword"
-                                        value={passwordData.confirmPassword}
-                                        onChange={handlePasswordChange}
+                                        value={profileData.confirmPassword}
+                                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                                     />
                                 </div>
                             </div>

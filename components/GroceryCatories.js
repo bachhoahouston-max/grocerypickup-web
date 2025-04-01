@@ -119,9 +119,9 @@ const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
                         setFavorite((prevFavorites) =>
                             prevFavorites.filter(fav => fav._id !== item._id)
                         );
-                        toaster({ type: "error", message: "item Remove From favourite" });
+                        toaster({ type: "error", message: "Item Remove From Favorite" });
                     } else {
-                        toaster({ type: "Sucess", message: "item Added to favourite" });
+                        toaster({ type: "Sucess", message: "Item Added to Favorite" });
                         setFavorite((prevFavorites) => [...prevFavorites, item]);
                     }
                    

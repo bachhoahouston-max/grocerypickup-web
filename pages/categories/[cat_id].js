@@ -191,7 +191,10 @@ function Categories(props) {
                                 {productList.length > 0 ? (
                                     productList.map((item, i) => (
                                         <div key={i} className='p-1 w-full md:mb-5 mb-2'>
-                                            <GroceryCatories item={item} i={i} url={`/product-details/${item?.slug}`} />
+                                            <GroceryCatories
+                                            loader={props.loader}
+                                            toaster={props.toaster}
+                                             item={item} i={i} url={`/product-details/${item?.slug}`} />
                                         </div>
                                     ))
                                 ) : (

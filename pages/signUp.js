@@ -25,8 +25,7 @@ const SignUp = (props) => {
   const submitSignUp = (e) => {
     e.preventDefault();
 
-    if (!userDetail.name || !userDetail.email || !userDetail.number || !userDetail.password) {
-      // You can add your toaster here to show validation error
+    if (!userDetail.name || !userDetail.email || !userDetail.number || !userDetail.password) { 
       props?.toaster?.({ type: "error", message: "Please fill all required fields" });
       return;
     }

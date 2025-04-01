@@ -9,15 +9,37 @@ function Mybooking(props) {
     const [expandedBookingId, setExpandedBookingId] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [parkingNo, setParkingNo] = useState("");
+    const [Id, setId] = useState("")
 
-    const toggleModal = () => {
+    const toggleModal = (id) => {
+        setId(id)
         setIsOpen(!isOpen);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Parking No:", parkingNo);
-        setIsOpen(false);
+
+        const data = {
+            parkingNo,
+            id: Id
+
+        };
+        props.loader(true);
+        Api("post", "updateProductRequest", data, router).then(
+            (res) => {
+                props.loader(false);
+                setIsOpen(false);
+                setParkingNo('')
+                props.toaster({ type: "success", message: "Parking No. Added Successfully" });
+                getBookingsByUser();
+            },
+            (err) => {
+                props.loader(false);
+                console.log(err);
+                props.toaster({ type: "error", message: err?.message });
+            }
+        );
+
     };
 
     useEffect(() => {
@@ -31,6 +53,9 @@ function Mybooking(props) {
                 props.loader(false);
                 console.log("res================>", res);
                 setBookingsData(res.data);
+                // const ParkingNo = res.data.map((data) => data.parkingNo)
+                // console.log(ParkingNo)
+                // setParkingNo(ParkingNo)
 
                 // console.log(isDriveUp);
             },
@@ -69,7 +94,7 @@ function Mybooking(props) {
 
     return (
         <>
-            <div className="mx-auto max-w-7xl py-12">
+            <div className="mx-auto max-w-7xl py-12 min-h-screen">
                 <div className="flex flex-col justify-center items-center">
                     <h1 className="text-center text-[35px] md:text-[45px] font-semibold text-black mb-2">
                         My
@@ -102,13 +127,13 @@ function Mybooking(props) {
                                         </div>
                                         <div className="flex justify-between">
                                             <p className="text-[18px] text-black md:text-[24px]">My Booking ({formatDate(booking.createdAt) || "N/A"})</p>
-                                            
-                                            {booking?.isDriveUp && ( // Check if isDriveup is true
+
+                                            {booking?.isDriveUp && ( // Check if isDriveUp is true
                                                 <p
-                                                    onClick={toggleModal}
+                                                    onClick={() => toggleModal(booking._id)}
                                                     className="px-4 py-2 bg-custom-gold text-white rounded"
                                                 >
-                                                    Parking No.
+                                                    {booking.parkingNo ? "Update Parking No." : "Parking No."}
                                                 </p>
                                             )}
 
@@ -134,8 +159,8 @@ function Mybooking(props) {
                                                     <input
                                                         type="text"
                                                         id="parkingNo"
-                                                        value={parkingNo}
-                                                        onChange={(e) => setParkingNo(e.target.value)}
+                                                        value={parkingNo} // Ensure value is controlled
+                                                        onChange={(e) => setParkingNo(e.target.value)} // Ensure setParkingNo is defined
                                                         className="border text-black border-gray-300 rounded p-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
                                                         placeholder="Enter Parking Number"
                                                         required

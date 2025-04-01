@@ -27,26 +27,26 @@ const FeedbackForm = (props) => {
         });
     };
 
-    const validateForm = () => {
-        const newErrors = {};
-        Object.keys(formData).forEach((key) => {
-            if (!formData[key]) {
-                newErrors[key] = `${key.charAt(0).toUpperCase() + key.slice(1)} is required`;
-            }
-        });
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0; // Return true if no errors
-    };
+    
 
     const submitFeedback = (e) => {
         e.preventDefault();
         props.loader(true);
-
-        if (!validateForm()) {
+    
+        // Validation
+        // if (!formData.fullName || !formData.email || !formData.phoneNumber || !formData.query || !formData.message) {
+        //     props.loader(false);
+        //     props.toaster({ type: "error", message: "All fields are required." });
+        //     return;
+        // }
+    
+        // Phone number validation
+        if (formData.phoneNumber.length !== 10) {
             props.loader(false);
-            return; // Stop submission if validation fails
+            props.toaster({ type: "error", message: "Phone number must be exactly 10 digits." });
+            return;
         }
-
+    
         Api("post", "createFeedback", formData).then(
             (res) => {
                 props.loader(false);
@@ -60,7 +60,7 @@ const FeedbackForm = (props) => {
                         query: '',
                         message: ''
                     });
-                    router.push("/")
+                    router.push("/");
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to submit feedback" });
                 }
@@ -96,6 +96,7 @@ const FeedbackForm = (props) => {
                                 onChange={handleChange}
                                 className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] outline-none rounded-md ${errors.fullName ? 'border-red-500' : ''}`}
                                 placeholder="Vaibhav"
+                                required
                             />
                             {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
                         </div>
@@ -108,6 +109,7 @@ const FeedbackForm = (props) => {
                                 onChange={handleChange}
                                 className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] rounded-md outline-none ${errors.email ? 'border-red-500' : ''}`}
                                 placeholder="Vaibhavmehrotra84@gmail.com"
+                                required
                             />
                             {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                         </div>
@@ -122,28 +124,22 @@ const FeedbackForm = (props) => {
                                 maxLength={10}
                                 className={`w-full mt-2 p-2 text-gray-700 border bg-[#F9F9F9] rounded-md outline-none ${errors.phoneNumber ? 'border-red-500' : ''}`}
                                 placeholder="987846447874"
+                                required
                             />
                             {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
                         </div>
 
-                        <div className="">
-                            <label className="block text-gray-700 text-[16px]">Message </label>
-                            <input
-                                name="message"
-                                value={formData.message}
-                                onChange={handleChange}
-                                className={`w-full mt-2 p-2 border text-gray-700 bg-[#F9F9F9] rounded-md ${errors.message ? 'border-red-500' : ''}`}
-                            />
-                            {errors.message && <p className="text-red-500 text-sm">{errors.message}</p>}
-                        </div>
+                      
+
                         <div>
                             <label className="block text-gray-700 text-[16px]">My Query *</label>
                             <textarea
                                 name="query"
-                                rows="4"
+                                rows="3"
                                 value={formData.query}
                                 onChange={handleChange}
                                 className={`text-gray-700 w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md ${errors.query ? 'border-red-500' : ''}`}
+                                required
                             >
                             </textarea>
                             {errors.query && <p className="text-red-500 text-sm">{errors.query}</p>}
