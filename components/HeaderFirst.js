@@ -98,7 +98,7 @@ const HeaderFirst = (props) => {
                         About Us
                     </p>
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'Contact' ? 'text-custom-green' : 'text-custom-black'}`}
-                        onClick={() => { router.push('/ContactUs'); setSelectedTab('ContactUs'); }}>
+                        onClick={() => { router.push('/ContactUs'); setSelectedTab('Contact'); }}>
                         Contact
                     </p>
                 </div>

@@ -459,6 +459,8 @@ function ProductDetails(props) {
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories
+                  loader={props.loader}
+                  toaster={props.toaster}
                   item={item}
                   i={i}
                   url={`/product-details/${item?.slug}`}
@@ -476,6 +478,8 @@ function ProductDetails(props) {
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories
+                 loader={props.loader}
+                 toaster={props.toaster}
                   item={item}
                   i={i}
                   url={`/product-details/${item?.slug}`}

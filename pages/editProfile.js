@@ -27,7 +27,6 @@ const EditProfile = ({ loader, toaster }) => {
         }
     }, []);
      
-    // Improved input handler for each specific field
     const handleInputChange = (name, value) => {
         setProfileData(prev => ({
             ...prev,
@@ -35,7 +34,7 @@ const EditProfile = ({ loader, toaster }) => {
         }));
     };
 
-    // Fetch profile data from API
+  
     const getProfileData = () => {
         loader(true);
         const token = localStorage.getItem('token');
@@ -69,12 +68,17 @@ const EditProfile = ({ loader, toaster }) => {
             });
     };
 
-    // Toggle edit mode
+    
     const toggleEditMode = () => setIsEditing(!isEditing);
 
-    // Update profile API call
+   
     const updateProfile = () => {
         loader(true);
+        if (profileData.mobile.length !== 10) {
+            loader(false);
+            toaster({ type: "error", message: "Phone number must be exactly 10 digits." });
+            return;
+        }
         const payload = {
             ...profileData,
             number: profileData.mobile,
@@ -103,7 +107,7 @@ const EditProfile = ({ loader, toaster }) => {
             });
     };
 
-    // Change password API call
+   
     const changePassword = () => {
         if (profileData.password !== profileData.confirmPassword) {
             toaster({ type: "error", message: "Passwords don't match" });
@@ -140,27 +144,6 @@ const EditProfile = ({ loader, toaster }) => {
                 toaster({ type: "error", message: err?.data?.message || "Failed to change password" });
             });
     };
-
-    // Improved form field component with dedicated onChange handler
-    const FormField = ({ label, name, type, value, placeholder }) => (
-        <div className="mb-4">
-            <label className="block text-gray-700 mb-1">{label}</label>
-            {isEditing ? (
-                <input
-                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                    placeholder={placeholder}
-                    type={type}
-                    name={name}
-                    value={value}
-                    onChange={(e) => handleInputChange(name, e.target.value)}
-                />
-            ) : (
-                <div className="text-black w-full p-2 border rounded bg-gray-50">
-                    {value || `No ${label.toLowerCase()} provided`}
-                </div>
-            )}
-        </div>
-    );
 
     return (
         <div className="mx-auto max-w-7xl px-4 py-6 md:py-12">
@@ -201,21 +184,42 @@ const EditProfile = ({ loader, toaster }) => {
                 {/* Profile Form */}
                 <div className="p-4 md:p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <FormField
-                            label="Full Name"
-                            name="username"
-                            type="text"
-                            value={profileData.username}
-                            placeholder="Your Full Name"
-                        />
-                        <FormField
-                            label="Email"
-                            name="email"
-                            type="email"
-                            value={profileData.email}
-                            placeholder="Your Email"
-                        />
 
+                    <div className="mb-4">
+                            <label className="block text-gray-700 mb-1">Full Name</label>
+                            {isEditing ? (
+                                <input
+                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
+                                    value={profileData.username}
+                                    type='text'
+                                    name="username"
+                                    placeholder="Your Name"
+                                    onChange={(e) => handleInputChange("username", e.target.value)}
+                                />
+                            ) : (
+                                <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                    {profileData.username || ' Not provided'}
+                                </div>
+                            )}
+                    </div>
+                    <div className="mb-4">
+                            <label className="block text-gray-700 mb-1">Email</label>
+                            {isEditing ? (
+                                <input
+                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
+                                    value={profileData.email}
+                                    type='email'
+                                    name="email"
+                                    placeholder="Your Email"
+                                    onChange={(e) => handleInputChange("email", e.target.value)}
+                                />
+                            ) : (
+                                <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                    {profileData.email || ' Not provided'}
+                                </div>
+                            )}
+                    </div>
+                    
                         {/* Gender Select with improved handler */}
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Gender</label>
@@ -253,38 +257,43 @@ const EditProfile = ({ loader, toaster }) => {
                             )}
                         </div>
 
-                        <FormField
-                            label="Shipping Address"
-                            name="shippingAddress"
-                            type="text"
-                            value={profileData.shippingAddress}
-                            placeholder="Shipping Address"
-                        />
-
-                        <FormField
-                            label="Mobile"
-                            name="mobile"
-                            type="text"
-                            value={profileData.mobile}
-                            placeholder="Your Mobile Number"
-                        />
-                        <FormField
-                            label="Shipping Address"
-                            name="shippingAddress"
-                            type="text"
-                            value={profileData.shippingAddress}
-                            placeholder="Shipping Address"
-                        />
-                        <FormField
-                            label="Shipping Address"
-                            name="shippingAddress"
-                            type="text"
-                            value={profileData.shippingAddress}
-                            placeholder="Shipping Address"
-                        />
+                        <div className="mb-4">
+                            <label className="block text-gray-700 mb-1">Shipping Address</label>
+                            {isEditing ? (
+                                <input
+                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
+                                    value={profileData.shippingAddress}
+                                    type='text'
+                                    name="shippingAddress"
+                                    placeholder="Shipping Address"
+                                    onChange={(e) => handleInputChange("shippingAddress", e.target.value)}
+                                />
+                            ) : (
+                                <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                    {profileData.shippingAddress || 'No Address provided'}
+                                </div>
+                            )}
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 mb-1">Mobile</label>
+                            {isEditing ? (
+                                <input
+                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
+                                    value={profileData.mobile}
+                                    type='text'
+                                    name="mobile"
+                                    placeholder="Your Mobile Number"
+                                    onChange={(e) => handleInputChange("mobile", e.target.value)}
+                                />
+                            ) : (
+                                <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                    {profileData.mobile || ' Not provided'}
+                                </div>
+                            )}
+                        </div>
+                     
                     </div>
 
-                    {/* Password Change Section with improved handlers */}
                     {!isEditing && (
                         <div className="mt-8">
                             <h3 className="text-lg font-semibold mb-4 text-black">Change Password</h3>
