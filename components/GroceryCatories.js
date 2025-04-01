@@ -106,6 +106,7 @@ const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
     const addremovefavourite = () => {
         loader(true);
         if (!user?.token) {
+           loader(false);
            return toaster({ type: "error", message: "Login required" });
         }
         let data = {
