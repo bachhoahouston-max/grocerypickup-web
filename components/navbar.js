@@ -409,9 +409,10 @@ const Navbar = (props) => {
                     {serchData && ( // Conditionally render the cross icon
                         <div
                             onClick={() => setSearchData('')}
-                            className="absolute right-5 md:right-72 pr-2 cursor-pointer" // Positioning the cross icon
+                            className="flex justify-center items-center right-5 bg-custom-green
+                             md:py-[12px] lg:py-[12.5px] xl:py-[13px] py-[10.5px] cursor-pointer" // Positioning the cross icon
                         >
-                            <RxCross2 className="md:h-4 md:w-4 w-3 h-3 font-bold text-black" />
+                            <RxCross2 className="md:h-4 mx-1 md:w-4 w-3 h-3 font-bold text-black" />
                         </div>
                     )}
                     <button
@@ -523,7 +524,7 @@ const Navbar = (props) => {
                 {/* Lock and Heart Icons */}
                 <div className="flex items-center justify-end space-x-2">
                     <div
-                        className="cursor-pointer"
+                        className="cursor-pointer md:flex hidden"
                         onClick={() => {
                             setOpenCart(true);
                             setMobileMenu(!mobileMenu);
@@ -839,9 +840,9 @@ const Navbar = (props) => {
                                     </div>
                                     <div className="flex  justify-center items-center col-span-3 md:mt-0 mt-5 md:hidden">
                                         <p className="text-custom-black font-semibold text-base">
-                                            ₹{item?.our_price}
+                                            ${item?.our_price}
                                             <del className="text-red-500 font-normal text-xs ml-2">
-                                                ₹{item?.other_price}
+                                                ${item?.other_price}
                                             </del>
                                         </p>
                                         <IoMdClose
@@ -901,9 +902,9 @@ const Navbar = (props) => {
 
                                 <div className="md:flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-5 hidden">
                                     <p className="text-custom-black font-semibold text-base">
-                                        ₹{item?.our_price}
+                                        ${item?.our_price}
                                         <del className="text-red-500 font-normal text-xs ml-2">
-                                            ₹{item?.other_price}
+                                            ${item?.other_price}
                                         </del>
                                     </p>
                                     <IoMdClose
@@ -924,16 +925,16 @@ const Navbar = (props) => {
                                     Item Total
                                 </p>
                                 <p className="text-custom-black font-normal text-base">
-                                    ₹{CartTotal}
+                                    ${CartTotal}
                                 </p>
                             </div>
 
                             <div className="flex justify-between items-center w-full pt-3">
                                 <p className="text-black font-normal text-base">
-                                    Delivery Fee (₹35 Saved)
+                                    Delivery Fee ($35 Saved)
                                 </p>
                                 <p className="text-custom-black font-normal text-base">
-                                    ₹{deliveryCharge}
+                                    ${deliveryCharge}
                                 </p>
                             </div>
 
@@ -942,7 +943,7 @@ const Navbar = (props) => {
                                     Delivery Partner Tip
                                 </p>
                                 <p className="font-normal text-base text-custom-black">
-                                    ₹{deliveryPartnerTip}
+                                    ${deliveryPartnerTip}
                                 </p>
                             </div>
 
@@ -951,7 +952,7 @@ const Navbar = (props) => {
                                     Total Payable
                                 </p>
                                 <p className="text-custom-black font-medium text-base">
-                                    ₹{mainTotal}
+                                    ${mainTotal}
                                 </p>
                             </div>
                         </div>
@@ -974,7 +975,7 @@ const Navbar = (props) => {
                                 }
                             }}
                         >
-                            CONTINUE TO PAY ₹{CartTotal}
+                            CONTINUE TO PAY ${CartTotal}
                         </button>
                     )}
                 </div>

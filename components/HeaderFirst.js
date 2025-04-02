@@ -51,7 +51,7 @@ const HeaderFirst = (props) => {
 
     return (
         <nav className="bg-white border-t-1 border-[#F0F1F1]">
-            <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+            <div className="container mx-auto px-4 py-2 flex justify-center items-center">
                 <div className="hidden flex-1 lg:flex justify-center space-x-6">
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'home' ? 'text-custom-green' : 'text-custom-black'}`}
                         onClick={() => { router.push('/'); setSelectedTab('home'); }}
@@ -102,7 +102,7 @@ const HeaderFirst = (props) => {
                         Contact
                     </p>
                 </div>
-                <div className="hidden lg:flex items-center space-x-2 mr-8">
+                <div className="hidden lg:flex items-center space-x-2 mr-6">
                     <BiPhoneCall className="text-[#FEC200] text-3xl" />
                     <a href="tel:6393274099" className="text-custom-black cursor-pointer font-semibold">+(402) 54646</a>
 

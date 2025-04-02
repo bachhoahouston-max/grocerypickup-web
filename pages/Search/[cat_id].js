@@ -80,7 +80,7 @@ function Categories(props) {
     };
 
     return (
-        <div className="bg-white w-full">
+        <div className="bg-white w-full min-h-screen">
             <section className="bg-white w-full flex flex-col justify-center items-center">
                 <div className="md:px-16 mx-auto w-full px-2 md:pt-10 pt-5 md:pb-10 pb-5">
                     <div className='grid md:grid-cols-5 grid-cols-2 w-full md:gap-2 gap-2'>

@@ -30,6 +30,12 @@ const SignUp = (props) => {
       return;
     }
 
+    if (userDetail.number.length !== 10) {
+      props.loader(false);
+      props.toaster({ type: "error", message: "Mobile number must be exactly 10 digits." });
+      return;
+  }
+
     props?.loader?.(true);
     const data = {
       email: userDetail.email.toLowerCase(),
