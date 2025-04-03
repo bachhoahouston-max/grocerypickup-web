@@ -828,7 +828,7 @@ const Navbar = (props) => {
                                     />
                                     <div className="pt-2 flex justify-start items-start">
                                         <div className="flex justify-center items-center">
-                                            <p className=" text-custom-black md:w-[80%] w-[60%] font-semibold md:text-[16px] text-[13px] ">
+                                            <p className="text-custom-black text-center md:w-[80%] w-full font-semibold md:text-[16px] text-[13px] ">
                                                 {item?.name}
                                             </p>
                                         </div>
