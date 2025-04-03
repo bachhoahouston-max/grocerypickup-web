@@ -381,9 +381,9 @@ const Navbar = (props) => {
 
     return (
         <>
-            <header className="flex  justify-between items-center p-4 bg-white shadow-md">
+            <header className="flex max-w-8xl justify-between items-center p-4 bg-white shadow-md">
                 {/* Logo */}
-                <div className="md:ms-20 ms-0 flex items-center">
+                <div className="md:ms-32 lg:ms-10 xl:ms-28 ms-0 flex items-center">
                     <img
                         src="/logo.png"
                         alt="Grocery logo with palm tree and text 'Tropicana' in green and 'Freshness' in blue"
@@ -404,7 +404,8 @@ const Navbar = (props) => {
                             setSearchData(text.target.value);
                         }}
                         placeholder="Search for products..."
-                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10" // Added padding-right for the cross icon
+                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10" 
+                        // Added padding-right for the cross icon
                     />
                     {serchData && ( // Conditionally render the cross icon
                         <div

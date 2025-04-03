@@ -133,24 +133,24 @@ function Mybooking(props) {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-6 md:mx-auto md:gap-12 gap-8 max-w-6xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-3 md:mx-auto md:gap-12 gap-4 max-w-6xl">
                     {groupedBookingsArray && groupedBookingsArray.length > 0 ? (
                         groupedBookingsArray.map((booking, key) => (
-                            <div key={key} className="bg-white p-4 rounded-md border-2 border-[#999999] h-auto self-start">
+                            <div key={key} className="bg-white md:p-4 p-2.5 rounded-md border-2 border-[#999999] h-auto self-start">
                                 <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleBooking(booking._id)}>
                                     <div className="flex flex-col justify-start w-full">
-                                        <div className="flex flex-row justify-between items-center mb-4">
-                                            <div className="bg-custom-green text-black rounded-full h-[50px] w-[50px] flex items-center justify-center mr-1 text-[24px]">
+                                        <div className="flex flex-row justify-between items-center mb-2">
+                                            <div className="bg-custom-green text-black rounded-full 
+                                            md:h-[50px] h-[40px] md:w-[50px] w-[40px] flex items-center justify-center mr-1 md:text-[24px] text-[18px]">
                                                 {key + 1}
                                             </div>
                                             {booking?.status === 'Completed' ? (
-                                                <p className="px-4 py-2 text-[18px] text-green-500 rounded">
-
+                                                <p className="">
                                                 </p>
                                             ) : (
                                                 booking?.SecretCode && (
-                                                    <p className="px-4 py-2 text-[14px] text-black rounded">
-                                                        Your Secret Code is {booking.SecretCode}. Please do not share this with anyone.
+                                                    <p className="px-2 py-2 md:text-[16px] text-[14px] text-black rounded md:w-[440px] w-[230px]">
+                                                        Secret Code is {booking.SecretCode}. Please do not share this with anyone.
                                                     </p>
                                                 )
                                             )}
@@ -163,24 +163,27 @@ function Mybooking(props) {
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
-                                            <p className="text-[18px] text-black md:text-[24px]">My Order ({formatDate(booking.createdAt) || "N/A"})</p>
+                                            <p className="text-[15px] text-black md:text-[20px]">My Order ({formatDate(booking.createdAt) || "N/A"})</p>
                                             {booking?.status === 'Completed' ? (
-                                                <p className="px-4 md:py-2 py-2 text-[16px] text-green-500 rounded">
+                                                <p className=" md:py-2 py-0 text-[15px] text-green-500 rounded">
                                                     Order Delivered
                                                 </p>
                                             ) : booking?.status === 'Pending' ? (
                                                 <>
-                                                    <p className="md:py-2 py-0 text-[16px] text-red-500 rounded">
-                                                        Order Pending
-                                                    </p>
+                                                <div className="flex md:flex-row flex-col">
+                                                    
                                                     {booking?.isDriveUp && (
                                                         <p
                                                             onClick={() => toggleModal(booking._id)}
-                                                            className="px-2 py-1.5 bg-custom-gold text-white rounded"
+                                                            className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded"
                                                         >
                                                             {booking.parkingNo ? "Update Parking No." : "Parking No."}
                                                         </p>
                                                     )}
+                                                    <p className="md:py-2 text-right pr-2  py-0 text-[16px] text-red-500 rounded">
+                                                        Order Pending
+                                                    </p>
+                                                    </div>
                                                 </>
                                             ) : (
                                                 (booking?.isLocalDelivery || booking?.isOrderPickup) && (

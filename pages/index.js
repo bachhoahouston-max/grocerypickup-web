@@ -326,7 +326,7 @@ export default function Home(props) {
               <div className="relative w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0 ">
                 {iscatdata ? (
                   productsData.length > 0 ? (
-                    productsData.map((item, i) => (
+                    productsData.slice(0, 8).map((item, i) => (
                       <GroceryCatories
                         loader={props.loader}
                         toaster={props.toaster}
@@ -341,7 +341,7 @@ export default function Home(props) {
                   )
                 ) : (
                   productList.length > 0 ? (
-                    productList.map((item, i) => (
+                    productList.slice(0, 8).map((item, i) => (
                       <GroceryCatories
                         loader={props.loader}
                         toaster={props.toaster}

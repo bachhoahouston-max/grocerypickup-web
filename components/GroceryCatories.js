@@ -153,13 +153,13 @@ const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
                         router.push(url);
                     }}
                 />
-                <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[40px] md:h-[45px] h-[40px] flex justify-center items-center md:mb-1 mb-2'
+                <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[36px] md:h-[45px] h-[36px] flex justify-center items-center md:mb-1 mb-2'
                     onClick={addremovefavourite}
                 >
                     {isFavorite ? (
-                        <FaHeart className="text-red-700 md:w-[23px] w-[20px] h-[23px]" />
+                        <FaHeart className="text-red-700 md:w-[23px] w-[18px] md:h-[23px] h-[20px]" />
                     ) : (
-                        <FaRegHeart className="text-black w-[23px] h-[23px]" />
+                        <FaRegHeart className="text-black md:w-[23px] w-[18px] md:h-[23px] h-[20px]" />
                     )}
                 </div>
             </div>

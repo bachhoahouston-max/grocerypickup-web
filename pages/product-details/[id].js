@@ -212,11 +212,11 @@ function ProductDetails(props) {
                 </div>
 
                 <div className="flex text-gray-400 mt-1 mb-1 " >
-                  <p className="text-[18px]">Home</p>
-                  <SlArrowRight className="font-bold mt-1.5 ml-1" />
-                  <p className="text-[18px]">{productsId?.categoryName}</p>
-                  <SlArrowRight className="font-bold mt-1.5 mr-1 ml-1" />
-                  <p className="text-[18px]"> {productsId?.name} </p>
+                  <p className="md:text-[18px] text-[14px]">Home</p>
+                  <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
+                  <p className="md:text-[18px] text-[14px]">{productsId?.categoryName}</p>
+                  <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
+                  <p className="md:text-[18px] text-[14px]"> {productsId?.name} </p>
                 </div>
                 <div className="pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
                   {priceSlot &&
@@ -374,40 +374,7 @@ function ProductDetails(props) {
                 )
               }
 
-                {/* {productsId.attributes?.some(
-                  (attribute) => attribute.name === "color"
-                ) && (
-                    <div className="w-full">
-                      <p className="text-custom-newBlacks font-semibold text-lg md:pt-5 pt-3 pb-3">
-                        Select Colors
-                      </p>
-                      <div className="flex gap-2 flex-wrap">
-                        {productsId?.varients?.map((item, i) => (
-                          <div
-                            key={i}
-                            className="md:w-[37px] w-[19px] md:h-[37px] h-[19px] rounded-full flex justify-center items-center border border-black"
-                            style={{ background: item?.color }}
-                            onClick={() => {
-                              item.selected.forEach((ele) => {
-                                ele.request = 0;
-                              });
-                              setSelectedColor(item);
-                              setSelectedImageList(item?.image);
-                              setSelectedImage(item?.image[0]);
-                            }}
-                          >
-                            {selectedColor?.color === item?.color && (
-                              <FaCheck className="md:w-[18px] w-[11px] md:h-[15px] h-[8px] text-white" />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )} */}
-
-
-
-
+          
               </div>
             </div>
           </div>
@@ -503,7 +470,7 @@ function ProductDetails(props) {
             </p>
 
             {/* Reviews Grid Layout */}
-            <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 md:w-full w-[400px] ">
+            <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[320px] ">
               {productReviews?.map((item, i) => (
                 <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
                   <div className='pt-2 flex justify-start items-center'>

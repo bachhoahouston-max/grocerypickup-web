@@ -80,7 +80,7 @@ function Myhistory(props) {
                     });
                     setProductId("");
                     setSellerId("");
-                    props.toaster({ type: "success", message: res.data?.message });
+                    props.toaster({ type: "success", message: "Reviews Submitted Successfully" });
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message });
                 }
@@ -130,14 +130,15 @@ function Myhistory(props) {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-6 md:mx-auto md:gap-12 gap-8 max-w-6xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-3 md:mx-auto md:gap-12 gap-8 max-w-6xl">
                     {groupedBookingsArray && groupedBookingsArray.length > 0 ? (
                         groupedBookingsArray.map((booking, key) => (
-                            <div key={key} className="bg-white p-4 rounded-md border-2 border-[#999999] h-auto self-start">
+                            <div key={key} className="bg-white md:p-4 p-2.5 rounded-md border-2 border-[#999999] h-auto self-start">
                                 <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleBooking(booking._id)}>
                                     <div className="flex flex-col justify-start w-full">
                                         <div className="flex flex-row justify-between items-center mb-4">
-                                            <div className="bg-custom-green text-black rounded-full h-[50px] w-[50px] flex items-center justify-center mr-3 text-[24px]">
+                                            <div className="bg-custom-green text-black rounded-full 
+                                            md:h-[50px] h-[40px] md:w-[50px] w-[40px] flex items-center justify-center mr-3 md:text-[24px] text-[18px]">
                                                 {key + 1}
                                             </div>
                                             <div className="flex items-center">
@@ -148,21 +149,26 @@ function Myhistory(props) {
                                                 )}
                                             </div>
                                         </div>
-                                        <p className="text-[18px] text-black md:text-[24px]">My History ({formatDate(booking.createdAt) || "N/A"})</p>
+                                        <p className="text-[16px] text-black md:text-[24px]">My History ({formatDate(booking.createdAt) || "N/A"})</p>
+                                        <div className="flex flex-col justify-end items-end mr-3 mt-[-24px]">
+                                            <p className="text-gray-600 md:text-base text-[15px] font-bold">
+                                                Total: $ {booking?.total || "0.00"}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div className={expandedHistoryId === booking._id ? "block mt-4" : "hidden"}>
-                                    <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-white p-3 rounded-[10px] border border-gray-200">
+                                    <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-white md:p-3 p-1 rounded-[10px] border border-gray-200">
                                         {booking.products.map((product, index) => (
-                                            <div className="col-span-3 flex md:gap-5 gap-2 " key={index}>
+                                            <div className="relative col-span-3 flex md:gap-5 gap-2 " key={index}>
                                                 <img
                                                     className="w-20 h-20 text-gray-600 rounded-[10px] object-contain border border-gray-200"
                                                     src={product?.image?.[0] || "/api/placeholder/100/100"}
                                                     alt="Product"
                                                 />
                                                 <div className="flex-grow">
-                                                    <p className="text-black text-base font-bold">
+                                                    <p className="text-black md:text-base text-[13px] font-bold">
                                                         {product?.product?.name}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
@@ -172,9 +178,9 @@ function Myhistory(props) {
                                                         Order ID: {booking?._id}
                                                     </p>
                                                 </div>
-                                                <div className=" justify-start items-start">
+                                                <div className="justify-start items-start">
                                                     <button
-                                                        className="mt-2 mb-2 bg-custom-gold text-white px-4 py-1.5 rounded-md text-[14px]"
+                                                        className="absolute md:right-0 right-2 mt-2 mb-2 bg-custom-gold text-white px-4 py-1.5 rounded-md text-[14px]"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             setProductId(product?.product);
@@ -189,11 +195,7 @@ function Myhistory(props) {
                                         ))}
                                     </div>
                                 </div>
-                                <div className="flex flex-col justify-end items-end mr-3 mt-2">
-                                    <p className="text-gray-600 text-base font-bold">
-                                        Total: $ {booking?.total || "0.00"}
-                                    </p>
-                                </div>
+
                             </div>
                         ))
                     ) : (
