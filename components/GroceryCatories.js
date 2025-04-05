@@ -106,34 +106,52 @@ const GroceryCatories = ({ item, i, url ,loader,toaster}) => {
     const addremovefavourite = () => {
         loader(true);
         if (!user?.token) {
-           loader(false);
-           return toaster({ type: "error", message: "Login required" });
+            loader(false);
+            return toaster({ type: "error", message: "Login required" });
         }
+        
         let data = {
             product: item?._id,
         };
+        
         Api("post", "addremovefavourite", data, router).then(
             (res) => {
                 if (res.status) {
                     loader(false);
                     if (isFavorite) {
-                        setFavorite((prevFavorites) =>
-                            prevFavorites.filter(fav => fav._id !== item._id)
-                        );
-                        toaster({ type: "error", message: "Item Remove From Favorite" });
+                        // Remove from favorites
+                        setFavorite((prevFavorites) => {
+                            const updatedFavorites = prevFavorites.filter(fav => fav._id !== item._id);
+                            localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+                            return updatedFavorites; // Return the updated favorites
+                        });
+                        toaster({ type: "error", message: "Item Removed From Favorite" });
                     } else {
-                        toaster({ type: "Sucess", message: "Item Added to Favorite" });
-                        setFavorite((prevFavorites) => [...prevFavorites, item]);
+                        // Add to favorites
+                        setFavorite((prevFavorites) => {
+                            const updatedFavorites = [...prevFavorites, item];
+                            localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+                            return updatedFavorites; // Return the updated favorites
+                        });
+                        toaster({ type: "success", message: "Item Added to Favorite" });
                     }
-                   
+                    
                     getProductById(); // Refresh the favorite products
                 }
             },
             (err) => {
                 console.log(err);
+                loader(false); // Ensure loader is turned off in case of error
             }
         );
     };
+    
+    useEffect(() => {
+        const storedFavorites = localStorage.getItem('favorites');
+        if (storedFavorites) {
+            setFavorite(JSON.parse(storedFavorites));
+        }
+    }, []);
 
     // Check if the item is in the cart and get its quantity
     const cartItem = cartData.find((cartItem) => cartItem._id === item._id);

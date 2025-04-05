@@ -35,6 +35,8 @@ function ProductDetails(props) {
   const [selectedPrice, setSelectedPrice] = useState({});
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isInCart, setIsInCart] = React.useState(false);
+  const [availableQty, setAvailableQty] = React.useState(0);
   // console.log(selectedPrice)
 
   useEffect(() => {
@@ -64,6 +66,85 @@ function ProductDetails(props) {
     },
   };
 
+  useEffect(() => {
+    if (cartData.length > 0) {
+      const cartItem = cartData.find((f) => f._id === productsId?._id);
+      if (cartItem) {
+        setIsInCart(true);
+        setAvailableQty(cartItem.qty);
+      } else {
+        setIsInCart(false);
+        setAvailableQty(0);
+      }
+    } else {
+      setIsInCart(false);
+      setAvailableQty(0);
+    }
+  }, [cartData, productsId]);
+
+  const handleAddToCart = () => {
+    const existingItem = cartData.find((f) =>
+      f._id === productsId?._id && f.our_price === productsId?.our_price
+    );
+
+    const price = parseFloat(priceSlot[priceIndex]?.price);
+    const ourPrice = parseFloat(priceSlot[priceIndex]?.our_price);
+    const percentageDifference = price && ourPrice ? ((price - ourPrice) / price) * 100 : 0;
+
+    if (!existingItem) {
+      const nextState = produce(cartData, (draft) => {
+        draft.push({
+          ...productsId,
+          selectedColor,
+          selectedImage,
+          qty: 1, // Start with 1 quantity when adding to cart
+          total: ourPrice.toFixed(2),
+          our_price: ourPrice,
+          other_price: priceSlot[priceIndex]?.other_price,
+          value: priceSlot[priceIndex]?.value,
+          unit: priceSlot[priceIndex]?.unit,
+          percentageDifference: percentageDifference.toFixed(2),
+        });
+      });
+      setCartData(nextState);
+      localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+    } else {
+      const nextState = produce(cartData, (draft) => {
+        const existingItem = draft.find((item) =>
+          item._id === productsId._id && item.our_price === productsId.our_price
+        );
+        existingItem.qty += 1; // Increment quantity
+        existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
+      });
+      setCartData(nextState);
+      localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+    }
+    setOpenCart(true);
+  };
+
+  const handleIncreaseQty = () => {
+    const nextState = produce(cartData, (draft) => {
+      const existingItem = draft.find((item) => item._id === productsId._id);
+      if (existingItem) {
+        existingItem.qty += 1; // Increment quantity
+        existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
+      }
+    });
+    setCartData(nextState);
+    localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+  };
+
+  const handleDecreaseQty = () => {
+    const nextState = produce(cartData, (draft) => {
+      const existingItem = draft.find((item) => item._id === productsId._id);
+      if (existingItem && existingItem.qty > 1) {
+        existingItem.qty -= 1; // Decrement quantity
+        existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
+      }
+    });
+    setCartData(nextState);
+    localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+  };
   const handleIndex = (index) => {
     setPriceIndex(index);
   };
@@ -133,6 +214,7 @@ function ProductDetails(props) {
       props.toaster({ type: "success", message: "Login required" });
       return;
     }
+
     let data = {
       product: productsId?._id,
     };
@@ -145,15 +227,20 @@ function ProductDetails(props) {
         if (res.status) {
           if (isFavorite) {
             props.toaster({ type: "success", message: res.data?.message });
-            setFavorite((prevFavorites) =>
-              prevFavorites.filter(fav => fav._id !== productsId._id)
-            );
+            setFavorite((prevFavorites) => {
+              const updatedFavorites = prevFavorites.filter(fav => fav._id !== productsId._id);
+              localStorage.setItem('favorites', JSON.stringify(updatedFavorites)); // Save to local storage
+              return updatedFavorites;
+            });
           } else {
-            setFavorite((prevFavorites) => [...prevFavorites, productsId]);
+            setFavorite((prevFavorites) => {
+              const updatedFavorites = [...prevFavorites, productsId];
+              localStorage.setItem('favorites', JSON.stringify(updatedFavorites)); // Save to local storage
+              return updatedFavorites;
+            });
           }
           getProductById();
-        }
-        else {
+        } else {
           props.toaster({ type: "error", message: res.data?.message });
         }
       },
@@ -164,6 +251,14 @@ function ProductDetails(props) {
       }
     );
   };
+
+  // On component mount, retrieve favorites from local storage
+  useEffect(() => {
+    const storedFavorites = localStorage.getItem('favorites');
+    if (storedFavorites) {
+      setFavorite(JSON.parse(storedFavorites));
+    }
+  }, []);
 
   const cartItem = productsId._id
   const itemQuantity = cartItem ? cartItem.qty : 0;
@@ -280,101 +375,36 @@ function ProductDetails(props) {
                   </p>
                 </div>
 
-                {itemQuantity > 0 ? (
-
-                  <div className="bg-custom-offWhite w-[100px] h-[32px] rounded-[8px] md:mt-5 mt-3 flex items-center">
+                {isInCart ? (
+                  <>
+                  <div className="flex mt-5">
                     <div
-                      className="h-[31px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none	 flex justify-center items-center"
-                      onClick={() => {
-                        if (productsId.qty > 1) {
-                          productsId.qty = productsId.qty - 1;
-                          productsId.total = (
-                            priceSlot[priceIndex]?.our_price * productsId.qty
-                          ).toFixed(2);
-                          setProductsId({ ...productsId });
-                        }
-                      }}
+                      className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                      onClick={handleDecreaseQty}
                     >
                       <IoRemoveSharp className="h-[16px] w-[16px] text-white" />
                     </div>
                     <p className="text-black md:text-xl text-lg font-medium text-center px-3 border-y-2 border-y-gray-200">
-                      {productsId?.qty || 0}
+                      {availableQty}
                     </p>
                     <div
-                      className="h-[31px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
-                      onClick={() => {
-                        productsId.qty = productsId.qty + 1;
-                        productsId.total = (
-                          parseFloat(priceSlot[priceIndex]?.our_price) * productsId.qty
-                        ).toFixed(2);
-
-                        setProductsId({ ...productsId });
-                      }}
+                      className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                      onClick={handleIncreaseQty}
                     >
                       <IoAddSharp className="h-[16px] w-[16px] text-white" />
                     </div>
-                  </div>
+                    </div>
+                  </>
                 ) : (
                   <button
                     className="bg-custom-gold w-[96px] h-[32px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4"
-                    onClick={() => {
-                      const d = cartData?.length > 0 ? cartData : [];
-                      const c = d.find((f) =>
-                        f._id === productsId?._id &&
-                        f.our_price === productsId?.our_price
-                      )
-
-                      const price = parseFloat(priceSlot[priceIndex]?.price);
-                      const ourPrice = parseFloat(priceSlot[priceIndex]?.our_price);
-                      const value = parseFloat(priceSlot[priceIndex]?.value);
-                      const unit = parseFloat(priceSlot[priceIndex]?.unit);
-                      const percentageDifference = price && ourPrice ? ((price - ourPrice) / price) * 100
-                        : 0;
-
-                      if (!c) {
-                        const nextState = produce(cartData, (draft) => {
-                          draft.push({
-                            ...productsId,
-                            selectedColor,
-                            selectedImage,
-                            qty: productsId.qty,
-                            total: (parseFloat(ourPrice) * productsId.qty).toFixed(2),
-                            our_price: ourPrice,
-                            other_price: priceSlot[priceIndex]?.other_price,
-                            value: priceSlot[priceIndex]?.value,
-                            unit: priceSlot[priceIndex]?.unit,
-                            percentageDifference: percentageDifference.toFixed(2),
-
-                          });
-
-                        });
-                        console.log("next state ::", nextState);
-                        setCartData(nextState);
-                        localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-                      }
-                      else {
-                        const nextState = produce(cartData, (draft) => {
-                          const existingItem = draft.find((item) =>
-                            item._id === c._id &&
-                            item.our_price === c.our_price
-                          );
-
-                          existingItem.qty += productsId.qty;
-                          existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
-                        });
-                        setCartData(nextState);
-                        localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-                        // router.push('/cart')
-                      }
-                      setOpenCart(true);
-                    }}
+                    onClick={handleAddToCart}
                   >
                     ADD
                   </button>
-                )
-              }
+                )}
 
-          
+
               </div>
             </div>
           </div>
