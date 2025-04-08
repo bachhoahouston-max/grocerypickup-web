@@ -23,29 +23,28 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
     const handleAddToCart = (item) => {
         let updatedCart = [...cartData];
         const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
-        const price = parseFloat(sellprice);
-
+        const price = parseFloat(sellprice * (1 + (item.tax ? item.tax / 100 : 0)));
         if (existingItemIndex === -1) {
             const newItem = {
                 ...item,
                 selectedColor: item?.varients[0],
                 image: item?.varients[0]?.image[0],
                 total: price,
-                our_price: price,
-                other_price: item?.price_slot[0]?.other_price,
-                price: price,
-                value: item?.price_slot[0]?.value,
                 qty: 1,
+                price_slot: {
+                    our_price: price,
+                    other_price: item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0)).toFixed(2) 
+                },
             };
             updatedCart.push(newItem);
         } else {
             const nextState = produce(updatedCart, (draft) => {
                 draft[existingItemIndex].qty += 1;
-                draft[existingItemIndex].total = (sellprice * draft[existingItemIndex].qty).toFixed(2);
+                draft[existingItemIndex].total = (price * draft[existingItemIndex].qty).toFixed(2);
             });
             updatedCart = nextState;
         }
-
+    
         setCartData(updatedCart);
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
     };
@@ -123,40 +122,12 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
         );
     };
 
-      const addremovefavourite = () => {
-        if (!user?.token) {
-            return;
-        }
-        let data = {
-            product: item?._id,
-        };
-        Api("post", "addremovefavourite", data, router).then(
-            (res) => {
-                if (res.status) {
-                    if (isFavorite) {
-                        setFavorite((prevFavorites) =>
-                            prevFavorites.filter(fav => fav._id !== item._id)
-                        );
-                    } else {
-                        setFavorite((prevFavorites) => [...prevFavorites, item]);
-                    }
-                    getProductById(); // Refresh the favorite products
-                }
-            },
-            (err) => {
-                console.log(err);
-            }
-        );
-      };
-
-    // Check if the item is in the cart and get its quantity
+    
     const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
     const itemQuantity = cartItem ? cartItem.qty : 0;
-    // console.log(saleData)
+ 
     const convertedSellPrice = saleData.map((data) => data?.price);
-
     const sellprice = convertedSellPrice.map((price) => Number(price));
-    // console.log(sellprice)
 
     return (
         <div
@@ -168,19 +139,8 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                     src={item.varients[0].image[0]}
                     alt="Product image"
                     className="w-full p-1 md:h-44 h-36 object-cover rounded cursor-pointer"
-                    // onClick={() => {
-                    //     router.push(url);
-                    // }}
                 />
-                {/* <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[40px] md:h-[45px] h-[40px] flex justify-center items-center md:mb-1 mb-2'
-                    onClick={addremovefavourite}
-                >
-                    {isFavorite ? (
-                        <FaHeart className="text-red-700 md:w-[23px] w-[20px] h-[23px]" />
-                    ) : (
-                        <FaRegHeart className="text-black w-[23px] h-[23px]" />
-                    )}
-                </div> */}
+               
             </div>
 
             <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">

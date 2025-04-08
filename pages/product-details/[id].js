@@ -68,7 +68,12 @@ function ProductDetails(props) {
 
   useEffect(() => {
     if (cartData.length > 0) {
-      const cartItem = cartData.find((f) => f._id === productsId?._id);
+      const cartItem = cartData.find(
+        (f) =>
+          f._id === productsId?._id &&
+          f.price_slot?.value === selectedPrice?.value
+      );
+
       if (cartItem) {
         setIsInCart(true);
         setAvailableQty(cartItem.qty);
@@ -80,71 +85,94 @@ function ProductDetails(props) {
       setIsInCart(false);
       setAvailableQty(0);
     }
-  }, [cartData, productsId]);
+  }, [cartData, productsId, selectedPrice]);
 
   const handleAddToCart = () => {
+    if (!productsId || !productsId._id || !selectedPrice?.value) {
+      console.error("Invalid product data or price selection:", productsId, selectedPrice);
+      return;
+    }
+
     const existingItem = cartData.find((f) =>
-      f._id === productsId?._id && f.our_price === productsId?.our_price
+      f._id === productsId._id && f.price_slot?.value === selectedPrice.value
     );
 
-    const price = parseFloat(priceSlot[priceIndex]?.price);
-    const ourPrice = parseFloat(priceSlot[priceIndex]?.our_price);
+    const price = parseFloat(selectedPrice?.our_price);
+    const ourPrice = parseFloat(selectedPrice?.our_price);
     const percentageDifference = price && ourPrice ? ((price - ourPrice) / price) * 100 : 0;
 
     if (!existingItem) {
-      const nextState = produce(cartData, (draft) => {
-        draft.push({
-          ...productsId,
-          selectedColor,
-          selectedImage,
-          qty: 1, // Start with 1 quantity when adding to cart
-          total: ourPrice.toFixed(2),
-          our_price: ourPrice,
-          other_price: priceSlot[priceIndex]?.other_price,
-          value: priceSlot[priceIndex]?.value,
-          unit: priceSlot[priceIndex]?.unit,
-          percentageDifference: percentageDifference.toFixed(2),
-        });
-      });
-      setCartData(nextState);
-      localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-    } else {
-      const nextState = produce(cartData, (draft) => {
-        const existingItem = draft.find((item) =>
-          item._id === productsId._id && item.our_price === productsId.our_price
-        );
-        existingItem.qty += 1; // Increment quantity
-        existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
-      });
-      setCartData(nextState);
-      localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-    }
-    setOpenCart(true);
-  };
+      const newProduct = {
+        ...productsId,
+        selectedColor: productsId.selectedColor || productsId.varients?.[0] || {},
+        selectedImage: productsId.selectedImage || productsId.varients?.[0]?.image?.[0] || "",
+        qty: 1,
+        total: ourPrice.toFixed(2),
+        our_price: ourPrice,
+        price_slot: selectedPrice,
+        percentageDifference: percentageDifference.toFixed(2),
+      };
 
+      const updatedCart = [...cartData, newProduct];
+      setCartData(updatedCart);
+      localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+      console.log("Product added to cart:", newProduct);
+    } else {
+      console.log("Product already in cart with this price slot:", existingItem);
+    }
+
+    props.toaster({
+      type: "success",
+      message: "Item added to cart",
+    });
+  };
   const handleIncreaseQty = () => {
     const nextState = produce(cartData, (draft) => {
-      const existingItem = draft.find((item) => item._id === productsId._id);
+      // Find the existing item in the cart based on product ID and price slot
+      const existingItem = draft.find((item) =>
+        item._id === productsId._id && item.price_slot.value === selectedPrice.value
+      );
+
       if (existingItem) {
         existingItem.qty += 1; // Increment quantity
-        existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
+        existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty * (1 + (existingItem.tax ? existingItem.tax / 100 : 0))).toFixed(2);
+      } else {
+        console.error("Item not found in cart for increasing quantity.");
       }
     });
+
     setCartData(nextState);
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
   };
 
   const handleDecreaseQty = () => {
     const nextState = produce(cartData, (draft) => {
-      const existingItem = draft.find((item) => item._id === productsId._id);
-      if (existingItem && existingItem.qty > 1) {
-        existingItem.qty -= 1; // Decrement quantity
-        existingItem.total = (parseFloat(existingItem.our_price) * existingItem.qty).toFixed(2);
+      // Find the existing item in the cart based on product ID and price slot
+      const existingItem = draft.find((item) =>
+        item._id === productsId._id && item.price_slot.value === selectedPrice.value
+      );
+
+      if (existingItem) {
+        if (existingItem.qty > 1) {
+          existingItem.qty -= 1;
+          existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty * (1 + (existingItem.tax ? existingItem.tax / 100 : 0))).toFixed(2);
+        } else {
+
+          const index = draft.indexOf(existingItem);
+          if (index > -1) {
+            draft.splice(index, 1);
+          }
+        }
+      } else {
+        console.error("Item not found in cart for decreasing quantity.");
       }
     });
+
     setCartData(nextState);
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
   };
+
+
   const handleIndex = (index) => {
     setPriceIndex(index);
   };
@@ -326,7 +354,9 @@ function ProductDetails(props) {
                         <div key={i}>
                           <div
 
-                            onClick={() => { setSelectedPrice(data); setPriceIndex(i); }}
+                            onClick={() => { 
+                              setSelectedPrice(data); 
+                              setPriceIndex(i); }}
                             className={`bg-custom-lightPurple cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
                                         ${priceIndex == i
                                 ? "bg-[#FFF5CB]"
@@ -346,12 +376,13 @@ function ProductDetails(props) {
                               {data.value} {data.unit}
                             </p>
                             <p className="text-black font-normal text-base pt-1">
-                              ₹{data.our_price}
+                              {/* ${data.our_price} */}
+                              ${(data?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0) }
                             </p>
                             <p className="text-custom-black font-semibold text-sm pt-2">
 
                               <span className="text-black font-normal line-through">
-                                {data?.other_price}
+                                ${(data?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0) }
                               </span>
                             </p>
                           </div>
@@ -377,22 +408,22 @@ function ProductDetails(props) {
 
                 {isInCart ? (
                   <>
-                  <div className="flex mt-5">
-                    <div
-                      className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
-                      onClick={handleDecreaseQty}
-                    >
-                      <IoRemoveSharp className="h-[16px] w-[16px] text-white" />
-                    </div>
-                    <p className="text-black md:text-xl text-lg font-medium text-center px-3 border-y-2 border-y-gray-200">
-                      {availableQty}
-                    </p>
-                    <div
-                      className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
-                      onClick={handleIncreaseQty}
-                    >
-                      <IoAddSharp className="h-[16px] w-[16px] text-white" />
-                    </div>
+                    <div className="flex mt-5">
+                      <div
+                        className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                        onClick={handleDecreaseQty}
+                      >
+                        <IoRemoveSharp className="h-[16px] w-[16px] text-white" />
+                      </div>
+                      <p className="text-black md:text-xl text-lg font-medium text-center px-3 border-y-2 border-y-gray-200">
+                        {availableQty}
+                      </p>
+                      <div
+                        className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                        onClick={handleIncreaseQty}
+                      >
+                        <IoAddSharp className="h-[16px] w-[16px] text-white" />
+                      </div>
                     </div>
                   </>
                 ) : (
@@ -489,7 +520,7 @@ function ProductDetails(props) {
           </div>
         </div>
 
-
+        {productsId?.rating && (
         <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
           <p className='text-black text-xl font-bold'>{("Ratings & Reviews")}</p>
           <div className='w-full'>
@@ -500,42 +531,48 @@ function ProductDetails(props) {
             </p>
 
             {/* Reviews Grid Layout */}
-            <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[320px] ">
-              {productReviews?.map((item, i) => (
-                <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
-                  <div className='pt-2 flex justify-start items-center'>
-                    <div className='w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center'>
-                      <p className='text-black text-[18px] font-bold'>{item?.posted_by?.username?.charAt(0).toUpperCase()}</p>
-                    </div>
-                    <div className='ml-5'>
-                      <div className='flex'>
-                        <p className='text-black font-normal text-[16px]'>{item?.posted_by?.username}</p>
+           
+              <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[320px] ">
+                {productReviews?.map((item, i) => (
+                  <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
+                    <div className='pt-2 flex justify-start items-center'>
+                      <div className='w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center'>
+                        <p className='text-black text-[18px] font-bold'>{item?.posted_by?.username?.charAt(0).toUpperCase()}</p>
                       </div>
-                      <p className='text-black font-normal text-xs'>
-                        {moment(item?.createdAt).format("MMM DD, YYYY")}
-                      </p>
+                      <div className='ml-5'>
+                        <div className='flex'>
+                          <p className='text-black font-normal text-[16px]'>{item?.posted_by?.username}</p>
+                        </div>
+                        <p className='text-black font-normal text-xs'>
+                          {moment(item?.createdAt).format("MMM DD, YYYY")}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className='text-black font-normal text-base pt-5'>{item?.description}</p>
+
+                    <div className='pt-5 flex gap-2'>
+                      <Box sx={{ width: 200, display: 'flex', alignItems: 'center' }}>
+                        <Rating
+                          name="text-feedback"
+                          value={item?.rating}
+                          readOnly
+                          precision={0.5}
+                          emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                        />
+                        <Box className='text-black' sx={{ ml: 2 }}>{item?.rating}</Box>
+                      </Box>
                     </div>
                   </div>
+                ))}
+              </div>
 
-                  <p className='text-black font-normal text-base pt-5'>{item?.description}</p>
+           
 
-                  <div className='pt-5 flex gap-2'>
-                    <Box sx={{ width: 200, display: 'flex', alignItems: 'center' }}>
-                      <Rating
-                        name="text-feedback"
-                        value={item?.rating}
-                        readOnly
-                        precision={0.5}
-                        emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                      />
-                      <Box className='text-black' sx={{ ml: 2 }}>{item?.rating}</Box>
-                    </Box>
-                  </div>
-                </div>
-              ))}
-            </div>
+
           </div>
         </div>
+         )}
 
       </section>
 

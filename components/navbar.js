@@ -50,7 +50,7 @@ const Navbar = (props) => {
     const [date, setDate] = useState(null);
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
-    const [viewPopup, setViewPopup] = useState(false);
+    const [tax, setTax] = useState(false);
     const [allProduct, setAllProduct] = useState([]);
 
     const handleOptionChange = (event) => {
@@ -90,19 +90,6 @@ const Navbar = (props) => {
 
     const timeoutRef = useRef(null);
 
-    const handleInputChange = (e) => {
-        const value = e.target.value;
-        setSearchData(value);
-        clearTimeout(timeoutRef.current);
-        timeoutRef.current = setTimeout(() => {
-            if (value) {
-                getproductBySearchCategory(value);
-            } else {
-                setProductsList([]);
-            }
-        }, 500);
-    };
-
     useEffect(() => {
         return () => {
             if (timeoutRef.current) {
@@ -138,33 +125,6 @@ const Navbar = (props) => {
         );
     };
 
-    const getproductBySearchCategory = async (text) => {
-        let parmas = {};
-        let url = `productsearch?key=${text}`;
-
-        Api("get", url, "", router, parmas).then(
-            (res) => {
-                props.loader && props.loader(false);
-                setProductsList(res.data);
-                if (res.data.length === 0) {
-                    setNoProductsFound(true);
-                } else {
-                    setNoProductsFound(false);
-                }
-            },
-            (err) => {
-                props.loader && props.loader(false);
-                props.toaster && props.toaster({ type: "error", message: err?.message });
-            }
-        );
-    };
-
-    const closeDrawer1 = async () => {
-        inputRef1.current && inputRef1.current.blur();
-        setTimeout(() => {
-            setShowCategory1(false);
-        }, 500);
-    };
 
     const fetchProducts = () => {
         props.loader(true);
@@ -251,8 +211,11 @@ const Navbar = (props) => {
                 accumulator + Number(currentValue?.qty || 0),
             0
         );
+        // const tax = cartData.map((item)=> item.tax)
+        // console.log("tax",tax);
         setCartItem(sumWithInitial1);
         setCartTotal(sumWithInitial);
+        setTax()
         setMainTotal(sumWithInitial + deliveryCharge + deliveryPartnerTip);
     }, [cartData, openCart]);
 
@@ -331,7 +294,7 @@ const Navbar = (props) => {
                     localStorage.removeItem("addCartDetail");
 
                     const data = res.data.orders
-                   
+
                     const isOrderPickup = data?.some(order => order?.isOrderPickup === true);
                     const isDriveUp = data?.some(order => order?.isDriveUp === true);
 
@@ -404,8 +367,8 @@ const Navbar = (props) => {
                             setSearchData(text.target.value);
                         }}
                         placeholder="Search for products..."
-                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10" 
-                        // Added padding-right for the cross icon
+                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10"
+                    // Added padding-right for the cross icon
                     />
                     {serchData && ( // Conditionally render the cross icon
                         <div
@@ -818,36 +781,41 @@ const Navbar = (props) => {
                         {cartData?.map((item, i) => (
                             <div
                                 key={i}
-                                className="grid md:grid-cols-9 grid-cols-1 w-full md:gap-5 gap-0 mt-5"
+                                className="grid md:grid-cols-9 grid-cols-1 w-full md:gap-5 mt-5"
                             >
                                 <div className="flex justify-start items-start col-span-4 md:gap-0 gap-2">
                                     <img
-                                        className="md:w-[135px] md:h-[94px] w-[80px] h-[60px] object-contain"
+                                        className="md:w-[145px] md:h-[104px] w-[50px] h-[50px] object-contain"
                                         src={item?.selectedImage || item?.image}
-                                        alt={item?.name}
                                     />
-                                    <div className="pt-2 flex justify-start items-start">
-                                        <div className="flex justify-center items-center">
-                                            <p className="text-custom-black text-center md:w-[80%] w-full font-semibold md:text-[16px] text-[13px] ">
-                                                {item?.name}
-                                            </p>
-                                        </div>
-                                        <p className="text-gray-500 w-full md:w-[100px] font-normal text-[11px] md:text-sm md:pt-7 pt-4">
+                                    <div className="pt-2">
+                                        <p className="text-custom-purple font-semibold text-base pl-3">
+                                            {item?.name}
+                                        </p>
+                                        <p className="text-custom-newGrayColors font-normal text-sm pt-2">
                                             <span className="pl-3">
-                                                {item?.value}
+                                                {item?.price_slot?.value ?? 1}
                                             </span>{" "}
-                                            <span>{item?.price_slot && item?.price_slot[0]?.unit}</span>
+                                            <span>{item?.price_slot?.unit ?? "unit"}</span>
+                                        </p>
+                                        <p className="text-custom-newGrayColors font-normal text-sm pt-2">
+                                            <span className="pl-3">
+                                            ${ (item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2) }
+                                            </span>{" "}
+                                            <span className="line-through">
+                                            ${ (item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
+                                            </span>
                                         </p>
                                     </div>
-                                    <div className="flex  justify-center items-center col-span-3 md:mt-0 mt-5 md:hidden">
-                                        <p className="text-custom-black font-semibold text-base">
-                                            ${item?.our_price}
-                                            <del className="text-red-500 font-normal text-xs ml-2">
-                                                ${item?.other_price}
+                                    <div className="flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-2 md:hidden">
+                                        <p className="text-custom-purple font-semibold text-base">
+                                        ${ (item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2) }
+                                            <del className="text-custom-red font-normal text-xs ml-2">
+                                            ${ (item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
                                             </del>
                                         </p>
                                         <IoMdClose
-                                            className="w-[22px] h-[22px] text-gray-500 ml-2 cursor-pointer"
+                                            className="w-[22px] h-[22px] text-custom-newGray ml-2 cursor-pointer"
                                             onClick={() => {
                                                 cartClose(item, i);
                                             }}
@@ -855,22 +823,20 @@ const Navbar = (props) => {
                                     </div>
                                 </div>
 
-                                <div className="flex justify-center items-center  col-span-3 md:mt-0 mt-5">
+                                <div className="flex md:justify-center justify-start md:items-center items-start col-span-3 md:mt-0 mt-5">
                                     <div className="bg-gray-100 w-[153px] h-[39px] rounded-[8px] flex justify-center items-center">
                                         <div
-                                            className="h-[39px] w-[51px] bg-custom-green cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                                            className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none	 flex justify-center items-center"
                                             onClick={() => {
                                                 if (item.qty > 1) {
                                                     const nextState = produce(cartData, (draft) => {
                                                         draft[i].qty -= 1;
-                                                        draft[i].total = (parseFloat(draft[i].our_price * draft[i].qty)
-                                                        ).toFixed(2);
+                                                        const price = parseFloat(draft[i]?.price_slot?.our_price);
+                                                        const tax = draft[i]?.tax ? draft[i].tax / 100 : 0; // Get tax rate or default to 0
+                                                        draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(2); // Calculate total with tax
                                                     });
                                                     setCartData(nextState);
-                                                    localStorage.setItem(
-                                                        "addCartDetail",
-                                                        JSON.stringify(nextState)
-                                                    );
+                                                    localStorage.setItem("addCartDetail", JSON.stringify(nextState));
                                                 }
                                             }}
                                         >
@@ -880,18 +846,14 @@ const Navbar = (props) => {
                                             {item?.qty}
                                         </p>
                                         <div
-                                            className="h-[39px] w-[51px] bg-custom-green cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                                            className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                                             onClick={() => {
                                                 const nextState = produce(cartData, (draft) => {
-                                                    if (draft[i]) {
-                                                        draft[i].qty += 1;
-                                                        const price = draft[i].our_price
-                                                        if (price) {
-                                                            draft[i].total = (parseFloat(price) * draft[i].qty).toFixed(2);
-                                                        }
-                                                    }
+                                                    draft[i].qty += 1;
+                                                    const price = parseFloat(draft[i]?.price_slot?.our_price);
+                                                    const tax = draft[i]?.tax ? draft[i].tax / 100 : 0; 
+                                                    draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(1); 
                                                 });
-
                                                 setCartData(nextState);
                                                 localStorage.setItem("addCartDetail", JSON.stringify(nextState));
                                             }}
@@ -902,14 +864,14 @@ const Navbar = (props) => {
                                 </div>
 
                                 <div className="md:flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-5 hidden">
-                                    <p className="text-custom-black font-semibold text-base">
-                                        ${item?.our_price}
-                                        <del className="text-red-500 font-normal text-xs ml-2">
-                                            ${item?.other_price}
+                                    <p className="text-custom-purple font-semibold text-base">
+                                        ${item?.total}
+                                        <del className="text-custom-red font-normal text-xs ml-2">
+                                        ${ (item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
                                         </del>
                                     </p>
                                     <IoMdClose
-                                        className="w-[22px] h-[22px] text-gray-500 ml-1 cursor-pointer"
+                                        className="w-[22px] h-[22px] text-custom-newGray ml-1 cursor-pointer"
                                         onClick={() => {
                                             cartClose(item, i);
                                         }}
@@ -955,13 +917,17 @@ const Navbar = (props) => {
                                 <p className="text-custom-black font-medium text-base">
                                     ${mainTotal}
                                 </p>
+                            </div> <div className="flex justify-between items-center w-full pt-1">
+                                <p className="text-red-500 font-normal text-base">
+                                    * Note : Tax is included in this price
+                                </p>
                             </div>
                         </div>
                     )}
 
                     {cartData.length > 0 && (
                         <button
-                            className="bg-black h-[50px] rounded-[12px] w-full font-semibold text-white text-base text-center mt-5 mb-6"
+                            className="bg-custom-gold h-[50px] rounded-[12px] w-full font-semibold text-black text-base text-center mt-5 mb-6"
                             onClick={() => {
                                 if (cartData?.length === 0) {
                                     props.toaster && props.toaster({
