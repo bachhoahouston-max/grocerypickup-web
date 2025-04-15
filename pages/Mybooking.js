@@ -102,7 +102,13 @@ function Mybooking(props) {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         return new Date(date).toLocaleDateString('en-US', options);
     }
-
+    
+    function formatDate2(dateInput) {
+        const date = new Date(dateInput);
+        const options = { day: 'numeric', month: 'short' }; // e.g., "21 Apr"
+        return date.toLocaleDateString('en-GB', options);
+      }
+      
     // const groupedBookings = bookingsData.reduce((acc, booking) => {
     //     if (!acc[booking._id]) {
     //         acc[booking._id] = {
@@ -154,6 +160,12 @@ function Mybooking(props) {
                                                     </p>
                                                 )
                                             )}
+                                            {booking?.isShipmentDelivery && (
+                                                <p className="text-black">
+                                                    Delivery expected by {formatDate2(new Date(new Date(booking.createdAt).setDate(new Date(booking.createdAt).getDate() + 3)))} 11 PM
+                                                </p>
+                                            )}
+
                                             <div className="flex items-center">
                                                 {expandedBookingId === booking._id ? (
                                                     <IoIosArrowUp className="text-2xl text-black" />
@@ -170,19 +182,19 @@ function Mybooking(props) {
                                                 </p>
                                             ) : booking?.status === 'Pending' ? (
                                                 <>
-                                                <div className="flex md:flex-row flex-col">
-                                                    
-                                                    {booking?.isDriveUp && (
-                                                        <p
-                                                            onClick={() => toggleModal(booking._id)}
-                                                            className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded"
-                                                        >
-                                                            {booking.parkingNo ? "Update Parking No." : "Parking No."}
+                                                    <div className="flex md:flex-row flex-col">
+
+                                                        {booking?.isDriveUp && (
+                                                            <p
+                                                                onClick={() => toggleModal(booking._id)}
+                                                                className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-black rounded"
+                                                            >
+                                                                {booking.parkingNo ? "Update Parking No." : "Parking No."}
+                                                            </p>
+                                                        )}
+                                                        <p className="md:py-2 text-right pr-2  py-0 text-[16px] text-red-500 rounded">
+                                                            Order Pending
                                                         </p>
-                                                    )}
-                                                    <p className="md:py-2 text-right pr-2  py-0 text-[16px] text-red-500 rounded">
-                                                        Order Pending
-                                                    </p>
                                                     </div>
                                                 </>
                                             ) : (

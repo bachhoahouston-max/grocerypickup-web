@@ -263,7 +263,7 @@ function Account(props) {
                 <div>
                     {!user?.username ? (
                         <div className="flex justify-between w-full">
-                            <button className='bg-custom-green rounded-[20px] h-[40px] w-[120px] text- text-base font-normal' onClick={() => { router.push('/signIn') }}>
+                            <button className='bg-custom-green rounded-[20px] h-[40px] w-[120px] text-black text-base font-normal' onClick={() => { router.push('/signIn') }}>
                                 Sign in
                             </button>
 

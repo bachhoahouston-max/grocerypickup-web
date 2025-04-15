@@ -390,23 +390,24 @@ const Navbar = (props) => {
                             setSearchData(text.target.value);
                         }}
                         placeholder="Search for products..."
-                        className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10"
+                        className=" md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10"
                     />
+                    
+                    <button
+                        className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer  rounded-r-md"
+                        onClick={() => { router.push(`/Search/${serchData}`); }}
+                    >
+                        <FontAwesomeIcon icon={faSearch} className='text-black relative' />
+                    </button>
                     {serchData && ( // Conditionally render the cross icon
                         <div
                             onClick={() => setSearchData('')}
-                            className="flex justify-center items-center right-5 bg-custom-green
-                             md:py-[12px] lg:py-[12.5px] xl:py-[13px] py-[10.5px] cursor-pointer" // Positioning the cross icon
+                            className=" absolute flex justify-center items-center right-6 2xl:right-72 xl:right-48 lg:right-40 
+                              cursor-pointer" // Positioning the cross icon
                         >
                             <RxCross2 className="md:h-4 mx-1 md:w-4 w-3 h-3 font-bold text-black" />
                         </div>
                     )}
-                    <button
-                        className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer rounded-r-md"
-                        onClick={() => { router.push(`/Search/${serchData}`); }}
-                    >
-                        <FontAwesomeIcon icon={faSearch} className='text-black' />
-                    </button>
                 </div>
 
 
@@ -427,7 +428,7 @@ const Navbar = (props) => {
                             onClick={() => setShowHover(true)}
                         >
                             <p className="font-bold text-black text-base text-center capitalize">
-                                {user?.username?.charAt(0).toUpperCase() || "R"}
+                                {user?.username?.charAt(0).toUpperCase() || "T"}
                             </p>
                             {showHover && (
                                 <div className="lg:absolute top-4 right-0 lg:min-w-[250px] group-hover:text-black hidden group-hover:lg:block hover:lg:block md:z-40">
