@@ -97,8 +97,11 @@ function ProductDetails(props) {
       f._id === productsId._id && f.price_slot?.value === selectedPrice.value
     );
 
-    const price = parseFloat(selectedPrice?.our_price);
-    const ourPrice = parseFloat(selectedPrice?.our_price);
+    const price = parseFloat(selectedPrice?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0)).toFixed(0));
+
+    const ourPrice = parseFloat(
+      (selectedPrice?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(2)
+    );
     const percentageDifference = price && ourPrice ? ((price - ourPrice) / price) * 100 : 0;
 
     if (!existingItem) {
@@ -147,7 +150,6 @@ function ProductDetails(props) {
 
   const handleDecreaseQty = () => {
     const nextState = produce(cartData, (draft) => {
-      // Find the existing item in the cart based on product ID and price slot
       const existingItem = draft.find((item) =>
         item._id === productsId._id && item.price_slot.value === selectedPrice.value
       );
@@ -354,9 +356,10 @@ function ProductDetails(props) {
                         <div key={i}>
                           <div
 
-                            onClick={() => { 
-                              setSelectedPrice(data); 
-                              setPriceIndex(i); }}
+                            onClick={() => {
+                              setSelectedPrice(data);
+                              setPriceIndex(i);
+                            }}
                             className={`bg-custom-lightPurple cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
                                         ${priceIndex == i
                                 ? "bg-[#FFF5CB]"
@@ -376,13 +379,13 @@ function ProductDetails(props) {
                               {data.value} {data.unit}
                             </p>
                             <p className="text-black font-normal text-base pt-1">
-                              {/* ${data.our_price} */}
-                              ${(data?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0) }
+
+                              ${(data?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}
                             </p>
                             <p className="text-custom-black font-semibold text-sm pt-2">
 
                               <span className="text-black font-normal line-through">
-                                ${(data?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0) }
+                                ${(data?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}
                               </span>
                             </p>
                           </div>
@@ -395,9 +398,9 @@ function ProductDetails(props) {
 
                 <div className="pt-3 mt-2 px-4  border-custom-darkPurple">
                   <p className="text-custom-gold font-semibold text-lg">
-                    ${selectedPrice?.our_price}{" "}
+                    ${(selectedPrice?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}{" "}
                     <span className="text-custom-black text-sm font-normal line-through">
-                      {selectedPrice?.other_price}
+                      {(selectedPrice?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}{" "}
                     </span>{" "}
                     <span className="text-sm text-custom-black">
 
@@ -434,7 +437,19 @@ function ProductDetails(props) {
                     ADD
                   </button>
                 )}
+                {productsId.isShipmentAvailable ? (
+                  <p className="text-black font-normal text-[17px] mt-2">
+                    Shipment Delivery is available
+                  </p>
+                ) : (
+                  <p className="text-black font-normal text-[17px] mt-2">
+                    Shipment Delivery is not available
+                  </p>
+                )}
 
+                <p className="text-red-500 font-normal text-[17px] mt-1">
+                  * Note : Tax is included in this price
+                </p>
 
               </div>
             </div>
@@ -521,17 +536,17 @@ function ProductDetails(props) {
         </div>
 
         {productsId?.rating && (
-        <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
-          <p className='text-black text-xl font-bold'>{("Ratings & Reviews")}</p>
-          <div className='w-full'>
+          <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
+            <p className='text-black text-xl font-bold'>{("Ratings & Reviews")}</p>
+            <div className='w-full'>
 
-            <p className='text-black  mb-2 mt-2 font-bold md:text-2xl text-base'>
-              {productsId?.rating || "4"}
-              <span className='text-black font-normal md:text-base text-xs'>{" / 5 "}</span>
-            </p>
+              <p className='text-black  mb-2 mt-2 font-bold md:text-2xl text-base'>
+                {productsId?.rating || "4"}
+                <span className='text-black font-normal md:text-base text-xs'>{" / 5 "}</span>
+              </p>
 
-            {/* Reviews Grid Layout */}
-           
+              {/* Reviews Grid Layout */}
+
               <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[320px] ">
                 {productReviews?.map((item, i) => (
                   <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
@@ -567,12 +582,12 @@ function ProductDetails(props) {
                 ))}
               </div>
 
-           
 
 
+
+            </div>
           </div>
-        </div>
-         )}
+        )}
 
       </section>
 

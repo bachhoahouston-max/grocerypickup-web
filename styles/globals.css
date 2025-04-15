@@ -48,3 +48,10 @@ body {
 .bg-custom-gold{
   background-color: var(--custom-Gold);
 }
+
+.css-d771x4.Mui-checked, .css-d771x4.MuiCheckbox-indeterminate 
+{  color: black  !important}
+
+.css-y50yd7 {
+  background-color: var(--custom-green) !important;
+}

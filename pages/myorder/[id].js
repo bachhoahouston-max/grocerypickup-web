@@ -68,7 +68,7 @@ export default function MyOrder(props) {
     };
 
     return (
-        <div className="bg-white w-full">
+        <div className="bg-white w-full md:mt-0 mt-8">
                 <section className="bg-white w-full  relative flex flex-col justify-center items-center">
                     <div className="md:px-10 mx-auto w-full  px-5 md:pt-10 pt-5 md:pb-10 pb-5 mb-6">
 

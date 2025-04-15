@@ -18,6 +18,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     const [user] = useContext(userContext);
     const [isFavorite, setIsFavorite] = useState(false);
     const [Favorite, setFavorite] = useContext(favoriteProductContext);
+    const [availableQty,setAvailableQty] = useState(1);
 
     const handleAddToCart = () => {
         setCartData((prevCartData) => {
@@ -221,8 +222,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                                 "addCartDetail",
                                 JSON.stringify(updatedCart)
                               );
-            
-                              setIsInCart(false);
+    
                               setAvailableQty(0);
                             }
                           }}

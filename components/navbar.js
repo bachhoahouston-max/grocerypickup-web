@@ -255,18 +255,47 @@ const Navbar = (props) => {
                 price: element.total,
                 qty: element.qty,
                 seller_id: element.userid,
+                isShipmentAvailable: element.isShipmentAvailable
             });
         });
+
+        console.log("qsdcfvgbn", data)
 
         const isLocalDelivery = pickupOption === 'localDelivery';
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
         const dateOfDelivery = isDriveUp && date ? date : null;
-        // const ParkingNo = isDriveUp && parkingNo ? parkingNo : null;
+        const isShipmentDelivery = pickupOption === 'ShipmentDelivery';
+
+        const unavailableProducts = data.filter(item => item.isShipmentAvailable === false);
+        const isShipmentAvailable = unavailableProducts.length === 0;
+
+        console.log(isShipmentAvailable)
+
+        if (pickupOption === 'ShipmentDelivery') {
+            if (!isShipmentAvailable) {
+                if (unavailableProducts.length === 1) {
+                    props.toaster({ type: "error", message: "One product in your cart is not available for shipment. Please remove it or choose a different delivery option." });
+                } else {
+                    props.toaster({ type: "error", message: "Some products in your cart are not available for shipment. Please remove them or choose a different delivery option." });
+                }
+                return false;
+            }
+        } else {
+            if (!isShipmentAvailable) {
+                const message = unavailableProducts.length === 1
+                    ? "Note: One product in your cart is not available for shipment if you wish to change delivery method later."
+                    : "Note: Some products in your cart are not available for shipment if you wish to change delivery method later.";
+
+                return props.toaster({ type: "info", message: message });
+
+            }
+        }
 
         let newData = {
             productDetail: data,
             total: CartTotal.toFixed(2),
+            user: user._id,
             Local_address: {
                 ...localAddress,
                 name: localAddress.name || profileData.username,
@@ -277,7 +306,7 @@ const Navbar = (props) => {
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
             isLocalDelivery: isLocalDelivery,
-            // parkingNo: ParkingNo
+            isShipmentDelivery: isShipmentDelivery
         };
 
         props.loader && props.loader(true);
@@ -288,21 +317,19 @@ const Navbar = (props) => {
                     setCartData([]);
                     setLocalAddress([])
                     setCartTotal(0);
-                    // setShowcart(false);
                     setOpenCart(false);
                     setDate('')
                     localStorage.removeItem("addCartDetail");
+                    props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
 
-                    const data = res.data.orders
+                    // const data = res.data.orders
 
-                    const isOrderPickup = data?.some(order => order?.isOrderPickup === true);
-                    const isDriveUp = data?.some(order => order?.isDriveUp === true);
+                    // const isOrderPickup = data?.find(order => order?.isOrderPickup === true);
+                    // const isDriveUp = data?.find(order => order?.isDriveUp === true);
 
-                    if (isOrderPickup) {
-                        props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });
-                    } else if (isDriveUp) {
-                        props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
-                    }
+                    // if (isOrderPickup) {
+                    //     props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });
+                    // } else if (isDriveUp) {
 
                     router.push("/Mybooking");
                 } else {
@@ -368,7 +395,6 @@ const Navbar = (props) => {
                         }}
                         placeholder="Search for products..."
                         className="md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10"
-                    // Added padding-right for the cross icon
                     />
                     {serchData && ( // Conditionally render the cross icon
                         <div
@@ -581,7 +607,7 @@ const Navbar = (props) => {
 
                     {cartData.length > 0 && (
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5 flex items-center justify-center ">
-                            <div className="rounded-lg p-4 flex items-center justify-center gap-3 md:gap-10 w-full max-w-4xl">
+                            <div className="rounded-lg p-2 flex items-center justify-center gap-3 md:gap-4 w-full max-w-4xl">
                                 <div className="flex items-center">
                                     <input
                                         type="radio"
@@ -615,6 +641,7 @@ const Navbar = (props) => {
                                         <span className="text-gray-500 text-[13px]">We bring it out to your car</span>
                                     </label>
                                 </div>
+
                                 <div className="flex items-center">
                                     <input
                                         type="radio"
@@ -629,6 +656,22 @@ const Navbar = (props) => {
                                         <span className="font-semibold text-[15px]">Local Delivery</span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">We bring it to your Home</span>
+                                    </label>
+                                </div>
+                                <div className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id="ShipmentDelivery"
+                                        name="pickupOption"
+                                        value="ShipmentDelivery"
+                                        className="form-radio h-5 w-5 text-green-600"
+                                        checked={pickupOption === 'ShipmentDelivery'}
+                                        onChange={handleOptionChange}
+                                    />
+                                    <label htmlFor="localDelivery" className="ml-2">
+                                        <span className="font-semibold text-[15px]">Shipment Delivery</span>
+                                        <br />
+                                        <span className="text-gray-500 text-[13px]">Delivery in 2 or 3 days</span>
                                     </label>
                                 </div>
                             </div>
@@ -682,39 +725,42 @@ const Navbar = (props) => {
                         </div>
                     )}
 
-                    {cartData.length > 0 && pickupOption === 'localDelivery' && (
+                    {cartData.length > 0 && (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') && (
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
-                            <div className="flex items-center justify-center">
+                            <div className="flex items-center justify-start">
                                 <div className="text-center">
                                     <h1 className="text-lg font-semibold mb-4">Delivery Info</h1>
-                                    <div className="relative inline-block">
-                                        <input
-                                            type="text"
-                                            value={localAddress.dateOfDelivery ? formatDate(localAddress.dateOfDelivery) : "Select date"}
-                                            placeholder="Select date"
-                                            className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            readOnly
-                                            onClick={handleIconClick}
+                                    {pickupOption === 'localDelivery' && (
+                                        <div className="relative inline-block">
+                                            <input
+                                                type="text"
+                                                value={localAddress.dateOfDelivery ? formatDate(localAddress.dateOfDelivery) : "Select date"}
+                                                placeholder="Select date"
+                                                className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                readOnly
+                                                onClick={handleIconClick}
+                                            />
+                                            <span
+                                                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
+                                                onClick={handleIconClick}
+                                            >
+                                                <FaRegCalendarAlt />
+                                            </span>
+                                            {isOpen && (
+                                                <div className="absolute z-10 mt-1">
+                                                    <DatePicker
+                                                        selected={localAddress.dateOfDelivery}
+                                                        onChange={handleDateChange1}
+                                                        inline
+                                                        onClickOutside={() => setIsOpen(false)}
+                                                        minDate={minDate} // disables past dates
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
 
-                                        />
-                                        <span
-                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
-                                            onClick={handleIconClick}
-                                        >
-                                            <FaRegCalendarAlt />
-                                        </span>
-                                        {isOpen && (
-                                            <div className="absolute z-10 mt-1">
-                                                <DatePicker
-                                                    selected={localAddress.dateOfDelivery}
-                                                    onChange={handleDateChange1}
-                                                    inline
-                                                    onClickOutside={() => setIsOpen(false)}
-                                                    minDate={minDate} // This will disable all dates before today + 1 
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
+
                                     <input
                                         type="text"
                                         name="name"
@@ -800,18 +846,19 @@ const Navbar = (props) => {
                                         </p>
                                         <p className="text-custom-newGrayColors font-normal text-sm pt-2">
                                             <span className="pl-3">
-                                            ${ (item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2) }
+                                                ${(item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2)}
                                             </span>{" "}
                                             <span className="line-through">
-                                            ${ (item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
+                                                ${(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
                                             </span>
                                         </p>
+
                                     </div>
                                     <div className="flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-2 md:hidden">
                                         <p className="text-custom-purple font-semibold text-base">
-                                        ${ (item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2) }
+                                            ${(item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2)}
                                             <del className="text-custom-red font-normal text-xs ml-2">
-                                            ${ (item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
+                                                ${(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
                                             </del>
                                         </p>
                                         <IoMdClose
@@ -821,6 +868,7 @@ const Navbar = (props) => {
                                             }}
                                         />
                                     </div>
+
                                 </div>
 
                                 <div className="flex md:justify-center justify-start md:items-center items-start col-span-3 md:mt-0 mt-5">
@@ -851,8 +899,8 @@ const Navbar = (props) => {
                                                 const nextState = produce(cartData, (draft) => {
                                                     draft[i].qty += 1;
                                                     const price = parseFloat(draft[i]?.price_slot?.our_price);
-                                                    const tax = draft[i]?.tax ? draft[i].tax / 100 : 0; 
-                                                    draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(1); 
+                                                    const tax = draft[i]?.tax ? draft[i].tax / 100 : 0;
+                                                    draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(1);
                                                 });
                                                 setCartData(nextState);
                                                 localStorage.setItem("addCartDetail", JSON.stringify(nextState));
@@ -867,7 +915,7 @@ const Navbar = (props) => {
                                     <p className="text-custom-purple font-semibold text-base">
                                         ${item?.total}
                                         <del className="text-custom-red font-normal text-xs ml-2">
-                                        ${ (item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
+                                            ${(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
                                         </del>
                                     </p>
                                     <IoMdClose
@@ -877,7 +925,22 @@ const Navbar = (props) => {
                                         }}
                                     />
                                 </div>
+
+                                <div className='flex justify-center md:flex-row col-span-8   '>
+                                    {pickupOption === 'ShipmentDelivery' && (
+                                        item.isShipmentAvailable ? (
+                                            <p className=" text-center mt-0 md:mt-[-34px] ms-12 text-black">
+                                                Product is available for Shipment Delivery
+                                            </p>
+                                        ) : (
+                                            <p className=" text-center mt-[-34px] ms-20 text-red-500">
+                                                Product is Not available for Shipment Delivery
+                                            </p>
+                                        )
+                                    )}
+                                </div>
                             </div>
+
                         ))}
                     </div>
 
@@ -937,8 +1000,6 @@ const Navbar = (props) => {
                                     return;
                                 } else {
                                     createProductRquest();
-                                    // setShowcart(true);
-                                    // setOpenCart(false);
                                 }
                             }}
                         >
@@ -947,90 +1008,6 @@ const Navbar = (props) => {
                     )}
                 </div>
             </Drawer>
-
-            {/* Shipping Form Modal */}
-
-
-            {/* <Drawer open={showCategory1} anchor="top" onClose={closeDrawer1}>
-            {viewPopup && (
-                <div className="fixed md:mt-6 top-0 left-0 w-screen bg-black/30 flex justify-center items-center !z-50">
-                    <div className=' md:absolute top-[50px] w-full md:w-[80%]  md:max-w-[750px] h-auto  bg-white  m-auto !z-50'>
-                        <div className="flex  flex-col md:max-h-[600px]  items-end  md:px-[30px]  overflow-hidden">
-
-                            <div
-                                className=" w-7 h-7 cursor-pointer hidden md:block "
-                                onClick={() => {
-                                    setViewPopup(false);
-                                    setShowCategory1(false);
-                                    setSearchData("");
-                                    setProductsList([]);
-                                }}
-                            >
-                                <RxCross2 className="h-7 w-7 font-semibold text-black" />
-                            </div>
-
-                            <div className="w-full flex md:hidden flex-row p-[10px]">
-                                <div
-                                    className="  cursor-pointer border-y-[1px] border-l-[1px] border-black flex justify-center items-center py-[5px] px-[5px]"
-                                    onClick={() => {
-                                        setViewPopup(false);
-                                        setShowCategory1(false);
-                                        setSearchData("");
-                                        setProductsList([]);
-                                    }}
-                                >
-                                    <RxCross2 className="h-7 w-7 font-semibold text-black " />
-                                </div>
-
-                                <input
-                                    className="w-full border-[1px] border-black text-black py-[10px] px-[10px] outline-none "
-                                    value={serchData}
-                                    onChange={(text) => {
-                                        setSearchData(text.target.value);
-                                        if (text.target.value) {
-                                            getproductBySearchCategory(text.target.value);
-                                        } else {
-                                            setProductsList([]);
-                                        }
-                                    }}
-                                    type="search"
-                                    placeholder="Search for product"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <section className="w-full ">
-                                <div className="max-w-7xl mx-auto w-full md:px-0 px-5 md:py-5 py-5">
-                                    <p className="md:text-[24px] text-2xl text-black font-normal text-center">
-                                        All Products
-                                    </p>
-                                    <div className="md:py-4 p-5 grid md:grid-cols-3 grid-cols-1 gap-5 w-full h-full overflow-x-auto overflow-y-auto">
-                                        {(productsList.length > 0 ? productsList : allProduct).map((item, i) => (
-                                            <div
-                                                key={i}
-                                                className="w-full h-full"
-                                                onClick={() => {
-                                                    setShowCategory1(false);
-                                                    setSearchData("");
-                                                    setProductsList([]);
-                                                }}
-                                            >
-                                                <GroceryCatories
-                                                    item={item}
-                                                    i={i}
-                                                    url={`/product-details/${item?.slug}`}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                </div>
-            )} */}
-            {/* </Drawer> */}
-
         </>
     );
 };

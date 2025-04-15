@@ -4,7 +4,7 @@ import { Api } from '@/services/service';
 import { useRouter } from 'next/router';
 
 
-function Categories(props) {
+function Search(props) {
     const router = useRouter()
     console.log(router)
     const [productList, SetProductList] = useState([])
@@ -102,4 +102,4 @@ function Categories(props) {
     )
 }
 
-export default Categories
+export default Search

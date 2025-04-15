@@ -103,18 +103,18 @@ function Mybooking(props) {
         return new Date(date).toLocaleDateString('en-US', options);
     }
 
-    const groupedBookings = bookingsData.reduce((acc, booking) => {
-        if (!acc[booking._id]) {
-            acc[booking._id] = {
-                ...booking,
-                products: []
-            };
-        }
-        acc[booking._id].products.push(booking.productDetail);
-        return acc;
-    }, {});
+    // const groupedBookings = bookingsData.reduce((acc, booking) => {
+    //     if (!acc[booking._id]) {
+    //         acc[booking._id] = {
+    //             ...booking,
+    //             products: []
+    //         };
+    //     }
+    //     acc[booking._id].products.push(booking.productDetail);
+    //     return acc;
+    // }, {});
 
-    const groupedBookingsArray = Object.values(groupedBookings);
+    // const groupedBookingsArray = Object.values(groupedBookings);
 
     const isDriveUp = bookingsData?.some(order => order?.isDriveUp === true);
 
@@ -134,8 +134,8 @@ function Mybooking(props) {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-3 md:mx-auto md:gap-12 gap-4 max-w-6xl">
-                    {groupedBookingsArray && groupedBookingsArray.length > 0 ? (
-                        groupedBookingsArray.map((booking, key) => (
+                    {bookingsData && bookingsData.length > 0 ? (
+                        bookingsData.map((booking, key) => (
                             <div key={key} className="bg-white md:p-4 p-2.5 rounded-md border-2 border-[#999999] h-auto self-start">
                                 <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleBooking(booking._id)}>
                                     <div className="flex flex-col justify-start w-full">
@@ -244,7 +244,7 @@ function Mybooking(props) {
 
                                 <div className={expandedBookingId === booking._id ? "block mt-4" : "hidden"}>
                                     <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-white p-3 rounded-[10px] border border-gray-200">
-                                        {booking.products.map((product, index) => (
+                                        {booking.productDetail.map((product, index) => (
                                             <div key={index} className="col-span-2 flex gap-5"
                                                 onClick={() => { router.push(`/myorder/${booking._id}?product_id=${product._id}`) }}
                                             >
