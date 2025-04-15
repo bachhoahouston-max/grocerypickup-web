@@ -240,12 +240,12 @@ const Navbar = (props) => {
 
     const createProductRquest = (e) => {
         // e.preventDefault();
-
+    
         let data = [];
         let cart = localStorage.getItem("addCartDetail");
-
+    
         let d = JSON.parse(cart);
-
+    
         d.forEach((element) => {
             data.push({
                 product: element?._id,
@@ -258,21 +258,25 @@ const Navbar = (props) => {
                 isShipmentAvailable: element.isShipmentAvailable
             });
         });
-
+    
         console.log("qsdcfvgbn", data)
-
+    
         const isLocalDelivery = pickupOption === 'localDelivery';
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
         const dateOfDelivery = isDriveUp && date ? date : null;
         const isShipmentDelivery = pickupOption === 'ShipmentDelivery';
-
+    
+        // Get products not available for shipment
         const unavailableProducts = data.filter(item => item.isShipmentAvailable === false);
+        const availableProducts = data.filter(item => item.isShipmentAvailable === true);
+        
         const isShipmentAvailable = unavailableProducts.length === 0;
-
-        console.log(isShipmentAvailable)
-
-        if (pickupOption === 'ShipmentDelivery') {
+    
+        console.log(isShipmentAvailable);
+    
+        // For ShipmentDelivery option
+        if (isShipmentDelivery) {
             if (!isShipmentAvailable) {
                 if (unavailableProducts.length === 1) {
                     props.toaster({ type: "error", message: "One product in your cart is not available for shipment. Please remove it or choose a different delivery option." });
@@ -281,17 +285,18 @@ const Navbar = (props) => {
                 }
                 return false;
             }
-        } else {
-            if (!isShipmentAvailable) {
-                const message = unavailableProducts.length === 1
-                    ? "Note: One product in your cart is not available for shipment if you wish to change delivery method later."
-                    : "Note: Some products in your cart are not available for shipment if you wish to change delivery method later.";
-
-                return props.toaster({ type: "info", message: message });
-
+        } 
+        else {
+            if (availableProducts.length > 0) {
+                const message = availableProducts.length === 1
+                    ? "Note: One product in your cart is not available for delivery if you wish to change delivery method later."
+                    : "Note: Some products in your cart are not available for delivery if you wish to change delivery method later.";
+                
+            return  props.toaster({ type: "info", message: message });
+                
             }
         }
-
+    
         let newData = {
             productDetail: data,
             total: CartTotal.toFixed(2),
@@ -308,7 +313,7 @@ const Navbar = (props) => {
             isLocalDelivery: isLocalDelivery,
             isShipmentDelivery: isShipmentDelivery
         };
-
+    
         props.loader && props.loader(true);
         Api("post", "createProductRquest", newData, router).then(
             (res) => {
@@ -321,16 +326,7 @@ const Navbar = (props) => {
                     setDate('')
                     localStorage.removeItem("addCartDetail");
                     props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
-
-                    // const data = res.data.orders
-
-                    // const isOrderPickup = data?.find(order => order?.isOrderPickup === true);
-                    // const isDriveUp = data?.find(order => order?.isDriveUp === true);
-
-                    // if (isOrderPickup) {
-                    //     props.toaster({ type: "success", message: "Your item is ready for delivery! Please pick it up at the store. Thank you!" });
-                    // } else if (isDriveUp) {
-
+    
                     router.push("/Mybooking");
                 } else {
                     props.toaster && props.toaster({ type: "error", message: res?.data?.message });
