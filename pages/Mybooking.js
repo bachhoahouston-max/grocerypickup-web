@@ -102,7 +102,7 @@ function Mybooking(props) {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         return new Date(date).toLocaleDateString('en-US', options);
     }
-    
+
     function formatDate2(dateInput) {
         const date = new Date(dateInput);
         const options = { day: 'numeric', month: 'short' }; // e.g., "21 Apr"
@@ -155,13 +155,13 @@ function Mybooking(props) {
                                                 </p>
                                             ) : (
                                                 booking?.SecretCode && (
-                                                    <p className="px-2 py-2 md:text-[16px] text-[14px] text-black rounded md:w-[440px] w-[230px]">
+                                                    <p className="px-2 py-2 md:text-[16px] text-[14px] text-black md:w-[440px] w-[230px]">
                                                         Secret Code is {booking.SecretCode}. Please do not share this with anyone.
                                                     </p>
                                                 )
                                             )}
                                             {booking?.isShipmentDelivery && (
-                                                <p className="text-black">
+                                                <p className="text-black  md:text-[16px] text-[14px]">
                                                     Delivery expected by {formatDate2(new Date(new Date(booking.createdAt).setDate(new Date(booking.createdAt).getDate() + 3)))} 11 PM
                                                 </p>
                                             )}
