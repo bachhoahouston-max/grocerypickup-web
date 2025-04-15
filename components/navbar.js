@@ -607,7 +607,7 @@ const Navbar = (props) => {
 
                     {cartData.length > 0 && (
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5 flex items-center justify-center ">
-                            <div className="rounded-lg p-2 flex items-center justify-center gap-3 md:gap-4 w-full max-w-4xl">
+                            <div className="rounded-lg p-2  items-center justify-center gap-3 md:gap-4 w-full grid  md:grid-cols-4 grid-cols-2">
                                 <div className="flex items-center">
                                     <input
                                         type="radio"
@@ -759,8 +759,6 @@ const Navbar = (props) => {
                                             )}
                                         </div>
                                     )}
-
-
                                     <input
                                         type="text"
                                         name="name"
@@ -827,14 +825,14 @@ const Navbar = (props) => {
                         {cartData?.map((item, i) => (
                             <div
                                 key={i}
-                                className="grid md:grid-cols-9 grid-cols-1 w-full md:gap-5 mt-5"
+                                className="grid md:grid-cols-9 grid-cols-1 w-full md:gap-5 gap-2 mt-5"
                             >
                                 <div className="flex justify-start items-start col-span-4 md:gap-0 gap-2">
                                     <img
                                         className="md:w-[145px] md:h-[104px] w-[50px] h-[50px] object-contain"
                                         src={item?.selectedImage || item?.image}
                                     />
-                                    <div className="pt-2">
+                                    <div className="pt-2 flex-1">
                                         <p className="text-custom-purple font-semibold text-base pl-3">
                                             {item?.name}
                                         </p>
@@ -852,36 +850,28 @@ const Navbar = (props) => {
                                                 ${(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
                                             </span>
                                         </p>
-
                                     </div>
-                                    <div className="flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-2 md:hidden">
-                                        <p className="text-custom-purple font-semibold text-base">
-                                            ${(item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2)}
-                                            <del className="text-custom-red font-normal text-xs ml-2">
-                                                ${(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
-                                            </del>
-                                        </p>
+                                    <div className="flex justify-end items-start md:hidden">
                                         <IoMdClose
-                                            className="w-[22px] h-[22px] text-custom-newGray ml-2 cursor-pointer"
+                                            className="w-[22px] h-[22px] text-custom-newGray cursor-pointer"
                                             onClick={() => {
                                                 cartClose(item, i);
                                             }}
                                         />
                                     </div>
-
                                 </div>
 
-                                <div className="flex md:justify-center justify-start md:items-center items-start col-span-3 md:mt-0 mt-5">
+                                <div className="flex md:justify-center justify-start md:items-center items-start col-span-3 md:mt-0 mt-3">
                                     <div className="bg-gray-100 w-[153px] h-[39px] rounded-[8px] flex justify-center items-center">
                                         <div
-                                            className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none	 flex justify-center items-center"
+                                            className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
                                             onClick={() => {
                                                 if (item.qty > 1) {
                                                     const nextState = produce(cartData, (draft) => {
                                                         draft[i].qty -= 1;
                                                         const price = parseFloat(draft[i]?.price_slot?.our_price);
-                                                        const tax = draft[i]?.tax ? draft[i].tax / 100 : 0; // Get tax rate or default to 0
-                                                        draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(2); // Calculate total with tax
+                                                        const tax = draft[i]?.tax ? draft[i].tax / 100 : 0;
+                                                        draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(2);
                                                     });
                                                     setCartData(nextState);
                                                     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
@@ -911,7 +901,8 @@ const Navbar = (props) => {
                                     </div>
                                 </div>
 
-                                <div className="md:flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-5 hidden">
+                                {/* Price and close button for desktop */}
+                                <div className="md:flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-5 hidden ">
                                     <p className="text-custom-purple font-semibold text-base">
                                         ${item?.total}
                                         <del className="text-custom-red font-normal text-xs ml-2">
@@ -926,21 +917,21 @@ const Navbar = (props) => {
                                     />
                                 </div>
 
-                                <div className='flex justify-center md:flex-row col-span-8   '>
+                                {/* Shipment availability notification */}
+                                <div className='flex md:col-span-9 col-span-2 w-full md:-mt-10 mt-0'>
                                     {pickupOption === 'ShipmentDelivery' && (
                                         item.isShipmentAvailable ? (
-                                            <p className=" text-center mt-0 md:mt-[-34px] ms-12 text-black">
+                                            <p className="text-green-500 text-sm md:text-base md:mt-3 mt-2 w-full md:text-center">
                                                 Product is available for Shipment Delivery
                                             </p>
                                         ) : (
-                                            <p className=" text-center mt-[-34px] ms-20 text-red-500">
+                                            <p className="text-red-500 text-sm md:text-base md:mt-3 mt-2 w-full  md:text-center">
                                                 Product is Not available for Shipment Delivery
                                             </p>
                                         )
                                     )}
                                 </div>
                             </div>
-
                         ))}
                     </div>
 

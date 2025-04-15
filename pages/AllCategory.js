@@ -29,7 +29,7 @@ const Category = (props) => {
 
   return (
     <>
-      <div className="max-w-7xl md:mt-0 mt-6 md:px-0 px-10 mx-auto bg-white">
+      <div className="max-w-7xl md:mt-0 mt-8 md:px-0 px-10 mx-auto bg-white">
         <h2 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">All Categories</h2>
         <div className="mb-4 grid md:grid-cols-4 grid-cols-2 md:gap-0 gap-8">
           {category.map((cat, index) => (

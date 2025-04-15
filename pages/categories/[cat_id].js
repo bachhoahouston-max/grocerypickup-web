@@ -63,7 +63,7 @@ function Categories(props) {
         totalItems: 0,
         totalPages: 0,
         currentPage: 1,
-        itemsPerPage: 4
+        itemsPerPage: 12
     });
 
     useEffect(() => {
@@ -104,7 +104,7 @@ function Categories(props) {
         );
     };
 
-    const getproductByCategory = async (cat, page = 1, limit = 4) => {
+    const getproductByCategory = async (cat, page = 1, limit = 12) => {
         props.loader(true);
         // setCategoryLoading(true);
         let url = `getProductBycategoryId?page=${page}&limit=${limit}`;
