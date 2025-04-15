@@ -263,14 +263,14 @@ function Account(props) {
                 <div>
                     {!user?.username ? (
                         <div className="flex justify-between w-full">
-                            <button className='bg-custom-green rounded-[20px] h-[40px] w-[120px] text-white text-base font-normal' onClick={() => { router.push('/signIn') }}>
+                            <button className='bg-custom-green rounded-[20px] h-[40px] w-[120px] text- text-base font-normal' onClick={() => { router.push('/signIn') }}>
                                 Sign in
                             </button>
 
                         </div>
                     ) : (
                         <div className='flex items-center'>
-                            <span className='text-white text-base font-normal mr-2'>Logout</span>
+                         
                             <div className='w-[40px] h-[40px] bg-custom-green rounded-full flex justify-center items-center'>
                                 <div
                                     onClick={() => {
@@ -301,7 +301,7 @@ function Account(props) {
                                     }}
                                     className="w-[40px] h-[40px] bg-custom-green rounded-full flex justify-center items-center text-white font-semibold"
                                 >
-                                    <PiSignOutFill className='text-white w-[23px] h-[23px]' />
+                                    <PiSignOutFill className='text-black w-[23px] h-[23px]' />
                                 </div>
                             </div>
                         </div>
@@ -312,7 +312,7 @@ function Account(props) {
                     <div
                         className='bg-custom-green h-[40px] w-[40px] rounded-full flex justify-center items-center group relative'
                     >
-                        <p className="font-bold text-white text-base text-center capitalize">
+                        <p className="font-bold text-black text-base text-center capitalize">
                             {user?.username?.charAt(0).toUpperCase()}
                         </p>
 
