@@ -3,9 +3,9 @@
 
 
 @theme {
-  --custom-green: #FFD67E;
+  --custom-green: #F38529;
   --custom-black: #292727;
-  --custom-Gold:  #FEC200 /* Example custom green color */
+  --custom-Gold:  #F38021 /* Example custom green color */
 }
 
 :root {
@@ -50,7 +50,7 @@ body {
 }
 
 .css-d771x4.Mui-checked, .css-d771x4.MuiCheckbox-indeterminate 
-{  color: black  !important}
+{  color: white  !important}
 
 .css-y50yd7 {
   background-color: var(--custom-green) !important;

@@ -263,7 +263,7 @@ function Account(props) {
                 <div>
                     {!user?.username ? (
                         <div className="flex justify-between w-full">
-                            <button className='bg-custom-green rounded-[20px] h-[40px] w-[120px] text-black text-base font-normal' onClick={() => { router.push('/signIn') }}>
+                            <button className='bg-custom-green rounded-[20px] h-[40px] w-[120px] text-white text-base font-normal' onClick={() => { router.push('/signIn') }}>
                                 Sign in
                             </button>
 
@@ -279,11 +279,11 @@ function Account(props) {
                                             showCancelButton: true,
                                             confirmButtonText: "Yes",
                                             cancelButtonText: "No",
-                                            confirmButtonColor: "#FEC200",
-                                            cancelButtonColor: "#ffffff",
+                                            confirmButtonColor: "#F38529",
+                                            cancelButtonColor: "#F38529",
                                             customClass: {
                                                 confirmButton: 'px-12 rounded-xl',
-                                                cancelButton: 'px-12 py-2 rounded-lg text-custom-green border-[12px] border-custom-green hover:none',
+                                                cancelButton: 'px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none',
                                                 text: 'text-[20px] text-black',
                                                 actions: 'swal2-actions-no-hover',
                                                 popup: 'rounded-[15px] shadow-custom-green'
@@ -301,7 +301,7 @@ function Account(props) {
                                     }}
                                     className="w-[40px] h-[40px] bg-custom-green rounded-full flex justify-center items-center text-white font-semibold"
                                 >
-                                    <PiSignOutFill className='text-black w-[23px] h-[23px]' />
+                                    <PiSignOutFill className='text-white w-[23px] h-[23px]' />
                                 </div>
                             </div>
                         </div>
@@ -312,7 +312,7 @@ function Account(props) {
                     <div
                         className='bg-custom-green h-[40px] w-[40px] rounded-full flex justify-center items-center group relative'
                     >
-                        <p className="font-bold text-black text-base text-center capitalize">
+                        <p className="font-bold text-white text-base text-center capitalize">
                             {user?.username?.charAt(0).toUpperCase()}
                         </p>
 
@@ -347,7 +347,7 @@ function Account(props) {
                                 <p className="text-gray-600">{user?.email || profileData.email || "user@example.com"}</p>
                             </div>
                             <button
-                                className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-black text-white hover:bg-gray-800 transition"
+                                className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-custom-green text-white hover:bg-gray-800 transition"
                                 onClick={isEditing ? updateProfile : toggleEditMode}
                             >
                                 {isEditing ? 'Save' : 'Edit'}
@@ -400,7 +400,7 @@ function Account(props) {
                                     </div>
                                     <div className="flex justify-end">
                                         <button
-                                            className="bg-black rounded-lg text-white px-4 py-2 justify-end mt-4"
+                                            className="bg-custom-green rounded-lg text-white px-4 py-2.5 justify-end mt-4"
                                             onClick={changePassword}
                                         >
                                             Change Password

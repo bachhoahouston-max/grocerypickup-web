@@ -371,7 +371,7 @@ const Navbar = (props) => {
                 {/* Logo */}
                 <div className="md:ms-32 lg:ms-10 xl:ms-28 ms-0 flex items-center">
                     <img
-                        src="/logo.png"
+                        src="/Logo2.png"
                         alt="Grocery logo with palm tree and text 'Tropicana' in green and 'Freshness' in blue"
                         className="object-contain cursor-pointer"
                         width="150"
@@ -390,14 +390,14 @@ const Navbar = (props) => {
                             setSearchData(text.target.value);
                         }}
                         placeholder="Search for products..."
-                        className=" md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#FFD67E] rounded-l-md focus:outline-none pr-10"
+                        className=" md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#F38529] rounded-l-md focus:outline-none pr-10"
                     />
                     
                     <button
                         className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer  rounded-r-md"
                         onClick={() => { router.push(`/Search/${serchData}`); }}
                     >
-                        <FontAwesomeIcon icon={faSearch} className='text-black relative' />
+                        <FontAwesomeIcon icon={faSearch} className='text-white relative' />
                     </button>
                     {serchData && ( // Conditionally render the cross icon
                         <div
@@ -427,7 +427,7 @@ const Navbar = (props) => {
                             className="bg-custom-green text-black h-[40px] w-[40px] rounded-full flex items-center justify-center cursor-pointer relative group"
                             onClick={() => setShowHover(true)}
                         >
-                            <p className="font-bold text-black text-base text-center capitalize">
+                            <p className="font-bold text-white text-base text-center capitalize">
                                 {user?.username?.charAt(0).toUpperCase() || "T"}
                             </p>
                             {showHover && (
@@ -437,31 +437,31 @@ const Navbar = (props) => {
 
                                             <li className="px-3 shadow-inner py-2 flex justify-between">
                                                 <div
-                                                    className="block px-5 py-1 pl-0 text-black text-left font-semibold text-base"
+                                                    className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
                                                     onClick={() => { router.push("/Mybooking") }}
                                                 >
                                                     {"My Order"}
                                                 </div>
-                                                <IoIosArrowForward className="text-2xl text-black" />
+                                                <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
                                             <li className="px-3 shadow-inner py-2 flex justify-between">
                                                 <div
-                                                    className="block px-5 py-1 pl-0 text-black text-left font-semibold text-base"
+                                                    className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
                                                     onClick={() => { router.push("/Myhistory") }}
                                                 >
                                                     {"History"}
                                                 </div>
-                                                <IoIosArrowForward className="text-2xl text-black" />
+                                                <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
 
                                             <li className="px-3 shadow-inner py-2 flex justify-between">
                                                 <div
-                                                    className="block px-5 py-1 pl-0 text-black text-left font-semibold text-[16px]"
+                                                    className="block px-5 py-1 pl-0 text-white text-left font-semibold text-[16px]"
                                                     onClick={() => { router.push("/editProfile") }}
                                                 >
                                                     {"Edit Profile"}
                                                 </div>
-                                                <IoIosArrowForward className="text-2xl text-black" />
+                                                <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
 
                                             <li className="px-3 shadow-inner py-2 flex justify-between">
@@ -472,11 +472,11 @@ const Navbar = (props) => {
                                                             showCancelButton: true,
                                                             confirmButtonText: "Yes",
                                                             cancelButtonText: "No",
-                                                            confirmButtonColor: "#FEC200",
-                                                            cancelButtonColor: "#ffffff",
+                                                            confirmButtonColor: "#F38529",
+                                                            cancelButtonColor: "#F38529",
                                                             customClass: {
                                                                 confirmButton: 'px-12 rounded-xl',
-                                                                cancelButton: 'px-12 py-2 rounded-lg text-custom-black border-[12px] border-custom-green hover:none',
+                                                                cancelButton: 'px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none',
                                                                 title: 'text-[20px] text-black',
                                                                 actions: 'swal2-actions-no-hover',
                                                                 popup: 'rounded-[15px] shadow-custom-green'
@@ -494,11 +494,11 @@ const Navbar = (props) => {
                                                             }
                                                         });
                                                     }}
-                                                    className="block px-5 py-1 pl-0 text-black text-left font-semibold text-base"
+                                                    className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
                                                 >
                                                     {"Sign out"}
                                                 </div>
-                                                <IoIosArrowForward className="text-2xl text-black" />
+                                                <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
                                         </ul>
                                     </div>
@@ -567,11 +567,11 @@ const Navbar = (props) => {
                                         showCancelButton: true,
                                         confirmButtonText: "Yes",
                                         cancelButtonText: "No",
-                                        confirmButtonColor: "#FEC200",
-                                        cancelButtonColor: "#ffffff",
+                                        confirmButtonColor: "#F38529",
+                                        cancelButtonColor: "#F38529",
                                         customClass: {
                                             confirmButton: 'px-12 rounded-xl',
-                                            cancelButton: 'px-12 py-2 rounded-lg text-custom-black border-[12px] border-custom-green hover:none',
+                                            cancelButton: 'px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none',
                                             text: 'text-[20px] text-black',
                                             actions: 'swal2-actions-no-hover',
                                             popup: 'rounded-[15px] shadow-custom-green',
@@ -978,7 +978,7 @@ const Navbar = (props) => {
 
                     {cartData.length > 0 && (
                         <button
-                            className="bg-custom-gold h-[50px] rounded-[12px] w-full font-semibold text-black text-base text-center mt-5 mb-6"
+                            className="bg-custom-gold border-white border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-white cursor-pointer text-base text-center mt-5 mb-6"
                             onClick={() => {
                                 if (cartData?.length === 0) {
                                     props.toaster && props.toaster({

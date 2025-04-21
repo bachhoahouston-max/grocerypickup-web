@@ -137,7 +137,7 @@ function Myhistory(props) {
                                 <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleBooking(booking._id)}>
                                     <div className="flex flex-col justify-start w-full">
                                         <div className="flex flex-row justify-between items-center mb-4">
-                                            <div className="bg-custom-green text-black rounded-full 
+                                            <div className="bg-custom-green text-white rounded-full 
                                             md:h-[50px] h-[40px] md:w-[50px] w-[40px] flex items-center justify-center mr-3 md:text-[24px] text-[18px]">
                                                 {key + 1}
                                             </div>

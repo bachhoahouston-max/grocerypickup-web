@@ -260,21 +260,21 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 </div>
             ) : (
                 <button
-                    className="font-bold bg-custom-gold w-[90px] md:mt-2 mt-1 rounded-[6px] md:px-4 px-0 py-1.5 text-[13px] md:text-[16px] text-black flex justify-center items-center"
+                    className="font-bold bg-custom-gold w-[90px] md:mt-2 mt-1 rounded-[6px] md:px-4 px-0 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center"
                     onClick={handleAddToCart}
                 >
-                    <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-custom-black md:mr-2 mr-1 font-bold" />
+                    <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
                     Add
                 </button>
             )}
 
             <div className="flex items-center text-black mt-2">
                 <div className="flex items-center mr-2">
-                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
-                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
-                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
-                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
-                    <FaStar className="text-yellow-500 md:text-xl text-sm" />
+                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
+                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
+                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
+                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
+                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
                 </div>
                 <span className="text-sm">(4.5)</span>
             </div>

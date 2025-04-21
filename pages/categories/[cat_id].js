@@ -151,15 +151,15 @@ function Categories(props) {
                         <div className='bg-custom-green md:flex hidden flex-col w-full px-5 py-5'>
                             <div className='border-b border-custom-gray'>
                                 <div className='flex justify-between items-center w-full  pb-5'>
-                                    <p className='text-custom-black font-semibold text-lg'>Sort By</p>
-                                    {!openData && <FaCircleChevronDown className='text-xl text-custom-gold'
+                                    <p className='text-white font-semibold text-lg'>Sort By</p>
+                                    {!openData && <FaCircleChevronDown className='text-xl text-white'
                                         onClick={() => { setOpenData(true); }} />}
-                                    {openData && < FaCircleChevronUp className='text-xl text-custom-gold'
+                                    {openData && < FaCircleChevronUp className='text-xl text-white'
                                         onClick={() => setOpenData(false)} />}
                                 </div>
                                 {openData && <FormControl className=''>
                                     <FormGroup className='flex flex-col' >
-                                        {sortByData.map((item, i) => (<FormControlLabel className='text-black' key={i}
+                                        {sortByData.map((item, i) => (<FormControlLabel className='text-white' key={i}
                                             control={
                                                 <Checkbox onChange={() => {
                                                     if (selectedSortBy === item?.value) {
@@ -177,15 +177,15 @@ function Categories(props) {
 
                             <div className='pt-5'>
                                 <div className='flex justify-between items-center w-full  pb-5'>
-                                    <p className='text-custom-black font-semibold text-lg'>Categories</p>
-                                    {!openCategory && <FaCircleChevronDown className='text-xl text-custom-gold cursor-pointer' onClick={() => { setOpenCategory(true); }} />}
-                                    {openCategory && < FaCircleChevronUp className='text-xl text-custom-gold cursor-pointer' onClick={() => setOpenCategory(false)} />}
+                                    <p className='text-white font-semibold text-lg'>Categories</p>
+                                    {!openCategory && <FaCircleChevronDown className='text-xl text-white cursor-pointer' onClick={() => { setOpenCategory(true); }} />}
+                                    {openCategory && < FaCircleChevronUp className='text-xl text-white cursor-pointer' onClick={() => setOpenCategory(false)} />}
                                 </div>
 
                                 {openCategory && <FormGroup>
                                     {
                                         categoryList.map((item, i) => (
-                                            <FormControlLabel className='text-black'
+                                            <FormControlLabel className='text-white'
                                                 key={i} control={<Checkbox
                                                     onChange={() => {
                                                         router.replace(`/categories/${item.slug}`)
@@ -211,14 +211,14 @@ function Categories(props) {
                                 <div className='border-b border-custom-gray'>
                                     <div className='flex justify-between items-center w-full  pb-5'>
                                         <p className='text-black font-semibold text-lg'>Sort By</p>
-                                        {!openData && <FaCircleChevronDown className='text-lg text-black'
+                                        {!openData && <FaCircleChevronDown className='text-lg text-white'
                                             onClick={() => { setOpenData(true); }} />}
-                                        {openData && < FaCircleChevronUp className='text-lg text-custom-gold'
+                                        {openData && < FaCircleChevronUp className='text-lg text-white'
                                             onClick={() => setOpenData(false)} />}
                                     </div>
                                     {openData && <FormControl className=''>
                                         <FormGroup className='flex flex-col' >
-                                            {sortByData.map((item, i) => (<FormControlLabel className='text-black' key={i}
+                                            {sortByData.map((item, i) => (<FormControlLabel className='text-white' key={i}
                                                 control={
                                                     <Checkbox className="text-white" onChange={() => {
                                                         if (selectedSortBy === item?.value) {
@@ -237,17 +237,17 @@ function Categories(props) {
 
                                 <div className='pt-5'>
                                     <div className='flex justify-between items-center w-full  pb-5'>
-                                        <p className='text-black font-semibold text-lg'>Categories</p>
-                                        {!openCategory && <FaCircleChevronDown className='text-lg text-black cursor-pointer' onClick={() => { setOpenCategory(true); }} />}
-                                        {openCategory && < FaCircleChevronUp className='text-lg text-custom-gold  cursor-pointer' onClick={() => setOpenCategory(false)} />}
+                                        <p className='text-white font-semibold text-lg'>Categories</p>
+                                        {!openCategory && <FaCircleChevronDown className='text-lg text-white cursor-pointer' onClick={() => { setOpenCategory(true); }} />}
+                                        {openCategory && < FaCircleChevronUp className='text-lg text-white  cursor-pointer' onClick={() => setOpenCategory(false)} />}
                                     </div>
 
                                     {openCategory && <FormGroup>
                                         {
                                             categoryList.map((item, i) => (
-                                                <FormControlLabel className='text-black'
+                                                <FormControlLabel className='text-white'
                                                     key={i} control={
-                                                        <Checkbox className="text-black"
+                                                        <Checkbox className="text-white"
                                                             onChange={() => {
                                                                 router.replace(`/categories/${item.slug}`)
                                                                 setSelectedCategories(item?.slug)

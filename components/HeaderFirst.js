@@ -75,17 +75,17 @@ const HeaderFirst = (props) => {
                                     <div key={index} className='flex flex-col justify-between'>
                                         <div className='flex flex-row justify-between'   onClick={() => { router.push(`/categories/${category?.slug}`) }}>
                                             <p
-                                                className="px-4 py-1.5 text-black text-[16px] cursor-pointer"
+                                                className="px-4 py-1.5 text-white text-[16px] cursor-pointer"
                                               
                                             >
                                                 {category.name}
                                             </p>
-                                            <IoIosArrowForward className='text-2xl mt-2 mr-1 text-black' />
+                                            <IoIosArrowForward className='text-2xl mt-2 mr-1 text-white' />
                                         </div>
                                     </div>
                                 ))}
                                 <p
-                                    className="px-4 py-1.5 text-black text-[16px] cursor-pointer"
+                                    className="px-4 py-1.5 text-white text-[16px] cursor-pointer"
                                     onClick={() => handleCategoryClick('/categories/all')}
                                 >
                                     See All Categories
@@ -103,7 +103,7 @@ const HeaderFirst = (props) => {
                     </p>
                 </div>
                 <div className="hidden lg:flex items-center space-x-2 mr-6">
-                    <BiPhoneCall className="text-[#FEC200] text-3xl" />
+                    <BiPhoneCall className="text-[#F38529] text-3xl" />
                     <a href="tel:6393274099" className="text-custom-black cursor-pointer font-semibold">+(402) 54646</a>
 
                    

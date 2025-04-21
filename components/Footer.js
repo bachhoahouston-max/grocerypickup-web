@@ -20,31 +20,31 @@ const Footer = () => {
               alt="Tropicano logo"
               className="mb-4 cursor-pointer"
               height="50"
-              src="/logo.png"
+              src="/Logo2.png"
               width="150"
               onClick={() => router.push('/')}
             />
-            <p className="text-[16px] md:text-[19px] text-black">Your digital partner for personal and professional growth</p>
+            <p className="text-[16px] md:text-[19px] text-white">Your digital partner for personal and professional growth</p>
             <div className="flex space-x-4 mt-4">
-              <a className="text-black border-2 rounded-full w-[40px] h-[40px] border-black flex justify-center items-center" href="#">
+              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaLinkedinIn />
               </a>
-              <a className="text-black border-2 rounded-full w-[40px] h-[40px] border-black flex justify-center items-center" href="#">
+              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaInstagram />
               </a>
-              <a className="text-black border-2 rounded-full w-[40px] h-[40px] border-black flex justify-center items-center" href="#">
+              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaFacebookF />
               </a>
-              <a className="text-black border-2 rounded-full w-[40px] h-[40px] border-black flex justify-center items-center" href="#">
+              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaXTwitter />
               </a>
-              <a className="text-black border-2 rounded-full w-[40px] h-[40px] border-black flex justify-center items-center" href="#">
+              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaYoutube />
               </a>
             </div>
           </div>
          
-          <div className='flex flex-col md:flex-row w-full'>
+          <div className='flex flex-col md:flex-row w-full text-white'>
             {/* Useful Links */}
             <div className="w-full md:w-1/2 mb-4 md:mb-0 max-w-2xl">
               <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">Useful Links</h3>
@@ -66,7 +66,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className='flex flex-col md:flex-row w-full'>
+          <div className='flex flex-col md:flex-row w-full text-white'>
             {/* Other Links */}
             <div className="w-full md:w-1/2 mb-4 md:mb-0">
               <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">Other Links</h3>
@@ -82,7 +82,7 @@ const Footer = () => {
               <ul>
                 <li className="flex items-center mb-2">
                   <IoCall className="text-2xl mr-2" />
-                  <a href="tel:6393274589" className="text-[16px] md:text-[19px] text-black cursor-pointer">+(402) 54646</a>
+                  <a href="tel:6393274589" className="text-[16px] md:text-[19px]text-white cursor-pointer">+(402) 54646</a>
                 </li>
                 <li className="flex items-center">
                   <MdEmail className="text-2xl mr-2" />
@@ -96,7 +96,7 @@ const Footer = () => {
       </div>
 
       <div className="flex justify-center pb-12 md:pb-6">
-        <div className="border-t w-[90%] border-black mt-6 text-[16px] pt-6 text-center">
+        <div className="border-t w-[90%] border-white mt-6 text-[16px] pt-6 text-center text-white">
           <p>Copyright @GroceryStore 2025. All Rights Reserved.</p>
         </div>
       </div>

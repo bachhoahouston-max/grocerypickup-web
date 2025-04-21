@@ -146,7 +146,7 @@ const FeedbackForm = (props) => {
                         </div>
                     </div>
                     <div className="text-center mt-6">
-                        <button type="submit" className="bg-gray-800 text-white py-2 px-6 rounded-md">Send Query</button>
+                        <button type="submit" className="bg-[#F38529] text-white py-2 px-6 rounded-md">Send Query</button>
                     </div>
                 </form>
             </div>
