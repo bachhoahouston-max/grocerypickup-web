@@ -363,22 +363,22 @@ export default function Home(props) {
       <div className="container mx-auto max-w-7xl py-12 md:px-4 px-5">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
           <div className="bg-white p-4 shadow-md text-center">
-            <FontAwesomeIcon icon={faBoxOpen} className="text-xl text-[#FEC200] mb-2" />
+            <FontAwesomeIcon icon={faBoxOpen} className="text-xl text-[#F38529] mb-2" />
             <h3 className="text-[16px] md:text-[18px] md:text-lg font-semibold text-black">Product Package</h3>
             <p className="text-gray-500 text-[13px] md:text-[16px]">Lorem Ipsum is simply dummy</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
-            <FontAwesomeIcon icon={faHeadset} className="text-xl text-[#FEC200] mb-4" />
+            <FontAwesomeIcon icon={faHeadset} className="text-xl text-[#F38529] mb-4" />
             <h3 className="text-[16px] md:text-[18px] font-semibold text-black">24/7 Support</h3>
             <p className="text-gray-500 text-[13px] md:text-[16px]">Lorem Ipsum is simply dummy</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
-            <FontAwesomeIcon icon={faTruck} className="text-xl text-[#FEC200] mb-4" />
+            <FontAwesomeIcon icon={faTruck} className="text-xl text-[#F38529] mb-4" />
             <h3 className="text-[16px] md:text-[18px] font-semibold text-black">Delivery in 5 Days</h3>
             <p className="text-gray-500 text-[13px] md:text-[16px]">Orders from all item</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
-            <FontAwesomeIcon icon={faLock} className="text-xl text-[#FEC200] mb-4" />
+            <FontAwesomeIcon icon={faLock} className="text-xl text-[#F38529] mb-4" />
             <h3 className="text-[16px] md:text-[18px] font-semibold text-black">Payment Secure</h3>
             <p className="text-gray-500 text-[13px] md:text-[16px]">Lorem Ipsum is simply dummy</p>
           </div>

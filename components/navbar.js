@@ -394,7 +394,7 @@ const Navbar = (props) => {
                     />
                     
                     <button
-                        className="py-[4.5px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer  rounded-r-md"
+                        className="py-[4.5px] xl:py-[9px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer  rounded-r-md"
                         onClick={() => { router.push(`/Search/${serchData}`); }}
                     >
                         <FontAwesomeIcon icon={faSearch} className='text-white relative' />
