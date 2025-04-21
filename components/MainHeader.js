@@ -7,7 +7,7 @@ function MainHeader(props) {
   const router = useRouter();
   
   return (
-    <div className="bg-[url('/image99.png')] bg-[#5CB447] bg-cover bg-no-repeat md:h-[580px] md:p-0 ">
+    <div className="bg-[url('/image98.png')]  bg-cover bg-no-repeat md:h-[580px] md:p-0 ">
      <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5 max-w-7xl mx-auto h-full px-4 md:px-20 lg:px-32 xl:px-20 2xl:px-5">
     <div className="flex flex-col justify-center items-center md:items-start py-10 md:py-0">
         <p className="text-white mb-4 mt-6 md:mt-0 md:mb-12 font-semibold text-[13px] md:text-[15px] text-center md:text-start">
