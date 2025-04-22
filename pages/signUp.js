@@ -143,7 +143,7 @@ const SignUp = (props) => {
             <div className="mt-2 w-full">
               <button 
                 type="submit" 
-                className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-black text-[16px] md:text-[20px] bg-custom-green focus:outline-none"
+                className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[16px] md:text-[20px] bg-custom-green focus:outline-none"
               >
                 Sign up
               </button>

@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { CountryDropdown } from 'react-country-region-selector';
 import { Api } from '@/services/service';
+import AddressInput from '@/components/addressInput';
 
 const EditProfile = ({ loader, toaster }) => {
-    // Combined state for all data
+
     const [profileData, setProfileData] = useState({
         username: '',
         email: '',
         gender: '',
         country: '',
-        mobile: '',
-        shippingAddress: '',
+        number: '',
+        address:'',
+    });
+
+    const [profilePassword, setProfilePassword] = useState({
         password: '',
         confirmPassword: '',
     });
 
+
+
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
-    // Load user data on component mount
+
     useEffect(() => {
         const userDetails = localStorage.getItem('userDetail');
         if (userDetails) {
@@ -26,7 +32,7 @@ const EditProfile = ({ loader, toaster }) => {
             getProfileData();
         }
     }, []);
-     
+
     const handleInputChange = (name, value) => {
         setProfileData(prev => ({
             ...prev,
@@ -34,7 +40,14 @@ const EditProfile = ({ loader, toaster }) => {
         }));
     };
 
-  
+    const handlePasswordChange = (name, value) => {
+        setProfilePassword(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+
     const getProfileData = () => {
         loader(true);
         const token = localStorage.getItem('token');
@@ -55,8 +68,8 @@ const EditProfile = ({ loader, toaster }) => {
                         email: res.data.email || '',
                         gender: res.data.gender || '',
                         country: res.data.country || '',
-                        mobile: res.data.number || '',
-                        shippingAddress: res.data.Shiping_address || ''
+                        number: res.data.number || '',
+                        address: res.data.address || ''
                     }));
                 } else {
                     toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
@@ -68,21 +81,19 @@ const EditProfile = ({ loader, toaster }) => {
             });
     };
 
-    
+
     const toggleEditMode = () => setIsEditing(!isEditing);
 
-   
+
     const updateProfile = () => {
         loader(true);
-        if (profileData.mobile.length !== 10) {
+        if (profileData.number.length !== 10) {
             loader(false);
             toaster({ type: "error", message: "Phone number must be exactly 10 digits." });
             return;
         }
         const payload = {
             ...profileData,
-            number: profileData.mobile,
-            Shiping_address: profileData.shippingAddress
         };
 
         Api("post", "updateProfile", payload)
@@ -107,22 +118,23 @@ const EditProfile = ({ loader, toaster }) => {
             });
     };
 
-   
+
     const changePassword = () => {
-        if (profileData.password !== profileData.confirmPassword) {
+
+        if (profilePassword.password !== profilePassword.confirmPassword) {
             toaster({ type: "error", message: "Passwords don't match" });
             return;
         }
 
-        if (!profileData.password) {
+        if (!profilePassword.password) {
             toaster({ type: "error", message: "Password cannot be empty" });
             return;
         }
 
         loader(true);
         const passwordData = {
-            password: profileData.password,
-            confirmPassword: profileData.confirmPassword
+            password: profilePassword.password,
+            confirmPassword: profilePassword.confirmPassword
         };
 
         Api("post", "profile/changePassword", passwordData)
@@ -130,11 +142,10 @@ const EditProfile = ({ loader, toaster }) => {
                 loader(false);
                 if (res?.status) {
                     toaster({ type: "success", message: "Password changed successfully" });
-                    setProfileData(prev => ({
-                        ...prev,
+                    setProfilePassword({
                         password: '',
-                        confirmPassword: ''
-                    }));
+                        confirmPassword: '',
+                    });
                 } else {
                     toaster({ type: "error", message: res?.data?.message || "Failed to change password" });
                 }
@@ -174,7 +185,7 @@ const EditProfile = ({ loader, toaster }) => {
                         <p className="text-gray-600">{user?.email || profileData.email || "user@example.com"}</p>
                     </div>
                     <button
-                        className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-custom-green text-white hover:bg-gray-800 transition"
+                        className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-custom-green text-white hover:bg-gray-800 cursor-pointer transition"
                         onClick={isEditing ? updateProfile : toggleEditMode}
                     >
                         {isEditing ? 'Save' : 'Edit'}
@@ -185,7 +196,7 @@ const EditProfile = ({ loader, toaster }) => {
                 <div className="p-4 md:p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
-                    <div className="mb-4">
+                        <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Full Name</label>
                             {isEditing ? (
                                 <input
@@ -201,8 +212,8 @@ const EditProfile = ({ loader, toaster }) => {
                                     {profileData.username || ' Not provided'}
                                 </div>
                             )}
-                    </div>
-                    <div className="mb-4">
+                        </div>
+                        <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Email</label>
                             {isEditing ? (
                                 <input
@@ -218,8 +229,8 @@ const EditProfile = ({ loader, toaster }) => {
                                     {profileData.email || ' Not provided'}
                                 </div>
                             )}
-                    </div>
-                    
+                        </div>
+
                         {/* Gender Select with improved handler */}
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Gender</label>
@@ -260,17 +271,15 @@ const EditProfile = ({ loader, toaster }) => {
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Shipping Address</label>
                             {isEditing ? (
-                                <input
+                                <AddressInput
+                                    setProfileData={setProfileData}
+                                    profileData={profileData}
+                                    value={profileData?.address}
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                    value={profileData.shippingAddress}
-                                    type='text'
-                                    name="shippingAddress"
-                                    placeholder="Shipping Address"
-                                    onChange={(e) => handleInputChange("shippingAddress", e.target.value)}
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.shippingAddress || 'No Address provided'}
+                                    {profileData.address || 'No Address provided'}
                                 </div>
                             )}
                         </div>
@@ -279,19 +288,19 @@ const EditProfile = ({ loader, toaster }) => {
                             {isEditing ? (
                                 <input
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                    value={profileData.mobile}
+                                    value={profileData.number}
                                     type='text'
-                                    name="mobile"
+                                    name="number"
                                     placeholder="Your Mobile Number"
-                                    onChange={(e) => handleInputChange("mobile", e.target.value)}
+                                    onChange={(e) => handleInputChange("number", e.target.value)}
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.mobile || ' Not provided'}
+                                    {profileData.number || ' Not provided'}
                                 </div>
                             )}
                         </div>
-                     
+
                     </div>
 
                     {!isEditing && (
@@ -305,8 +314,8 @@ const EditProfile = ({ loader, toaster }) => {
                                         placeholder="Enter New Password"
                                         type="password"
                                         name="password"
-                                        value={profileData.password}
-                                        onChange={(e) => handleInputChange('password', e.target.value)}
+                                        value={profilePassword.password}
+                                        onChange={(e) => handlePasswordChange('password', e.target.value)}
                                     />
                                 </div>
                                 <div className="mb-4">
@@ -316,8 +325,8 @@ const EditProfile = ({ loader, toaster }) => {
                                         placeholder="Confirm New Password"
                                         type="password"
                                         name="confirmPassword"
-                                        value={profileData.confirmPassword}
-                                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                                        value={profilePassword.confirmPassword}
+                                        onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
                                     />
                                 </div>
                             </div>

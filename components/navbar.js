@@ -22,6 +22,7 @@ import { FaRegCalendarAlt } from "react-icons/fa"
 import 'react-datepicker/dist/react-datepicker.css';
 import { BsCart2 } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
+import AddressInput from './addressInput';
 
 const Navbar = (props) => {
     const router = useRouter();
@@ -188,7 +189,7 @@ const Navbar = (props) => {
                     setProfileData({
                         username: res.data.username || '',
                         mobile: res.data.number || '',
-                        Shiping_address: res.data.Shiping_address || '' // Ensure this is set correctly
+                        address: res.data.address || '' // Ensure this is set correctly
                     });
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
@@ -240,12 +241,12 @@ const Navbar = (props) => {
 
     const createProductRquest = (e) => {
         // e.preventDefault();
-    
+
         let data = [];
         let cart = localStorage.getItem("addCartDetail");
-    
+
         let d = JSON.parse(cart);
-    
+
         d.forEach((element) => {
             data.push({
                 product: element?._id,
@@ -258,23 +259,23 @@ const Navbar = (props) => {
                 isShipmentAvailable: element.isShipmentAvailable
             });
         });
-    
+
         console.log("qsdcfvgbn", data)
-    
+
         const isLocalDelivery = pickupOption === 'localDelivery';
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
         const dateOfDelivery = isDriveUp && date ? date : null;
         const isShipmentDelivery = pickupOption === 'ShipmentDelivery';
-    
+
         // Get products not available for shipment
         const unavailableProducts = data.filter(item => item.isShipmentAvailable === false);
         const availableProducts = data.filter(item => item.isShipmentAvailable === true);
-        
+
         const isShipmentAvailable = unavailableProducts.length === 0;
-    
+
         console.log(isShipmentAvailable);
-    
+
         // For ShipmentDelivery option
         if (isShipmentDelivery) {
             if (!isShipmentAvailable) {
@@ -285,18 +286,18 @@ const Navbar = (props) => {
                 }
                 return false;
             }
-        } 
+        }
         else {
             if (availableProducts.length > 0) {
                 const message = availableProducts.length === 1
                     ? "Note: One product in your cart is not available for delivery if you wish to change delivery method later."
                     : "Note: Some products in your cart are not available for delivery if you wish to change delivery method later.";
-                
-            return  props.toaster({ type: "info", message: message });
-                
+
+                return props.toaster({ type: "info", message: message });
+
             }
         }
-    
+
         let newData = {
             productDetail: data,
             total: CartTotal.toFixed(2),
@@ -305,7 +306,7 @@ const Navbar = (props) => {
                 ...localAddress,
                 name: localAddress.name || profileData.username,
                 phoneNumber: localAddress.phoneNumber || profileData.mobile,
-                address: localAddress.address || profileData.Shiping_address
+                address: localAddress.address || profileData.address
             },
             dateOfDelivery: dateOfDelivery,
             isOrderPickup: isOrderPickup,
@@ -313,7 +314,7 @@ const Navbar = (props) => {
             isLocalDelivery: isLocalDelivery,
             isShipmentDelivery: isShipmentDelivery
         };
-    
+
         props.loader && props.loader(true);
         Api("post", "createProductRquest", newData, router).then(
             (res) => {
@@ -326,7 +327,7 @@ const Navbar = (props) => {
                     setDate('')
                     localStorage.removeItem("addCartDetail");
                     props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
-    
+
                     router.push("/Mybooking");
                 } else {
                     props.toaster && props.toaster({ type: "error", message: res?.data?.message });
@@ -392,7 +393,7 @@ const Navbar = (props) => {
                         placeholder="Search for products..."
                         className=" md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#F38529] rounded-l-md focus:outline-none pr-10"
                     />
-                    
+
                     <button
                         className="py-[4.5px] xl:py-[9px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer  rounded-r-md"
                         onClick={() => { router.push(`/Search/${serchData}`); }}
@@ -775,15 +776,24 @@ const Navbar = (props) => {
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         required
                                     />
-                                    <input
+
+                                    {/* <input
                                         type="text"
                                         name="address"
                                         placeholder="Address"
-                                        value={localAddress.address || profileData.Shiping_address}
+                                        value={localAddress.address || profileData.address}
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         required
+                                    /> */}
+
+                                    <AddressInput
+                                        setProfileData={setLocalAddress}
+                                        profileData={localAddress}
+                                        value={profileData.address}
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
+
                                 </div>
                             </div>
                         </div>

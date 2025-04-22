@@ -368,7 +368,7 @@ function ProductDetails(props) {
                             `}
                           >
                             <img
-                              className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px]"
+                              className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
                               src="/Star-1.png"
                             />
                             <p className="text-black text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">

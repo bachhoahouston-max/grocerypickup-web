@@ -5,18 +5,20 @@ import { PiSignOutFill } from 'react-icons/pi'
 import Swal from "sweetalert2";
 import { CountryDropdown } from 'react-country-region-selector';
 import { Api } from '@/services/service';
+import AddressInput from '@/components/addressInput';
 
 function Account(props) {
     const router = useRouter();
     const [user, setUser] = useContext(userContext);
     const [isEditing, setIsEditing] = useState(false);
+
     const [profileData, setProfileData] = useState({
         username: '',
         email: '',
         gender: '',
         country: '',
         mobile: '',
-        Shiping_address:''
+        address:''
     });
 
     const [passwordData, setPasswordData] = useState({
@@ -54,7 +56,7 @@ function Account(props) {
                         gender: res.data.gender || '',
                         country: res.data.country || '',
                         mobile: res.data.number || '',
-                        Shiping_address:res.data.Shiping_address || '',
+                        Shiping_address:res.data.address || '',
                     });
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
@@ -67,7 +69,7 @@ function Account(props) {
         );
     };
 
-    // Handle profile data change
+  
     const handleProfileChange = (e) => {
         const { name, value } = e.target;
         setProfileData({
@@ -76,7 +78,7 @@ function Account(props) {
         });
     };
 
-    // Handle country selection
+    
     const selectCountry = (val) => {
         setProfileData({
             ...profileData,
@@ -84,7 +86,7 @@ function Account(props) {
         });
     };
 
-    // Handle password data change
+   
     const handlePasswordChange = (e) => {
         const { name, value } = e.target;
         setPasswordData({
@@ -93,12 +95,11 @@ function Account(props) {
         });
     };
 
-    // Toggle edit mode
     const toggleEditMode = () => {
         setIsEditing(!isEditing);
     };
 
-    // Update profile information
+    
     const updateProfile = () => {
         props.loader(true);
         const payload = {
@@ -112,7 +113,7 @@ function Account(props) {
                 if (res?.status) {
                     props.toaster({ type: "success", message: "Profile updated successfully" });
 
-                    // Update local storage with new user details if available
+                    
                     if (res.data) {
                         const userDetail = JSON.parse(localStorage.getItem('userDetail') || '{}');
                         const updatedUser = { ...userDetail, ...res.data };
@@ -360,13 +361,20 @@ function Account(props) {
                                 {renderFormField("Email", "email", "email", profileData.email, "Your Email")}
                                 {renderGenderSelect()}
                                 {renderCountryDropdown()}
-                                {renderFormField(
+
+                                {/* {renderFormField(
                                 "Shipping Address",
                                 "Shiping_address", // Ensure this matches the state
                                 "text",
                                 profileData.Shiping_address,
                                 "Shipping Address")
-                                }
+                                } */}
+                                 <AddressInput
+                                    setProfileData={setProfileData}
+                                    profileData={profileData}
+                                    value={profileData?.address}
+                                    className="w-full mt-2 p-2 border rounded text-black"
+                                />
 
                                 {renderFormField("Mobile", "mobile", "text", profileData.mobile, "Your Mobile Number")}
                             </div>
