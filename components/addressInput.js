@@ -33,8 +33,13 @@ const AddressInput = ({ profileData, setProfileData, className ,value}) => {
       setProfileData((prev) => ({
         ...prev,
         address: formattedAddress,
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
+        location: {
+          type: 'Point',
+          coordinates: [
+            place.geometry.location.lng(),
+            place.geometry.location.lat()
+          ]
+        },
       }));
     }
   };

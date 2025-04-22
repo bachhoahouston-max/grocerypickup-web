@@ -519,9 +519,9 @@ const Navbar = (props) => {
                         }}
                     >
 
-                        <BsCart2 className="relative md:text-3xl text-black text-lg cursor-pointer" />
+                        <BsCart2 className="relative md:text-3xl text-[#F38529] text-lg cursor-pointer" />
                         {cartData.length > 0 && (
-                            <div className="absolute bg-red-500 text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11 md:right-13 right-11 md:text-[9px] text-[7px] ">
+                            <div className="absolute bg-[#F38529] text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11 md:right-13 right-11 md:text-[9px] text-[7px] ">
                                 {cartData.length}
                             </div>
                         )}
@@ -531,9 +531,9 @@ const Navbar = (props) => {
                         className="cursor-pointer"
                         onClick={() => router.push("/Favourite")}
                     >
-                        <CiHeart className="relative text-black text-2xl md:text-3xl  cursor-pointer" />
+                        <CiHeart className="relative text-[#F38529] text-2xl md:text-3xl  cursor-pointer" />
                         {Favorite.length > 0 && (
-                            <div className="absolute bg-red-500 text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11  md:text-[9px] text-[7px] right-4 ">
+                            <div className="absolute bg-[#F38529] text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11  md:text-[9px] text-[7px] right-4 ">
                                 {Favorite.length}
                             </div>
                         )}
