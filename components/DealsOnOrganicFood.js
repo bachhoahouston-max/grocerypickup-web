@@ -10,7 +10,7 @@ function DealsOnOrganicFood() {
               </div>
               <p className="text-[25px] md:text-[32px] text-black font-bold mb-4">Great deal on Organic food</p>
               <p className="text-[#6B6B6B] text-[13px] md:text-[16px] italic">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
+              Enjoy 35% off on fresh, organic groceries – clean, healthy, and chemical-free, straight from trusted farms.
               </p>
             </div>
           </div>

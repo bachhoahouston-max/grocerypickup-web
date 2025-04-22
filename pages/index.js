@@ -232,7 +232,7 @@ export default function Home(props) {
         <div className="text-center mb-8 flex flex-col items-center justify-center">
           <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">Categories</h1>
           <p className="text-gray-600 mt-4 w-full md:w-[50%] text-center text-[13px] md:text-[16px] italic">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.
+          Browse through a wide range of categories — from fresh produce to pantry staples. We've got everything you need, all in one place..
           </p>
         </div>
         <div className="flex flex-col md:flex-row justify-center items-start md:space-x-4">
@@ -286,8 +286,8 @@ export default function Home(props) {
           <div className="container mx-auto px-6 md:px-0 xl:w-full md:max-w-7xl">
             <div className="flex justify-center flex-col items-center mt-4">
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">Popular Products</h1>
-              <p className="text-center w-full text-[13px] md:text-[16px] md:w-[50%] text-gray-500 mb-6 mt-2 italic">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy.
+              <p className="text-center w-full text-[13px] md:text-[16px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
+              Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers
               </p>
             </div>
 
@@ -365,22 +365,22 @@ export default function Home(props) {
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faBoxOpen} className="text-xl text-[#F38529] mb-2" />
             <h3 className="text-[16px] md:text-[18px] md:text-lg font-semibold text-black">Product Package</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">Lorem Ipsum is simply dummy</p>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">Fresh and safely packed for you</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faHeadset} className="text-xl text-[#F38529] mb-4" />
             <h3 className="text-[16px] md:text-[18px] font-semibold text-black">24/7 Support</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">Lorem Ipsum is simply dummy</p>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">Help available anytime you need it</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faTruck} className="text-xl text-[#F38529] mb-4" />
             <h3 className="text-[16px] md:text-[18px] font-semibold text-black">Delivery in 5 Days</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">Orders from all item</p>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">Quick delivery within just 5 days</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faLock} className="text-xl text-[#F38529] mb-4" />
             <h3 className="text-[16px] md:text-[18px] font-semibold text-black">Payment Secure</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">Lorem Ipsum is simply dummy</p>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">Safe and secure payment options</p>
           </div>
         </div>
       </div>

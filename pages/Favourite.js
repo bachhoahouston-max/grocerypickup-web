@@ -39,8 +39,7 @@ function Favourite(props) {
           </h1>
           <p className="md:px-0  px-12 text-center  text-[16px] mb-6  w-full md:w-[40%] text-black">
             {" "}
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-            sint. Velit officia consequat.
+            Quickly access your favorite items for easy reordering.
           </p>
         </div>
         <div className="grid md:grid-cols-5 grid-cols-2 md:px-0 px-4 w-full md:gap-4 gap-2">

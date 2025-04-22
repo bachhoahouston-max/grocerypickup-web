@@ -17,7 +17,7 @@ function MainHeader(props) {
             Explore fresh<br />juicy Fruits.
         </h1>
         <p className="text-white text-center md:text-start font-medium text-[13px] md:text-[15px] mt-4 italic md:mt-12 max-w-md w-[90%]">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy
+        From garden-fresh fruits and crisp vegetables to dairy, snacks, and daily household needs — everything you need, all in one place. Easy pickup. Guaranteed freshness.
         </p>
         <button className="flex justify-center md:justify-start bg-custom-gold text-white px-6 py-3 rounded-lg text-[13px] md:text-[15px] mt-6 md:mt-12 items-center"
         onClick={()=>router.push("/categories/all")}

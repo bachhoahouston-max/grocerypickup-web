@@ -164,8 +164,7 @@ const EditProfile = ({ loader, toaster }) => {
                     My <span className="text-custom-green">Profile</span>
                 </h1>
                 <p className="text-center text-base mt-2 max-w-xl text-black">
-                    Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-                    sint. Velit officia consequat.
+                Manage your account details, addresses all in one place.
                 </p>
             </div>
 
