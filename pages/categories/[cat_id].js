@@ -142,7 +142,7 @@ function Categories(props) {
                 <div className="max-w-7xl mx-auto w-full md:px-0 px-5 md:pt-5 pt-5 md:pb-10 pb-0">
                     <div className="flex justify-center flex-col items-center mt-2" > <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">Popular Products</h1>
                         <p className="text-center w-full text-[13px] md:text-[16px] md:w-[50%] text-gray-500 mb-6 mt-2 italic">
-                            Loarn Ipsum is simply dummy text of the printing and typesetting industry. Loarn Ipsum has been the industry's standard dummy.
+                        Browse through a wide range of categories — from fresh produce to pantry staples. We've got everything you need, all in one place.
                         </p>
                     </div>
 

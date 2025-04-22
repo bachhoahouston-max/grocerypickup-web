@@ -32,7 +32,7 @@ const AddressInput = ({ profileData, setProfileData, className ,value}) => {
       
       setProfileData((prev) => ({
         ...prev,
-        address: formattedAddress,
+        address: formattedAddress ,
         location: {
           type: 'Point',
           coordinates: [
@@ -52,8 +52,6 @@ const AddressInput = ({ profileData, setProfileData, className ,value}) => {
       setProfileData((prev) => ({
         ...prev,
         address: "",
-        lat: "",
-        lng: "",
       }));
     }
   };

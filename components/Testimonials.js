@@ -1,7 +1,7 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
-
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { CiStar } from "react-icons/ci";
 const testimonialsData = [
     {
         name: "Ahmed Saeed",
@@ -47,7 +47,7 @@ const Testimonials = () => {
                             <p className="text-gray-600 mb-4 px-6 text-[12px] md:text-[16px] text-center">{testimonial.testimonial}</p>
                             <div className="flex justify-center mb-4">
                                 {[...Array(5)].map((_, i) => (
-                                    <FontAwesomeIcon key={i} icon={faStar} className="text-yellow-500" />
+                                    <CiStar className="text-[#F38529]" />
                                 ))}
                             </div>
                         </div>

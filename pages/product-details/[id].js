@@ -501,7 +501,7 @@ function ProductDetails(props) {
           <p className="text-black text-xl font-bold md:mb-10 mb-5">
             Similar Products
           </p>
-          <div className="grid md:grid-cols-5 grid-cols-1 md:gap-2 gap-5">
+          <div className="grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-5">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories
@@ -520,7 +520,7 @@ function ProductDetails(props) {
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             You might also like
           </p>
-          <div className="grid md:grid-cols-5 grid-cols-1 md:gap-2 gap-5 md:ms-14 ms-4">
+          <div className="grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-5 md:ms-14 ms-4">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories

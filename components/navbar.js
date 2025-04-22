@@ -23,7 +23,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { BsCart2 } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import AddressInput from './addressInput';
-
 const Navbar = (props) => {
     const router = useRouter();
     const [serchData, setSearchData] = useState("");
@@ -189,7 +188,9 @@ const Navbar = (props) => {
                     setProfileData({
                         username: res.data.username || '',
                         mobile: res.data.number || '',
-                        address: res.data.address || '' // Ensure this is set correctly
+                        address: res.data.address || '',
+                        lat: res?.data?.location?.coordinates[1],
+                        lng: res?.data?.location?.coordinates[0],// Ensure this is set correctly
                     });
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
@@ -201,6 +202,7 @@ const Navbar = (props) => {
             });
     };
 
+    console.log(profileData)
     useEffect(() => {
         const sumWithInitial = cartData?.reduce(
             (accumulator, currentValue) =>
@@ -242,6 +244,10 @@ const Navbar = (props) => {
     const createProductRquest = (e) => {
         // e.preventDefault();
 
+        if (pickupOption === 'localDelivery' && localAddress.dateOfDelivery == null) {
+            return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
+        }
+
         let data = [];
         let cart = localStorage.getItem("addCartDetail");
 
@@ -268,15 +274,12 @@ const Navbar = (props) => {
         const dateOfDelivery = isDriveUp && date ? date : null;
         const isShipmentDelivery = pickupOption === 'ShipmentDelivery';
 
-        // Get products not available for shipment
         const unavailableProducts = data.filter(item => item.isShipmentAvailable === false);
         const availableProducts = data.filter(item => item.isShipmentAvailable === true);
-
         const isShipmentAvailable = unavailableProducts.length === 0;
 
         console.log(isShipmentAvailable);
 
-        // For ShipmentDelivery option
         if (isShipmentDelivery) {
             if (!isShipmentAvailable) {
                 if (unavailableProducts.length === 1) {
@@ -309,6 +312,13 @@ const Navbar = (props) => {
                 address: localAddress.address || profileData.address
             },
             dateOfDelivery: dateOfDelivery,
+            location: {
+                type: "Point",
+                coordinates: [
+                    profileData.lng ? Number(profileData.lng) : 0,
+                    profileData.lat ? Number(profileData.lat) : 0,
+                ],
+            },
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
             isLocalDelivery: isLocalDelivery,
@@ -725,8 +735,8 @@ const Navbar = (props) => {
 
                     {cartData.length > 0 && (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') && (
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
-                            <div className="flex items-center justify-start">
-                                <div className="text-center">
+                            <div className="flex  items-center justify-center">
+                                <div className="text-center md:grid-cols-3 grid-cols-1">
                                     <h1 className="text-lg font-semibold mb-4">Delivery Info</h1>
                                     {pickupOption === 'localDelivery' && (
                                         <div className="relative inline-block">
@@ -734,8 +744,9 @@ const Navbar = (props) => {
                                                 type="text"
                                                 value={localAddress.dateOfDelivery ? formatDate(localAddress.dateOfDelivery) : "Select date"}
                                                 placeholder="Select date"
-                                                className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
                                                 readOnly
+                                                required
                                                 onClick={handleIconClick}
                                             />
                                             <span
@@ -763,7 +774,7 @@ const Navbar = (props) => {
                                         placeholder="Name"
                                         value={localAddress.name || profileData.username}
                                         onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
                                         required
                                     />
 
@@ -773,25 +784,16 @@ const Navbar = (props) => {
                                         placeholder="Phone Number"
                                         value={localAddress.phoneNumber || profileData.mobile}
                                         onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
                                         required
                                     />
-
-                                    {/* <input
-                                        type="text"
-                                        name="address"
-                                        placeholder="Address"
-                                        value={localAddress.address || profileData.address}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        required
-                                    /> */}
 
                                     <AddressInput
                                         setProfileData={setLocalAddress}
                                         profileData={localAddress}
                                         value={profileData.address}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
+                                        required
                                     />
 
                                 </div>
@@ -868,7 +870,7 @@ const Navbar = (props) => {
                                     </div>
                                 </div>
 
-                                <div className="flex md:justify-center justify-start md:items-center items-start col-span-3 md:mt-0 mt-3">
+                                <div className="flex justify-center items-center  col-span-3 md:mt-0 mt-3">
                                     <div className="bg-gray-100 w-[153px] h-[39px] rounded-[8px] flex justify-center items-center">
                                         <div
                                             className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
