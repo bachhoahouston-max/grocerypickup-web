@@ -17,6 +17,8 @@ const AddressInput = ({ profileData, setProfileData, className ,value}) => {
     if (value) {
       setInputValue(value);
     }
+
+    console.log(value)
   }, [value]);
  
   const handlePlaceSelect = () => {
@@ -27,6 +29,8 @@ const AddressInput = ({ profileData, setProfileData, className ,value}) => {
       const country = place.address_components?.find((comp) =>
         comp.types.includes("country")
       )?.long_name || "";
+
+      console.log(formattedAddress)
       
       setInputValue(formattedAddress);
       
@@ -47,7 +51,7 @@ const AddressInput = ({ profileData, setProfileData, className ,value}) => {
   const handleChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
-    
+    console.log(value)
     if (value.trim() === "") {
       setProfileData((prev) => ({
         ...prev,
@@ -60,7 +64,7 @@ const AddressInput = ({ profileData, setProfileData, className ,value}) => {
   if (!isLoaded) return <p>Loading...</p>;
  
   return (
-    <div>
+    <div className="!z-[99999999]">
       <Autocomplete
         onLoad={(autoC) => (autocompleteRef.current = autoC)}
         onPlaceChanged={handlePlaceSelect}

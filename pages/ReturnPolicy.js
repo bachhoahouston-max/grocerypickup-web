@@ -4,7 +4,7 @@ function ReturnPolicy() {
     return (
         <div className="relative min-h-screen">
             <img
-                src="./image12345.png"
+                src="./image00.png"
                 alt="Return Policy"
                 className="h-20 md:h-full w-full"
             />

@@ -518,7 +518,7 @@ function ProductDetails(props) {
 
         <div className="bg-white  max-w-7xl">
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
-            You might also like
+            You might also like 
           </p>
           <div className="grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-5 md:ms-14 ms-4">
             {productList.map((item, i) => (

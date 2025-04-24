@@ -8,6 +8,7 @@ const SignUp = (props) => {
   const router = useRouter();
   const [userDetail, setUserDetail] = useState({
     name: "",
+    lastname:"",
     email: "",
     number: "",
     password: ""
@@ -25,7 +26,7 @@ const SignUp = (props) => {
   const submitSignUp = (e) => {
     e.preventDefault();
 
-    if (!userDetail.name || !userDetail.email || !userDetail.number || !userDetail.password) { 
+    if (!userDetail.name || !userDetail.email || !userDetail.number || !userDetail.password || !userDetail.lastname) { 
       props?.toaster?.({ type: "error", message: "Please fill all required fields" });
       return;
     }
@@ -42,6 +43,7 @@ const SignUp = (props) => {
       username: userDetail.name,
       password: userDetail.password,
       number: userDetail.number,
+      lastname:userDetail.lastname,
       type: "USER",
     };
 
@@ -82,12 +84,24 @@ const SignUp = (props) => {
             <h3 className="text-black text-[28px] md:text-[40px] font-bold text-center md:mb-12 mb-8">Sign up</h3>
 
             <div className="relative flex items-center w-full mb-8 md:mb-10">
-              <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[16px] md:text-[20px]">Name</label>
+              <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[16px] md:text-[20px]">First Name</label>
               <input 
                 type="text" 
                 name="name"
-                placeholder="Enter Name"
+                placeholder="Enter First Name"
                 value={userDetail.name}
+                onChange={handleChange}
+                className="px-4 py-3 bg-white w-full text-[16px] md:text-[18px] border-2 border-black rounded-xl text-black outline-none" 
+                required
+              />
+            </div>
+            <div className="relative flex items-center w-full mb-8 md:mb-10">
+              <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[16px] md:text-[20px]">Last Name</label>
+              <input 
+                type="text" 
+                name="lastname"
+                placeholder="Enter Last Name"
+                value={userDetail.lastname}
                 onChange={handleChange}
                 className="px-4 py-3 bg-white w-full text-[16px] md:text-[18px] border-2 border-black rounded-xl text-black outline-none" 
                 required

@@ -22,16 +22,16 @@ const AboutUs = () => {
 
     return (
         <>
-            <div className="w-full bg-[#FFF5CB] mx-auto flex flex-col md:flex-row justify-center items-center">
+            <div className="w-full bg-[#f59b51] mx-auto flex flex-col md:flex-row justify-center items-center">
                 <div className="md:py-14 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
                     <nav className="mb-4 mt-8 md:mt-12 text-[12px] md:text-start text-center">
-                        <span className="text-gray-600 mr-1">Home /</span>
+                        <span className="text-white mr-1">Home /</span>
                         <span className="text-[#F38529]">About us</span>
                     </nav>
-                    <h1 className="md:mt-12 mt-4 md:text-start text-center text-[25px] md:text-3xl md:leading-[50px] leading-10 font-bold text-gray-800 mb-4">
+                    <h1 className="md:mt-12 mt-4 md:text-start text-center text-[25px] md:text-3xl md:leading-[50px] leading-10 font-bold text-white mb-4">
                         Welcome to our online grocery store!
                     </h1>
-                    <p className="text-gray-600 md:text-start text-center mb-6 text-[15px] leading-[32px]">
+                    <p className="text-white md:text-start text-center mb-6 text-[15px] leading-[32px]">
                         We provide fresh, high-quality groceries with a focus on convenience and customer satisfaction. From local produce to everyday essentials, we ensure fast and reliable delivery. Our mission is to bring the best products straight to your doorstep, making grocery shopping easier and hassle-free
                     </p>
                     <div className="flex justify-center md:justify-start mt-6">

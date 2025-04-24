@@ -6,7 +6,7 @@ function Termsandcondition
     return (
         <div className="relative">
             <img
-                src="./image12345.png"
+                src="./image00.png"
                 alt="Return Policy"
                 className="h-20 md:h-full w-full"
             />

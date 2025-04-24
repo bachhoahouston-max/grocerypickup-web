@@ -46,7 +46,14 @@ const Navbar = (props) => {
     const [productList, SetProductList] = useState([]);
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
-    const [profileData, setProfileData] = useState([])
+    const [profileData, setProfileData] = useState({
+        username: '',
+        mobile: '',
+        address: '',
+        lastname: '',
+        lat: null,
+        lng: null
+    })
     const [date, setDate] = useState(null);
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
@@ -75,6 +82,7 @@ const Navbar = (props) => {
         dateOfDelivery: "",
         address: "",
         name: "",
+        lastname: "",
         phoneNumber: "",
     });
 
@@ -189,8 +197,9 @@ const Navbar = (props) => {
                         username: res.data.username || '',
                         mobile: res.data.number || '',
                         address: res.data.address || '',
+                        lastname: res.data.lastname || '',
                         lat: res?.data?.location?.coordinates[1],
-                        lng: res?.data?.location?.coordinates[0],// Ensure this is set correctly
+                        lng: res?.data?.location?.coordinates[0],
                     });
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
@@ -244,7 +253,7 @@ const Navbar = (props) => {
     const createProductRquest = (e) => {
         // e.preventDefault();
 
-        if (pickupOption === 'localDelivery' && localAddress.dateOfDelivery == null) {
+        if (pickupOption === 'localDelivery' && localAddress.dateOfDelivery === null) {
             return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
         }
 
@@ -309,7 +318,9 @@ const Navbar = (props) => {
                 ...localAddress,
                 name: localAddress.name || profileData.username,
                 phoneNumber: localAddress.phoneNumber || profileData.mobile,
-                address: localAddress.address || profileData.address
+                address: localAddress.address || profileData.address,
+                lastname: localAddress.lastname || profileData.lastname
+
             },
             dateOfDelivery: dateOfDelivery,
             location: {
@@ -644,7 +655,7 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="driveUp" className="ml-2">
-                                        <span className="font-semibold text-[15px]">Drive up</span>
+                                        <span className="font-semibold text-[15px]">Curbside Pickup</span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">We bring it out to your car</span>
                                     </label>
@@ -661,9 +672,9 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="localDelivery" className="ml-2">
-                                        <span className="font-semibold text-[15px]">Local Delivery</span>
+                                        <span className="font-semibold text-[15px]">Next day delivery </span>
                                         <br />
-                                        <span className="text-gray-500 text-[13px]">We bring it to your Home</span>
+                                        <span className="text-gray-500 text-[13px]">Cut of time 4 pm</span>
                                     </label>
                                 </div>
                                 <div className="flex items-center">
@@ -679,7 +690,7 @@ const Navbar = (props) => {
                                     <label htmlFor="localDelivery" className="ml-2">
                                         <span className="font-semibold text-[15px]">Shipment Delivery</span>
                                         <br />
-                                        <span className="text-gray-500 text-[13px]">Delivery in 2 or 3 days</span>
+                                        <span className="text-gray-500 text-[13px]">Delivery in 3 to 5 working days</span>
                                     </label>
                                 </div>
                             </div>
@@ -777,6 +788,15 @@ const Navbar = (props) => {
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
                                         required
                                     />
+                                    <input
+                                        type="text"
+                                        name="lastname"
+                                        placeholder="Last Name"
+                                        value={localAddress.lastname || profileData.lastname}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
+                                        required
+                                    />
 
                                     <input
                                         type="text"
@@ -789,10 +809,12 @@ const Navbar = (props) => {
                                     />
 
                                     <AddressInput
-                                        setProfileData={setLocalAddress}
+                                        setProfileData={setProfileData}
                                         profileData={localAddress}
                                         value={profileData.address}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
+                                        defaultvalue={profileData.address}
+
+                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 !z-[999999999]"
                                         required
                                     />
 
@@ -809,7 +831,7 @@ const Navbar = (props) => {
                                     <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
                                 </div>
                                 <p className="text-black font-semibold text-[18px]">
-                                    Delivery in Next Day
+                                    Delivery in 3 to 5 Working days
                                 </p>
                             </div>
                         ) : (
@@ -955,23 +977,30 @@ const Navbar = (props) => {
                                 </p>
                             </div>
 
-                            <div className="flex justify-between items-center w-full pt-3">
-                                <p className="text-black font-normal text-base">
-                                    Delivery Fee ($35 Saved)
-                                </p>
-                                <p className="text-custom-black font-normal text-base">
-                                    ${deliveryCharge}
-                                </p>
-                            </div>
+                            {mainTotal < 35 && (
+                                <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
+                                    <p className="text-black font-normal text-base">
+                                        Delivery Fee
+                                    </p>
+                                    <p className="text-custom-black font-normal text-base">
+                                        ${deliveryCharge}
+                                    </p>
+                                </div>
+                            )}
 
-                            <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-5">
-                                <p className="text-gray-500 font-normal text-base">
-                                    Delivery Partner Tip
-                                </p>
-                                <p className="font-normal text-base text-custom-black">
-                                    ${deliveryPartnerTip}
-                                </p>
-                            </div>
+                            {mainTotal >= 35 && (
+                                <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
+                                    <p className="text-black font-normal text-base">
+                                        Delivery Fee
+                                    </p>
+                                    <p className="text-green-500 font-normal text-base">
+                                        Free
+                                    </p>
+                                </div>
+                            )}
+
+
+
 
                             <div className="flex justify-between items-center w-full pt-5">
                                 <p className="text-custom-black font-normal text-base">

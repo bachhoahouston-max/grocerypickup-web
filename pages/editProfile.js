@@ -7,11 +7,12 @@ const EditProfile = ({ loader, toaster }) => {
 
     const [profileData, setProfileData] = useState({
         username: '',
+        lastname: "",
         email: '',
         gender: '',
         country: '',
         number: '',
-        address:'',
+        address: '',
     });
 
     const [profilePassword, setProfilePassword] = useState({
@@ -66,6 +67,7 @@ const EditProfile = ({ loader, toaster }) => {
                         ...prev,
                         username: res.data.username || '',
                         email: res.data.email || '',
+                        lastname: res.data.lastname || '',
                         gender: res.data.gender || '',
                         country: res.data.country || '',
                         number: res.data.number || '',
@@ -164,7 +166,7 @@ const EditProfile = ({ loader, toaster }) => {
                     My <span className="text-custom-green">Profile</span>
                 </h1>
                 <p className="text-center text-base mt-2 max-w-xl text-black">
-                Manage your account details, addresses all in one place.
+                    Manage your account details, addresses all in one place.
                 </p>
             </div>
 
@@ -212,6 +214,25 @@ const EditProfile = ({ loader, toaster }) => {
                                 </div>
                             )}
                         </div>
+
+                        <div className="mb-4">
+                            <label className="block text-gray-700 mb-1">Last Name</label>
+                            {isEditing ? (
+                                <input
+                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
+                                    value={profileData.lastname}
+                                    type='text'
+                                    name="lastname"
+                                    placeholder="Your Name"
+                                    onChange={(e) => handleInputChange("lastname", e.target.value)}
+                                />
+                            ) : (
+                                <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                    {profileData.lastname || ' Not provided'}
+                                </div>
+                            )}
+                        </div>
+
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">Email</label>
                             {isEditing ? (
@@ -300,7 +321,6 @@ const EditProfile = ({ loader, toaster }) => {
                                 </div>
                             )}
                         </div>
-
                     </div>
 
                     {!isEditing && (
