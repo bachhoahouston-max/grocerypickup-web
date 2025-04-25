@@ -18,6 +18,8 @@
     "@mui/material": "^6.4.7",
     "@react-google-maps/api": "^2.20.6",
     "@react-pdf/renderer": "^4.3.0",
+    "@stripe/react-stripe-js": "^3.6.0",
+    "@stripe/stripe-js": "^7.2.0",
     "axios": "^1.8.3",
     "date-fns": "^4.1.0",
     "html2pdf.js": "^0.10.3",
