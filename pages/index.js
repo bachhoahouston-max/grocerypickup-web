@@ -256,7 +256,7 @@ export default function Home(props) {
               </div>
 
               <div className="mb-4 bg-[#F7F7F8] flex flex-col py-6 md:py-7 cursor-pointer rounded-sm justify-center items-center">
-                <p className="text-[#FEC200] mb-2 font-semibold text-[16px]"
+                <p className="text-custom-green mb-2 font-semibold text-[16px]"
                   onClick={() => handleCategoryClick1('/categories/all')}
                 >
                   {t("View More")}
@@ -301,7 +301,7 @@ export default function Home(props) {
                 <ul className="rounded-lg p-4 space-y-2">
                   <li
                     onClick={() => handleCategoryClick1('/categories/all')}
-                    className={`flex text-[14px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between p-2 ${selectedCategory === 'all' ? 'text-[#FEC200]' : 'text-black'} cursor-pointer`}
+                    className={`flex text-[14px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between p-2 ${selectedCategory === 'all' ? 'text-custom-green' : 'text-black'} cursor-pointer`}
                   >
                     <span> {t("View All")}</span>
                     <FaArrowRight />

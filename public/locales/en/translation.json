@@ -34,8 +34,8 @@
   "Pick it up inside the store": "Pick it up inside the store",
   "Curbside Pickup": "Curbside Pickup",
   "We bring it out to your car": "We bring it out to your car",
-  "Next day delivery": "Next day delivery",
-  "Cut of time 4 pm": "ThờiCut of time 4 pm",
+  "Next Day Delivery": "Next Day Delivery",
+  "Cut of time 4 pm": "Cut of time 4 pm",
   "Shipment Delivery": "Shipment Delivery",
   "Select Date of Delivery": "Select Date of Delivery",
   "Select date": "Select date",
@@ -149,12 +149,44 @@
   "Gender":"Gender",
   "Select Gender":"Select Gender",
   "Male":"Male",
-  "Female":"Female"
-
-
-
-
-
-
+  "Female":"Female",
+  "Order":"Order",
+  "View and manage all your order in one place":"View and manage all your order in one place",
+  "Secret Code is":"Secret Code is",
+  "Please do not share this with anyone":"Please do not share this with anyone",
+  "Order Delivered":"Order Delivered",
+  "Update Parking No.":"CUpdate Parking No.",
+  "Parking No.":"Parking No.",
+  "Delivery expected by":"Delivery expected by",
+  "Order Pending":"Order Pending",
+  "Parking Information":"Parking Information",
+  "Parking No:":"Parking No:",
+  "Enter Parking Number":"Enter Parking Number",
+  "Cancel":"Cancel",
+  "Quantity":"Quantity",
+  "Order Id":"Order Id",
+  "Total":"Total",
+  "No bookings available":"No bookings available",
+  "View all your order History in one place. Leave reviews for products you've purchased":"View all your order History in one place. Leave reviews for products you've purchased",
+  "My History":"My History",
+  "Review":"Review",
+  "No history available":"No history available",
+  "How many stars would you give to them":"How many stars would you give to them",
+  "Description":"Description",
+  "All Categories":"All Categories",
+  "Search Result":"Search Result",
+  "No Products":"No Products",
+  "ADD":"THÊM VÀO",
+  "Shipment Delivery is available":"Giao hàng Giao hàng có sẵn",
+  "Shipment Delivery is not available":"Giao hàng Giao hàng không khả dụng",
+  "About Product":"About Produc",
+  "Country of Origin":"Country of Origin",
+  "Self Life":"Self Life",
+  "Manufacturer Name":"Manufacturer Name",
+  "Manufacturer Address":"Manufacturer Address",
+  "Similar Products":"Similar Products",
+  "You might also like":"You might also like",
+  "Ratings & Reviews":"Ratings & Reviews",
+    "Add":"Add"
   }
   

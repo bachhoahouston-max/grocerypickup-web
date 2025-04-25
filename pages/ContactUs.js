@@ -97,20 +97,20 @@ const FeedbackForm = (props) => {
                                 value={formData.fullName}
                                 onChange={handleChange}
                                 className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] outline-none rounded-md ${errors.fullName ? 'border-red-500' : ''}`}
-                                placeholder="John"
+                                placeholder={t("Full Name")}
                                 required
                             />
                             {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
                         </div>
                         <div>
-                            <label className="block text-[16px] text-gray-700">{t("Email")}</label>
+                            <label className="block text-[16px] text-gray-700"> {t("Email")}</label>
                             <input
                                 type="email"
                                 name="email"
                                 value={formData.email}
                                 onChange={handleChange}
                                 className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] rounded-md outline-none ${errors.email ? 'border-red-500' : ''}`}
-                                placeholder="Vaibhavmehrotra84@gmail.com"
+                                placeholder={t("Email")}
                                 required
                             />
                             {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
@@ -125,7 +125,7 @@ const FeedbackForm = (props) => {
                                 minLength={10}
                                 maxLength={10}
                                 className={`w-full mt-2 p-2 text-gray-700 border bg-[#F9F9F9] rounded-md outline-none ${errors.phoneNumber ? 'border-red-500' : ''}`}
-                                placeholder="987846447874"
+                                placeholder={t("Phone number")}
                                 required
                             />
                             {errors.phoneNumber && <p className="text-red-500 text-sm">{errors.phoneNumber}</p>}
@@ -141,6 +141,7 @@ const FeedbackForm = (props) => {
                                 value={formData.query}
                                 onChange={handleChange}
                                 className={`text-gray-700 w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md ${errors.query ? 'border-red-500' : ''}`}
+                               placeholder= {t("My Query")} 
                                 required
                             >
                             </textarea>

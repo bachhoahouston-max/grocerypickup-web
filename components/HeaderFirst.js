@@ -71,8 +71,8 @@ const HeaderFirst = (props) => {
     }
 
     return (
-        <nav className="bg-white border-t-1 border-[#F0F1F1]">
-            <div className="container mx-auto px-4 py-2 flex justify-center items-center">
+        <nav className="bg-white  border-t-1 border-[#F0F1F1]">
+            <div className="relative mt-2 container mx-auto px-4 py-2 flex justify-center items-center h-[">
                 <div className="hidden flex-1 lg:flex justify-center space-x-6">
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'home' ? 'text-custom-green' : 'text-custom-black'}`}
                         onClick={() => { router.push('/'); setSelectedTab('home'); }}
@@ -124,14 +124,14 @@ const HeaderFirst = (props) => {
                        {t("Contact")} 
                     </p>
                 </div>
+            </div>
+            <div className="container absolute right-0 top-22 px-4 py-2 flex justify-end items-center">
                 <div className="hidden lg:flex items-center space-x-2 mr-6">
                     <BiPhoneCall className="text-[#F38529] text-3xl" />
                     <a href="tel:6393274099" className="text-custom-black cursor-pointer font-semibold">+(402) 54646</a>
 
                 </div>
-
-
-                <div className="flex rounded-lg">
+                <div className="hidden lg:flex rounded-lg">
                     <select className="bg-white w-full  px-4 font-normal text-xs text-black outline-none" type="text" placeholder="English"
                         value={lang}
                         onChange={(e) => handleClick(e.target.value)}

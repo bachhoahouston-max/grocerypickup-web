@@ -7,9 +7,11 @@ import { RxCrossCircled } from "react-icons/rx";
 import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import StarIcon from "@mui/icons-material/Star";
+import { useTranslation } from "react-i18next";
 
 function Myhistory(props) {
     const router = useRouter();
+     const {t} = useTranslation();
     const [bookingsData, setBookingsData] = useState([]);
     const [expandedHistoryId, setExpandedHistoryId] = useState(null);
     const [showReviews, setShowReviews] = useState(false);
@@ -119,14 +121,14 @@ function Myhistory(props) {
             <div className="mx-auto max-w-7xl py-12 min-h-screen">
                 <div className="flex flex-col justify-center items-center">
                     <h1 className="text-center text-[35px] md:text-[45px] font-semibold text-black mb-2">
-                        My
+                        {t("My")}
                         <span className="ml-2 text-[35px] md:text-[45px] font-semibold mb-4 text-custom-green">
-                            History !
+                            {t("History")} !
                         </span>
                     </h1>
                     <p className="md:px-0 px-12 text-center text-[16px] mb-6 w-full md:w-[40%] text-black">
                         {" "}
-                        View all your order History in one place. Leave reviews for products you've purchased.
+                        {t("View all your order History in one place. Leave reviews for products you've purchased")}.
                     </p>
                 </div>
 
@@ -149,10 +151,11 @@ function Myhistory(props) {
                                                 )}
                                             </div>
                                         </div>
-                                        <p className="text-[16px] text-black md:text-[24px]">My History ({formatDate(booking.createdAt) || "N/A"})</p>
+                                        <p className="text-[16px] text-black md:text-[24px]">
+                                            {t("My History")} ({formatDate(booking.createdAt) || "N/A"})</p>
                                         <div className="flex flex-col justify-end items-end mr-3 mt-[-24px]">
                                             <p className="text-gray-600 md:text-base text-[15px] font-bold">
-                                                Total: $ {booking?.total || "0.00"}
+                                                {t("Total")}: $ {booking?.total || "0.00"}
                                             </p>
                                         </div>
                                     </div>
@@ -172,10 +175,10 @@ function Myhistory(props) {
                                                         {product?.product?.name}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        Quantity: {product.qty || 1}
+                                                        {t("Quantity")}: {product.qty || 1}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        Order ID: {booking?._id}
+                                                        {t("Order Id")}: {booking?._id}
                                                     </p>
                                                 </div>
                                                 <div className="justify-start items-start">
@@ -188,7 +191,7 @@ function Myhistory(props) {
                                                             setShowReviews(true);
                                                         }}
                                                     >
-                                                        Review
+                                                        {t("Review")}
                                                     </button>
                                                 </div>
                                             </div>
@@ -201,7 +204,7 @@ function Myhistory(props) {
                     ) : (
                         <div className="flex justify-center items-center md:mt-5 w-full md:h-[300px] h-[200px] col-span-2">
                             <p className="text-center text-black text-2xl">
-                                No history available.
+                                {t("No history available")}.
                             </p>
                         </div>
                     )}
@@ -219,7 +222,7 @@ function Myhistory(props) {
                                 </div>
 
                                 <form className="px-5 py-5" onSubmit={createProductRquest}>
-                                    <p className="text-black font-bold text-2xl mb-5 mt-4 text-center">How many stars would you give to them?</p>
+                                    <p className="text-black font-bold text-2xl mb-5 mt-4 text-center">{t("How many stars would you give to them")}?</p>
 
 
                                     <div className="flex flex-col justify-center items-center  rounded-[10px] py-1 ">
@@ -256,7 +259,7 @@ function Myhistory(props) {
                                         <input
                                             className="bg-white md:w-full w-full px-5 py-2 border-b border-b-black font-normal  text-base text-black outline-none md:my-5 my-3"
                                             type="text"
-                                            placeholder="Description"
+                                            placeholder={t("Description")}
                                             value={reviewsData.description}
                                             onChange={(e) => {
                                                 setReviewsData({
@@ -273,7 +276,7 @@ function Myhistory(props) {
                                             className="bg-custom-gold w-full md:h-[50px] h-[40px] rounded-[5px] text-white font-normal text-base"
                                             type="submit"
                                         >
-                                            Submit
+                                            {t("Submit")}
                                         </button>
                                     </div>
                                 </form>

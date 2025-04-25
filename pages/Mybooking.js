@@ -7,9 +7,11 @@ import { userContext } from "./_app";
 import { GoDownload } from "react-icons/go";
 import generatePDF, { usePDF, Margin } from "react-to-pdf";
 import ReactToPrint from "react-to-print";
+import { useTranslation } from "react-i18next";
 
 function Mybooking(props) {
     const ref = useRef();
+    const {t} = useTranslation();
     const router = useRouter();
     const [user, setUser] = useContext(userContext)
     const [bookingsData, setBookingsData] = useState([]);
@@ -107,13 +109,13 @@ function Mybooking(props) {
             <div className="mx-auto max-w-7xl py-12 min-h-screen">
                 <div className="flex flex-col justify-center items-center">
                     <h1 className="text-center text-[35px] md:text-[45px] font-semibold text-black mb-2">
-                        My
+                        {t("My")}
                         <span className="ml-2 text-[35px] md:text-[45px] font-semibold mb-4 text-custom-green">
-                            Order
+                            {t("Order")}
                         </span>
                     </h1>
                     <p className="md:px-0 px-12 text-center text-[16px] mb-6 w-full md:w-[40%] text-black">
-                        View and manage all your order in one place.
+                        {t("View and manage all your order in one place")}.
                     </p>
                 </div>
 
@@ -134,13 +136,13 @@ function Mybooking(props) {
                                             ) : (
                                                 booking?.SecretCode && (
                                                     <p className="px-2 py-2 md:text-[16px] text-[14px] text-black md:w-[440px] w-[230px]">
-                                                        Secret Code is {booking.SecretCode}. Please do not share this with anyone.
+                                                       {t("Secret Code is")} {booking.SecretCode} {t("Please do not share this with anyone")}.
                                                     </p>
                                                 )
                                             )}
                                             {booking?.isShipmentDelivery && (
                                                 <p className="text-black  md:text-[16px] text-[14px]">
-                                                    Delivery expected by {formatDate2(new Date(new Date(booking.createdAt).setDate(new Date(booking.createdAt).getDate() + 3)))} 11 PM
+                                                    {t("Delivery expected by")} {formatDate2(new Date(new Date(booking.createdAt).setDate(new Date(booking.createdAt).getDate() + 3)))} 11 PM
                                                 </p>
                                             )}
 
@@ -148,9 +150,7 @@ function Mybooking(props) {
                                             <div className="flex items-center">
 
                                                 <div>
-
                                                     <GoDownload className="text-black text-2xl"
-
                                                     />
 
                                                 </div>
@@ -168,32 +168,32 @@ function Mybooking(props) {
                                             </div>
                                         </div>
                                         <div className="flex justify-between">
-                                            <p className="text-[15px] text-black md:text-[20px]">My Order ({formatDate(booking.createdAt) || "N/A"})</p>
+                                            <p className="text-[15px] text-black md:text-[20px]">
+                                                {t("My Order")} ({formatDate(booking.createdAt) || "N/A"})</p>
                                             {booking?.status === 'Completed' ? (
                                                 <p className=" md:py-2 py-0 text-[15px] text-green-500 rounded">
-                                                    Order Delivered
+                                                    {t("Order Delivered")}
                                                 </p>
                                             ) : booking?.status === 'Pending' ? (
                                                 <>
                                                     <div className="flex md:flex-row flex-col">
-
                                                         {booking?.isDriveUp && (
                                                             <p
                                                                 onClick={() => toggleModal(booking._id)}
                                                                 className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded"
                                                             >
-                                                                {booking.parkingNo ? "Update Parking No." : "Parking No."}
+                                                                {booking.parkingNo ? t("Update Parking No.") : t("Parking No.")}
                                                             </p>
                                                         )}
                                                         <p className="md:py-2 text-right pr-2  py-0 text-[16px] text-red-500 rounded">
-                                                            Order Pending
+                                                           {t("Order Pending")} 
                                                         </p>
                                                     </div>
                                                 </>
                                             ) : (
                                                 (booking?.isLocalDelivery || booking?.isOrderPickup) && (
                                                     <p className="px-4 py-2 text-[16px] text-red-500 rounded">
-                                                        Order Pending
+                                                      {t("Order Pending")}
                                                     </p>
                                                 )
                                             )}
@@ -212,18 +212,18 @@ function Mybooking(props) {
                                                 >
                                                     <IoIosClose className="text-2xl" />
                                                 </button>
-                                                <h2 className="text-xl font-bold mb-4 text-black text-center">Parking Information</h2>
+                                                <h2 className="text-xl font-bold mb-4 text-black text-center">{t("Parking Information")}</h2>
                                                 <form onSubmit={handleSubmit}>
                                                     <label htmlFor="parkingNo" className="block mb-2 text-black">
-                                                        Parking No:
+                                                        {t("Parking No:")}
                                                     </label>
                                                     <input
                                                         type="text"
                                                         id="parkingNo"
-                                                        value={parkingNo} // Ensure value is controlled
-                                                        onChange={(e) => setParkingNo(e.target.value)} // Ensure setParkingNo is defined
+                                                        value={parkingNo} 
+                                                        onChange={(e) => setParkingNo(e.target.value)} 
                                                         className="border text-black border-gray-300 rounded p-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
-                                                        placeholder="Enter Parking Number"
+                                                        placeholder={t("Enter Parking Number")}
                                                         required
                                                     />
                                                     <div className="flex justify-end gap-4">
@@ -232,13 +232,13 @@ function Mybooking(props) {
                                                             onClick={toggleModal}
                                                             className="px-4 py-2 text-black bg-gray-300 rounded hover:bg-gray-400 transition"
                                                         >
-                                                            Cancel
+                                                            {t("Cancel")}
                                                         </button>
                                                         <button
                                                             type="submit"
                                                             className="px-4 py-2 bg-custom-gold text-white rounded hover:bg-gray-800 transition"
                                                         >
-                                                            Submit
+                                                            {t("Submit")}
                                                         </button>
                                                     </div>
                                                 </form>
@@ -260,20 +260,20 @@ function Mybooking(props) {
                                                 />
                                                 <div>
                                                     <p className="text-black text-base font-bold">
-                                                        {product.product?.name || "Product Name"}
+                                                        {product.product?.name }
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        Quantity: {product.qty || 1}
+                                                        {t("Quantity")}: {product.qty || 1}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        Order Id: {booking._id || 1}
+                                                        {t("Order Id")}: {booking._id || 1}
                                                     </p>
                                                 </div>
                                             </div>
                                         ))}
                                         <div className="flex flex-col justify-center items-end">
                                             <p className="text-gray-600 text-base font-bold">
-                                                Total: $ {booking.total || "0.00"}
+                                                {t("Total")}: $ {booking.total || "0.00"}
                                             </p>
                                         </div>
                                     </div>
@@ -281,7 +281,11 @@ function Mybooking(props) {
                             </div>
                         ))
                     ) : (
-                        <p className="text-black">No bookings available.</p>
+                        <div className="flex justify-center items-center md:mt-5 w-full md:h-[300px] h-[200px] col-span-2">
+                        <p className="text-center text-black text-2xl">
+                        {t("No bookings available")}.
+                        </p>
+                    </div>
                     )}
                 </div>
 

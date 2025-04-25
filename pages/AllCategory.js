@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import ShopFasterTropicana from '@/components/ShopFasterMarketplace';
 import { Api } from '@/services/service';
-
+import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
+
 const Category = (props) => {
+  const {t} = useTranslation()
   const [category, setCategory] = useState([]);
   const router = useRouter();
   
@@ -30,7 +32,8 @@ const Category = (props) => {
   return (
     <>
       <div className="max-w-7xl md:mt-0 mt-8 md:px-0 px-10 mx-auto bg-white">
-        <h2 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">All Categories</h2>
+        <h2 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
+          {t("All Categories")}</h2>
         <div className="mb-4 grid md:grid-cols-4 grid-cols-2 md:gap-0 gap-8">
           {category.map((cat, index) => (
             <div key={index} className="rounded-lg h-full flex flex-col items-center cursor-pointer "

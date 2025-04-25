@@ -17,8 +17,10 @@ import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
 import moment from 'moment';
+import { useTranslation } from "react-i18next";
 
 function ProductDetails(props) {
+  const {t} = useTranslation()
   const router = useRouter();
   // console.log(router);
   const [user, setUser] = useContext(userContext);
@@ -373,7 +375,7 @@ function ProductDetails(props) {
                             />
                             <p className="text-black text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
                               {percentageDifference?.toFixed(2)}%<br />
-                              off
+                              {t("off")}
                             </p>
                             <p className="text-black font-normal text-base pt-1">
                               {data.value} {data.unit}
@@ -434,21 +436,21 @@ function ProductDetails(props) {
                     className="bg-custom-gold w-[96px] h-[32px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4"
                     onClick={handleAddToCart}
                   >
-                    ADD
+                    {t("ADD")}
                   </button>
                 )}
                 {productsId.isShipmentAvailable ? (
                   <p className="text-black font-normal text-[17px] mt-2">
-                    Shipment Delivery is available
+                    {t("Shipment Delivery is available")}
                   </p>
                 ) : (
                   <p className="text-black font-normal text-[17px] mt-2">
-                    Shipment Delivery is not available
+                     {t("Shipment Delivery is not available")}
                   </p>
                 )}
 
                 <p className="text-red-500 font-normal text-[17px] mt-1">
-                  * Note : Tax is included in this price
+                  * {t("Note : Tax is included in this price")}
                 </p>
 
               </div>
@@ -459,7 +461,7 @@ function ProductDetails(props) {
           <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
             <div className="flex flex-col justify-start items-start">
               <p className="text-black md:text-2xl text-xl font-bold">
-                About Product
+                {t("About Product")}
               </p>
               <p className="text-black font-medium md:text-xl text-base pt-2">
                 Description :{" "}
@@ -470,25 +472,25 @@ function ProductDetails(props) {
             </div>
             <div className="flex flex-col justify-start items-start">
               <p className="text-black font-medium md:text-xl text-base">
-                Country of Origin :{" "}
+                {t("Country of Origin")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
                   {productsId?.origin}
                 </span>
               </p>
               <p className="text-black font-medium md:text-xl text-base pt-2">
-                Self Life :{" "}
+                {t("Self Life")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
                   {productsId?.selflife}
                 </span>
               </p>
               <p className="text-black font-medium md:text-xl text-base pt-2">
-                Manufacturer Name :{" "}
+                {t("Manufacturer Name")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
                   {productsId?.manufacturername}
                 </span>
               </p>
               <p className="text-black font-medium md:text-xl text-base pt-2">
-                Manufacturer Address :{" "}
+                {t("Manufacturer Address")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
                   {productsId?.manufactureradd}
                 </span>
@@ -499,7 +501,7 @@ function ProductDetails(props) {
 
         <div className="bg-white w-full md:pt-10 md:pb-10 pb-5 max-w-7xl md:ms-12 ms-4">
           <p className="text-black text-xl font-bold md:mb-10 mb-5">
-            Similar Products
+            {t("Similar Products")}
           </p>
           <div className="grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-5">
             {productList.map((item, i) => (
@@ -518,7 +520,7 @@ function ProductDetails(props) {
 
         <div className="bg-white  max-w-7xl">
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
-            You might also like 
+            {t("You might also like")} 
           </p>
           <div className="grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-5 md:ms-14 ms-4">
             {productList.map((item, i) => (
@@ -537,7 +539,7 @@ function ProductDetails(props) {
 
         {productsId?.rating && (
           <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
-            <p className='text-black text-xl font-bold'>{("Ratings & Reviews")}</p>
+            <p className='text-black text-xl font-bold'>{t("Ratings & Reviews")}</p>
             <div className='w-full'>
 
               <p className='text-black  mb-2 mt-2 font-bold md:text-2xl text-base'>

@@ -477,7 +477,7 @@ const Navbar = (props) => {
                                 onClick={() => router.push('/signIn')}>
                                 <IoPersonOutline className="text-black text-xl" />
                             </div>
-                            <div className="text-black flex items-center w-14 cursor-pointer">
+                            <div className="text-black flex items-center w-20 cursor-pointer">
                                 <span onClick={() => router.push('/signIn')}> {t("Sign in")}</span>
                             </div>
                         </>
@@ -618,7 +618,7 @@ const Navbar = (props) => {
                         </div>
                         {cartData.length > 0 && (
                             <button
-                                className="text-black font-bold cursor-pointer text-[18px] rounded-[12px] px-4 py-3"
+                                className="text-white font-bold bg-custom-green cursor-pointer text-[18px] rounded-[12px] px-4 py-3"
                                 onClick={() => {
                                     const drawerElement = document.querySelector('.MuiDrawer-paper');
                                     Swal.fire({
@@ -693,7 +693,7 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="driveUp" className="ml-2">
-                                        <span className="font-semibold text-[15px]">{t("Curbside Pickup")}"</span>
+                                        <span className="font-semibold text-[15px]">{t("Curbside Pickup")}</span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
                                             {t("We bring it out to your car")}</span>
@@ -712,7 +712,7 @@ const Navbar = (props) => {
                                     />
                                     <label htmlFor="localDelivery" className="ml-2">
                                         <span className="font-semibold text-[15px]">
-                                            {t("Next day delivery")} </span>
+                                            {t("Next Day Delivery")} </span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
                                             {t("Cut of time 4 pm")}</span>
@@ -732,7 +732,7 @@ const Navbar = (props) => {
                                         <span className="font-semibold text-[15px]">{t("Shipment Delivery")}</span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
-                                            {t("Delivery in 3 to 5 Working days")}"</span>
+                                            {t("Delivery in 3 to 5 Working days")}</span>
                                     </label>
                                 </div>
                             </div>
