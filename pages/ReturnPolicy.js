@@ -1,6 +1,7 @@
 import React from 'react';
-
+import { useTranslation } from "react-i18next";
 function ReturnPolicy() {
+    const { t } = useTranslation()
     return (
         <div className="relative min-h-screen">
             <img
@@ -10,7 +11,7 @@ function ReturnPolicy() {
             />
             <div className="absolute top-[44px] md:top-14 left-1/2 transform -translate-x-1/2 flex justify-center items-center ">
                 <p className="text-black font-bold text-[10px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
-                    Return Policy
+                    {t("Return Policy")}
                 </p>
             </div>
             <div className="text-black mx-auto text-start w-[80%] space-x-2 mb-4 mt-6 ">

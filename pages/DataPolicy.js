@@ -1,13 +1,8 @@
-
-
 import React from 'react';
+import { useTranslation } from "react-i18next";
 
-function DataPolicy
-
-
-
-
-    () {
+function DataPolicy() {
+    const { t } = useTranslation()
     return (
         <div className="relative">
             <img
@@ -17,9 +12,7 @@ function DataPolicy
             />
             <div className="absolute top-[44px] md:top-14 left-1/2 transform -translate-x-1/2 flex justify-center items-center ">
                 <p className="text-black font-bold text-[10px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
-                    Data Policy
-
-
+                   {t("Data Policy")} 
 
                 </p>
             </div>
@@ -67,7 +60,7 @@ function DataPolicy
 
 
                     <p className='text-black pt-4 font-bold'>     📬 Contact Us </p>
-                  
+
                     If you have questions about how your data is handled, reach out to us at . We’re here to help.</p>
             </div>
         </div>

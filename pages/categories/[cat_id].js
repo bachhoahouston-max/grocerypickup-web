@@ -11,6 +11,7 @@ import GroceryCatories from '@/components/GroceryCatories';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { IoFilterSharp } from "react-icons/io5";
 import Drawer from '@mui/material/Drawer';
+import { useTranslation } from 'react-i18next';
 
 const sortByData = [
     {
@@ -50,6 +51,7 @@ const sortByData = [
 function Categories(props) {
     const router = useRouter()
     console.log(router)
+    const { t } = useTranslation()
     const [productList, SetProductList] = useState([])
     const [category, setCategory] = useState({})
     const [categoryList, SetCategoryList] = useState([])
@@ -140,9 +142,9 @@ function Categories(props) {
         <div className="bg-white w-full min-h-screen">
             <section className="bg-white w-full  relative flex flex-col justify-center items-center">
                 <div className="max-w-7xl mx-auto w-full md:px-0 px-5 md:pt-5 pt-5 md:pb-10 pb-0">
-                    <div className="flex justify-center flex-col items-center mt-2" > <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">Popular Products</h1>
+                    <div className="flex justify-center flex-col items-center mt-2" > <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">{t("Popular Products")}</h1>
                         <p className="text-center w-full text-[13px] md:text-[16px] md:w-[50%] text-gray-500 mb-6 mt-2 italic">
-                        Browse through a wide range of categories — from fresh produce to pantry staples. We've got everything you need, all in one place.
+                        {t("Browse through a wide range of categories from fresh produce to pantry staples. We've got everything you need, all in one place")}.
                         </p>
                     </div>
 
@@ -151,7 +153,7 @@ function Categories(props) {
                         <div className='bg-custom-green md:flex hidden flex-col w-full px-5 py-5'>
                             <div className='border-b border-custom-gray'>
                                 <div className='flex justify-between items-center w-full  pb-5'>
-                                    <p className='text-white font-semibold text-lg'>Sort By</p>
+                                    <p className='text-white font-semibold text-lg'>{t("Sort By")}</p>
                                     {!openData && <FaCircleChevronDown className='text-xl text-white'
                                         onClick={() => { setOpenData(true); }} />}
                                     {openData && < FaCircleChevronUp className='text-xl text-white'
@@ -170,14 +172,14 @@ function Categories(props) {
                                                 }}
                                                     checked={item?.value === selectedSortBy}
                                                 />}
-                                            label={item?.name} />))}
+                                            label={t(`${item?.name}`)} />))}
                                     </FormGroup>
                                 </FormControl>}
                             </div>
 
                             <div className='pt-5'>
                                 <div className='flex justify-between items-center w-full  pb-5'>
-                                    <p className='text-white font-semibold text-lg'>Categories</p>
+                                    <p className='text-white font-semibold text-lg'>{t("Categories")}</p>
                                     {!openCategory && <FaCircleChevronDown className='text-xl text-white cursor-pointer' onClick={() => { setOpenCategory(true); }} />}
                                     {openCategory && < FaCircleChevronUp className='text-xl text-white cursor-pointer' onClick={() => setOpenCategory(false)} />}
                                 </div>
@@ -201,7 +203,7 @@ function Categories(props) {
                         <div className="md:hidden col-span-1 flex -pt-8">
                             <button className="flex-row py-1 flex justify-between gap-48 mx-2">
                                 <p className="text-black text-[20px]">
-                                    Categories
+                                    {t("Categories")}
                                 </p>
                                 <IoFilterSharp className="text-black text-3xl" onClick={() => setOpen(true)} />
                             </button>
@@ -210,7 +212,7 @@ function Categories(props) {
                             <div className='bg-custom-green w-[250px] h-full px-5 py-5 md:hidden block md:col-span-1'>
                                 <div className='border-b border-custom-gray'>
                                     <div className='flex justify-between items-center w-full  pb-5'>
-                                        <p className='text-black font-semibold text-lg'>Sort By</p>
+                                        <p className='text-black font-semibold text-lg'>{t("Sort By")}</p>
                                         {!openData && <FaCircleChevronDown className='text-lg text-white'
                                             onClick={() => { setOpenData(true); }} />}
                                         {openData && < FaCircleChevronUp className='text-lg text-white'
@@ -230,14 +232,14 @@ function Categories(props) {
                                                     }}
                                                         checked={item?.value === selectedSortBy}
                                                     />}
-                                                label={item?.name} />))}
+                                                label={t(`${item?.name}`)}/>))}
                                         </FormGroup>
                                     </FormControl>}
                                 </div>
 
                                 <div className='pt-5'>
                                     <div className='flex justify-between items-center w-full  pb-5'>
-                                        <p className='text-white font-semibold text-lg'>Categories</p>
+                                        <p className='text-white font-semibold text-lg'>{t("Categories")}</p>
                                         {!openCategory && <FaCircleChevronDown className='text-lg text-white cursor-pointer' onClick={() => { setOpenCategory(true); }} />}
                                         {openCategory && < FaCircleChevronUp className='text-lg text-white  cursor-pointer' onClick={() => setOpenCategory(false)} />}
                                     </div>
@@ -272,7 +274,8 @@ function Categories(props) {
                                     ))
                                 ) : (
                                     <div className='flex justify-center items-center h-[500px] md:h-[400px] col-span-4 '>
-                                        <p className='text-black text-center font-semibold text-xl'>No products available in this category.</p>
+                                        <p className='text-black text-center font-semibold text-xl'>
+                                            {t("No products available in this category")}.</p>
                                     </div>
                                 )}
                             </div>

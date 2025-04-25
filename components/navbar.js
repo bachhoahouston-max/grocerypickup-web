@@ -23,7 +23,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { BsCart2 } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import AddressInput from './addressInput';
+import { useTranslation } from "react-i18next";
+
 const Navbar = (props) => {
+    const  { t } = useTranslation()
     const router = useRouter();
     const [serchData, setSearchData] = useState("");
     const [productsList, setProductsList] = useState([]);
@@ -84,7 +87,28 @@ const Navbar = (props) => {
         name: "",
         lastname: "",
         phoneNumber: "",
+        location: { type: 'Point', coordinates: [null, null] }, // Initialize with null values
     });
+
+
+    useEffect(() => {
+        if (profileData) {
+            setLocalAddress({
+                dateOfDelivery: "",
+                address: profileData.address || '',
+                name: profileData.username || '',
+                lastname: profileData.lastname || '',
+                phoneNumber: profileData.mobile || '',
+                location: {
+                    type: 'Point',
+                    coordinates: [
+                        profileData.lat || null,
+                        profileData.lng || null
+                    ],
+                },
+            });
+        }
+    }, [profileData]);
 
     const handleDateChange1 = (date) => {
         setLocalAddress({ ...localAddress, dateOfDelivery: date });
@@ -253,8 +277,13 @@ const Navbar = (props) => {
     const createProductRquest = (e) => {
         // e.preventDefault();
 
-        if (pickupOption === 'localDelivery' && localAddress.dateOfDelivery === null) {
-            return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
+        if (pickupOption === 'localDelivery') {
+            console.log('pickupOption:', pickupOption);
+            console.log('localAddress.dateOfDelivery:', localAddress.dateOfDelivery);
+
+            if (localAddress.dateOfDelivery === null) {
+                return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
+            }
         }
 
         let data = [];
@@ -316,26 +345,34 @@ const Navbar = (props) => {
             user: user._id,
             Local_address: {
                 ...localAddress,
-                name: localAddress.name || profileData.username,
-                phoneNumber: localAddress.phoneNumber || profileData.mobile,
-                address: localAddress.address || profileData.address,
-                lastname: localAddress.lastname || profileData.lastname
-
+                name: localAddress.name,
+                phoneNumber: localAddress.phoneNumber,
+                address: localAddress.address,
+                lastname: localAddress.lastname,
+                dateOfDelivery: dateOfDelivery,
+                location: {
+                    type: 'Point',
+                    coordinates: [
+                        localAddress.location.coordinates[0] || null,
+                        localAddress.location.coordinates[1] || null
+                    ],
+                },
             },
-            dateOfDelivery: dateOfDelivery,
-            location: {
-                type: "Point",
-                coordinates: [
-                    profileData.lng ? Number(profileData.lng) : 0,
-                    profileData.lat ? Number(profileData.lat) : 0,
-                ],
-            },
+           
+            // location: {
+            //     type: "Point",
+            //     coordinates: [
+            //         (localAddress && localAddress.lng) ? Number(localAddress.lng) : (profileData.lng ? Number(profileData.lng) : 0),
+            //         (localAddress && localAddress.lat) ? Number(localAddress.lat) : (profileData.lat ? Number(profileData.lat) : 0),
+            //     ],
+            // },
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
             isLocalDelivery: isLocalDelivery,
             isShipmentDelivery: isShipmentDelivery
         };
 
+        console.log(newData)
         props.loader && props.loader(true);
         Api("post", "createProductRquest", newData, router).then(
             (res) => {
@@ -411,7 +448,7 @@ const Navbar = (props) => {
                         onChange={(text) => {
                             setSearchData(text.target.value);
                         }}
-                        placeholder="Search for products..."
+                        placeholder={t("Search for products...")}
                         className=" md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#F38529] rounded-l-md focus:outline-none pr-10"
                     />
 
@@ -441,7 +478,7 @@ const Navbar = (props) => {
                                 <IoPersonOutline className="text-black text-xl" />
                             </div>
                             <div className="text-black flex items-center w-14 cursor-pointer">
-                                <span onClick={() => router.push('/signIn')}>Sign in</span>
+                                <span onClick={() => router.push('/signIn')}> {t("Sign in")}</span>
                             </div>
                         </>
                     ) : (
@@ -462,7 +499,7 @@ const Navbar = (props) => {
                                                     className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
                                                     onClick={() => { router.push("/Mybooking") }}
                                                 >
-                                                    {"My Order"}
+                                                    {t("My Order")}
                                                 </div>
                                                 <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
@@ -471,7 +508,7 @@ const Navbar = (props) => {
                                                     className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
                                                     onClick={() => { router.push("/Myhistory") }}
                                                 >
-                                                    {"History"}
+                                                    {t("History")}
                                                 </div>
                                                 <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
@@ -481,7 +518,7 @@ const Navbar = (props) => {
                                                     className="block px-5 py-1 pl-0 text-white text-left font-semibold text-[16px]"
                                                     onClick={() => { router.push("/editProfile") }}
                                                 >
-                                                    {"Edit Profile"}
+                                                    {t("Edit Profile")}
                                                 </div>
                                                 <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
@@ -490,10 +527,10 @@ const Navbar = (props) => {
                                                 <div
                                                     onClick={() => {
                                                         Swal.fire({
-                                                            text: "Are you sure you want to logout?",
+                                                            text: t("Are you sure you want to logout?"),
                                                             showCancelButton: true,
-                                                            confirmButtonText: "Yes",
-                                                            cancelButtonText: "No",
+                                                            confirmButtonText: t("Yes"),
+                                                            cancelButtonText: t("No"),
                                                             confirmButtonColor: "#F38529",
                                                             cancelButtonColor: "#F38529",
                                                             customClass: {
@@ -518,7 +555,7 @@ const Navbar = (props) => {
                                                     }}
                                                     className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
                                                 >
-                                                    {"Sign out"}
+                                                    {t("Sign out")}
                                                 </div>
                                                 <IoIosArrowForward className="text-2xl text-white" />
                                             </li>
@@ -576,7 +613,7 @@ const Navbar = (props) => {
                         >
                             <IoIosArrowBack className="md:w-[38px] w-[28px] md:h-[31px] h-[21px] text-black" />
                             <p className="text-black md:text-[18px] text-[17px] font-bold">
-                                Your Cart
+                                {t("Your Cart")}
                             </p>
                         </div>
                         {cartData.length > 0 && (
@@ -585,10 +622,10 @@ const Navbar = (props) => {
                                 onClick={() => {
                                     const drawerElement = document.querySelector('.MuiDrawer-paper');
                                     Swal.fire({
-                                        text: "Are you sure you want to empty your cart?",
+                                        text: t("Are you sure you want to empty your cart?"),
                                         showCancelButton: true,
-                                        confirmButtonText: "Yes",
-                                        cancelButtonText: "No",
+                                        confirmButtonText: t("Yes"),
+                                        cancelButtonText: t("No"),
                                         confirmButtonColor: "#F38529",
                                         cancelButtonColor: "#F38529",
                                         customClass: {
@@ -618,7 +655,7 @@ const Navbar = (props) => {
                                     });
                                 }}
                             >
-                                Empty Cart
+                               {t("Empty Cart")} 
                             </button>
                         )}
                     </div>
@@ -638,9 +675,10 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="orderPickup" className="ml-2">
-                                        <span className="font-semibold text-[15px]">Order Pickup</span>
+                                        <span className="font-semibold text-[15px]">{t("Order Pickup")} </span>
                                         <br />
-                                        <span className="text-gray-500 text-[13px] w-full">Pick it up inside the store</span>
+                                        <span className="text-gray-500 text-[13px] w-full">
+                                            {t("Pick it up inside the store")}</span>
                                     </label>
                                 </div>
 
@@ -655,9 +693,10 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="driveUp" className="ml-2">
-                                        <span className="font-semibold text-[15px]">Curbside Pickup</span>
+                                        <span className="font-semibold text-[15px]">{t("Curbside Pickup")}"</span>
                                         <br />
-                                        <span className="text-gray-500 text-[13px]">We bring it out to your car</span>
+                                        <span className="text-gray-500 text-[13px]">
+                                            {t("We bring it out to your car")}</span>
                                     </label>
                                 </div>
 
@@ -672,9 +711,11 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="localDelivery" className="ml-2">
-                                        <span className="font-semibold text-[15px]">Next day delivery </span>
+                                        <span className="font-semibold text-[15px]">
+                                            {t("Next day delivery")} </span>
                                         <br />
-                                        <span className="text-gray-500 text-[13px]">Cut of time 4 pm</span>
+                                        <span className="text-gray-500 text-[13px]">
+                                            {t("Cut of time 4 pm")}</span>
                                     </label>
                                 </div>
                                 <div className="flex items-center">
@@ -688,9 +729,10 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="localDelivery" className="ml-2">
-                                        <span className="font-semibold text-[15px]">Shipment Delivery</span>
+                                        <span className="font-semibold text-[15px]">{t("Shipment Delivery")}</span>
                                         <br />
-                                        <span className="text-gray-500 text-[13px]">Delivery in 3 to 5 working days</span>
+                                        <span className="text-gray-500 text-[13px]">
+                                            {t("Delivery in 3 to 5 Working days")}"</span>
                                     </label>
                                 </div>
                             </div>
@@ -701,12 +743,13 @@ const Navbar = (props) => {
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
                             <div className="flex items-center justify-center">
                                 <div className="text-center">
-                                    <h1 className="text-lg font-semibold mb-4">Select Date of Delivery</h1>
+                                    <h1 className="text-lg font-semibold mb-4">
+                                        {t("Select Date of Delivery")}"</h1>
                                     <div className="relative inline-block">
                                         <input
                                             type="text"
-                                            value={date ? formatDate(date) : "Select date"} // Check if date is valid
-                                            placeholder="Select date"
+                                            value={date ? formatDate(date) : t("Select date")} // Check if date is valid
+                                            placeholder={t("Select date")}
                                             className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none"
                                             readOnly
                                             required
@@ -748,13 +791,14 @@ const Navbar = (props) => {
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
                             <div className="flex  items-center justify-center">
                                 <div className="text-center md:grid-cols-3 grid-cols-1">
-                                    <h1 className="text-lg font-semibold mb-4">Delivery Info</h1>
+                                    <h1 className="text-lg font-semibold mb-4">
+                                        {t("Delivery Info")}</h1>
                                     {pickupOption === 'localDelivery' && (
                                         <div className="relative inline-block">
                                             <input
                                                 type="text"
-                                                value={localAddress.dateOfDelivery ? formatDate(localAddress.dateOfDelivery) : "Select date"}
-                                                placeholder="Select date"
+                                                value={localAddress.dateOfDelivery ? formatDate(localAddress.dateOfDelivery) : t("Select date")}
+                                                placeholder={t("Select date")}
                                                 className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
                                                 readOnly
                                                 required
@@ -783,7 +827,7 @@ const Navbar = (props) => {
                                         type="text"
                                         name="name"
                                         placeholder="Name"
-                                        value={localAddress.name || profileData.username}
+                                        value={localAddress.name}
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
                                         required
@@ -792,7 +836,7 @@ const Navbar = (props) => {
                                         type="text"
                                         name="lastname"
                                         placeholder="Last Name"
-                                        value={localAddress.lastname || profileData.lastname}
+                                        value={localAddress.lastname}
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
                                         required
@@ -802,7 +846,7 @@ const Navbar = (props) => {
                                         type="text"
                                         name="phoneNumber"
                                         placeholder="Phone Number"
-                                        value={localAddress.phoneNumber || profileData.mobile}
+                                        value={localAddress.phoneNumber}
                                         onChange={handleInputChange1}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
                                         required
@@ -811,9 +855,8 @@ const Navbar = (props) => {
                                     <AddressInput
                                         setProfileData={setProfileData}
                                         profileData={localAddress}
-                                        value={profileData.address}
-                                        defaultvalue={profileData.address}
-
+                                        value={localAddress.address}
+                                        // defaultvalue={profileData.address}
                                         className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 !z-[999999999]"
                                         required
                                     />
@@ -831,7 +874,7 @@ const Navbar = (props) => {
                                     <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
                                 </div>
                                 <p className="text-black font-semibold text-[18px]">
-                                    Delivery in 3 to 5 Working days
+                                    {t("Delivery in 3 to 5 Working days")}
                                 </p>
                             </div>
                         ) : (
@@ -840,7 +883,7 @@ const Navbar = (props) => {
                                 <img src="/image77.png"
                                     className="w-20 h-20" />
                                 <p className="text-black  text-[18px]">
-                                    Your cart is empty
+                                    {t("Your cart is empty")}
                                 </p>
                                 <button
                                     className=" text-custom-green border-2 border-custom-green text-[20px] font-medium rounded-[18px] md:w-[180px] w-full mt-2 py-2 px-1"
@@ -849,7 +892,7 @@ const Navbar = (props) => {
                                         router.push("/categories/all")
                                     }}
                                 >
-                                    Browse Products
+                                    {t("Browse Products")}
                                 </button>
                             </div>
                         )}
@@ -953,11 +996,11 @@ const Navbar = (props) => {
                                     {pickupOption === 'ShipmentDelivery' && (
                                         item.isShipmentAvailable ? (
                                             <p className="text-green-500 text-sm md:text-base md:mt-3 mt-2 w-full md:text-center">
-                                                Product is available for Shipment Delivery
+                                                {t("Product is available for Shipment Delivery")}
                                             </p>
                                         ) : (
                                             <p className="text-red-500 text-sm md:text-base md:mt-3 mt-2 w-full  md:text-center">
-                                                Product is Not available for Shipment Delivery
+                                               {t("Product is Not available for Shipment Delivery")}
                                             </p>
                                         )
                                     )}
@@ -970,7 +1013,7 @@ const Navbar = (props) => {
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
                             <div className="flex justify-between items-center w-full">
                                 <p className="text-custom-black font-normal text-base">
-                                    Item Total
+                                    {t("Item Total")}
                                 </p>
                                 <p className="text-custom-black font-normal text-base">
                                     ${CartTotal}
@@ -980,7 +1023,7 @@ const Navbar = (props) => {
                             {mainTotal < 35 && (
                                 <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                     <p className="text-black font-normal text-base">
-                                        Delivery Fee
+                                        {t("Delivery Fee")}
                                     </p>
                                     <p className="text-custom-black font-normal text-base">
                                         ${deliveryCharge}
@@ -991,10 +1034,10 @@ const Navbar = (props) => {
                             {mainTotal >= 35 && (
                                 <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                     <p className="text-black font-normal text-base">
-                                        Delivery Fee
+                                    {t("Delivery Fee")}
                                     </p>
                                     <p className="text-green-500 font-normal text-base">
-                                        Free
+                                       {t("Free")} 
                                     </p>
                                 </div>
                             )}
@@ -1004,14 +1047,14 @@ const Navbar = (props) => {
 
                             <div className="flex justify-between items-center w-full pt-5">
                                 <p className="text-custom-black font-normal text-base">
-                                    Total Payable
+                                   {t("Total Payable")} 
                                 </p>
                                 <p className="text-custom-black font-medium text-base">
                                     ${mainTotal}
                                 </p>
                             </div> <div className="flex justify-between items-center w-full pt-1">
                                 <p className="text-red-500 font-normal text-base">
-                                    * Note : Tax is included in this price
+                                    * {t("Note : Tax is included in this price")}"
                                 </p>
                             </div>
                         </div>
@@ -1032,7 +1075,7 @@ const Navbar = (props) => {
                                 }
                             }}
                         >
-                            CONTINUE TO PAY ${CartTotal}
+                           {t("CONTINUE TO PAY")}  ${CartTotal}
                         </button>
                     )}
                 </div>

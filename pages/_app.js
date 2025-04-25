@@ -5,13 +5,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
 import Loader from "@/components/loader";
+import { useTranslation } from "react-i18next";
+import { appWithI18Next } from "ni18n";
+import { ni18nConfig } from "../ni18n.config"
 
 export const userContext = createContext();
 export const openCartContext = createContext();
 export const cartContext = createContext();
 export const favoriteProductContext = createContext();
+export const languageContext = createContext();
 
-export default function App({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   const router = useRouter();
   const [user, setUser ] = useState({});
   const [open, setOpen] = useState(false);
@@ -19,6 +23,9 @@ export default function App({ Component, pageProps }) {
   const [openCart, setOpenCart] = useState(false);
   const [cartData, setCartData] = useState([]);
   const [Favorite, setFavorite] = useState([]);
+  const [globallang, setgloballang] = useState('es');
+  const { i18n } = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (router.route === "/") {
@@ -44,13 +51,19 @@ export default function App({ Component, pageProps }) {
     }
   };
 
-  // useEffect(() => {
-  //   localStorage.setItem("favoriteProducts", JSON.stringify(Favorite));
-  // }, [Favorite]);
+  useEffect(() => {
+    const defaultLanguage = 'vi';
+    localStorage.setItem("LANGUAGE", defaultLanguage);
+    i18n.changeLanguage(defaultLanguage);
+    setgloballang(defaultLanguage);
+  }, []);
+
+
 
   return (
     <div>
       <ToastContainer />
+      <languageContext.Provider value={[globallang, setgloballang]}>
       <userContext.Provider value={[user, setUser ]}>
         <openCartContext.Provider value={[openCart, setOpenCart]}>
           <cartContext.Provider value={[cartData, setCartData]}>
@@ -68,6 +81,8 @@ export default function App({ Component, pageProps }) {
           </cartContext.Provider>
         </openCartContext.Provider>
       </userContext.Provider>
+      </languageContext.Provider>
     </div>
   );
 }
+export default appWithI18Next(App, ni18nConfig);

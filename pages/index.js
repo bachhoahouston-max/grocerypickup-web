@@ -9,7 +9,11 @@ import { faBoxOpen, faHeadset, faTruck, faLock } from '@fortawesome/free-solid-s
 import { FaArrowRight } from "react-icons/fa6";
 import GroceryCatories from "@/components/GroceryCatories";
 import SellProduct from "@/components/SellProduct";
+import { useTranslation } from "react-i18next";
+
+
 export default function Home(props) {
+  const { t } = useTranslation()
   const router = useRouter();
   const [category, setCategory] = useState([]);
   const [productsData, setProductsData] = useState([]);
@@ -175,12 +179,10 @@ export default function Home(props) {
         {sellProduct.length > 0 && (
           <>
             <div className="flex items-center justify-between">
-              <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">Flash Sale</h1>
-              {/* <p className="text-gray-600 mt-2 w-full md:w-[50%] text-center text-[13px] md:text-[16px] italic">
-                Grab any product at a single price before the sale ends!
-              </p> */}
+              <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">{t("Flash Sale")}</h1>
+             
               <div>
-                <h1 className="text-black m-2 text-[14px]"> Sale Status: </h1>
+                <h1 className="text-black m-2 text-[14px]"> {t("Sale Status")}: </h1>
                 <div className="flex flex-col space-y-4">
                 {countdown.map((sale, index) => (
                                 <div key={index} className="p-4 bg-white rounded-lg shadow-lg">
@@ -189,19 +191,19 @@ export default function Home(props) {
                                         <div className="flex space-x-4 mt-2">
                                             <div className="flex flex-col items-center">
                                                 <span className="text-2xl text-black font-bold">{sale.timeLeft.days}</span>
-                                                <span className="text-sm text-gray-500">Days</span>
+                                                <span className="text-sm text-gray-500">{t("Days")}</span>
                                             </div>
                                             <div className="flex flex-col items-center">
                                                 <span className="text-2xl text-black font-bold">{sale.timeLeft.hours}</span>
-                                                <span className="text-sm text-gray-500">Hours</span>
+                                                <span className="text-sm text-gray-500">{t("Hours")}</span>
                                             </div>
                                             <div className="flex flex-col items-center">
                                                 <span className="text-2xl text-black font-bold">{sale.timeLeft.minutes}</span>
-                                                <span className="text-sm text-gray-500">Minutes</span>
+                                                <span className="text-sm text-gray-500">{t("Minutes")}</span>
                                             </div>
                                             <div className="flex flex-col items-center">
                                                 <span className="text-2xl text-black font-bold">{sale.timeLeft.seconds}</span>
-                                                <span className="text-sm text-gray-500">Seconds</span>
+                                                <span className="text-sm text-gray-500">{t("Seconds")}</span>
                                             </div>
                                         </div>
                                     ) : (
@@ -230,9 +232,9 @@ export default function Home(props) {
 
       <div className="hidden md:flex flex-col container mx-auto bg-white max-w-7xl md:px-0 px-6">
         <div className="text-center mb-8 flex flex-col items-center justify-center">
-          <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">Categories</h1>
+          <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">{t("Categories")}</h1>
           <p className="text-gray-600 mt-4 w-full md:w-[50%] text-center text-[13px] md:text-[16px] italic">
-          Browse through a wide range of categories — from fresh produce to pantry staples. We've got everything you need, all in one place..
+          {t("Browse through a wide range of categories from fresh produce to pantry staples. We've got everything you need, all in one place")}..
           </p>
         </div>
         <div className="flex flex-col md:flex-row justify-center items-start md:space-x-4">
@@ -247,7 +249,8 @@ export default function Home(props) {
                     md:text-[16px] text-[14px]">
                       {category.name}
                     </p>
-                    <p className="cursor-pointer text-[#767C7D] md:text-[14px] text-[13px]">(65 items)</p>
+                    <p className="cursor-pointer text-[#767C7D] md:text-[14px] text-[13px]">(65 {" "} 
+                      {t("items")})</p>
                   </div>
                 ))}
               </div>
@@ -256,7 +259,7 @@ export default function Home(props) {
                 <p className="text-[#FEC200] mb-2 font-semibold text-[16px]"
                   onClick={() => handleCategoryClick1('/categories/all')}
                 >
-                  View More
+                  {t("View More")}
                 </p>
               </div>
             </div>
@@ -285,9 +288,10 @@ export default function Home(props) {
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
           <div className="container mx-auto px-6 md:px-0 xl:w-full md:max-w-7xl">
             <div className="flex justify-center flex-col items-center mt-4">
-              <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">Popular Products</h1>
+              <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">
+                {t("Popular Products")}</h1>
               <p className="text-center w-full text-[13px] md:text-[16px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
-              Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers
+              {t("Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers")}
               </p>
             </div>
 
@@ -299,7 +303,7 @@ export default function Home(props) {
                     onClick={() => handleCategoryClick1('/categories/all')}
                     className={`flex text-[14px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between p-2 ${selectedCategory === 'all' ? 'text-[#FEC200]' : 'text-black'} cursor-pointer`}
                   >
-                    <span>View All</span>
+                    <span> {t("View All")}</span>
                     <FaArrowRight />
                   </li>
                   {category.slice(0, 4).map((cat, index) => (
@@ -337,7 +341,7 @@ export default function Home(props) {
                       />
                     ))
                   ) : (
-                    <div className="absolute top-48 left-64 col-span-4 flex justify-center text-[24px] items-center text-gray-500 ">No products available in this category.</div>
+                    <div className="absolute top-48 left-64 col-span-4 flex justify-center text-[24px] items-center text-gray-500 "> {t("No products available in this category")}.</div>
                   )
                 ) : (
                   productList.length > 0 ? (
@@ -351,7 +355,7 @@ export default function Home(props) {
                         url={`/product-details/${item?.slug}`} />
                     ))
                   ) : (
-                    <div className="flex justify-center md:text-[24px] items-center text-[18px] text-gray-500">No products available.</div>
+                    <div className="flex justify-center md:text-[24px] items-center text-[18px] text-gray-500">{t("No products available")}.</div>
                   )
                 )}
               </div>
@@ -364,23 +368,26 @@ export default function Home(props) {
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faBoxOpen} className="text-xl text-[#F38529] mb-2" />
-            <h3 className="text-[16px] md:text-[18px] md:text-lg font-semibold text-black">Product Package</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">Fresh and safely packed for you</p>
+            <h3 className="text-[16px] md:text-[18px] md:text-lg font-semibold text-black">
+              {t("Product Package")}</h3>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">
+              {t("Fresh and safely packed for you")}</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faHeadset} className="text-xl text-[#F38529] mb-4" />
-            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">24/7 Support</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">Help available anytime you need it</p>
+            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">{t("24/7 Support")}</h3>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">
+              {t("Help available anytime you need it")}</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faTruck} className="text-xl text-[#F38529] mb-4" />
-            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">Delivery in 5 Days</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">Quick delivery within just 5 days</p>
+            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">{t("Delivery in 5 Days")}</h3>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">{t("Quick delivery within just 5 days")}</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faLock} className="text-xl text-[#F38529] mb-4" />
-            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">Payment Secure</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">Safe and secure payment options</p>
+            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">{t("Payment Secure")}</h3>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">{t("Safe and secure payment options")}</p>
           </div>
         </div>
       </div>

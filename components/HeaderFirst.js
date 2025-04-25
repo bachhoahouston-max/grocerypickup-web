@@ -4,6 +4,9 @@ import { IoIosArrowDown } from "react-icons/io";
 import { useRouter } from 'next/router';
 import { IoIosArrowForward } from "react-icons/io";
 import { Api } from '@/services/service';
+import { useTranslation } from "react-i18next";
+import { languageContext } from "@/pages/_app";
+import { useContext } from 'react';
 
 const HeaderFirst = (props) => {
     const router = useRouter();
@@ -11,6 +14,11 @@ const HeaderFirst = (props) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [category, setCategory] = useState([]);
     const dropdownRef = useRef(null);
+
+    const [lang, setLang] = useState(null);
+    const [globallang, setgloballang] = useContext(languageContext);
+    const { i18n } = useTranslation();
+    const { t } = useTranslation();
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -27,7 +35,7 @@ const HeaderFirst = (props) => {
         };
     }, []);
 
-    
+
     const CategoryData = () => {
         props.loader(true);
 
@@ -49,34 +57,48 @@ const HeaderFirst = (props) => {
         setDropdownOpen(false);
     };
 
+    function handleClick(idx) {
+        try {
+            setLang(idx);
+            const language = idx || "vi";
+            console.log(language);
+            i18n.changeLanguage(language);
+            setgloballang(language);
+            localStorage.setItem("LANGUAGE", language);
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
     return (
         <nav className="bg-white border-t-1 border-[#F0F1F1]">
             <div className="container mx-auto px-4 py-2 flex justify-center items-center">
                 <div className="hidden flex-1 lg:flex justify-center space-x-6">
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'home' ? 'text-custom-green' : 'text-custom-black'}`}
                         onClick={() => { router.push('/'); setSelectedTab('home'); }}
-                    >Home</p>
+                    >
+                        {t("Home")}</p>
                     <div className="relative flex" ref={dropdownRef}>
                         <button
                             className={`text-base font-medium cursor-pointer inline-flex items-center ${selectedTab === 'AllCategory' ? 'text-custom-green' : 'text-custom-black'}`}
                             onClick={() => { router.push('/AllCategory'); setSelectedTab('AllCategory'); }}
                         >
-                            Categories
-                            
+                           {t("Categories")} 
+
                         </button>
-                        <IoIosArrowDown className="text-2xl cursor-pointer ml-1 text-black" 
-                             onClick={() => {
+                        <IoIosArrowDown className="text-2xl cursor-pointer ml-1 text-black"
+                            onClick={() => {
                                 setDropdownOpen(prev => !prev); // Toggle 
                             }}
-                            />
+                        />
                         {dropdownOpen && (
                             <div className="absolute top-full left-0 mt-4 bg-custom-gold shadow-lg rounded-xl w-[241px] overflow-hidden z-20 pt-3 pb-4">
                                 {category.slice(0, 6).map((category, index) => (
                                     <div key={index} className='flex flex-col justify-between'>
-                                        <div className='flex flex-row justify-between'   onClick={() => { router.push(`/categories/${category?.slug}`) }}>
+                                        <div className='flex flex-row justify-between' onClick={() => { router.push(`/categories/${category?.slug}`) }}>
                                             <p
                                                 className="px-4 py-1.5 text-white text-[16px] cursor-pointer"
-                                              
+
                                             >
                                                 {category.name}
                                             </p>
@@ -88,25 +110,36 @@ const HeaderFirst = (props) => {
                                     className="px-4 py-1.5 text-white text-[16px] cursor-pointer"
                                     onClick={() => handleCategoryClick('/categories/all')}
                                 >
-                                    See All Categories
+                                   {t("See All Categories")} 
                                 </p>
                             </div>
                         )}
                     </div>
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'AboutUs' ? 'text-custom-green' : 'text-custom-black'}`}
                         onClick={() => { router.push('/AboutUs'); setSelectedTab('AboutUs'); }}>
-                        About Us
+                        {t("About Us")}
                     </p>
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'Contact' ? 'text-custom-green' : 'text-custom-black'}`}
                         onClick={() => { router.push('/ContactUs'); setSelectedTab('Contact'); }}>
-                        Contact
+                       {t("Contact")} 
                     </p>
                 </div>
                 <div className="hidden lg:flex items-center space-x-2 mr-6">
                     <BiPhoneCall className="text-[#F38529] text-3xl" />
                     <a href="tel:6393274099" className="text-custom-black cursor-pointer font-semibold">+(402) 54646</a>
 
-                   
+                </div>
+
+
+                <div className="flex rounded-lg">
+                    <select className="bg-white w-full  px-4 font-normal text-xs text-black outline-none" type="text" placeholder="English"
+                        value={lang}
+                        onChange={(e) => handleClick(e.target.value)}
+                    >
+                        <option value={"vi"}>Vitnamies</option>
+                        <option value={"en"}>English</option>
+
+                    </select>
                 </div>
             </div>
         </nav>

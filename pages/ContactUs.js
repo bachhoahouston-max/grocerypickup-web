@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { Api } from '@/services/service';
+import { useTranslation } from "react-i18next";
 
 const FeedbackForm = (props) => {
+ const { t } = useTranslation()
  const router = useRouter();
     const [formData, setFormData] = useState({
         fullName: '',
@@ -75,33 +77,33 @@ const FeedbackForm = (props) => {
     return (
         <div className="relative">
             <img
-                src="./image12345.png"
+                src="./image00.png"
                 alt="Return Policy"
                 className="h-24 md:h-full w-full"
             />
             <div className="absolute top-[44px] md:top-14 left-1/2 transform -translate-x-1/2 flex justify-center items-center ">
                 <p className="text-black font-bold text-[15px] md:text-[28px] p-2 bg-opacity-75 rounded lg:mt-3 ">
-                    Contact Us
+                    {t("Contact Us")}
                 </p>
             </div>
             <div className="container mx-auto py-4 md:py-16 ">
                 <form className="bg-white p-8 max-w-7xl mx-auto" onSubmit={submitFeedback}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                            <label className="block text-gray-700">Full Name</label>
+                            <label className="block text-gray-700">{t("Full Name")}</label>
                             <input
                                 type="text"
                                 name="fullName"
                                 value={formData.fullName}
                                 onChange={handleChange}
                                 className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] outline-none rounded-md ${errors.fullName ? 'border-red-500' : ''}`}
-                                placeholder="Vaibhav"
+                                placeholder="John"
                                 required
                             />
                             {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
                         </div>
                         <div>
-                            <label className="block text-[16px] text-gray-700">Email</label>
+                            <label className="block text-[16px] text-gray-700">{t("Email")}</label>
                             <input
                                 type="email"
                                 name="email"
@@ -114,7 +116,7 @@ const FeedbackForm = (props) => {
                             {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                         </div>
                         <div>
-                            <label className="block text-gray-700 text-[16px]">Phone number</label>
+                            <label className="block text-gray-700 text-[16px]">{t("Phone number")}</label>
                             <input
                                 type="number"
                                 name="phoneNumber"
@@ -132,7 +134,7 @@ const FeedbackForm = (props) => {
                       
 
                         <div>
-                            <label className="block text-gray-700 text-[16px]">My Query *</label>
+                            <label className="block text-gray-700 text-[16px]">{t("My Query")} *</label>
                             <textarea
                                 name="query"
                                 rows="3"
@@ -146,7 +148,7 @@ const FeedbackForm = (props) => {
                         </div>
                     </div>
                     <div className="text-center mt-6">
-                        <button type="submit" className="bg-[#F38529] text-white py-2 px-6 rounded-md">Send Query</button>
+                        <button type="submit" className="bg-[#F38529] text-white py-2 px-6 rounded-md">{t("Send Query")}</button>
                     </div>
                 </form>
             </div>

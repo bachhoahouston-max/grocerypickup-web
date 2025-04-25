@@ -1,8 +1,9 @@
 
 import React from 'react';
-
+import { useTranslation } from "react-i18next";
 function Termsandcondition
     () {
+        const { t } = useTranslation()
     return (
         <div className="relative">
             <img
@@ -12,7 +13,7 @@ function Termsandcondition
             />
             <div className="absolute top-[44px] md:top-14 left-1/2 transform -translate-x-1/2 flex justify-center items-center ">
                 <p className="text-black font-bold text-[10px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
-                    Terms and condition
+                    {t("Terms and Conditions")}
 
                 </p>
             </div>

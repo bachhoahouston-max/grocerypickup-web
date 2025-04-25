@@ -3,8 +3,10 @@ import { useRouter } from 'next/router';
 import { Api } from '@/services/service';
 import { userContext } from './_app';
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { useTranslation } from "react-i18next";
 
 const SignIn = (props) => {
+    const  { t } = useTranslation()
     const router = useRouter();
     const [userDetail, setUserDetail] = useState({
         email: "",
@@ -55,18 +57,18 @@ const SignIn = (props) => {
             <div className="font-sans bg-white flex flex-col items-center justify-center">
                 <div className="max-w-7xl mx-auto w-full mt-0 md:mt-2">
                     <div className="mx-auto ms-6 md:ms-20 md:mt-0 mt-8">
-                        <h1 className="text-[34px] md:text-[64px] text-black">Welcome</h1>
-                        <p className="md:text-[20px] text-[16px] text-[#858080]">Please enter your sign in details.</p>
+                        <h1 className="text-[34px] md:text-[64px] text-black">{t("Welcome")}</h1>
+                        <p className="md:text-[20px] text-[16px] text-[#858080]"> {t("Please enter your sign in details")}.</p>
                     </div>
                     <div className="grid lg:grid-cols-2 md:grid-cols-2 gap-4 py-8">
                         <div className="hidden md:flex justify-center items-center">
                             <img src="/image-10.png" alt="Sign In" className="w-[590px] h-[566px]" />
                         </div>
                         <form onSubmit={submit} className="border-[2px] mx-4 rounded-xl border-black md:px-12 px-3 flex flex-col justify-center items-center md:mb-8 mb-20">
-                            <h3 className="text-black md:text-[40px] text-[28px] font-bold text-center md:mb-8 mb-4 mt-4">Sign in</h3>
+                            <h3 className="text-black md:text-[40px] text-[28px] font-bold text-center md:mb-8 mb-4 mt-4">{t("Sign in")}</h3>
                             
                             <div className="relative flex items-center w-full md:mb-14 mb-8">
-                                <label className="text-gray-800 text-[16px] md:text-[20px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px]">Email</label>
+                                <label className="text-gray-800 text-[16px] md:text-[20px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px]">{t("Email")}</label>
                                 <input 
                                     type="email" 
                                     placeholder="demo@gmail.com"
@@ -83,7 +85,7 @@ const SignIn = (props) => {
                             </div>
                             
                             <div className="relative flex items-center w-full mb-4">
-                                <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[16px] md:text-[20px]">Password</label>
+                                <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[16px] md:text-[20px]">{t("Password")}</label>
                                 <input 
                                     type={!eyeIcon ? "password" : "text"}
                                     placeholder="***********"
@@ -108,7 +110,7 @@ const SignIn = (props) => {
                                     <p className="text-black cursor-pointer font-semibold text-sm hover:underline"
                                         onClick={() => router.push('/forgotPassword')}
                                     >
-                                        Forgot Password?
+                                        {t("Forgot Password?")}
                                     </p>
                                 </div>
                             </div>
@@ -118,17 +120,17 @@ const SignIn = (props) => {
                                     type="submit" 
                                     className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[16px] md:text-[20px] bg-custom-green focus:outline-none"
                                 >
-                                    Sign in
+                                    {t("Sign in")}
                                 </button>
                             </div>
                             
                             <p className="text-[14px] text-[#A7A9AA] mt-4 text-center mb-2">
-                                Haven't registered yet?
+                                {t("Haven't registered yet?")}
                                 <span 
                                     className="text-custom-green font-semibold hover:underline ml-1 whitespace-nowrap cursor-pointer text-[14px]"
                                     onClick={() => router.push('/signUp')}
                                 > 
-                                    Sign up
+                                    {t("Sign up")}
                                 </span>
                             </p>
                         </form>

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { CountryDropdown } from 'react-country-region-selector';
 import { Api } from '@/services/service';
 import AddressInput from '@/components/addressInput';
+import { useTranslation } from 'react-i18next';
 
 const EditProfile = ({ loader, toaster }) => {
-
+   const { t } = useTranslation()
     const [profileData, setProfileData] = useState({
         username: '',
         lastname: "",
@@ -163,10 +164,10 @@ const EditProfile = ({ loader, toaster }) => {
             {/* Header */}
             <div className="flex flex-col justify-center items-center mb-8">
                 <h1 className="md:mt-0 mt-4 text-center text-3xl md:text-4xl font-semibold text-black">
-                    My <span className="text-custom-green">Profile</span>
+                   {t("My")}  <span className="text-custom-green">{t("Profile")}</span>
                 </h1>
                 <p className="text-center text-base mt-2 max-w-xl text-black">
-                    Manage your account details, addresses all in one place.
+                    {t("Manage your account details, addresses all in one place")}.
                 </p>
             </div>
 
@@ -189,7 +190,7 @@ const EditProfile = ({ loader, toaster }) => {
                         className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-custom-green text-white hover:bg-gray-800 cursor-pointer transition"
                         onClick={isEditing ? updateProfile : toggleEditMode}
                     >
-                        {isEditing ? 'Save' : 'Edit'}
+                        {isEditing ? t('Save') : t('Edit')}
                     </button>
                 </div>
 
@@ -198,7 +199,7 @@ const EditProfile = ({ loader, toaster }) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">Full Name</label>
+                            <label className="block text-gray-700 mb-1">{t("Full Name")}</label>
                             {isEditing ? (
                                 <input
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
@@ -210,13 +211,13 @@ const EditProfile = ({ loader, toaster }) => {
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.username || ' Not provided'}
+                                    {profileData.username || t('Not provided')}
                                 </div>
                             )}
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">Last Name</label>
+                            <label className="block text-gray-700 mb-1">{t("Last Name")}</label>
                             {isEditing ? (
                                 <input
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
@@ -228,13 +229,13 @@ const EditProfile = ({ loader, toaster }) => {
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.lastname || ' Not provided'}
+                                    {profileData.lastname || t('Not provided')}
                                 </div>
                             )}
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">Email</label>
+                            <label className="block text-gray-700 mb-1">{t("Email")}</label>
                             {isEditing ? (
                                 <input
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
@@ -246,14 +247,14 @@ const EditProfile = ({ loader, toaster }) => {
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.email || ' Not provided'}
+                                    {profileData.email ||  t('Not provided')}
                                 </div>
                             )}
                         </div>
 
                         {/* Gender Select with improved handler */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">Gender</label>
+                            <label className="block text-gray-700 mb-1">{t("Gender")}</label>
                             {isEditing ? (
                                 <select
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
@@ -261,20 +262,20 @@ const EditProfile = ({ loader, toaster }) => {
                                     value={profileData.gender}
                                     onChange={(e) => handleInputChange('gender', e.target.value)}
                                 >
-                                    <option value="">Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                    <option value="">{t("Select Gender")}</option>
+                                    <option value="Male">{t("Male")}</option>
+                                    <option value="Female">{t("Female")}</option>
                                 </select>
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.gender || 'No gender provided'}
+                                    {profileData.gender ||  t('Not provided')}
                                 </div>
                             )}
                         </div>
 
                         {/* Country Select with improved handler */}
                         <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">Country</label>
+                            <label className="block text-gray-700 mb-1">{t("Country")}</label>
                             {isEditing ? (
                                 <CountryDropdown
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
@@ -283,13 +284,13 @@ const EditProfile = ({ loader, toaster }) => {
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.country || 'No country provided'}
+                                    {profileData.country ||  t('Not provided')}
                                 </div>
                             )}
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">Shipping Address</label>
+                            <label className="block text-gray-700 mb-1">{t("Shipping Address")}</label>
                             {isEditing ? (
                                 <AddressInput
                                     setProfileData={setProfileData}
@@ -299,13 +300,13 @@ const EditProfile = ({ loader, toaster }) => {
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.address || 'No Address provided'}
+                                    {profileData.address ||  t('Not provided')}
                                 </div>
                             )}
                         </div>
 
                         <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">Mobile</label>
+                            <label className="block text-gray-700 mb-1">{t("Mobile")}</label>
                             {isEditing ? (
                                 <input
                                     className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
@@ -317,7 +318,7 @@ const EditProfile = ({ loader, toaster }) => {
                                 />
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.number || ' Not provided'}
+                                    {profileData.number || t('Not provided')}
                                 </div>
                             )}
                         </div>
@@ -325,13 +326,13 @@ const EditProfile = ({ loader, toaster }) => {
 
                     {!isEditing && (
                         <div className="mt-8">
-                            <h3 className="text-lg font-semibold mb-4 text-black">Change Password</h3>
+                            <h3 className="text-lg font-semibold mb-4 text-black">{t("Change Password")}</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                 <div className="mb-4">
-                                    <label className="block text-gray-700 mb-1">New Password</label>
+                                    <label className="block text-gray-700 mb-1">{t("New Password")}</label>
                                     <input
                                         className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                        placeholder="Enter New Password"
+                                        placeholder={t("Enter New Password")}
                                         type="password"
                                         name="password"
                                         value={profilePassword.password}
@@ -339,10 +340,10 @@ const EditProfile = ({ loader, toaster }) => {
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label className="block text-gray-700 mb-1">Confirm Password</label>
+                                    <label className="block text-gray-700 mb-1">{t("Confirm Password")}</label>
                                     <input
                                         className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                        placeholder="Confirm New Password"
+                                        placeholder={t("Confirm New Password")}
                                         type="password"
                                         name="confirmPassword"
                                         value={profilePassword.confirmPassword}
@@ -355,7 +356,7 @@ const EditProfile = ({ loader, toaster }) => {
                                     className="bg-custom-green rounded-lg text-white px-4 py-2.5 hover:bg-gray-800 transition mt-4"
                                     onClick={changePassword}
                                 >
-                                    Change Password
+                                    {t("Change Password")}
                                 </button>
                             </div>
                         </div>
