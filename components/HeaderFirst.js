@@ -128,7 +128,7 @@ const HeaderFirst = (props) => {
             <div className="container absolute xl:right-20 lg:right-12 top-22 px-4 py-2 flex justify-end items-center">
                 <div className="hidden lg:flex items-center space-x-2 mr-6">
                     <BiPhoneCall className="text-[#F38529] text-3xl" />
-                    <a href="tel:6393274099" className="text-custom-black cursor-pointer font-semibold">+(402) 54646</a>
+                    <a href="tel:832-230-9288" className="text-custom-black cursor-pointer font-semibold"> 832-230-9288</a>
 
                 </div>
                 <div className="hidden lg:flex rounded-lg">

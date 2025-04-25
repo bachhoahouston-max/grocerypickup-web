@@ -90,7 +90,7 @@ const Footer = () => {
                 </li>
                 <li className="flex items-center">
                   <MdEmail className="text-2xl mr-2" />
-                  <a className="text-[16px] md:text-[19px]" href="mailto:abc@zeeddo.com">abc@zeeddo.com</a>
+                  <a className="text-[16px] md:text-[19px]" href="mailto:contact@bachhoahouston.com">contact@bachhoahouston.com</a>
                 </li>
               </ul>
             </div>
