@@ -201,8 +201,8 @@ function Categories(props) {
                         </div>
 
                         <div className="md:hidden col-span-1 flex -pt-8">
-                            <button className="flex-row py-1 flex justify-between gap-48 mx-2">
-                                <p className="text-black text-[20px]">
+                            <button className="flex-row py-1 flex justify-between gap-50 mx-4">
+                                <p className="text-black text-[20px] w-24">
                                     {t("Categories")}
                                 </p>
                                 <IoFilterSharp className="text-black text-3xl" onClick={() => setOpen(true)} />

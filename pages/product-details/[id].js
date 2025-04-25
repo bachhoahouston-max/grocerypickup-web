@@ -339,7 +339,7 @@ function ProductDetails(props) {
                 </div>
 
                 <div className="flex text-gray-400 mt-1 mb-1 " >
-                  <p className="md:text-[18px] text-[14px]">Home</p>
+                  <p className="md:text-[18px] text-[14px]">{t("Home")}</p>
                   <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
                   <p className="md:text-[18px] text-[14px]">{productsId?.categoryName}</p>
                   <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
@@ -391,8 +391,6 @@ function ProductDetails(props) {
                               </span>
                             </p>
                           </div>
-
-
                         </div>
                       );
                     })}
@@ -415,25 +413,25 @@ function ProductDetails(props) {
                   <>
                     <div className="flex mt-5">
                       <div
-                        className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                        className="h-[42px] w-[44px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
                         onClick={handleDecreaseQty}
                       >
-                        <IoRemoveSharp className="h-[16px] w-[16px] text-white" />
+                        <IoRemoveSharp className="h-[24px] w-[24px] text-white" />
                       </div>
-                      <p className="text-black md:text-xl text-lg font-medium text-center px-3 border-y-2 border-y-gray-200">
+                      <p className="text-black md:text-xl text-lg font-medium text-center px-3 border-y-2 border-y-gray-200 py-1">
                         {availableQty}
                       </p>
                       <div
-                        className="h-[32px] w-[32px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                        className="h-[42px] w-[44px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                         onClick={handleIncreaseQty}
                       >
-                        <IoAddSharp className="h-[16px] w-[16px] text-white" />
+                        <IoAddSharp className="h-[24px] w-[24px] text-white" />
                       </div>
                     </div>
                   </>
                 ) : (
                   <button
-                    className="bg-custom-gold w-[96px] h-[32px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4"
+                    className="bg-custom-gold w-[136px] h-[42px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1"
                     onClick={handleAddToCart}
                   >
                     {t("ADD")}

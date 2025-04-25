@@ -26,7 +26,7 @@ import AddressInput from './addressInput';
 import { useTranslation } from "react-i18next";
 
 const Navbar = (props) => {
-    const  { t } = useTranslation()
+    const { t } = useTranslation()
     const router = useRouter();
     const [serchData, setSearchData] = useState("");
     const [productsList, setProductsList] = useState([]);
@@ -358,7 +358,7 @@ const Navbar = (props) => {
                     ],
                 },
             },
-           
+
             // location: {
             //     type: "Point",
             //     coordinates: [
@@ -469,132 +469,133 @@ const Navbar = (props) => {
                     )}
                 </div>
 
-
-                <div className="hidden md:flex items-center space-x-4 mr-20">
-                    {user?.token === undefined ? (
-                        <>
-                            <div className="text-white border-2 rounded-full w-[40px] h-[40px] cursor-pointer border-black flex justify-center items-center"
-                                onClick={() => router.push('/signIn')}>
-                                <IoPersonOutline className="text-black text-xl" />
-                            </div>
-                            <div className="text-black flex items-center w-20 cursor-pointer">
-                                <span onClick={() => router.push('/signIn')}> {t("Sign in")}</span>
-                            </div>
-                        </>
-                    ) : (
-                        <div
-                            className="bg-custom-green text-black h-[40px] w-[40px] rounded-full flex items-center justify-center cursor-pointer relative group"
-                            onClick={() => setShowHover(true)}
-                        >
-                            <p className="font-bold text-white text-base text-center capitalize">
-                                {user?.username?.charAt(0).toUpperCase() || "T"}
-                            </p>
-                            {showHover && (
-                                <div className="lg:absolute top-4 right-0 lg:min-w-[250px] group-hover:text-black hidden group-hover:lg:block hover:lg:block md:z-40">
-                                    <div className="bg-custom-green lg:shadow-inner z-10 rounded-md lg:mt-8 shadow-inner">
-                                        <ul>
-
-                                            <li className="px-3 shadow-inner py-2 flex justify-between">
-                                                <div
-                                                    className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
-                                                    onClick={() => { router.push("/Mybooking") }}
-                                                >
-                                                    {t("My Order")}
-                                                </div>
-                                                <IoIosArrowForward className="text-2xl text-white" />
-                                            </li>
-                                            <li className="px-3 shadow-inner py-2 flex justify-between">
-                                                <div
-                                                    className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
-                                                    onClick={() => { router.push("/Myhistory") }}
-                                                >
-                                                    {t("History")}
-                                                </div>
-                                                <IoIosArrowForward className="text-2xl text-white" />
-                                            </li>
-
-                                            <li className="px-3 shadow-inner py-2 flex justify-between">
-                                                <div
-                                                    className="block px-5 py-1 pl-0 text-white text-left font-semibold text-[16px]"
-                                                    onClick={() => { router.push("/editProfile") }}
-                                                >
-                                                    {t("Edit Profile")}
-                                                </div>
-                                                <IoIosArrowForward className="text-2xl text-white" />
-                                            </li>
-
-                                            <li className="px-3 shadow-inner py-2 flex justify-between">
-                                                <div
-                                                    onClick={() => {
-                                                        Swal.fire({
-                                                            text: t("Are you sure you want to logout?"),
-                                                            showCancelButton: true,
-                                                            confirmButtonText: t("Yes"),
-                                                            cancelButtonText: t("No"),
-                                                            confirmButtonColor: "#F38529",
-                                                            cancelButtonColor: "#F38529",
-                                                            customClass: {
-                                                                confirmButton: 'px-12 rounded-xl',
-                                                                cancelButton: 'px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none',
-                                                                title: 'text-[20px] text-black',
-                                                                actions: 'swal2-actions-no-hover',
-                                                                popup: 'rounded-[15px] shadow-custom-green'
-                                                            },
-                                                            buttonsStyling: true,
-                                                            reverseButtons: true,
-                                                            width: '320px'
-                                                        }).then(function (result) {
-                                                            if (result.isConfirmed) {
-                                                                setUser({});
-                                                                setShowHover(false);
-                                                                localStorage.removeItem("userDetail");
-                                                                localStorage.removeItem("token");
-                                                                router.push("/signIn");
-                                                            }
-                                                        });
-                                                    }}
-                                                    className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
-                                                >
-                                                    {t("Sign out")}
-                                                </div>
-                                                <IoIosArrowForward className="text-2xl text-white" />
-                                            </li>
-                                        </ul>
-                                    </div>
+                <div className="xl:mr-20 lg:mr-12  mr-2 flex">
+                    <div className="hidden md:flex items-center space-x-4 mr-4">
+                        {user?.token === undefined ? (
+                            <>
+                                <div className="text-white border-2 rounded-full w-[40px] h-[40px] cursor-pointer border-black flex justify-center items-center"
+                                    onClick={() => router.push('/signIn')}>
+                                    <IoPersonOutline className="text-black text-xl" />
                                 </div>
-                            )}
-                        </div>
-                    )}
-                </div>
+                                <div className="text-black flex items-center w-20 cursor-pointer">
+                                    <span onClick={() => router.push('/signIn')}> {t("Sign in")}</span>
+                                </div>
+                            </>
+                        ) : (
+                            <div
+                                className="bg-custom-green text-black h-[40px] w-[40px] rounded-full flex items-center justify-center cursor-pointer relative group"
+                                onClick={() => setShowHover(true)}
+                            >
+                                <p className="font-bold text-white text-base text-center capitalize">
+                                    {user?.username?.charAt(0).toUpperCase() || "T"}
+                                </p>
+                                {showHover && (
+                                    <div className="lg:absolute top-4 right-0 lg:min-w-[250px] group-hover:text-black hidden group-hover:lg:block hover:lg:block md:z-40">
+                                        <div className="bg-custom-green lg:shadow-inner z-10 rounded-md lg:mt-8 shadow-inner">
+                                            <ul>
 
-                {/* Lock and Heart Icons */}
-                <div className="flex items-center justify-end space-x-2">
-                    <div
-                        className="cursor-pointer md:flex hidden"
-                        onClick={() => {
-                            setOpenCart(true);
-                            setMobileMenu(!mobileMenu);
-                        }}
-                    >
+                                                <li className="px-3 shadow-inner py-2 flex justify-between">
+                                                    <div
+                                                        className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
+                                                        onClick={() => { router.push("/Mybooking") }}
+                                                    >
+                                                        {t("My Order")}
+                                                    </div>
+                                                    <IoIosArrowForward className="text-2xl text-white" />
+                                                </li>
+                                                <li className="px-3 shadow-inner py-2 flex justify-between">
+                                                    <div
+                                                        className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
+                                                        onClick={() => { router.push("/Myhistory") }}
+                                                    >
+                                                        {t("History")}
+                                                    </div>
+                                                    <IoIosArrowForward className="text-2xl text-white" />
+                                                </li>
 
-                        <BsCart2 className="relative md:text-3xl text-[#F38529] text-lg cursor-pointer" />
-                        {cartData.length > 0 && (
-                            <div className="absolute bg-[#F38529] text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11 md:right-13 right-11 md:text-[9px] text-[7px] ">
-                                {cartData.length}
+                                                <li className="px-3 shadow-inner py-2 flex justify-between">
+                                                    <div
+                                                        className="block px-5 py-1 pl-0 text-white text-left font-semibold text-[16px]"
+                                                        onClick={() => { router.push("/editProfile") }}
+                                                    >
+                                                        {t("Edit Profile")}
+                                                    </div>
+                                                    <IoIosArrowForward className="text-2xl text-white" />
+                                                </li>
+
+                                                <li className="px-3 shadow-inner py-2 flex justify-between">
+                                                    <div
+                                                        onClick={() => {
+                                                            Swal.fire({
+                                                                text: t("Are you sure you want to logout?"),
+                                                                showCancelButton: true,
+                                                                confirmButtonText: t("Yes"),
+                                                                cancelButtonText: t("No"),
+                                                                confirmButtonColor: "#F38529",
+                                                                cancelButtonColor: "#F38529",
+                                                                customClass: {
+                                                                    confirmButton: 'px-12 rounded-xl',
+                                                                    cancelButton: 'px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none',
+                                                                    title: 'text-[20px] text-black',
+                                                                    actions: 'swal2-actions-no-hover',
+                                                                    popup: 'rounded-[15px] shadow-custom-green'
+                                                                },
+                                                                buttonsStyling: true,
+                                                                reverseButtons: true,
+                                                                width: '320px'
+                                                            }).then(function (result) {
+                                                                if (result.isConfirmed) {
+                                                                    setUser({});
+                                                                    setShowHover(false);
+                                                                    localStorage.removeItem("userDetail");
+                                                                    localStorage.removeItem("token");
+                                                                    router.push("/signIn");
+                                                                }
+                                                            });
+                                                        }}
+                                                        className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
+                                                    >
+                                                        {t("Sign out")}
+                                                    </div>
+                                                    <IoIosArrowForward className="text-2xl text-white" />
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
 
-                    <div
-                        className="cursor-pointer"
-                        onClick={() => router.push("/Favourite")}
-                    >
-                        <CiHeart className="relative text-[#F38529] text-2xl md:text-3xl  cursor-pointer" />
-                        {Favorite.length > 0 && (
-                            <div className="absolute bg-[#F38529] text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11  md:text-[9px] text-[7px] right-4 ">
-                                {Favorite.length}
-                            </div>
-                        )}
+                    {/* Lock and Heart Icons */}
+                    <div className="flex items-center justify-end space-x-2">
+                        <div
+                            className="cursor-pointer md:flex hidden"
+                            onClick={() => {
+                                setOpenCart(true);
+                                setMobileMenu(!mobileMenu);
+                            }}
+                        >
+
+                            <BsCart2 className="relative md:text-3xl text-[#F38529] text-lg cursor-pointer" />
+                            {cartData.length > 0 && (
+                                <div className="absolute bg-[#F38529] text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11 md:right-13 right-11 md:text-[9px] text-[7px] ">
+                                    {cartData.length}
+                                </div>
+                            )}
+                        </div>
+
+                        <div
+                            className="cursor-pointer"
+                            onClick={() => router.push("/Favourite")}
+                        >
+                            <CiHeart className="relative text-[#F38529] text-2xl md:text-3xl  cursor-pointer" />
+                            {Favorite.length > 0 && (
+                                <div className="absolute bg-[#F38529] text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-11  md:text-[9px] text-[7px] right-4 ">
+                                    {Favorite.length}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </header>
@@ -655,7 +656,7 @@ const Navbar = (props) => {
                                     });
                                 }}
                             >
-                               {t("Empty Cart")} 
+                                {t("Empty Cart")}
                             </button>
                         )}
                     </div>
@@ -1000,7 +1001,7 @@ const Navbar = (props) => {
                                             </p>
                                         ) : (
                                             <p className="text-red-500 text-sm md:text-base md:mt-3 mt-2 w-full  md:text-center">
-                                               {t("Product is Not available for Shipment Delivery")}
+                                                {t("Product is Not available for Shipment Delivery")}
                                             </p>
                                         )
                                     )}
@@ -1034,10 +1035,10 @@ const Navbar = (props) => {
                             {mainTotal >= 35 && (
                                 <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                     <p className="text-black font-normal text-base">
-                                    {t("Delivery Fee")}
+                                        {t("Delivery Fee")}
                                     </p>
                                     <p className="text-green-500 font-normal text-base">
-                                       {t("Free")} 
+                                        {t("Free")}
                                     </p>
                                 </div>
                             )}
@@ -1047,7 +1048,7 @@ const Navbar = (props) => {
 
                             <div className="flex justify-between items-center w-full pt-5">
                                 <p className="text-custom-black font-normal text-base">
-                                   {t("Total Payable")} 
+                                    {t("Total Payable")}
                                 </p>
                                 <p className="text-custom-black font-medium text-base">
                                     ${mainTotal}
@@ -1075,7 +1076,7 @@ const Navbar = (props) => {
                                 }
                             }}
                         >
-                           {t("CONTINUE TO PAY")}  ${CartTotal}
+                            {t("CONTINUE TO PAY")}  ${CartTotal}
                         </button>
                     )}
                 </div>
