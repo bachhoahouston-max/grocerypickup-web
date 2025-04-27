@@ -579,7 +579,7 @@ const Navbar = (props) => {
 
                             <BsCart2 className="relative md:text-3xl text-[#F38529] text-lg cursor-pointer" />
                             {cartData.length > 0 && (
-                                <div className="absolute bg-[#F38529] text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-10 md:right-32 right-11 md:text-[9px] text-[7px] ">
+                                <div className="absolute bg-[#F38529] text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-10 lg:right-24 xl:right-32 right-11 md:text-[9px] text-[7px] ">
                                     {cartData.length}
                                 </div>
                             )}
@@ -591,7 +591,7 @@ const Navbar = (props) => {
                         >
                             <CiHeart className="relative text-[#F38529] text-2xl md:text-3xl  cursor-pointer" />
                             {Favorite.length > 0 && (
-                                <div className="absolute bg-[#F38529] text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-10  md:text-[9px] text-[7px] right-24 ">
+                                <div className="absolute bg-[#F38529] text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-10  md:text-[9px] text-[7px] lg:right-16 xl:right-24 right-6 ">
                                     {Favorite.length}
                                 </div>
                             )}
@@ -745,7 +745,7 @@ const Navbar = (props) => {
                             <div className="flex items-center justify-center">
                                 <div className="text-center">
                                     <h1 className="text-lg font-semibold mb-4">
-                                        {t("Select Date of Delivery")}"</h1>
+                                        {t("Select of Date Pick up")}</h1>
                                     <div className="relative inline-block">
                                         <input
                                             type="text"
@@ -875,7 +875,7 @@ const Navbar = (props) => {
                                     <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
                                 </div>
                                 <p className="text-black font-semibold text-[18px]">
-                                    {t("Delivery in 3 to 5 Working days")}
+                                    {t("Pick up in 2 Hours")}
                                 </p>
                             </div>
                         ) : (

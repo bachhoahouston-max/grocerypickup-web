@@ -11,11 +11,11 @@ import { useTranslation } from "react-i18next";
 
 
 const Footer = () => {
-   const { t } = useTranslation()
+  const { t } = useTranslation()
   const router = useRouter();
   return (
     <footer className="p-10 bg-custom-green text-black font-sans">
-      <div className="container mx-auto max-w-7xl">
+      <div className="container mx-auto xl:max-w-7xl border-b w-[90%] border-b-white pb-8">
         <div className="flex flex-col md:flex-row justify-between lg:gap-14 xl:gap-10">
           {/* Logo and Description */}
           <div className="w-full mb-6 md:mb-0">
@@ -46,11 +46,21 @@ const Footer = () => {
                 <FaYoutube />
               </a>
             </div>
+            <div className='mt-6 text-white'> <ul>
+              <li className="flex items-center mb-2">
+                <IoCall className="text-2xl mr-2" />
+                <a href="tel:6393274589" className="text-[16px] md:text-[19px]text-white cursor-pointer">+(402) 54646</a>
+              </li>
+              <li className="flex items-center">
+                <MdEmail className="text-2xl mr-2" />
+                <a className="text-[16px] md:text-[19px]" href="mailto:contact@bachhoahouston.com">contact@bachhoahouston.com</a>
+              </li>
+            </ul></div>
           </div>
-         
+
           <div className='flex flex-col md:flex-row w-full text-white'>
             {/* Useful Links */}
-            <div className="w-full md:w-1/2 mb-4 md:mb-0 max-w-2xl">
+            <div className="w-full md:w-1/3 mb-4 md:mb-0 ">
               <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">{t("Useful Links")}</h3>
               <ul>
                 <li className="md:pb-2 pb-1"><a className="text-[16px] md:text-[17px]" href="" onClick={() => router.push('/')}> {t("Home")}</a></li>
@@ -60,7 +70,7 @@ const Footer = () => {
             </div>
 
             {/* Help & Support */}
-            <div className="w-full md:w-1/2 mb-4 md:mb-0">
+            <div className="w-full md:w-1/3 mb-4 md:mb-0">
               <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">{t("Help & Support")}</h3>
               <ul>
                 <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/ReturnPolicy')}>{t("Return Policy")} </a></li>
@@ -68,20 +78,38 @@ const Footer = () => {
                 <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/DataPolicy')}>{t("Data Policy")} </a></li>
               </ul>
             </div>
-          </div>
+      
 
-          <div className='flex flex-col md:flex-row w-full text-white'>
+          
             {/* Other Links */}
-            <div className="w-full md:w-1/2 mb-4 md:mb-0">
+            <div className="w-full md:w-1/3 mb-4 md:mb-0">
               <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">{("Other Links")}</h3>
               <ul>
                 <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/Myhistory')}>{t("History")}</a></li>
                 <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/Mybooking')}>{t("My Order")}</a></li>
               </ul>
             </div>
+            </div>
+          
+        </div>
 
-            {/* Contact Us */}
-            <div className="w-full md:w-1/2 mb-4 md:mb-0">
+      </div>
+
+      <div className="flex justify-center pb-12 md:pb-6">
+        <div className=" border-white mt-4 text-[16px] pt-4 text-center text-white">
+          <p>{t("Copyright @GroceryStore 2025. All Rights Reserved")}.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;
+
+
+
+  {/* Contact Us */}
+            {/* <div className="w-full md:w-1/2 mb-4 md:mb-0">
               <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">{t("Contact Us")}</h3>
               <ul>
                 <li className="flex items-center mb-2">
@@ -93,19 +121,4 @@ const Footer = () => {
                   <a className="text-[16px] md:text-[19px]" href="mailto:contact@bachhoahouston.com">contact@bachhoahouston.com</a>
                 </li>
               </ul>
-            </div>
-          </div>
-          </div>
-       
-      </div>
-
-      <div className="flex justify-center pb-12 md:pb-6">
-        <div className="border-t w-[90%] border-white mt-6 text-[16px] pt-6 text-center text-white">
-          <p>{t("Copyright @GroceryStore 2025. All Rights Reserved")}.</p>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
-export default Footer;
+            </div> */}

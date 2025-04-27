@@ -70,24 +70,38 @@ const HeaderFirst = (props) => {
         }
     }
 
+    // Navigation handler function
+    const handleNavigation = (path, tab) => {
+        console.log(`Navigating to ${path}, setting tab to ${tab}`);
+        setSelectedTab(tab);
+        router.push(path);
+    };
+
     return (
-        <nav className="bg-white  border-t-1 border-[#F0F1F1]">
-            <div className="relative mt-2 container mx-auto px-4 py-2 flex justify-center items-center h-[">
+        <nav className="bg-white border-t-1 border-[#F0F1F1] relative">
+            <div className=" mt-2 mx-auto px-4 py-2 flex justify-center items-center ">
                 <div className="hidden flex-1 lg:flex justify-center space-x-6">
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'home' ? 'text-custom-green' : 'text-custom-black'}`}
-                        onClick={() => { router.push('/'); setSelectedTab('home'); }}
+                        onClick={(e) => { 
+                            e.preventDefault();
+                            handleNavigation('/', 'home');
+                         }}
                     >
-                        {t("Home")}</p>
+                        {("Home")}
+                    </p>
                     <div className="relative flex" ref={dropdownRef}>
                         <button
                             className={`text-base font-medium cursor-pointer inline-flex items-center ${selectedTab === 'AllCategory' ? 'text-custom-green' : 'text-custom-black'}`}
-                            onClick={() => { router.push('/AllCategory'); setSelectedTab('AllCategory'); }}
+                            onClick={(e) => { 
+                                e.preventDefault();
+                                handleNavigation('/AllCategory', 'AllCategory');
+                            }}
                         >
                            {t("Categories")} 
-
                         </button>
                         <IoIosArrowDown className="text-2xl cursor-pointer ml-1 text-black"
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 setDropdownOpen(prev => !prev); // Toggle 
                             }}
                         />
@@ -95,11 +109,15 @@ const HeaderFirst = (props) => {
                             <div className="absolute top-full left-0 mt-4 bg-custom-gold shadow-lg rounded-xl w-[241px] overflow-hidden z-20 pt-3 pb-4">
                                 {category.slice(0, 6).map((category, index) => (
                                     <div key={index} className='flex flex-col justify-between'>
-                                        <div className='flex flex-row justify-between' onClick={() => { router.push(`/categories/${category?.slug}`) }}>
-                                            <p
-                                                className="px-4 py-1.5 text-white text-[16px] cursor-pointer"
-
-                                            >
+                                        <div 
+                                            className='flex flex-row justify-between cursor-pointer' 
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                handleNavigation(`/categories/${category?.slug}`, 'category');
+                                            }}
+                                        >
+                                            <p className="px-4 py-1.5 text-white text-[16px]">
                                                 {category.name}
                                             </p>
                                             <IoIosArrowForward className='text-2xl mt-2 mr-1 text-white' />
@@ -108,7 +126,10 @@ const HeaderFirst = (props) => {
                                 ))}
                                 <p
                                     className="px-4 py-1.5 text-white text-[16px] cursor-pointer"
-                                    onClick={() => handleCategoryClick('/categories/all')}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleNavigation('/categories/all', 'allCategories');
+                                    }}
                                 >
                                    {t("See All Categories")} 
                                 </p>
@@ -116,29 +137,33 @@ const HeaderFirst = (props) => {
                         )}
                     </div>
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'AboutUs' ? 'text-custom-green' : 'text-custom-black'}`}
-                        onClick={() => { router.push('/AboutUs'); setSelectedTab('AboutUs'); }}>
+                        onClick={(e) => { 
+                            e.preventDefault();
+                            handleNavigation('/AboutUs', 'AboutUs');
+                        }}>
                         {t("About Us")}
                     </p>
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'Contact' ? 'text-custom-green' : 'text-custom-black'}`}
-                        onClick={() => { router.push('/ContactUs'); setSelectedTab('Contact'); }}>
+                        onClick={(e) => { 
+                            e.preventDefault();
+                            handleNavigation('/ContactUs', 'Contact');
+                        }}>
                        {t("Contact")} 
                     </p>
                 </div>
             </div>
-            <div className="container absolute xl:right-20 lg:right-12 top-22 px-4 py-2 flex justify-end items-center">
+            <div className="xl:right-20 lg:right-12  absolute top-2 px-4 py-2 flex justify-end items-center">
                 <div className="hidden lg:flex items-center space-x-2 mr-6">
                     <BiPhoneCall className="text-[#F38529] text-3xl" />
                     <a href="tel:832-230-9288" className="text-custom-black cursor-pointer font-semibold"> 832-230-9288</a>
-
                 </div>
                 <div className="hidden lg:flex rounded-lg">
-                    <select className="bg-white w-full  px-4 font-normal text-xs text-black outline-none" type="text" placeholder="English"
+                    <select className="bg-white w-full font-normal text-sm text-black outline-none cursor-pointer" 
                         value={lang}
                         onChange={(e) => handleClick(e.target.value)}
                     >
-                        <option value={"vi"}>Vitnamies</option>
+                        <option value={"vi"}>Vietnamese</option>
                         <option value={"en"}>English</option>
-
                     </select>
                 </div>
             </div>

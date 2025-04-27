@@ -230,7 +230,7 @@ export default function Home(props) {
         )}
       </div>
 
-      <div className="hidden md:flex flex-col container mx-auto bg-white max-w-7xl md:px-0 px-6">
+      {/* <div className="hidden md:flex flex-col container mx-auto bg-white max-w-7xl md:px-0 px-6">
         <div className="text-center mb-8 flex flex-col items-center justify-center">
           <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">{t("Categories")}</h1>
           <p className="text-gray-600 mt-4 w-full md:w-[50%] text-center text-[13px] md:text-[16px] italic">
@@ -281,7 +281,7 @@ export default function Home(props) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
 
       <div className="bg-white w-full">
