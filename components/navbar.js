@@ -775,7 +775,7 @@ const Navbar = (props) => {
                                         <span className="font-semibold text-[15px]">{t("Shipping")}</span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
-                                            {t("Delivery in 2 or 3 business days")}</span>
+                                            {t("Delivery in 3 or 5 business days")}</span>
                                     </label>
                                 </div>
                             </div>
@@ -920,7 +920,7 @@ const Navbar = (props) => {
                                 <p className="text-black font-semibold text-[18px]">
                                     {pickupOption === 'orderPickup' || pickupOption === 'driveUp'
                                         ? t("Pick up in 2 Hours")
-                                        : t("Delivery in 2 or 3 business days")}
+                                        : t("Delivery in 3 or 5 business days")}
                                 </p>
 
                             </div>
