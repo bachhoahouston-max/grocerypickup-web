@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { IoPersonOutline } from "react-icons/io5";
 import { CiHeart } from "react-icons/ci";
+import constant from "../services/constant"
 import { FiLock, FiShoppingCart, FiSearch } from "react-icons/fi";
 import { useRouter } from 'next/router';
 import { Drawer, Typography, IconButton, Button } from "@mui/material";
@@ -44,7 +45,6 @@ const Navbar = (props) => {
     const [showcart, setShowcart] = useState(false);
     const [Favorite, setFavorite] = useContext(favoriteProductContext);
     const [deliveryCharge, setDeliveryCharge] = useState(0);
-    const [deliveryPartnerTip, setDeliveryPartnerTip] = useState(0);
     const [mainTotal, setMainTotal] = useState(0);
     const [productList, SetProductList] = useState([]);
     const [productsId, setProductsId] = useState([]);
@@ -60,7 +60,6 @@ const Navbar = (props) => {
     const [date, setDate] = useState(null);
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
-    const [tax, setTax] = useState(false);
     const [allProduct, setAllProduct] = useState([]);
 
     const handleOptionChange = (event) => {
@@ -236,7 +235,11 @@ const Navbar = (props) => {
     };
 
     console.log(profileData)
+
+
     useEffect(() => {
+        setDeliveryCharge(CartTotal <= 35 ? 15 : 0);
+
         const sumWithInitial = cartData?.reduce(
             (accumulator, currentValue) =>
                 accumulator + Number(currentValue?.total || 0),
@@ -247,13 +250,11 @@ const Navbar = (props) => {
                 accumulator + Number(currentValue?.qty || 0),
             0
         );
-        // const tax = cartData.map((item)=> item.tax)
-        // console.log("tax",tax);
+
         setCartItem(sumWithInitial1);
         setCartTotal(sumWithInitial);
-        setTax()
-        setMainTotal(sumWithInitial + deliveryCharge + deliveryPartnerTip);
-    }, [cartData, openCart]);
+        setMainTotal(sumWithInitial + deliveryCharge);
+    }, [cartData, openCart, CartTotal]);
 
     const emptyCart = async () => {
         setCartData([]);
@@ -422,6 +423,42 @@ const Navbar = (props) => {
                 console.log(err);
             }
         );
+    };
+
+
+    const payment = (price, id) => {
+        const cur = {
+            "$": "USD",
+            "£": "GBP",
+            "€": "EUR"
+        }
+        
+        if (!user?._id) {
+            props.toaster({ type: "error", message: "Please login for Shopping" });
+        } else {
+            const data = {
+                price: price,
+                currency: "USD"
+            };
+            console.log(data);
+            props.loader(true);
+            Api("post", `poststripe`, data, router).then(
+                (res) => {
+                    props.loader(false);
+                    console.log("Payment called", res);
+                    setClientSecret(res.clientSecret);
+                    router.push(
+                        `/payment?clientSecret=${res.clientSecret}&price=${res.price}&planid=${id}&month=${month}&currency=${currency}`
+                    );
+                    setPrice(res.price);
+                },
+                (err) => {
+                    console.log(err);
+                    props.loader(false);
+                    props.toaster({ type: "error", message: err?.message });
+                }
+            );
+        }
     };
 
     return (
@@ -613,13 +650,13 @@ const Navbar = (props) => {
                             }}
                         >
                             <IoIosArrowBack className="md:w-[38px] w-[28px] md:h-[31px] h-[21px] text-black" />
-                            <p className="text-black md:text-[18px] text-[17px] font-bold">
+                            <p className="text-black md:text-[18px] text-[15px] font-bold">
                                 {t("Your Cart")}
                             </p>
                         </div>
                         {cartData.length > 0 && (
                             <button
-                                className="text-white font-bold bg-custom-green cursor-pointer text-[18px] rounded-[12px] px-4 py-3"
+                                className="text-white font-bold bg-custom-green cursor-pointer text-[15px] md:text-[18px] rounded-[12px] md:px-4 px-3 py-2 md:py-3"
                                 onClick={() => {
                                     const drawerElement = document.querySelector('.MuiDrawer-paper');
                                     Swal.fire({
@@ -676,7 +713,8 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="orderPickup" className="ml-2">
-                                        <span className="font-semibold text-[15px]">{t("Order Pickup")} </span>
+                                        <span className="font-semibold text-[15px]">
+                                            {t("In Store Pickup")} </span>
                                         <br />
                                         <span className="text-gray-500 text-[13px] w-full">
                                             {t("Pick it up inside the store")}</span>
@@ -730,10 +768,10 @@ const Navbar = (props) => {
                                         onChange={handleOptionChange}
                                     />
                                     <label htmlFor="localDelivery" className="ml-2">
-                                        <span className="font-semibold text-[15px]">{t("Shipment Delivery")}</span>
+                                        <span className="font-semibold text-[15px]">{t("Shipping")}</span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
-                                            {t("Delivery in 3 to 5 Working days")}</span>
+                                            {t("Delivery in 2 or 3 business days")}</span>
                                     </label>
                                 </div>
                             </div>
@@ -790,8 +828,8 @@ const Navbar = (props) => {
 
                     {cartData.length > 0 && (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') && (
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
-                            <div className="flex  items-center justify-center">
-                                <div className="text-center md:grid-cols-3 grid-cols-1">
+                            <div className="flex items-center justify-center w-full">
+                                <div className="relative md:grid-cols-2 grid-cols-1 ">
                                     <h1 className="text-lg font-semibold mb-4">
                                         {t("Delivery Info")}</h1>
                                     {pickupOption === 'localDelivery' && (
@@ -800,7 +838,7 @@ const Navbar = (props) => {
                                                 type="text"
                                                 value={localAddress.dateOfDelivery ? formatDate(localAddress.dateOfDelivery) : t("Select date")}
                                                 placeholder={t("Select date")}
-                                                className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
+                                                className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
                                                 readOnly
                                                 required
                                                 onClick={handleIconClick}
@@ -827,29 +865,29 @@ const Navbar = (props) => {
                                     <input
                                         type="text"
                                         name="name"
-                                        placeholder="Name"
+                                        placeholder={t("First Name")}
                                         value={localAddress.name}
                                         onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
+                                        className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
                                         required
                                     />
                                     <input
                                         type="text"
                                         name="lastname"
-                                        placeholder="Last Name"
+                                        placeholder={t("Last Name")}
                                         value={localAddress.lastname}
                                         onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
+                                        className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
                                         required
                                     />
 
                                     <input
                                         type="text"
                                         name="phoneNumber"
-                                        placeholder="Phone Number"
+                                        placeholder={t("Phone Number")}
                                         value={localAddress.phoneNumber}
                                         onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1"
+                                        className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
                                         required
                                     />
 
@@ -858,9 +896,10 @@ const Navbar = (props) => {
                                         profileData={localAddress}
                                         value={localAddress.address}
                                         // defaultvalue={profileData.address}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 !z-[999999999]"
+                                        className=" m-1 border rounded-lg py-2 pl-2 md:pl-4 md:pr-2 pr-7 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  !z-[999999999] text-xs md:text-sm md:w-[608px] w-[295px]"
                                         required
                                     />
+
 
                                 </div>
                             </div>
@@ -875,8 +914,11 @@ const Navbar = (props) => {
                                     <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
                                 </div>
                                 <p className="text-black font-semibold text-[18px]">
-                                    {t("Pick up in 2 Hours")}
+                                    {pickupOption === 'orderPickup' || pickupOption === 'driveUp'
+                                        ? t("Pick up in 2 Hours")
+                                        : t("Delivery in 2 or 3 business days")}
                                 </p>
+
                             </div>
                         ) : (
                             <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
@@ -919,10 +961,10 @@ const Navbar = (props) => {
                                         </p>
                                         <p className="text-custom-newGrayColors font-normal text-sm pt-2">
                                             <span className="pl-3">
-                                                ${(item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2)}
+                                                {constant.currency}{(item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2)}
                                             </span>{" "}
                                             <span className="line-through">
-                                                ${(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
+                                                {constant.currency}{(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
                                             </span>
                                         </p>
                                     </div>
@@ -973,15 +1015,16 @@ const Navbar = (props) => {
                                         >
                                             <IoAddSharp className="h-[30px] w-[30px] text-white" />
                                         </div>
+
                                     </div>
                                 </div>
 
                                 {/* Price and close button for desktop */}
                                 <div className="md:flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-5 hidden ">
                                     <p className="text-custom-purple font-semibold text-base">
-                                        ${item?.total}
+                                        {constant.currency}{item?.total}
                                         <del className="text-custom-red font-normal text-xs ml-2">
-                                            ${(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
+                                            {constant.currency}{(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
                                         </del>
                                     </p>
                                     <IoMdClose
@@ -1017,22 +1060,22 @@ const Navbar = (props) => {
                                     {t("Item Total")}
                                 </p>
                                 <p className="text-custom-black font-normal text-base">
-                                    ${CartTotal}
+                                    {constant.currency}{CartTotal}
                                 </p>
                             </div>
 
-                            {mainTotal < 35 && (
+                            {CartTotal < 35 && (
                                 <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                     <p className="text-black font-normal text-base">
                                         {t("Delivery Fee")}
                                     </p>
                                     <p className="text-custom-black font-normal text-base">
-                                        ${deliveryCharge}
+                                        {constant.currency}{deliveryCharge}
                                     </p>
                                 </div>
                             )}
 
-                            {mainTotal >= 35 && (
+                            {CartTotal >= 35 && (
                                 <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                     <p className="text-black font-normal text-base">
                                         {t("Delivery Fee")}
@@ -1051,7 +1094,7 @@ const Navbar = (props) => {
                                     {t("Total Payable")}
                                 </p>
                                 <p className="text-custom-black font-medium text-base">
-                                    ${mainTotal}
+                                    {constant.currency}{mainTotal}
                                 </p>
                             </div> <div className="flex justify-between items-center w-full pt-1">
                                 <p className="text-red-500 font-normal text-base">
@@ -1073,10 +1116,11 @@ const Navbar = (props) => {
                                     return;
                                 } else {
                                     createProductRquest();
+                                    // payment(CartTotal)
                                 }
                             }}
                         >
-                            {t("CONTINUE TO PAY")}  ${CartTotal}
+                            {t("CONTINUE TO PAY")}  {constant.currency}{CartTotal}
                         </button>
                     )}
                 </div>

@@ -23,6 +23,7 @@ function App({ Component, pageProps }) {
   const [openCart, setOpenCart] = useState(false);
   const [cartData, setCartData] = useState([]);
   const [Favorite, setFavorite] = useState([]);
+  
   const [globallang, setgloballang] = useState('es');
   const { i18n } = useTranslation();
   const { t } = useTranslation();

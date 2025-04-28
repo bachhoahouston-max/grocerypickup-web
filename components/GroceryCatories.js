@@ -10,6 +10,8 @@ import { Api } from '@/services/service';
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useTranslation } from 'react-i18next';
+import constant from '@/services/constant';
+
 const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     const router = useRouter();
     const {t} = useTranslation();
@@ -151,13 +153,13 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     return (
         <div
             key={i}
-            className="bg-white w-full max-w-[350px] h-full md:h-[389px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 border items-center flex flex-col mt-2 relative"
+            className="bg-white w-full max-w-[350px] h-full md:h-[389px] rounded-lg md:p-2 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative"
         >
             <div className='relative'>
                 <img
                     src={item.varients[0].image[0]}
                     alt="Product image"
-                    className="w-full p-1 md:h-44 h-36 object-cover rounded cursor-pointer"
+                    className="w-full p-1 md:h-44 h-36 object-cover rounded-xl cursor-pointer"
                     onClick={() => {
                         router.push(url);
                     }}
@@ -182,9 +184,9 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
                 <p className="text-custom-gold text-lg md:text-xl font-semibold">
-                  ${(item?.price_slot[0]?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
+                  {constant.currency}{(item?.price_slot[0]?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
                     <del className="font-medium text-sm text-custom-black ml-2">
-                    ${(item?.price_slot[0]?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
+                    {constant.currency}{(item?.price_slot[0]?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
                         
                     </del>
                 </p>

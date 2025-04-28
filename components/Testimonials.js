@@ -1,7 +1,7 @@
 import React from 'react';
 import { CiStar } from "react-icons/ci";
 import { useTranslation } from "react-i18next";
-
+import { FaStar } from "react-icons/fa6";
 const Testimonials = () => {
      const { t } = useTranslation()
     return (
@@ -29,11 +29,11 @@ const Testimonials = () => {
                             {t("The quality and freshness of the groceries are top-notch. I love how easy it is to order and pick up a real time-saver for busy people like me")}
                         </p>
                         <div className="flex justify-center mb-4">
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
                         </div>
                     </div>
 
@@ -50,11 +50,11 @@ const Testimonials = () => {
                             {t("This service has changed how I shop. Everything is well-organized, on time, and perfectly packed. Highly recommend to anyone looking for convenience and quality")}
                         </p>
                         <div className="flex justify-center mb-4">
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                        <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
                         </div>
                     </div>
 
@@ -71,11 +71,9 @@ const Testimonials = () => {
                             {t("From the intuitive website to the freshness of each item — every part of the experience feels premium. It's reliable, efficient, and customer-focused")}.
                         </p>
                         <div className="flex justify-center mb-4">
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
-                            <CiStar className="text-yellow-500" />
+                            <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                            <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
+                            <FaStar className="text-[#F38529] md:text-[17px] text-sm" />                            <FaStar className="text-[#F38529] md:text-[17px] text-sm" />                            <FaStar className="text-[#F38529] md:text-[17px] text-sm" />
                         </div>
                     </div>
                     

@@ -87,7 +87,7 @@ const HeaderFirst = (props) => {
                             handleNavigation('/', 'home');
                          }}
                     >
-                        {("Home")}
+                        {t("Home")}
                     </p>
                     <div className="relative flex" ref={dropdownRef}>
                         <button
@@ -155,7 +155,7 @@ const HeaderFirst = (props) => {
             <div className="xl:right-20 lg:right-12  absolute top-2 px-4 py-2 flex justify-end items-center">
                 <div className="hidden lg:flex items-center space-x-2 mr-6">
                     <BiPhoneCall className="text-[#F38529] text-3xl" />
-                    <a href="tel:832-230-9288" className="text-custom-black cursor-pointer font-semibold"> 832-230-9288</a>
+                    <a href="tel:832-230-9288" className="text-custom-black cursor-pointer font-semibold">832-230-9288</a>
                 </div>
                 <div className="hidden lg:flex rounded-lg">
                     <select className="bg-white w-full font-normal text-sm text-black outline-none cursor-pointer" 

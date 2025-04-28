@@ -40,7 +40,7 @@
   "Select Date of Delivery": "Chọn ngày giao hàng",
   "Select date": "Chọn ngày",
   "Delivery Info": "Thông tin giao hàng",
-  "Delivery in 3 to 5 Working days": "Giao hàng trong vòng 3 đến 5 ngày làm việc",
+  "Delivery in 2 or 3 business days": "Giao hàng trong vòng 2 hoặc 3 ngày làm việc",
   "Your cart is empty": "Giỏ hàng của bạn trống",
   "Browse Products": "Duyệt sản phẩm",
   "Product is available for Shipment Delivery": "Sản phẩm có sẵn để Giao hàng",
@@ -189,13 +189,19 @@
   "Ratings & Reviews":"Xếp hạng & Đánh giá",
   "Add":"Thêm vào",
   "Select of Date Pick up":"Chọn ngày nhận hàng",
-  "Pick up in 2 Hours":"Nhận hàng trong vòng 2 giờ"
+  "Pick up in 2 Hours":"Nhận hàng trong vòng 2 giờ",
+  "Phone Number":"Số điện thoại",
+  "In Store Pickup":"Nhận hàng tại cửa hàng",
+  "Shipping":"vận chuyển",
+  "Favorite":"Yêu thích",
+  "Quickly access your favorite items for easy reordering":"Truy cập nhanh vào các mục yêu thích của bạn để sắp xếp lại dễ dàng",
+  "No favourites product available":"Không có sản phẩm yêu thích nào có sẵn",
+  "Shop Faster With Grocery App":"Mua sắm nhanh hơn với ứng dụng Grocery",
+  "Available on both IOS & Android":"Có sẵn trên cả IOS và Android",
+  "Cart":"Xe đẩy",
+  "Account":"Tài khoản"
   
-
-
-
-
-
+  
 
 
 

@@ -49,7 +49,7 @@ const Footer = () => {
             <div className='mt-6 text-white'> <ul>
               <li className="flex items-center mb-2">
                 <IoCall className="text-2xl mr-2" />
-                <a href="tel:6393274589" className="text-[16px] md:text-[19px]text-white cursor-pointer">+(402) 54646</a>
+                <a href="tel:832-230-9288" className="text-[16px] md:text-[19px]text-white cursor-pointer">832-230-9288</a>
               </li>
               <li className="flex items-center">
                 <MdEmail className="text-2xl mr-2" />

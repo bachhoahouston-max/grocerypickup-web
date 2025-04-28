@@ -18,6 +18,7 @@ import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
 import moment from 'moment';
 import { useTranslation } from "react-i18next";
+import constant from "@/services/constant";
 
 function ProductDetails(props) {
   const {t} = useTranslation()
@@ -299,7 +300,7 @@ function ProductDetails(props) {
   return (
     <div className="bg-white w-full">
       <section className="bg-white w-full md:pt-10 pt-14 md:pb-5 pb-5 ">
-        <div className="max-w-7xl  mx-auto w-full md:px-0 px-5">
+        <div className="max-w-7xl  mx-auto w-full md:px-4 px-5">
           <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
             <div className="border border-black p-[10px] rounded-[15px]">
               <Carousel
@@ -371,9 +372,9 @@ function ProductDetails(props) {
                           >
                             <img
                               className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
-                              src="/Star-1.png"
+                              src="/Star.png"
                             />
-                            <p className="text-black text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
+                            <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
                               {percentageDifference?.toFixed(2)}%<br />
                               {t("off")}
                             </p>
@@ -382,12 +383,12 @@ function ProductDetails(props) {
                             </p>
                             <p className="text-black font-normal text-base pt-1">
 
-                              ${(data?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}
+                            {constant.currency}{(data?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}
                             </p>
                             <p className="text-custom-black font-semibold text-sm pt-2">
 
                               <span className="text-black font-normal line-through">
-                                ${(data?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}
+                              {constant.currency}{(data?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}
                               </span>
                             </p>
                           </div>
@@ -398,9 +399,9 @@ function ProductDetails(props) {
 
                 <div className="pt-3 mt-2 px-4  border-custom-darkPurple">
                   <p className="text-custom-gold font-semibold text-lg">
-                    ${(selectedPrice?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}{" "}
+                  {constant.currency}{(selectedPrice?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}{" "}
                     <span className="text-custom-black text-sm font-normal line-through">
-                      {(selectedPrice?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}{" "}
+                    {constant.currency}{(selectedPrice?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}{" "}
                     </span>{" "}
                     <span className="text-sm text-custom-black">
 
@@ -462,7 +463,7 @@ function ProductDetails(props) {
                 {t("About Product")}
               </p>
               <p className="text-black font-medium md:text-xl text-base pt-2">
-                Description :{" "}
+                {t("Description")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
                   {productsId?.long_description}
                 </span>

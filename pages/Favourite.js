@@ -3,9 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import GroceryCategories from "@/components/GroceryCatories";
 import ShopFasterTropicana from "@/components/ShopFasterMarketplace"
-
+import { useTranslation } from "react-i18next";
 function Favourite(props) {
   const router = useRouter();
+  const {t} = useTranslation()
   const [favouriteList, setFavouriteList] = useState([]);
 
   useEffect(() => {
@@ -32,14 +33,14 @@ function Favourite(props) {
       <div className="mx-auto max-w-7xl py-12">
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-center text-[35px] md:text-[45px] font-semibold mb-2 text-black">
-            My
+            {t("My")}
             <span className="ml-2 text-[35px] md:text-[45px] font-semibold mb-4 text-custom-green">
-              Favorite
+              {t("Favorite")}
             </span>
           </h1>
           <p className="md:px-0  px-12 text-center  text-[16px] mb-6  w-full md:w-[40%] text-black">
             {" "}
-            Quickly access your favorite items for easy reordering.
+            {t("Quickly access your favorite items for easy reordering")}.
           </p>
         </div>
         <div className="grid md:grid-cols-5 grid-cols-2 md:px-0 px-4 w-full md:gap-4 gap-2">
@@ -55,7 +56,8 @@ function Favourite(props) {
               </div>
             ))) : (
               <div className='flex justify-center items-center col-span-10 h-[200px] md:h-[300px]'>
-                <p className='text-black font-semibold text-xl md:text-2xl text-center'>No favourites product available</p>
+                <p className='text-black font-semibold text-xl md:text-2xl text-center'>
+                  {t("No favourites product available")}</p>
               </div>
             )
           }

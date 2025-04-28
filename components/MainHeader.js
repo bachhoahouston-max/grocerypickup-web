@@ -14,7 +14,7 @@ function MainHeader(props) {
                     <p className="text-white mb-4 mt-6 md:mt-0 md:mb-12 font-semibold text-[13px] md:text-[15px] text-center md:text-start">
                         <span className="text-white font-semibold">100%</span> {t("Organic Fruits")}
                     </p>
-                    <h1 className="text-center md:text-start text-2xl md:text-4xl lg:text-[55px] font-bold text-custom-purple leading-tight md:leading-[60px] text-white">
+                    <h1 className="text-center md:text-start text-2xl md:text-4xl lg:text-[44px]  xl:text-[55px] font-bold text-custom-purple leading-tight md:leading-[60px] text-white w-full">
                         {t("Explore fresh")} <br /> {t("juicy Fruits")}.
                     </h1>
                     <p className="text-white text-center md:text-start font-medium text-[13px] md:text-[15px] mt-4 italic md:mt-12 max-w-md w-[90%]">
