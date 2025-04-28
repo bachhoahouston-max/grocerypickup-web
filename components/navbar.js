@@ -1121,8 +1121,8 @@ const Navbar = (props) => {
                                     });
                                     return;
                                 } else {
-                                    // createProductRquest();
-                                    payment()
+                                    createProductRquest();
+                                    // payment()
                                 }
                             }}
                         >
