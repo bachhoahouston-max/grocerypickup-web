@@ -14,14 +14,14 @@ import constant from '@/services/constant';
 
 const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     const router = useRouter();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const [cartData, setCartData] = useContext(cartContext);
     const [openCart, setOpenCart] = useContext(openCartContext);
     const [productsId, setProductsId] = useState([]);
     const [user] = useContext(userContext);
     const [isFavorite, setIsFavorite] = useState(false);
     const [Favorite, setFavorite] = useContext(favoriteProductContext);
-    const [availableQty,setAvailableQty] = useState(1);
+    const [availableQty, setAvailableQty] = useState(1);
 
     const handleAddToCart = () => {
         setCartData((prevCartData) => {
@@ -47,26 +47,26 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         toaster({ type: "success", message: "Product added to cart" });
     };
 
-    const handleRemoveFromCart = () => {
-        let updatedCart = [...cartData];
-        const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
-        const price = parseFloat(item?.price_slot[0]?.our_price);
+    // const handleRemoveFromCart = () => {
+    //     let updatedCart = [...cartData];
+    //     const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
+    //     const price = parseFloat(item?.price_slot[0]?.our_price);
 
-        if (existingItemIndex !== -1) {
-            const nextState = produce(updatedCart, (draft) => {
-                if (draft[existingItemIndex].qty > 1) {
-                    draft[existingItemIndex].qty -= 1;
-                    draft[existingItemIndex].total = (price * draft[existingItemIndex].qty).toFixed(2);
-                } else {
-                    draft.splice(existingItemIndex, 1);
-                }
-            });
-            updatedCart = nextState;
-        }
+    //     if (existingItemIndex !== -1) {
+    //         const nextState = produce(updatedCart, (draft) => {
+    //             if (draft[existingItemIndex].qty > 1) {
+    //                 draft[existingItemIndex].qty -= 1;
+    //                 draft[existingItemIndex].total = (price * draft[existingItemIndex].qty).toFixed(2);
+    //             } else {
+    //                 draft.splice(existingItemIndex, 1);
+    //             }
+    //         });
+    //         updatedCart = nextState;
+    //     }
 
-        setCartData(updatedCart);
-        localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-    };
+    //     setCartData(updatedCart);
+    //     localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+    // };
 
     useEffect(() => {
         if (user && user.token) {
@@ -184,10 +184,10 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
                 <p className="text-custom-gold text-lg md:text-xl font-semibold">
-                  {constant.currency}{(item?.price_slot[0]?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0) }
+                    {constant.currency}{(item?.price_slot[0]?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
                     <del className="font-medium text-sm text-custom-black ml-2">
-                    {constant.currency}{(item?.price_slot[0]?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
-                        
+                        {constant.currency}{(item?.price_slot[0]?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
+
                     </del>
                 </p>
             </div>
@@ -195,43 +195,36 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             {itemQuantity > 0 ? (
                 <div className="bg-gray-100 w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
                     <div
-                        className=" bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
+                        className="bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
                         onClick={() => {
-                            if (availableQty > 1) {
-                              const updatedCart = cartData.map((cartItem) =>
-                                cartItem._id === item._id
-                                  ? {
-                                      ...cartItem,
-                                      qty: cartItem.qty - 1,
-                                      total: (
-                                        (cartItem.price || 0) *
-                                        (cartItem.qty - 1)
-                                      ).toFixed(2),
-                                    }
-                                  : cartItem
-                              );
-            
-                              setCartData(updatedCart);
-                              localStorage.setItem(
-                                "addCartDetail",
-                                JSON.stringify(updatedCart)
-                              );
-                            } else {
-                              const updatedCart = cartData.filter(
-                                (cartItem) => cartItem._id !== item._id
-                              );
-                              setCartData(updatedCart);
-                              localStorage.setItem(
-                                "addCartDetail",
-                                JSON.stringify(updatedCart)
-                              );
-    
-                              setAvailableQty(0);
+                            const currentItem = cartData.find((cartItem) => cartItem._id === item._id);
+
+                            if (currentItem && currentItem.qty > 1) {
+                                const updatedCart = cartData.map((cartItem) =>
+                                    cartItem._id === item._id
+                                        ? {
+                                            ...cartItem,
+                                            qty: cartItem.qty - 1,
+                                            total: (
+                                                (cartItem.price || 0) *
+                                                (cartItem.qty - 1)
+                                            ).toFixed(2),
+                                        }
+                                        : cartItem
+                                );
+
+                                setCartData(updatedCart);
+                                localStorage.setItem(
+                                    "addCartDetail",
+                                    JSON.stringify(updatedCart)
+                                );
                             }
-                          }}
+                        }}
                     >
                         <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
                     </div>
+
+
                     <p className="text-black md:text-xl text-lg font-medium text-center mx-3 ">
                         {itemQuantity}
                     </p>
@@ -239,24 +232,24 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                         className="md:px-2 px-1 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                         onClick={() => {
                             const updatedCart = cartData.map((cartItem) =>
-                              cartItem._id === item._id
-                                ? {
-                                    ...cartItem,
-                                    qty: cartItem.qty + 1,
-                                    total: (
-                                      (cartItem.price || 0) *
-                                      (cartItem.qty + 1)
-                                    ).toFixed(2),
-                                  }
-                                : cartItem
+                                cartItem._id === item._id
+                                    ? {
+                                        ...cartItem,
+                                        qty: cartItem.qty + 1,
+                                        total: (
+                                            (cartItem.price || 0) *
+                                            (cartItem.qty + 1)
+                                        ).toFixed(2),
+                                    }
+                                    : cartItem
                             );
-            
+
                             setCartData(updatedCart);
                             localStorage.setItem(
-                              "addCartDetail",
-                              JSON.stringify(updatedCart)
+                                "addCartDetail",
+                                JSON.stringify(updatedCart)
                             );
-                          }}
+                        }}
                     >
                         <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
                     </div>

@@ -33,10 +33,8 @@ const Navbar = (props) => {
     const [productsList, setProductsList] = useState([]);
     const inputRef1 = useRef(null);
     const inputRef2 = useRef(null);
-    const [showCategory1, setShowCategory1] = useState(false);
     const [showHover, setShowHover] = useState(true);
     const [mobileMenu, setMobileMenu] = useState(false);
-    const [noProductsFound, setNoProductsFound] = useState(false);
     const [user, setUser] = useContext(userContext);
     const [CartTotal, setCartTotal] = useState(0);
     const [openCart, setOpenCart] = useContext(openCartContext);
@@ -49,6 +47,7 @@ const Navbar = (props) => {
     const [productList, SetProductList] = useState([]);
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
+
     const [profileData, setProfileData] = useState({
         username: '',
         mobile: '',
@@ -61,6 +60,7 @@ const Navbar = (props) => {
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
     const [allProduct, setAllProduct] = useState([]);
+    const [clientSecret,setClientSecret] = useState([]);
 
     const handleOptionChange = (event) => {
         setPickupOption(event.target.value);
@@ -238,8 +238,6 @@ const Navbar = (props) => {
 
 
     useEffect(() => {
-        setDeliveryCharge(CartTotal <= 35 ? 15 : 0);
-
         const sumWithInitial = cartData?.reduce(
             (accumulator, currentValue) =>
                 accumulator + Number(currentValue?.total || 0),
@@ -250,12 +248,18 @@ const Navbar = (props) => {
                 accumulator + Number(currentValue?.qty || 0),
             0
         );
-
+    
         setCartItem(sumWithInitial1);
         setCartTotal(sumWithInitial);
-        setMainTotal(sumWithInitial + deliveryCharge);
-    }, [cartData, openCart, CartTotal]);
-
+    
+        // Delivery charge condition: only add $15 if total <= 35
+        const delivery = sumWithInitial <= 35 ? 15 : 0;
+        setDeliveryCharge(delivery);
+    
+        // Apply delivery conditionally to main total
+        setMainTotal(sumWithInitial + delivery);
+    }, [cartData, openCart]);
+    
     const emptyCart = async () => {
         setCartData([]);
         setDate([])
@@ -426,39 +430,39 @@ const Navbar = (props) => {
     };
 
 
-    const payment = (price, id) => {
+    const payment = () => {
         const cur = {
             "$": "USD",
             "£": "GBP",
             "€": "EUR"
-        }
-        
+        };
+    
         if (!user?._id) {
             props.toaster({ type: "error", message: "Please login for Shopping" });
-        } else {
-            const data = {
-                price: price,
-                currency: "USD"
-            };
-            console.log(data);
-            props.loader(true);
-            Api("post", `poststripe`, data, router).then(
-                (res) => {
-                    props.loader(false);
-                    console.log("Payment called", res);
-                    setClientSecret(res.clientSecret);
-                    router.push(
-                        `/payment?clientSecret=${res.clientSecret}&price=${res.price}&planid=${id}&month=${month}&currency=${currency}`
-                    );
-                    setPrice(res.price);
-                },
-                (err) => {
-                    console.log(err);
-                    props.loader(false);
-                    props.toaster({ type: "error", message: err?.message });
-                }
-            );
+            return; // Early return to prevent further execution
         }
+    
+        const data = {
+            price: CartTotal.toFixed(2),
+            currency: "USD" // Consider making this dynamic
+        };
+    
+        console.log(data);
+        props.loader(true);
+    
+        Api("post", `poststripe`, data, router).then(
+            (res) => {
+                props.loader(false);
+                console.log("Payment called", res);
+                setClientSecret(res.clientSecret);
+                router.push(`/payment?clientSecret=${res.clientSecret}&price=${CartTotal}`);
+            },
+            (err) => {
+                console.error(err); // Use console.error for errors
+                props.loader(false);
+                props.toaster({ type: "error", message: err?.message || "An error occurred" });
+            }
+        );
     };
 
     return (
@@ -1006,8 +1010,10 @@ const Navbar = (props) => {
                                                 const nextState = produce(cartData, (draft) => {
                                                     draft[i].qty += 1;
                                                     const price = parseFloat(draft[i]?.price_slot?.our_price);
-                                                    const tax = draft[i]?.tax ? draft[i].tax / 100 : 0;
+                                                    const tax = draft[i]?.tax ? draft[i].tax / 100 : 0; 
                                                     draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(1);
+                                                    draft[i].total += draft[i].total <= 35 ? deliveryCharge : 0;
+
                                                 });
                                                 setCartData(nextState);
                                                 localStorage.setItem("addCartDetail", JSON.stringify(nextState));
@@ -1115,8 +1121,8 @@ const Navbar = (props) => {
                                     });
                                     return;
                                 } else {
-                                    createProductRquest();
-                                    // payment(CartTotal)
+                                    // createProductRquest();
+                                    payment()
                                 }
                             }}
                         >

@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { Api } from "@/services/service";
+import constant from "@/services/constant";
 import { useRouter } from "next/router";
 import {
   Elements,
@@ -14,7 +15,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CheckoutForm } from "@/components/Checkout/stripe"
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY);
 
-// const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Payment(props) {
   const router = useRouter();
@@ -48,12 +49,14 @@ export default function Payment(props) {
   //       }
   //     );
   //   };
+
   const appearance = {
     theme: "stripe",
     // theme: "default",
     // layout: "tabs",
     // paymentMethodOrder: ["apple_pay", "google_pay", "card"],
   };
+
   const options = {
     clientSecret,
     appearance,
@@ -66,15 +69,13 @@ export default function Payment(props) {
     <div className="w-full ">
       {clientSecret && (
         <div>
-
           <Elements options={options} stripe={stripePromise} key={clientSecret}>
-
             <CheckoutForm
-              price={price}
+              price={props.price.toFixed(2)}
               loader={props.loader}
-              currency={currency}
-              planid={planid}
-              month={month}
+              clientSecret={clientSecret}
+              currency={constant.currency}
+              // url={`cart`}
             />
           </Elements>
         </div>
