@@ -14,7 +14,8 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 import CheckoutForm  from "@/components/Checkout/stripe"
 import { useEffect } from "react";
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY);
+
+const stripePromise = loadStripe("pk_test_51RJ8vERoENQzVclyyZC2YrXTIvGYvx2V8NR88vGDNjqbpBTaar4lovnanf5Df38kC9rzChaYGNAf3PjwTaHL8plP00QaOyY60A");
 
 stripePromise.then((stripe) => console.log("Stripe loaded:", stripe));
 
