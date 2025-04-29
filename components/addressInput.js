@@ -82,7 +82,7 @@ const AddressInput = ({ profileData, setProfileData, className ,value}) => {
           onChange={handleChange}
           required
         />
-        <IoSearch className='absolute md:right-8 right-2 top-[240px] md:top-[150px]'/>
+        <IoSearch className='absolute md:right-7 right-2 top-[287px] md:top-[198px]'/>
         </div>
       </Autocomplete>
     </div>

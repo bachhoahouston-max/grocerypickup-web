@@ -4,11 +4,29 @@ import { userContext } from './_app';
 import { PiSignOutFill } from 'react-icons/pi'
 import Swal from "sweetalert2";
 import EditProfile from './editProfile';
+import { useTranslation } from "react-i18next";
+import { languageContext } from "@/pages/_app";
 
 function Account(props) {
     const router = useRouter();
     const [user, setUser] = useContext(userContext);
-   
+       const [lang, setLang] = useState(null);
+       const [globallang, setgloballang] = useContext(languageContext);
+       const { i18n } = useTranslation();
+       const { t } = useTranslation();
+
+       function handleClick(idx) {
+        try {
+            setLang(idx);
+            const language = idx || "vi";
+            console.log(language);
+            i18n.changeLanguage(language);
+            setgloballang(language);
+            localStorage.setItem("LANGUAGE", language);
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
 
     return (
         <div className={`w-full px-2 md:mt-8 mt-9 pb-4 `}>
@@ -80,6 +98,15 @@ function Account(props) {
 
                     </div>
                 )}
+                <div className="flex rounded-lg">
+                    <select className="bg-white border-1 py-1.5 px-1.5 w-full font-normal text-sm text-black outline-none cursor-pointer" 
+                        value={lang}
+                        onChange={(e) => handleClick(e.target.value)}
+                    >
+                        <option value={"vi"}>Vietnamese</option>
+                        <option value={"en"}>English</option>
+                    </select>
+                </div>
             </div>
             {user?.username && (
                 // <div className="mx-auto max-w-7xl py-6 md:py-12">

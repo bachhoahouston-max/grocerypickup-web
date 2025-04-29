@@ -53,6 +53,7 @@ const Navbar = (props) => {
         mobile: '',
         address: '',
         lastname: '',
+        email:'',
         lat: null,
         lng: null
     })
@@ -85,6 +86,7 @@ const Navbar = (props) => {
         address: "",
         name: "",
         lastname: "",
+        email:"",
         phoneNumber: "",
         location: { type: 'Point', coordinates: [null, null] }, // Initialize with null values
     });
@@ -97,6 +99,7 @@ const Navbar = (props) => {
                 address: profileData.address || '',
                 name: profileData.username || '',
                 lastname: profileData.lastname || '',
+                email: profileData.email || "",
                 phoneNumber: profileData.mobile || '',
                 location: {
                     type: 'Point',
@@ -221,6 +224,7 @@ const Navbar = (props) => {
                         mobile: res.data.number || '',
                         address: res.data.address || '',
                         lastname: res.data.lastname || '',
+                        email: res.data?.email || '',
                         lat: res?.data?.location?.coordinates[1],
                         lng: res?.data?.location?.coordinates[0],
                     });
@@ -353,6 +357,7 @@ const Navbar = (props) => {
                 name: localAddress.name,
                 phoneNumber: localAddress.phoneNumber,
                 address: localAddress.address,
+                email:localAddress.email,
                 lastname: localAddress.lastname,
                 dateOfDelivery: dateOfDelivery,
                 location: {
@@ -884,6 +889,16 @@ const Navbar = (props) => {
                                         className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
                                         required
                                     />
+                                      <input
+                                        type="email"
+                                        name="email"
+                                        placeholder={t("Email")}
+                                        value={localAddress.email}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
+                                        required
+                                    />
+                                    
 
                                     <input
                                         type="text"
@@ -899,7 +914,7 @@ const Navbar = (props) => {
                                         setProfileData={setProfileData}
                                         profileData={localAddress}
                                         value={localAddress.address}
-                                        // defaultvalue={profileData.address}
+                                
                                         className=" m-1 border rounded-lg py-2 pl-2 md:pl-4 md:pr-2 pr-7 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  !z-[999999999] text-xs md:text-sm md:w-[608px] w-[295px]"
                                         required
                                     />
