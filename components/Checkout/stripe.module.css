@@ -10,9 +10,10 @@
   display: flex;
   justify-content: center;
   align-content: center;
-  height: 85vh;
+  height: 100vh;
   width: 100vw;
   background-color: white;
+  min-height: screen;
 }
 
 .form {
@@ -37,9 +38,10 @@
 
 .payment_element {
   margin-bottom: 24px;
+  padding-bottom: 24px;
 }
 
-/* Buttons and links */
+
 .form button {
   background: #5469d4;
   font-family: Arial, sans-serif;

@@ -23,7 +23,7 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
     const handleAddToCart = (item) => {
         let updatedCart = [...cartData];
         const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
-        const price = parseFloat(sellprice * (1 + (item.tax ? item.tax / 100 : 0)));
+        const price = parseFloat(sellprice);
         if (existingItemIndex === -1) {
             const newItem = {
                 ...item,
@@ -33,7 +33,7 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                 qty: 1,
                 price_slot: {
                     our_price: price,
-                    other_price: item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0)).toFixed(2) 
+                    other_price: item?.price_slot?.other_price,
                 },
             };
             updatedCart.push(newItem);

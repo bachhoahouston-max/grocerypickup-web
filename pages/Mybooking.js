@@ -122,7 +122,7 @@ function Mybooking(props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-3 md:mx-auto md:gap-12 gap-4 max-w-6xl">
                     {bookingsData && bookingsData.length > 0 ? (
                         bookingsData.map((booking, key) => (
-                            <div key={key} className="bg-white md:p-4 p-2.5 rounded-md border-2 border-[#999999] h-auto self-start">
+                            <div key={key} className="bg-white md:p-2 py-4 p-2.5 rounded-md border-2 border-[#999999] h-auto self-start lg:w-[578px] xl:w-[590px]">
                                 <div className="flex items-center justify-between cursor-pointer" >
                                     <div className="flex flex-col justify-start w-full">
                                         <div className="flex flex-row justify-between items-center mb-2">

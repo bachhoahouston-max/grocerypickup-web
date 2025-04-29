@@ -47,13 +47,14 @@ const Navbar = (props) => {
     const [productList, SetProductList] = useState([]);
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
+    const [totalTax, setTotalTax] = useState(0)
 
     const [profileData, setProfileData] = useState({
         username: '',
         mobile: '',
         address: '',
         lastname: '',
-        email:'',
+        email: '',
         lat: null,
         lng: null
     })
@@ -61,7 +62,7 @@ const Navbar = (props) => {
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
     const [allProduct, setAllProduct] = useState([]);
-    const [clientSecret,setClientSecret] = useState([]);
+    const [clientSecret, setClientSecret] = useState([]);
 
     const handleOptionChange = (event) => {
         setPickupOption(event.target.value);
@@ -76,17 +77,13 @@ const Navbar = (props) => {
         setIsOpen(false);
     };
 
-    const handleInputChange2 = (e) => {
-        setParkingNo(e.target.value);
-        // console.log(e.target.value)
-    };
 
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
         address: "",
         name: "",
         lastname: "",
-        email:"",
+        email: "",
         phoneNumber: "",
         location: { type: 'Point', coordinates: [null, null] }, // Initialize with null values
     });
@@ -110,7 +107,7 @@ const Navbar = (props) => {
                 },
             });
         }
-    }, [profileData]);
+    }, [profileData, cartData]);
 
     const handleDateChange1 = (date) => {
         setLocalAddress({ ...localAddress, dateOfDelivery: date });
@@ -247,23 +244,33 @@ const Navbar = (props) => {
                 accumulator + Number(currentValue?.total || 0),
             0
         );
+
         const sumWithInitial1 = cartData?.reduce(
             (accumulator, currentValue) =>
                 accumulator + Number(currentValue?.qty || 0),
             0
         );
-    
-        setCartItem(sumWithInitial1);
-        setCartTotal(sumWithInitial);
-    
-        // Delivery charge condition: only add $15 if total <= 35
+
+        const totalTax = cartData?.reduce((accumulator, currentValue) => {
+            const itemTotal = Number(currentValue?.total || 0);
+            const taxRate = Number(currentValue?.tax || 0); // percentage
+            const taxAmount = (itemTotal * taxRate) / 100;
+            return accumulator + taxAmount;
+        }, 0);
+
+        console.log(totalTax)
         const delivery = sumWithInitial <= 35 ? 15 : 0;
+
+        const finalTotal = sumWithInitial + totalTax + delivery;
+        console.log("finalTotal ", finalTotal)
+
+        setCartItem(sumWithInitial1);
+        setCartTotal(finalTotal);
+        setTotalTax(totalTax);
         setDeliveryCharge(delivery);
-    
-        // Apply delivery conditionally to main total
-        setMainTotal(sumWithInitial + delivery);
+        setMainTotal(finalTotal); 
     }, [cartData, openCart]);
-    
+
     const emptyCart = async () => {
         setCartData([]);
         setDate([])
@@ -287,13 +294,17 @@ const Navbar = (props) => {
         // e.preventDefault();
 
         if (pickupOption === 'localDelivery') {
-            console.log('pickupOption:', pickupOption);
-            console.log('localAddress.dateOfDelivery:', localAddress.dateOfDelivery);
-
-            if (localAddress.dateOfDelivery === null) {
+            if (!localAddress.dateOfDelivery) {
                 return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
             }
         }
+
+        if (pickupOption === 'driveUp') {
+            if (!date) {
+                return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
+            }
+        }
+
 
         let data = [];
         let cart = localStorage.getItem("addCartDetail");
@@ -357,7 +368,7 @@ const Navbar = (props) => {
                 name: localAddress.name,
                 phoneNumber: localAddress.phoneNumber,
                 address: localAddress.address,
-                email:localAddress.email,
+                email: localAddress.email,
                 lastname: localAddress.lastname,
                 dateOfDelivery: dateOfDelivery,
                 location: {
@@ -393,6 +404,7 @@ const Navbar = (props) => {
                     setCartTotal(0);
                     setOpenCart(false);
                     setDate('')
+                    getProfileData()
                     localStorage.removeItem("addCartDetail");
                     props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
 
@@ -411,15 +423,15 @@ const Navbar = (props) => {
     function formatDate(dateString) {
 
         const date = new Date(dateString);
+
         if (isNaN(date.getTime())) {
             return "Invalid date";
         }
-
         const day = String(date.getDate()).padStart(2, '0'); // Ensure two digits
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
         const year = date.getFullYear();
 
-        return `${day}/${month}/${year}`;
+        return `${month}/${day}/${year}`;
     }
 
     const getProductById = async () => {
@@ -436,25 +448,26 @@ const Navbar = (props) => {
 
 
     const payment = () => {
+        setOpenCart(false);
         const cur = {
             "$": "USD",
             "£": "GBP",
             "€": "EUR"
         };
-    
+
         if (!user?._id) {
             props.toaster({ type: "error", message: "Please login for Shopping" });
             return; // Early return to prevent further execution
         }
-    
+
         const data = {
             price: CartTotal.toFixed(2),
             currency: "USD" // Consider making this dynamic
         };
-    
+
         console.log(data);
         props.loader(true);
-    
+
         Api("post", `poststripe`, data, router).then(
             (res) => {
                 props.loader(false);
@@ -889,7 +902,7 @@ const Navbar = (props) => {
                                         className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
                                         required
                                     />
-                                      <input
+                                    <input
                                         type="email"
                                         name="email"
                                         placeholder={t("Email")}
@@ -898,7 +911,6 @@ const Navbar = (props) => {
                                         className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
                                         required
                                     />
-                                    
 
                                     <input
                                         type="text"
@@ -914,12 +926,9 @@ const Navbar = (props) => {
                                         setProfileData={setProfileData}
                                         profileData={localAddress}
                                         value={localAddress.address}
-                                
                                         className=" m-1 border rounded-lg py-2 pl-2 md:pl-4 md:pr-2 pr-7 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  !z-[999999999] text-xs md:text-sm md:w-[608px] w-[295px]"
                                         required
                                     />
-
-
                                 </div>
                             </div>
                         </div>
@@ -933,9 +942,14 @@ const Navbar = (props) => {
                                     <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
                                 </div>
                                 <p className="text-black font-semibold text-[18px]">
+
                                     {pickupOption === 'orderPickup' || pickupOption === 'driveUp'
                                         ? t("Pick up in 2 Hours")
-                                        : t("Delivery in 3 or 5 business days")}
+                                        : pickupOption === 'localDelivery'
+                                            ? t("Delivery is next day")
+                                            : t("Delivery in 3 or 5 business days")}
+
+
                                 </p>
 
                             </div>
@@ -980,10 +994,10 @@ const Navbar = (props) => {
                                         </p>
                                         <p className="text-custom-newGrayColors font-normal text-sm pt-2">
                                             <span className="pl-3">
-                                                {constant.currency}{(item?.price_slot?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2)}
+                                                {constant.currency}{(item?.price_slot?.our_price)}
                                             </span>{" "}
                                             <span className="line-through">
-                                                {constant.currency}{(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
+                                                {constant.currency}{(item?.price_slot?.other_price)}
                                             </span>
                                         </p>
                                     </div>
@@ -1006,8 +1020,7 @@ const Navbar = (props) => {
                                                     const nextState = produce(cartData, (draft) => {
                                                         draft[i].qty -= 1;
                                                         const price = parseFloat(draft[i]?.price_slot?.our_price);
-                                                        const tax = draft[i]?.tax ? draft[i].tax / 100 : 0;
-                                                        draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(2);
+                                                        draft[i].total = (price * draft[i].qty)
                                                     });
                                                     setCartData(nextState);
                                                     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
@@ -1025,8 +1038,8 @@ const Navbar = (props) => {
                                                 const nextState = produce(cartData, (draft) => {
                                                     draft[i].qty += 1;
                                                     const price = parseFloat(draft[i]?.price_slot?.our_price);
-                                                    const tax = draft[i]?.tax ? draft[i].tax / 100 : 0; 
-                                                    draft[i].total = (price * draft[i].qty * (1 + tax)).toFixed(1);
+
+                                                    draft[i].total = (price * draft[i].qty)
                                                     draft[i].total += draft[i].total <= 35 ? deliveryCharge : 0;
 
                                                 });
@@ -1045,7 +1058,7 @@ const Navbar = (props) => {
                                     <p className="text-custom-purple font-semibold text-base">
                                         {constant.currency}{item?.total}
                                         <del className="text-custom-red font-normal text-xs ml-2">
-                                            {constant.currency}{(item?.price_slot?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
+                                            {constant.currency}{(item?.price_slot?.other_price)}
                                         </del>
                                     </p>
                                     <IoMdClose
@@ -1084,7 +1097,14 @@ const Navbar = (props) => {
                                     {constant.currency}{CartTotal}
                                 </p>
                             </div>
-
+                            <div className="flex justify-between items-center w-full pt-3 ">
+                                <p className="text-black font-normal text-base">
+                                    {t("Tax")}
+                                </p>
+                                <p className="text-custom-black font-normal text-base">
+                                    {constant.currency}{totalTax || 0}
+                                </p>
+                            </div>
                             {CartTotal < 35 && (
                                 <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                     <p className="text-black font-normal text-base">
@@ -1117,11 +1137,12 @@ const Navbar = (props) => {
                                 <p className="text-custom-black font-medium text-base">
                                     {constant.currency}{mainTotal}
                                 </p>
-                            </div> <div className="flex justify-between items-center w-full pt-1">
+                            </div>
+                            {/* <div className="flex justify-between items-center w-full pt-1">
                                 <p className="text-red-500 font-normal text-base">
                                     * {t("Note : Tax is included in this price")}"
                                 </p>
-                            </div>
+                            </div> */}
                         </div>
                     )}
 
@@ -1136,8 +1157,8 @@ const Navbar = (props) => {
                                     });
                                     return;
                                 } else {
-                                    createProductRquest();
-                                    // payment()
+                                    // createProductRquest();
+                                    payment()
                                 }
                             }}
                         >

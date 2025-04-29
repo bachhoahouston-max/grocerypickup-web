@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import constant from "@/services/constant";
 
 function ProductDetails(props) {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const router = useRouter();
   // console.log(router);
   const [user, setUser] = useContext(userContext);
@@ -100,10 +100,10 @@ function ProductDetails(props) {
       f._id === productsId._id && f.price_slot?.value === selectedPrice.value
     );
 
-    const price = parseFloat(selectedPrice?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0)).toFixed(0));
+    const price = parseFloat(selectedPrice?.our_price);
 
     const ourPrice = parseFloat(
-      (selectedPrice?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(2)
+      (selectedPrice?.our_price)
     );
     const percentageDifference = price && ourPrice ? ((price - ourPrice) / price) * 100 : 0;
 
@@ -141,7 +141,7 @@ function ProductDetails(props) {
 
       if (existingItem) {
         existingItem.qty += 1; // Increment quantity
-        existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty * (1 + (existingItem.tax ? existingItem.tax / 100 : 0))).toFixed(2);
+        existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty)
       } else {
         console.error("Item not found in cart for increasing quantity.");
       }
@@ -160,7 +160,7 @@ function ProductDetails(props) {
       if (existingItem) {
         if (existingItem.qty > 1) {
           existingItem.qty -= 1;
-          existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty * (1 + (existingItem.tax ? existingItem.tax / 100 : 0))).toFixed(2);
+          existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty );
         } else {
 
           const index = draft.indexOf(existingItem);
@@ -383,12 +383,12 @@ function ProductDetails(props) {
                             </p>
                             <p className="text-black font-normal text-base pt-1">
 
-                            {constant.currency}{(data?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}
+                              {constant.currency}{(data?.our_price)}
                             </p>
                             <p className="text-custom-black font-semibold text-sm pt-2">
 
                               <span className="text-black font-normal line-through">
-                              {constant.currency}{(data?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}
+                                {constant.currency}{(data?.other_price)}
                               </span>
                             </p>
                           </div>
@@ -399,9 +399,9 @@ function ProductDetails(props) {
 
                 <div className="pt-3 mt-2 px-4  border-custom-darkPurple">
                   <p className="text-custom-gold font-semibold text-lg">
-                  {constant.currency}{(selectedPrice?.our_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}{" "}
+                    {constant.currency}{(selectedPrice?.our_price)}{" "}
                     <span className="text-custom-black text-sm font-normal line-through">
-                    {constant.currency}{(selectedPrice?.other_price * (1 + (productsId?.tax ? productsId.tax / 100 : 0))).toFixed(0)}{" "}
+                      {constant.currency}{(selectedPrice?.other_price)}{" "}
                     </span>{" "}
                     <span className="text-sm text-custom-black">
 
@@ -444,13 +444,13 @@ function ProductDetails(props) {
                   </p>
                 ) : (
                   <p className="text-black font-normal text-[17px] mt-2">
-                     {t("Shipment Delivery is not available")}
+                    {t("Shipment Delivery is not available")}
                   </p>
                 )}
 
-                <p className="text-red-500 font-normal text-[17px] mt-1">
+                {/* <p className="text-red-500 font-normal text-[17px] mt-1">
                   * {t("Note : Tax is included in this price")}
-                </p>
+                </p> */}
 
               </div>
             </div>
@@ -468,6 +468,7 @@ function ProductDetails(props) {
                   {productsId?.long_description}
                 </span>
               </p>
+             
             </div>
             <div className="flex flex-col justify-start items-start">
               <p className="text-black font-medium md:text-xl text-base">
@@ -476,12 +477,12 @@ function ProductDetails(props) {
                   {productsId?.origin}
                 </span>
               </p>
-              <p className="text-black font-medium md:text-xl text-base pt-2">
+              {/* <p className="text-black font-medium md:text-xl text-base pt-2">
                 {t("Self Life")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
                   {productsId?.selflife}
                 </span>
-              </p>
+              </p> */}
               <p className="text-black font-medium md:text-xl text-base pt-2">
                 {t("Manufacturer Name")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
@@ -495,6 +496,33 @@ function ProductDetails(props) {
                 </span>
               </p>
             </div>
+            <div className="col-span-2">
+                <p className="text-black font-semibold md:text-xl text-base pt-1">
+                  {t("Disclaimer")} :
+                </p>
+                <span
+                  className="text-black font-normal md:text-xl text-base"
+                  dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
+                />
+              </div>
+              <div className="col-span-2">
+                <p className="text-black font-semibold md:text-xl text-base pt-1">
+                  {t("Warning")} :
+                </p>
+                <span
+                  className="text-black font-normal md:text-xl text-base"
+                  dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
+                />
+              </div>
+               <div className="col-span-2">
+                <p className="text-black font-semibold md:text-xl text-base pt-1">
+                  {t("Return Policy")} :
+                </p>
+                <span
+                  className="text-black font-normal md:text-xl text-base"
+                  dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
+                />
+              </div>
           </div>
         </div>
 
@@ -519,7 +547,7 @@ function ProductDetails(props) {
 
         <div className="bg-white  max-w-7xl">
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
-            {t("You might also like")} 
+            {t("You might also like")}
           </p>
           <div className="grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-5 md:ms-14 ms-4">
             {productList.map((item, i) => (

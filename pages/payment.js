@@ -12,21 +12,30 @@ import {
   Ele,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { CheckoutForm } from "@/components/Checkout/stripe"
+import CheckoutForm  from "@/components/Checkout/stripe"
+import { useEffect } from "react";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY);
+
+stripePromise.then((stripe) => console.log("Stripe loaded:", stripe));
 
 // const inter = Inter({ subsets: ["latin"] });
 
 export default function Payment(props) {
   const router = useRouter();
   const [res, setres] = useState(null);
-  const [price, setPrice] = useState(Number(router.query.price));
-
-  const planid = router.query.planid;
-  const month = router.query.month;
-  const currency = router.query.currency;
-  const clientSecret = router.query.clientSecret;
+  const [price, setPrice] = useState(null);
   
+  const currency = router.query.currency;
+  const [clientSecret, setClientSecret] = useState(null);
+  
+
+  useEffect(() => {
+    if (router.isReady) {
+      setClientSecret(router.query.clientSecret);
+      setPrice(Number(router.query.price));
+    }
+  }, [router.isReady]);
+
   //   const payment = (id) => {
   //     const data = {
   //       price: id,
@@ -64,18 +73,18 @@ export default function Payment(props) {
 
   console.log("price ::", price);
 
- 
+
   return (
     <div className="w-full ">
       {clientSecret && (
         <div>
           <Elements options={options} stripe={stripePromise} key={clientSecret}>
             <CheckoutForm
-              price={props.price.toFixed(2)}
+              price={price}
               loader={props.loader}
               clientSecret={clientSecret}
               currency={constant.currency}
-              // url={`cart`}
+
             />
           </Elements>
         </div>

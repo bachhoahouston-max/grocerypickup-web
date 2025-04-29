@@ -176,7 +176,7 @@
   "All Categories": "All Categories",
   "Search Result": "Search Result",
   "No Products": "No Products",
-  "ADD": "THÊM VÀO",
+  "ADD": "ADD",
   "Shipment Delivery is available": "Shipment Delivery is available",
   "Shipment Delivery is not available": "Shipment Delivery is not available",
   "About Product": "About Produc",
@@ -199,5 +199,8 @@
    "Shop Faster With Grocery App":"Shop Faster With Grocery App",
   "Available on both IOS & Android":"Available on both IOS & Android",
   "Cart":"Cart",
-  "Account":"Account"
+  "Account":"Account",
+  "Delivery is next day":"Delivery is next day",
+  "Warning":"Warning",
+  "Disclaimer":"Disclaimer"
 }

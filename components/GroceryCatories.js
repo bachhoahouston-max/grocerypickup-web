@@ -33,9 +33,10 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                     selectedColor: item?.varients[0] || {},
                     selectedImage: item?.varients[0]?.image[0] || "",
                     qty: 1,
-                    price: item.price_slot[0]?.our_price * (1 + (item?.tax / 100)).toFixed(2),
-                    total: (Number(item.price_slot?.[0]?.our_price ?? 0) * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(2),
+                    price: item.price_slot[0]?.our_price,
+                    total: Number(item.price_slot?.[0]?.our_price ?? 0),
                     price_slot: item.price_slot[0],
+                    tax: item?.tax
                 };
 
                 const updatedCart = [...prevCartData, newItem];
@@ -184,9 +185,9 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
                 <p className="text-custom-gold text-lg md:text-xl font-semibold">
-                    {constant.currency}{(item?.price_slot[0]?.our_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
+                    {constant.currency}{(item?.price_slot[0]?.our_price)}
                     <del className="font-medium text-sm text-custom-black ml-2">
-                        {constant.currency}{(item?.price_slot[0]?.other_price * (1 + (item?.tax ? item.tax / 100 : 0))).toFixed(0)}
+                        {constant.currency}{(item?.price_slot[0]?.other_price )}
 
                     </del>
                 </p>
