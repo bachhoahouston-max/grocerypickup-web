@@ -15,7 +15,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CheckoutForm } from "@/components/Checkout/stripe"
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY);
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export default function Payment(props) {
   const router = useRouter();
