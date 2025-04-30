@@ -258,18 +258,27 @@ const Navbar = (props) => {
             return accumulator + taxAmount;
         }, 0);
 
-        console.log(totalTax)
-        const delivery = sumWithInitial <= 35 ? 15 : 0;
+        console.log("Tax:", totalTax);
+
+
+        let delivery = 0;
+
+        if (pickupOption === "localDelivery" || pickupOption === "ShipmentDelivery") {
+            delivery = sumWithInitial <= 35 ? 15 : 0;
+        } else if (pickupOption === "orderPickup" || pickupOption === "driveUp") {
+            delivery = 0;
+        }
 
         const finalTotal = sumWithInitial + totalTax + delivery;
-        console.log("finalTotal ", finalTotal)
+
+        console.log("Final Total:", finalTotal);
 
         setCartItem(sumWithInitial1);
-        setCartTotal(finalTotal);
+        setCartTotal(sumWithInitial);
         setTotalTax(totalTax);
         setDeliveryCharge(delivery);
-        setMainTotal(finalTotal); 
-    }, [cartData, openCart]);
+        setMainTotal(finalTotal);
+    }, [cartData, openCart, pickupOption]);
 
     const emptyCart = async () => {
         setCartData([]);
@@ -1105,18 +1114,8 @@ const Navbar = (props) => {
                                     {constant.currency}{totalTax || 0}
                                 </p>
                             </div>
-                            {CartTotal < 35 && (
-                                <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
-                                    <p className="text-black font-normal text-base">
-                                        {t("Delivery Fee")}
-                                    </p>
-                                    <p className="text-custom-black font-normal text-base">
-                                        {constant.currency}{deliveryCharge}
-                                    </p>
-                                </div>
-                            )}
 
-                            {CartTotal >= 35 && (
+                            {(pickupOption === "orderPickup" || pickupOption === "driveUp") ? (
                                 <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                     <p className="text-black font-normal text-base">
                                         {t("Delivery Fee")}
@@ -1125,7 +1124,30 @@ const Navbar = (props) => {
                                         {t("Free")}
                                     </p>
                                 </div>
+                            ) : (
+                                <>
+                                    {CartTotal < 35 ? (
+                                        <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
+                                            <p className="text-black font-normal text-base">
+                                                {t("Delivery Fee")}
+                                            </p>
+                                            <p className="text-custom-black font-normal text-base">
+                                                {constant.currency}{deliveryCharge}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
+                                            <p className="text-black font-normal text-base">
+                                                {t("Delivery Fee")}
+                                            </p>
+                                            <p className="text-green-500 font-normal text-base">
+                                                {t("Free")}
+                                            </p>
+                                        </div>
+                                    )}
+                                </>
                             )}
+
 
 
 
@@ -1162,7 +1184,7 @@ const Navbar = (props) => {
                                 }
                             }}
                         >
-                            {t("CONTINUE TO PAY")}  {constant.currency}{CartTotal}
+                            {t("CONTINUE TO PAY")}  {constant.currency}{mainTotal}
                         </button>
                     )}
                 </div>
