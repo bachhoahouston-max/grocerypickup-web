@@ -180,9 +180,9 @@ function Mybooking(props) {
                                                         {booking?.isDriveUp && (
                                                             <p
                                                                 onClick={() => toggleModal(booking._id)}
-                                                                className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded"
+                                                                className="px-4 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded "
                                                             >
-                                                                {booking.parkingNo ? t("Update Parking No.") : t("Parking No.")}
+                                                                {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
                                                             </p>
                                                         )}
                                                         <p className="md:py-2 text-right pr-2  py-0 text-[16px] text-red-500 rounded">
@@ -208,14 +208,14 @@ function Mybooking(props) {
                                             <div className="p-6">
                                                 <button
                                                     onClick={toggleModal}
-                                                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+                                                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer"
                                                 >
-                                                    <IoIosClose className="text-2xl" />
+                                                    <IoIosClose className="text-3xl " />
                                                 </button>
-                                                <h2 className="text-xl font-bold mb-4 text-black text-center">{t("Parking Information")}</h2>
+                                                <h2 className="text-xl font-semibold mb-4 text-black text-center">{t("Employee will Bring Products out ")}</h2>
                                                 <form onSubmit={handleSubmit}>
                                                     <label htmlFor="parkingNo" className="block mb-2 text-black">
-                                                        {t("Parking No:")}
+                                                        {t("Parking Spot")}:
                                                     </label>
                                                     <input
                                                         type="text"
@@ -223,7 +223,7 @@ function Mybooking(props) {
                                                         value={parkingNo} 
                                                         onChange={(e) => setParkingNo(e.target.value)} 
                                                         className="border text-black border-gray-300 rounded p-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
-                                                        placeholder={t("Enter Parking Number")}
+                                                        placeholder={t("Enter Parking Spot")}
                                                         required
                                                     />
                                                     <div className="flex justify-end gap-4">

@@ -25,6 +25,8 @@ import { BsCart2 } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import AddressInput from './addressInput';
 import { useTranslation } from "react-i18next";
+import { Country, State, City } from 'country-state-city';
+import Select from 'react-select';
 
 const Navbar = (props) => {
     const { t } = useTranslation()
@@ -48,6 +50,29 @@ const Navbar = (props) => {
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
     const [totalTax, setTotalTax] = useState(0)
+    const [selectedCountry, setSelectedCountry] = useState(null);
+    const [selectedState, setSelectedState] = useState(null);
+    const [selectedCity, setSelectedCity] = useState(null);
+    const [cities, setCities] = useState([]);
+    const [states, setStates] = useState([]);
+
+
+    useEffect(() => {
+        if (selectedCountry) {
+            const stateList = State.getStatesOfCountry(selectedCountry.isoCode);
+            setStates(stateList);
+        }
+    }, [selectedCountry]);
+
+    useEffect(() => {
+        if (selectedState) {
+            const cityList = City.getCitiesOfState(
+                selectedCountry.isoCode,
+                selectedState.isoCode
+            );
+            setCities(cityList);
+        }
+    }, [selectedState, selectedCity]);
 
     const [profileData, setProfileData] = useState({
         username: '',
@@ -80,6 +105,10 @@ const Navbar = (props) => {
 
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
+        // pincode:"",
+        // city:"",
+        // state:"",
+        // country:"",
         address: "",
         name: "",
         lastname: "",
@@ -379,6 +408,10 @@ const Navbar = (props) => {
                 address: localAddress.address,
                 email: localAddress.email,
                 lastname: localAddress.lastname,
+                // city:localAddress.city,
+                // country:localAddress.country,
+                // pincode:localAddress.pincode,
+                // state:localAddress.state,
                 dateOfDelivery: dateOfDelivery,
                 location: {
                     type: 'Point',
@@ -413,6 +446,9 @@ const Navbar = (props) => {
                     setCartTotal(0);
                     setOpenCart(false);
                     setDate('')
+                    setSelectedCountry('')
+                    setSelectedCity('')
+                    setSelectedState('')
                     getProfileData()
                     localStorage.removeItem("addCartDetail");
                     props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
@@ -921,16 +957,64 @@ const Navbar = (props) => {
                                         required
                                     />
 
+                                  
+                                    
                                     <input
                                         type="text"
                                         name="phoneNumber"
                                         placeholder={t("Phone Number")}
                                         value={localAddress.phoneNumber}
                                         onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                        className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
                                         required
                                     />
+                                        {/* <Select
+                                            options={Country.getAllCountries()}
+                                            getOptionLabel={(e) => e.name}
+                                            getOptionValue={(e) => e.isoCode}
+                                            onChange={(value) => {
+                                                setSelectedCountry(value)
+                                                setLocalAddress({ ...localAddress, country: value.name });
+                                            }}
+                                            placeholder={t("Select Country")}
+                                            className="m-1 rounded-lg py-1 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                        />
 
+                                        <Select
+                                            options={states}
+                                            getOptionLabel={(e) => e.name}
+                                            getOptionValue={(e) => e.isoCode}
+                                            onChange={(value) => {
+                                                setSelectedState(value)
+                                                setLocalAddress({ ...localAddress, state: value.name });
+                                            }}
+                                            placeholder={t("Select State")}
+                                            className="m-1 rounded-lg py-1 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                        />
+
+                                        <Select
+                                            options={cities}
+                                            getOptionLabel={(e) => e.name}
+                                            getOptionValue={(e) => e.name}
+                                            onChange={(value) => {
+                                                setSelectedCity(value)
+                                                setLocalAddress({ ...localAddress, city: value.name });
+                                            }}
+                                            placeholder={t("Select City")}
+                                            className="m-1 rounded-lg py-1 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                        />
+
+                                        <input
+                                            type="text"
+                                            value={localAddress.pincode}
+                                            placeholder={t("Pincode")}
+                                            name="pincode"
+                                            onChange={handleInputChange1}
+                                            required
+                                            className="m-1 p-2 border rounded-lg pl-2    text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                        /> */}
+
+                                    
                                     <AddressInput
                                         setProfileData={setProfileData}
                                         profileData={localAddress}
@@ -1179,8 +1263,8 @@ const Navbar = (props) => {
                                     });
                                     return;
                                 } else {
-                                    // createProductRquest();
-                                    payment()
+                                    createProductRquest();
+                                    // payment()
                                 }
                             }}
                         >

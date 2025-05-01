@@ -28,7 +28,7 @@
   "Yes": "Yes",
   "No": "No",
   "Your Cart": "Your Cart",
-  "Are you sure you want to empty your cart?": "BạnAre you sure you want to empty your cart?",
+  "Are you sure you want to empty your cart?": "Are you sure you want to empty your cart?",
   "Empty Cart": "Empty Cart",
   "Order Pickup": "Order Pickup",
   "Pick it up inside the store": "Pick it up inside the store",
@@ -155,8 +155,8 @@
   "Secret Code is": "Secret Code is",
   "Please do not share this with anyone": "Please do not share this with anyone",
   "Order Delivered": "Order Delivered",
-  "Update Parking No.": "CUpdate Parking No.",
-  "Parking No.": "Parking No.",
+  "Update Parking Spot": "Update Parking Spot",
+  "Parking Spot": "Parking Spot",
   "Delivery expected by": "Delivery expected by",
   "Order Pending": "Order Pending",
   "Parking Information": "Parking Information",
@@ -203,5 +203,11 @@
   "Delivery is next day":"Delivery is next day",
   "Warning":"Warning",
   "Disclaimer":"Disclaimer",
-  "Tax":"Tax"
+  "Tax":"Tax",
+  "Select Country":"Select Country",
+  "Select State":"Select State",
+  "Select City":"Select City",
+  "Pincode":"Pincode",
+  "I'm here":"I'm here"
+  
 }
