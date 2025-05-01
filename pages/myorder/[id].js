@@ -5,9 +5,12 @@ import { Api } from '@/services/service';
 import "react-multi-carousel/lib/styles.css";
 import moment from 'moment';
 import Carousel from "react-multi-carousel";
+import { useTranslation } from 'react-i18next';
+import constant from '@/services/constant';
 
 export default function MyOrder(props) {
     const router = useRouter();
+    const {t} = useTranslation()
     const [productsId, setProductsId] = useState({});
     const [ordersData, setOrdersData] = useState([]);
     const [selectedImageList, setSelectedImageList] = useState([]);
@@ -89,19 +92,21 @@ export default function MyOrder(props) {
                         </div>
                         <div className='flex flex-col justify-start items-start md:px-16 px-0 md:pt-5 md:pb-5'>
                             <p className='text-black md:text-3xl md:leading-[40px] text-base font-normal md:pt-0 pt-0'>{productsId?.product?.name}</p>
-                            <p className='text-black text-xl font-normal md:pt-5 pt-3'>€{productsId?.price}</p>
+                            <p className='text-black text-xl font-normal md:pt-5 pt-3'>
+                                {constant.currency}{productsId?.price}</p>
                             {productsId?.color && <div className='flex justify-start items-center pt-[6px] mt-2'>
                                 <p className='text-black text-base font-normal'>{("Colour")}: <span className='font-bold'>{productsId?.color}</span></p>
                             </div>}
+
                             <div className='flex flex-col justify-start items-start'>
-                                <p className='text-black text-base font-normal md:mt-5 mt-3 '>{("Qty")}: <span className='font-bold'>{productsId?.qty || 0}</span></p>
+                                <p className='text-black text-base font-normal md:mt-5 mt-3 '>{t("Qty")}: <span className='font-bold'>{productsId?.qty || 0}</span></p>
                                 {productsId?.vat && <p className='text-black text-base font-normal md:mt-5 mt-3 '>{("VAT")}: <span className='font-bold'>{productsId?.vat}</span></p>}
 
-                                <p className='text-black text-base font-normal md:pt-5 pt-3'>{("Order Date")}: <span className='font-bold'>{moment(new Date(ordersData?.createdAt)).format('DD MMM YYYY')}</span></p>
+                                <p className='text-black text-base font-normal md:pt-5 pt-3'>{t("Order Date")}: <span className='font-bold'>{moment(new Date(ordersData?.createdAt)).format('DD MMM YYYY')}</span></p>
 
                                 {userAddress?.address && (
                                     <div className='flex w-full justify-center gap-1 items-center'>
-                                        <p className='text-black text-base font-normal md:pt-5 pt-3'>{("Shipping Address: ") }</p>
+                                        <p className='text-black text-base font-normal md:pt-5 pt-3'>{t("Shipping Address") }:</p>
                                         <p className='text-black text-base font-bold md:pt-5 pt-3'>{}{}{ userAddress?.address}</p>
 
                                     </div>

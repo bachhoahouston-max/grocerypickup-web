@@ -208,6 +208,8 @@
   "Select State":"Select State",
   "Select City":"Select City",
   "Pincode":"Pincode",
-  "I'm here":"I'm here"
+  "I'm here":"I'm here",
+    "Qty":"Qty",
+    "Order Date":"Order Date"
   
 }

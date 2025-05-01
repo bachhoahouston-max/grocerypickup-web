@@ -264,8 +264,6 @@ const Navbar = (props) => {
             });
     };
 
-    console.log(profileData)
-
 
     useEffect(() => {
         const sumWithInitial = cartData?.reduce(
@@ -401,6 +399,7 @@ const Navbar = (props) => {
             productDetail: data,
             total: CartTotal.toFixed(2),
             user: user._id,
+            Email:user.email,
             Local_address: {
                 ...localAddress,
                 name: localAddress.name,
@@ -838,7 +837,7 @@ const Navbar = (props) => {
                                         <span className="font-semibold text-[15px]">{t("Shipping")}</span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
-                                            {t("Delivery in 3 or 5 business days")}</span>
+                                            {t("Delivery in 3 to 5 business days")}</span>
                                     </label>
                                 </div>
                             </div>
@@ -1040,7 +1039,7 @@ const Navbar = (props) => {
                                         ? t("Pick up in 2 Hours")
                                         : pickupOption === 'localDelivery'
                                             ? t("Delivery is next day")
-                                            : t("Delivery in 3 or 5 business days")}
+                                            : t("Delivery in 3 to 5 business days")}
 
 
                                 </p>
