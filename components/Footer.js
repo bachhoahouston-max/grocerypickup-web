@@ -76,6 +76,8 @@ const Footer = () => {
                 <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/ReturnPolicy')}>{t("Return Policy")} </a></li>
                 <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/Termsandcondition')}>{t("Terms and Conditions")} </a></li>
                 <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/DataPolicy')}>{t("Data Policy")} </a></li>
+                <li className="pb-2 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/PrivacyPolicy')}>{t("Privacy Policy")} </a></li>
+                
               </ul>
             </div>
       

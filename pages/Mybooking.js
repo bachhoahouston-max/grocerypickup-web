@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 function Mybooking(props) {
     const ref = useRef();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const router = useRouter();
     const [user, setUser] = useContext(userContext)
     const [bookingsData, setBookingsData] = useState([]);
@@ -26,11 +26,11 @@ function Mybooking(props) {
         setId(id)
         setIsOpen(!isOpen);
     }
+
     let secretCode = Math.floor(1000 + Math.random() * 9000);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const data = {
             parkingNo,
             id: Id,
@@ -60,7 +60,43 @@ function Mybooking(props) {
             });
     };
 
+    const toggleModal2 = (id) => {
+        setId(id)
+        getSecrectCode()
+    }
+    let secretCode1 = Math.floor(1000 + Math.random() * 9000);
 
+    const getSecrectCode = () => {
+      
+        const data = {
+            id: Id,
+            SecretCode: secretCode1
+        };
+
+        console.log(data);
+        props.loader(true);
+
+        Api("post", "getSecrectCode", data, router)
+            .then((res) => {
+                props.loader(false);
+
+                if (res.status) {
+                    props.toaster({ type: "success", message: "Secrect Code Send Successfully" });
+                    getBookingsByUser();
+                    setIsOpen(false);
+                    setParkingNo('');
+                } else {
+                    props.toaster({ type: "error", message: "Failed to send Secrect Code" });
+                }
+            })
+            .catch((err) => {
+                props.loader(false);
+                console.log(err);
+                props.toaster({ type: "error", message: err?.message });
+            });
+    };
+
+    
     useEffect(() => {
         getBookingsByUser();
     }, []);
@@ -136,7 +172,7 @@ function Mybooking(props) {
                                             ) : (
                                                 booking?.SecretCode && (
                                                     <p className="px-2 py-2 md:text-[16px] text-[14px] text-black md:w-[440px] w-[230px]">
-                                                       {t("Secret Code is")} {booking.SecretCode} {t("Please do not share this with anyone")}.
+                                                        {t("Secret Code is")} {booking.SecretCode} {t("Please do not share this with anyone")}.
                                                     </p>
                                                 )
                                             )}
@@ -185,15 +221,24 @@ function Mybooking(props) {
                                                                 {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
                                                             </p>
                                                         )}
+
+                                                         {booking?.isOrderPickup && (
+                                                            <p
+                                                                onClick={() => toggleModal2(booking._id)}
+                                                                className="px-4 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded "
+                                                            >
+                                                                {t("I'm here")}
+                                                            </p>
+                                                        )}
                                                         <p className="md:py-2 text-right pr-2  py-0 text-[16px] text-red-500 rounded">
-                                                           {t("Order Pending")} 
+                                                            {t("Order Pending")}
                                                         </p>
                                                     </div>
                                                 </>
                                             ) : (
                                                 (booking?.isLocalDelivery || booking?.isOrderPickup) && (
                                                     <p className="px-4 py-2 text-[16px] text-red-500 rounded">
-                                                      {t("Order Pending")}
+                                                        {t("Order Pending")}
                                                     </p>
                                                 )
                                             )}
@@ -217,15 +262,22 @@ function Mybooking(props) {
                                                     <label htmlFor="parkingNo" className="block mb-2 text-black">
                                                         {t("Parking Spot")}:
                                                     </label>
-                                                    <input
-                                                        type="text"
+                                                    <select
                                                         id="parkingNo"
-                                                        value={parkingNo} 
-                                                        onChange={(e) => setParkingNo(e.target.value)} 
+                                                        value={parkingNo}
+                                                        onChange={(e) => setParkingNo(e.target.value)}
                                                         className="border text-black border-gray-300 rounded p-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
-                                                        placeholder={t("Enter Parking Spot")}
                                                         required
-                                                    />
+                                                    >
+                                                        <option value="">{t("Select Parking Spot")}</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                        <option value="3">5</option>
+                                                        <option value="4">6</option>
+                                                    </select>
+
                                                     <div className="flex justify-end gap-4">
                                                         <button
                                                             type="button"
@@ -242,6 +294,7 @@ function Mybooking(props) {
                                                         </button>
                                                     </div>
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div>
@@ -260,7 +313,7 @@ function Mybooking(props) {
                                                 />
                                                 <div>
                                                     <p className="text-black text-base font-bold">
-                                                        {product.product?.name }
+                                                        {product.product?.name}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
                                                         {t("Quantity")}: {product.qty || 1}
@@ -282,10 +335,10 @@ function Mybooking(props) {
                         ))
                     ) : (
                         <div className="flex justify-center items-center md:mt-5 w-full md:h-[300px] h-[200px] col-span-2">
-                        <p className="text-center text-black text-2xl">
-                        {t("No bookings available")}.
-                        </p>
-                    </div>
+                            <p className="text-center text-black text-2xl">
+                                {t("No bookings available")}.
+                            </p>
+                        </div>
                     )}
                 </div>
 
