@@ -411,7 +411,7 @@ const Navbar = (props) => {
                 // country:localAddress.country,
                 // pincode:localAddress.pincode,
                 // state:localAddress.state,
-                dateOfDelivery: dateOfDelivery,
+                dateOfDelivery: localAddress.dateOfDelivery,
                 location: {
                     type: 'Point',
                     coordinates: [
@@ -431,7 +431,8 @@ const Navbar = (props) => {
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
             isLocalDelivery: isLocalDelivery,
-            isShipmentDelivery: isShipmentDelivery
+            isShipmentDelivery: isShipmentDelivery,
+            dateOfDelivery: dateOfDelivery,
         };
 
         console.log(newData)

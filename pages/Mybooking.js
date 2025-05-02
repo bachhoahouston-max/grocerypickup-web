@@ -212,11 +212,11 @@ function Mybooking(props) {
                                                 </p>
                                             ) : booking?.status === 'Pending' ? (
                                                 <>
-                                                    <div className="flex md:flex-row flex-col">
+                                                    <div className="flex md:flex-row flex-col  justify-end items-end">
                                                         {booking?.isDriveUp && (
                                                             <p
                                                                 onClick={() => toggleModal(booking._id)}
-                                                                className="px-4 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded "
+                                                                className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded  md:h-9 h-[32px]"
                                                             >
                                                                 {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
                                                             </p>
@@ -225,19 +225,19 @@ function Mybooking(props) {
                                                          {booking?.isOrderPickup && (
                                                             <p
                                                                 onClick={() => toggleModal2(booking._id)}
-                                                                className="px-4 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded "
+                                                                className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded md:w-22 w-20"
                                                             >
                                                                 {t("I'm here")}
                                                             </p>
                                                         )}
-                                                        <p className="md:py-2 text-right pr-2  py-0 text-[16px] text-red-500 rounded">
+                                                        <p className="md:py-2 text-right pr-2 w-44 py-0 text-[16px] text-red-500 rounded">
                                                             {t("Order Pending")}
                                                         </p>
                                                     </div>
                                                 </>
                                             ) : (
                                                 (booking?.isLocalDelivery || booking?.isOrderPickup) && (
-                                                    <p className="px-4 py-2 text-[16px] text-red-500 rounded">
+                                                    <p className="px-1 py-2 text-[16px] text-red-500 rounded">
                                                         {t("Order Pending")}
                                                     </p>
                                                 )
@@ -257,7 +257,7 @@ function Mybooking(props) {
                                                 >
                                                     <IoIosClose className="text-3xl " />
                                                 </button>
-                                                <h2 className="text-xl font-semibold mb-4 text-black text-center">{t("Employee will Bring Products out ")}</h2>
+                                                <h2 className="text-xl font-semibold mb-4 text-black text-center">{t("Employee will Bring Products out")}</h2>
                                                 <form onSubmit={handleSubmit}>
                                                     <label htmlFor="parkingNo" className="block mb-2 text-black">
                                                         {t("Parking Spot")}:
