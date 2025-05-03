@@ -216,7 +216,7 @@ function Mybooking(props) {
                                                         {booking?.isDriveUp && (
                                                             <p
                                                                 onClick={() => toggleModal(booking._id)}
-                                                                className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded  md:h-9 h-[32px]"
+                                                                className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded "
                                                             >
                                                                 {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
                                                             </p>

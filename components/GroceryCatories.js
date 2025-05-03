@@ -257,10 +257,10 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 </div>
             ) : (
                 <button
-                    className="font-bold bg-custom-gold w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center"
+                    className="font-bold bg-custom-gold w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
                     onClick={handleAddToCart}
                 >
-                    <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
+                    <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold " />
                     {t("Add")}
                 </button>
             )}
