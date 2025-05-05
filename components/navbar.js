@@ -209,11 +209,15 @@ const Navbar = (props) => {
     };
 
     const minDate = (() => {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1); // Set to tomorrow
-        return tomorrow;
+        return new Date(); // Includes today
     })();
+
+    const minDate1 = (() => {
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        return date;
+    })();
+    
 
     const closeDrawers = async () => {
         setOpenCart(false);
@@ -384,16 +388,7 @@ const Navbar = (props) => {
                 return false;
             }
         }
-        else {
-            if (availableProducts.length > 0) {
-                const message = availableProducts.length === 1
-                    ? "Note: One product in your cart is not available for delivery if you wish to change delivery method later."
-                    : "Note: Some products in your cart are not available for delivery if you wish to change delivery method later.";
-
-                return props.toaster({ type: "info", message: message });
-
-            }
-        }
+       
 
         let newData = {
             productDetail: data,
@@ -407,10 +402,6 @@ const Navbar = (props) => {
                 address: localAddress.address,
                 email: localAddress.email,
                 lastname: localAddress.lastname,
-                // city:localAddress.city,
-                // country:localAddress.country,
-                // pincode:localAddress.pincode,
-                // state:localAddress.state,
                 dateOfDelivery: localAddress.dateOfDelivery,
                 location: {
                     type: 'Point',
@@ -420,14 +411,6 @@ const Navbar = (props) => {
                     ],
                 },
             },
-
-            // location: {
-            //     type: "Point",
-            //     coordinates: [
-            //         (localAddress && localAddress.lng) ? Number(localAddress.lng) : (profileData.lng ? Number(profileData.lng) : 0),
-            //         (localAddress && localAddress.lat) ? Number(localAddress.lat) : (profileData.lat ? Number(profileData.lat) : 0),
-            //     ],
-            // },
             isOrderPickup: isOrderPickup,
             isDriveUp: isDriveUp,
             isLocalDelivery: isLocalDelivery,
@@ -923,7 +906,7 @@ const Navbar = (props) => {
                                                         onChange={handleDateChange1}
                                                         inline
                                                         onClickOutside={() => setIsOpen(false)}
-                                                        minDate={minDate} // disables past dates
+                                                        minDate={minDate1} // disables past dates
                                                     />
                                                 </div>
                                             )}
@@ -968,52 +951,7 @@ const Navbar = (props) => {
                                         className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
                                         required
                                     />
-                                        {/* <Select
-                                            options={Country.getAllCountries()}
-                                            getOptionLabel={(e) => e.name}
-                                            getOptionValue={(e) => e.isoCode}
-                                            onChange={(value) => {
-                                                setSelectedCountry(value)
-                                                setLocalAddress({ ...localAddress, country: value.name });
-                                            }}
-                                            placeholder={t("Select Country")}
-                                            className="m-1 rounded-lg py-1 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                        />
-
-                                        <Select
-                                            options={states}
-                                            getOptionLabel={(e) => e.name}
-                                            getOptionValue={(e) => e.isoCode}
-                                            onChange={(value) => {
-                                                setSelectedState(value)
-                                                setLocalAddress({ ...localAddress, state: value.name });
-                                            }}
-                                            placeholder={t("Select State")}
-                                            className="m-1 rounded-lg py-1 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                        />
-
-                                        <Select
-                                            options={cities}
-                                            getOptionLabel={(e) => e.name}
-                                            getOptionValue={(e) => e.name}
-                                            onChange={(value) => {
-                                                setSelectedCity(value)
-                                                setLocalAddress({ ...localAddress, city: value.name });
-                                            }}
-                                            placeholder={t("Select City")}
-                                            className="m-1 rounded-lg py-1 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                        />
-
-                                        <input
-                                            type="text"
-                                            value={localAddress.pincode}
-                                            placeholder={t("Pincode")}
-                                            name="pincode"
-                                            onChange={handleInputChange1}
-                                            required
-                                            className="m-1 p-2 border rounded-lg pl-2    text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                        /> */}
-
+                                    
                                     
                                     <AddressInput
                                         setProfileData={setProfileData}

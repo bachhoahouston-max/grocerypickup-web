@@ -178,7 +178,7 @@ function Myhistory(props) {
                                                         {t("Quantity")}: {product.qty || 1}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        {t("Order Id")}: {booking?._id}
+                                                        {t("Order Id")}: {booking?.orderId}
                                                     </p>
                                                 </div>
                                                 <div className="justify-start items-start">

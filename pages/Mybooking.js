@@ -81,12 +81,12 @@ function Mybooking(props) {
                 props.loader(false);
 
                 if (res.status) {
-                    props.toaster({ type: "success", message: "Secrect Code Send Successfully" });
+                    props.toaster({ type: "success", message: "Secret Code Send Successfully" });
                     getBookingsByUser();
                     setIsOpen(false);
                     setParkingNo('');
                 } else {
-                    props.toaster({ type: "error", message: "Failed to send Secrect Code" });
+                    props.toaster({ type: "error", message: "Failed to Send Secret Code" });
                 }
             })
             .catch((err) => {
@@ -319,7 +319,7 @@ function Mybooking(props) {
                                                         {t("Quantity")}: {product.qty || 1}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        {t("Order Id")}: {booking._id || 1}
+                                                        {t("Order Id")}: {booking.orderId || 1}
                                                     </p>
                                                 </div>
                                             </div>
