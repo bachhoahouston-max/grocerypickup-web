@@ -8,6 +8,8 @@ import { GoDownload } from "react-icons/go";
 import generatePDF, { usePDF, Margin } from "react-to-pdf";
 import ReactToPrint from "react-to-print";
 import { useTranslation } from "react-i18next";
+import Invoice from "../components/Invoice"
+
 
 function Mybooking(props) {
     const ref = useRef();
@@ -185,12 +187,8 @@ function Mybooking(props) {
 
                                             <div className="flex items-center">
 
-                                                <div>
-                                                    <GoDownload className="text-black text-2xl"
-                                                    />
-
-                                                </div>
-
+                                                {/* <Invoice order={booking} /> */}
+                                              
                                                 <div>
                                                     {expandedBookingId === booking._id ? (
                                                         <IoIosArrowUp className="text-2xl text-black"
@@ -342,138 +340,6 @@ function Mybooking(props) {
                     )}
                 </div>
 
-                <div style={{ position: 'absolute', left: '-9999px', top: 0 }}>
-                    <div className="bg-white w-[1024px] text-gray-700  min-h-screen">
-                        <div className='relative'>
-                            <div className='absolute top-0 right-0 '>
-                                <div className='bg-white h-[110px]  border-2 border-dashed px-4 pb-4 border-gray-400 w-full flex-col flex justify-center items-center '>
-                                    <p className='text-[34px] text-gray-400 font-bold pb-2 mb-2 leading-3'>ORIGINAL</p>
-                                    {/* <hr className='text-black'/> */}
-                                    <p className='text-[18px] text-gray-400 m-0 border-t-2 border-t-gray-700 mt-4 w-[160px] text-center'>FOR Recipient</p>
-                                </div>
-                            </div>
-
-
-                            <div className="w-full max-w-5xl mx-auto px-8 py-5">
-
-                                <div className='flex justify-start'>
-                                    <h1 className="text-gray-700 font-bold text-5xl mb-14">Tax Invoice</h1>
-                                </div>
-
-                                <div className='grid grid-cols-1 md:grid-cols-3 gap-10 mb-11 text-gray-600 mt-6'>
-                                    {/* <div>
-                                        {logoBase64 && (
-                                            <Image
-                                                src={logoBase64}
-                                                alt="signature"
-                                                width="240"
-                                                height="100"
-                                                className="object-contain "
-                                            />
-                                        )}
-                                    </div> */}
-                                    <div className='col-span-2'>
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-11 text-gray-600">
-
-                                            <div>
-                                                <div className="text-lg font-semibold mb-3">INVOICE NUMBER</div>
-                                                <div className="text-xl text-gray-900">{bookingsData.invoiceNumber}</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-lg font-semibold mb-3">DATE OF ISSUE</div>
-                                                <div className="text-xl text-gray-900">{bookingsData.invoiceDate}</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-lg font-semibold mb-3">DUE DATE</div>
-                                                <div className="text-xl text-gray-900">{bookingsData.dueDate}</div>
-                                            </div>
-
-                                        </div>
-
-                                        {/* Billing Details */}
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-14 text-gray-600">
-                                            <div>
-                                                <div className="text-lg font-semibold mb-3">BILLED TO</div>
-                                                <div className="text-xl text-gray-900 whitespace-pre-line">{bookingsData.billTo}</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-lg font-semibold mb-3">FROM</div>
-                                                <div className="text-xl text-gray-900 whitespace-pre-line">{bookingsData.companyDetails}</div>
-                                            </div>
-                                            <div>
-                                                <div className="text-lg font-semibold mb-3">PURCHASE ORDER</div>
-                                                <div className="text-xl text-gray-900">{bookingsData.purchaseOrder}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="mb-14">
-                                    {/* Header Row */}
-                                    <div className="flex text-gray-600 font-semibold border-b-2 border-gray-500 py-3 mb-4">
-                                        <div className="w-1/2 text-lg">Description</div>
-                                        <div className="w-1/6 text-right text-lg">Unit cost</div>
-                                        <div className="w-1/6 text-right text-lg">QTY</div>
-                                        <div className="w-1/6 text-right text-lg">Amount</div>
-                                    </div>
-
-                                    {/* Line Items */}
-                                    <div className="border-b-2 border-gray-300 pb-4">
-                                        {bookingsData?.productDetail?.map((item, index) => (
-                                            <div key={index} className="flex text-gray-900 py-1">
-                                                <div className="w-1/2 text-lg leading-relaxed">{item.description}</div>
-                                                <div className="w-1/6 text-right text-lg">{item.unitCost}</div>
-                                                <div className="w-1/6 text-right text-lg">{item.quantity}</div>
-                                                <div className="w-1/6 text-right text-lg font-medium">{item.amount.toLocaleString()}</div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-
-                                <div className="flex flex-col md:flex-row justify-between">
-                                    {/* Terms */}
-                                    <div className="w-full md:w-1/2 mb-8 md:mb-0 pr-0 md:pr-12">
-                                        <div className="text-lg font-semibold text-gray-600 mb-3">TERMS</div>
-                                        <div className="text-lg text-gray-900 whitespace-pre-line">{bookingsData.notes}</div>
-                                    </div>
-
-
-                                    <div className="w-full md:w-1/2">
-                                        <div className="flex justify-between text-lg text-gray-600 mb-2">
-                                            <span>SUBTOTAL</span>
-                                            {/* <span className="text-gray-900">{subtotal.toLocaleString()}</span> */}
-                                        </div>
-                                        <div className="flex justify-between text-lg text-gray-600 mb-2">
-                                            <span>DISCOUNT</span>
-                                            {/* <span className="text-gray-900">-{bookingsData.discount.toLocaleString()}</span> */}
-                                        </div>
-                                        <div className="flex justify-between text-lg text-gray-600 mb-2">
-                                            <span>(TAX RATE)</span>
-                                            {/* <span className="text-gray-900">({bookingsData.tax}%) {taxAmount()}</span> */}
-                                        </div>
-                                        <div className="flex justify-between text-lg text-gray-600 mb-2">
-                                            <span>SHIPPING</span>
-                                            {/* <span className="text-gray-900">{bookingsData.shipping.toLocaleString()}</span> */}
-                                        </div>
-                                        <div className="flex justify-between text-xl font-semibold text-gray-900 border-t-2 border-gray-300 mt-4 pt-4">
-                                            <span>INVOICE TOTAL</span>
-                                            {/* <span>{total.toLocaleString()}</span> */}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-8 pt-4 border-t border-gray-300 flex justify-between">
-                                    <div>
-                                        <div className="text-lg font-semibold text-gray-600 mb-3">BANK ACCOUNT DETAILS</div>
-                                        <div className="text-lg text-gray-900 whitespace-pre-line">{bookingsData.bankAccount}</div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </>
     );
