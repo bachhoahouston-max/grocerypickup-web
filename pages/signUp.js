@@ -80,7 +80,7 @@ const SignUp = (props) => {
             </div>
           </div>
           <form 
-            className="md:h-[756px] h-[550px] border-[2px] rounded-xl border-black px-2.5 md:px-12 flex flex-col justify-center items-center md:m-0 m-4 py-4 md:py-0"
+            className="md:h-[756px] h-[640px] border-[2px] rounded-xl border-black px-2.5 md:px-12 flex flex-col justify-center items-center md:m-0 m-4 py-4 md:py-0"
             onSubmit={submitSignUp}
           >
             <h3 className="text-black text-[28px] md:text-[40px] font-bold text-center md:mb-12 mb-8">{t("Sign up")}</h3>
