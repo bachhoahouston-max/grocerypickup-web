@@ -268,6 +268,23 @@ const Navbar = (props) => {
             });
     };
 
+    const [cost,setCost] = useState("")
+    
+    const getShippingCost = async () => {
+      props.loader(true);
+      try {
+        const res = await Api('get', 'getShippingCost', '', props.router);
+        props.loader(false);
+        setCost(res?.shippingCosts[0].ShippingCost || 0);
+      } catch (err) {
+        props.loader(false);
+        props.toaster({ type: 'error', message: err?.message });
+      }
+    };
+
+    useEffect(()=>{
+        getShippingCost()
+    },[])
 
     useEffect(() => {
         const sumWithInitial = cartData?.reduce(
@@ -295,7 +312,7 @@ const Navbar = (props) => {
         let delivery = 0;
 
         if (pickupOption === "localDelivery" || pickupOption === "ShipmentDelivery") {
-            delivery = sumWithInitial <= 35 ? 15 : 0;
+            delivery = sumWithInitial <= 35 ? cost : 0;
         } else if (pickupOption === "orderPickup" || pickupOption === "driveUp") {
             delivery = 0;
         }
@@ -320,6 +337,7 @@ const Navbar = (props) => {
         localStorage.removeItem("addCartDetail");
     };
 
+   
     const cartClose = (item, i) => {
         const nextState = produce(cartData, (draftState) => {
             if (i !== -1) {
