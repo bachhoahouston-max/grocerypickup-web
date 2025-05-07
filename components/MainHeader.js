@@ -1,12 +1,47 @@
-import { useState } from "react";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
+import React, {
+    useState,
+    useEffect,
+  } from "react";
 
 function MainHeader(props) {
     const router = useRouter();
     const { t } = useTranslation()
+    const [carouselImg, setCarouselImg] = useState([]);
+
+    useEffect(() => {
+        getsetting();
+      }, []);
+
+    const getsetting = async () => {
+        props.loader(true);
+        Api("get", "getsetting", "", router).then(
+          (res) => {
+            props.loader(false);
+            console.log("res================>", res);
+            if (res?.success) {
+              if (res?.setting.length > 0) {
+                setCarouselImg(res?.setting[0].carousel);
+              }
+    
+            } else {
+              props.loader(false);
+              console.log(res?.data?.message);
+              props.toaster({ type: "error", message: res?.data?.message });
+            }
+          },
+          (err) => {
+            props.loader(false);
+            console.log(err);
+            props.toaster({ type: "error", message: err?.message });
+          }
+        );
+      };
+      
     return (
         <div className="bg-[url('/image98.png')]  bg-cover bg-no-repeat md:h-[580px] md:p-0 ">
             <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5 max-w-7xl mx-auto h-full px-4 md:px-20 lg:px-32 xl:px-20 2xl:px-5">
