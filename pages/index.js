@@ -174,7 +174,10 @@ export default function Home(props) {
 
   return (
     <div className="">
-      <MainHeader />
+      <MainHeader 
+      loader={props.loader}
+      toaster={props.toaster}
+      />
       <div className="container mb-8 md:mt-8 mt-4 mx-auto bg-white max-w-7xl md:px-0 px-6">
         {sellProduct.length > 0 && (
           <>
