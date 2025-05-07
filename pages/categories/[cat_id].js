@@ -311,7 +311,7 @@ function Categories(props) {
                                             <button
                                                 key={pageNum}
                                                 onClick={() => handlePageChange(pageNum)}
-                                                className={`w-10 h-10 flex items-center justify-center rounded-md ${pageNum === paginationData.currentPage ? 'bg-custom-gold text-black' : 'text-black bg-gray-200'}`}
+                                                className={`w-10 h-10 flex items-center justify-center rounded-md ${pageNum === paginationData.currentPage ? 'bg-custom-gold text-white' : 'text-black bg-gray-200'}`}
                                             >
                                                 {pageNum}
                                             </button>

@@ -20,6 +20,8 @@ function Mybooking(props) {
     const [expandedBookingId, setExpandedBookingId] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [parkingNo, setParkingNo] = useState("");
+    const [carColor,setCarColor] = useState("");
+    const [carBrand,setCarBrand] = useState("");
     const [Id, setId] = useState("")
     const [otp, setOtp] = useState("")
     const [isGenerating, setIsGenerating] = useState(false);
@@ -35,6 +37,8 @@ function Mybooking(props) {
         e.preventDefault();
         const data = {
             parkingNo,
+            carColor:carColor,
+            carBrand:carBrand,
             id: Id,
             SecretCode: secretCode
         };
@@ -47,7 +51,7 @@ function Mybooking(props) {
                 props.loader(false);
 
                 if (res.status) {
-                    props.toaster({ type: "success", message: "Parking No. Added Successfully" });
+                    props.toaster({ type: "success", message: "Delivery Details Added Successfully" });
                     getBookingsByUser();
                     setIsOpen(false);
                     setParkingNo('');
@@ -276,6 +280,32 @@ function Mybooking(props) {
                                                         <option value="4">6</option>
                                                     </select>
 
+                                                    <label htmlFor="carBrand" className="block mb-2 text-black">
+                                                        {t("Car Brand")}:
+                                                    </label>
+                                                    <input
+                                                        id="carBrand"
+                                                        name="carBrand"
+                                                        value={carBrand}
+                                                        onChange={(e) => setCarBrand(e.target.value)}
+                                                        className="border text-black border-gray-300 rounded p-1.5 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
+                                                        required
+                                                    />
+                                                       
+                                                    <label htmlFor="CarColor" className="block mb-2 text-black">
+                                                        {t("Car Color")}:
+                                                    </label>
+                                                    <input
+                                                        id="CarColor"
+                                                        name="CarColor"
+                                                        value={carColor}
+                                                        onChange={(e) => setCarColor(e.target.value)}
+                                                        className="border text-black border-gray-300 rounded p-1.5 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
+                                                        required
+                                                    />
+                                                       
+                                                   
+
                                                     <div className="flex justify-end gap-4">
                                                         <button
                                                             type="button"
@@ -286,7 +316,7 @@ function Mybooking(props) {
                                                         </button>
                                                         <button
                                                             type="submit"
-                                                            className="px-4 py-2 bg-custom-gold text-white rounded hover:bg-gray-800 transition"
+                                                            className="px-4 py-2 bg-custom-gold text-white rounded hover:bg-gray-800 transition cursor-pointer"
                                                         >
                                                             {t("Submit")}
                                                         </button>

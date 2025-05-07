@@ -564,7 +564,7 @@ function ProductDetails(props) {
           </div>
         </div>
 
-        {productsId?.rating && (
+        {productsId?.reviews && (
           <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
             <p className='text-black text-xl font-bold'>{t("Ratings & Reviews")}</p>
             <div className='w-full'>
@@ -581,7 +581,7 @@ function ProductDetails(props) {
                   <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
                     <div className='pt-2 flex justify-start items-center'>
                       <div className='w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center'>
-                        <p className='text-black text-[18px] font-bold'>{item?.posted_by?.username?.charAt(0).toUpperCase()}</p>
+                        <p className='text-white text-[18px] font-bold'>{item?.posted_by?.username?.charAt(0).toUpperCase()}</p>
                       </div>
                       <div className='ml-5'>
                         <div className='flex'>
