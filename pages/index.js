@@ -146,7 +146,7 @@ export default function Home(props) {
             
            
             if (nowIndia < startDate) {
-                return { ...sale, timeLeft: null, status: 'Sale will start soon' };
+                return { ...sale, timeLeft: null, status: t('Sale will start soon') };
             } else if (nowIndia >= startDate && nowIndia < endDate) {
                 const distance = endDate - nowIndia;
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -156,10 +156,10 @@ export default function Home(props) {
                 return {
                     ...sale,
                     timeLeft: { days, hours, minutes, seconds },
-                    status: 'Sale is live'
+                    status: t('Sale is live')
                 };
             } else {
-                return { ...sale, timeLeft: null, status: 'Sale has ended' };
+                return { ...sale, timeLeft: null, status: t('Sale has ended') };
             }
         });
         
@@ -223,6 +223,7 @@ export default function Home(props) {
                   loader={props.loader}
                   toaster={props.toaster}
                   key={i}
+                  timeleft={sale.timeLeft}
                   item={item}
                   i={i}
                   url={`/product-details/${item?.slug}`}

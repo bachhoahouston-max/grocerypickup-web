@@ -9,15 +9,16 @@ import { FaHeart } from "react-icons/fa6";
 import { Api } from '@/services/service';
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
+import { useTranslation } from 'react-i18next';
 
-const SellProduct = ({ item, i, url ,loader,toaster}) => {
+const SellProduct = ({ item, i, url, loader, toaster }) => {
     const router = useRouter();
+    const { t } = useTranslation()
     const [cartData, setCartData] = useContext(cartContext);
     const [openCart, setOpenCart] = useContext(openCartContext);
     const [productsId, setProductsId] = useState([]);
     const [user] = useContext(userContext);
     const [isFavorite, setIsFavorite] = useState(false);
-    const [Favorite, setFavorite] = useContext(favoriteProductContext);
     const [saleData, setSaleData] = useState([])
 
     const handleAddToCart = (item) => {
@@ -44,7 +45,7 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
             });
             updatedCart = nextState;
         }
-    
+
         setCartData(updatedCart);
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
     };
@@ -60,7 +61,7 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                     draft[existingItemIndex].qty -= 1;
                     draft[existingItemIndex].total = (price * draft[existingItemIndex].qty).toFixed(2);
                 } else {
-                   
+
                     draft.splice(existingItemIndex, 1);
                 }
             });
@@ -72,36 +73,8 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
     };
 
     useEffect(() => {
-        if (user && user.token) {
-            getProductById();  
-        }
         getSale();
-    }, [user?.token]);
-
-    useEffect(() => {
-        // Fix: Check if productsId is an array before using .some()
-        if (Array.isArray(productsId)) {
-            const isProductFavorite = productsId.some((product) => product?.product?._id === item?._id);
-            setIsFavorite(isProductFavorite);
-        } else {
-            setIsFavorite(false);
-        }
-    }, [productsId, item?._id]);
-
-    const getProductById = async () => {
-        loader(true);
-        Api("get", "getFavourite", "", router).then(
-            (res) => {
-                loader(false);
-                // Ensure we're setting an array
-                setProductsId(Array.isArray(res.data) ? res.data : []);
-            },
-            (err) => {
-                console.log(err);
-                setProductsId([]);  // Set empty array on error
-            }
-        );
-    };
+    }, []);
 
     const getSale = async () => {
         loader(true);
@@ -111,7 +84,7 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                 loader(false);
                 if (res.status) {
                     setSaleData(res.data)
-                    console.log("dfghj",res.data)
+                    console.log("dfghj", res.data)
                 }
             },
             (err) => {
@@ -122,10 +95,10 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
         );
     };
 
-    
+
     const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
     const itemQuantity = cartItem ? cartItem.qty : 0;
- 
+
     const convertedSellPrice = saleData.map((data) => data?.price);
     const sellprice = convertedSellPrice.map((price) => Number(price));
 
@@ -140,7 +113,7 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                     alt="Product image"
                     className="w-full p-1 md:h-44 h-36 object-cover rounded cursor-pointer"
                 />
-               
+
             </div>
 
             <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
@@ -162,10 +135,10 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
             {itemQuantity > 0 ? (
                 <div className="bg-custom-offWhite w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
                     <div
-                        className=" bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
+                        className="bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
                         onClick={() => {
                             if (itemQuantity > 1) {
-                                handleRemoveFromCart(item)
+                                handleRemoveFromCart(item);
                             }
                         }}
                     >
@@ -184,14 +157,21 @@ const SellProduct = ({ item, i, url ,loader,toaster}) => {
                     </div>
                 </div>
             ) : (
-                <button
-                    className="font-bold bg-custom-gold w-[90px] md:mt-2 mt-1 rounded-[6px] md:px-4 px-0 py-1.5 text-[13px] md:text-[16px] text-black flex justify-center items-center"
-                    onClick={() => handleAddToCart(item)}
-                >
-                    <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-custom-black md:mr-2 mr-1 font-bold" />
-                    Add
-                </button>
+                timeLeft ? (
+                    <button
+                        className="font-bold bg-custom-gold w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
+                        onClick={handleAddToCart}
+                    >
+                        <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
+                        {t("Add")}
+                    </button>
+                ) : (
+                    <div className="w-[120px] md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-gray-500 flex justify-center items-center border border-gray-300 rounded-[6px]">
+                        {t("Start Soon")}
+                    </div>
+                )
             )}
+
 
             <div className="flex items-center text-black mt-2">
                 <div className="flex items-center mr-2">
