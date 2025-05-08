@@ -10,7 +10,7 @@ function Api(method, url, data, router, params) {
     if (typeof window !== "undefined") {
       token = localStorage?.getItem("token") || "";
     }
-    console.log(token);
+    // console.log(token);
     axios({
       method,
       url: ConstantsUrl + url,
