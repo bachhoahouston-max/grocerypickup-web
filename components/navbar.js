@@ -4,20 +4,16 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { IoPersonOutline } from "react-icons/io5";
 import { CiHeart } from "react-icons/ci";
 import constant from "../services/constant"
-import { FiLock, FiShoppingCart, FiSearch } from "react-icons/fi";
 import { useRouter } from 'next/router';
-import { Drawer, Typography, IconButton, Button } from "@mui/material";
-import { RxCrossCircled } from "react-icons/rx";
+import { Drawer } from "@mui/material";
 import { IoMdClose, IoIosArrowBack } from "react-icons/io";
 import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
 import { GoClock } from "react-icons/go";
-import { MdOutlineShoppingCart } from "react-icons/md";
 import { produce } from "immer";
 import { cartContext, openCartContext, userContext, favoriteProductContext } from "@/pages/_app";
 import { Api } from "@/services/service";
 import Swal from "sweetalert2";
 import { IoIosArrowForward } from "react-icons/io";
-import GroceryCatories from "../components/GroceryCatories"
 import DatePicker from 'react-datepicker';
 import { FaRegCalendarAlt } from "react-icons/fa"
 import 'react-datepicker/dist/react-datepicker.css';
@@ -25,8 +21,6 @@ import { BsCart2 } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import AddressInput from './addressInput';
 import { useTranslation } from "react-i18next";
-import { Country, State, City } from 'country-state-city';
-import Select from 'react-select';
 
 const Navbar = (props) => {
     const { t } = useTranslation()
@@ -50,30 +44,7 @@ const Navbar = (props) => {
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
     const [totalTax, setTotalTax] = useState(0)
-    const [selectedCountry, setSelectedCountry] = useState(null);
-    const [selectedState, setSelectedState] = useState(null);
-    const [selectedCity, setSelectedCity] = useState(null);
-    const [cities, setCities] = useState([]);
-    const [states, setStates] = useState([]);
-
-
-    useEffect(() => {
-        if (selectedCountry) {
-            const stateList = State.getStatesOfCountry(selectedCountry.isoCode);
-            setStates(stateList);
-        }
-    }, [selectedCountry]);
-
-    useEffect(() => {
-        if (selectedState) {
-            const cityList = City.getCitiesOfState(
-                selectedCountry.isoCode,
-                selectedState.isoCode
-            );
-            setCities(cityList);
-        }
-    }, [selectedState, selectedCity]);
-
+  
     const [profileData, setProfileData] = useState({
         username: '',
         mobile: '',
@@ -83,6 +54,7 @@ const Navbar = (props) => {
         lat: null,
         lng: null
     })
+
     const [date, setDate] = useState(null);
     const [parkingNo, setParkingNo] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
@@ -105,10 +77,6 @@ const Navbar = (props) => {
 
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
-        // pincode:"",
-        // city:"",
-        // state:"",
-        // country:"",
         address: "",
         name: "",
         lastname: "",
@@ -350,7 +318,7 @@ const Navbar = (props) => {
 
     const createProductRquest = (e) => {
         // e.preventDefault();
-
+   
         if (pickupOption === 'localDelivery') {
             if (!localAddress.dateOfDelivery) {
                 return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
@@ -362,7 +330,7 @@ const Navbar = (props) => {
                 return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
             }
         }
-
+        setOpenCart(false)
 
         let data = [];
         let cart = localStorage.getItem("addCartDetail");
@@ -410,7 +378,7 @@ const Navbar = (props) => {
 
         let newData = {
             productDetail: data,
-            total: CartTotal.toFixed(2),
+            total: mainTotal.toFixed(2),
             user: user._id,
             Email:user.email,
             Local_address: {
@@ -437,33 +405,32 @@ const Navbar = (props) => {
         };
 
         console.log(newData)
-        props.loader && props.loader(true);
-        Api("post", "createProductRquest", newData, router).then(
-            (res) => {
-                props.loader && props.loader(false);
-                if (res.status) {
-                    setCartData([]);
-                    setLocalAddress([])
-                    setCartTotal(0);
-                    setOpenCart(false);
-                    setDate('')
-                    setSelectedCountry('')
-                    setSelectedCity('')
-                    setSelectedState('')
-                    getProfileData()
-                    localStorage.removeItem("addCartDetail");
-                    props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
+        // props.loader && props.loader(true);
+        // Api("post", "createProductRquest", newData, router).then(
+        //     (res) => {
+        //         props.loader && props.loader(false);
+        //         if (res.status) {
+        //             setCartData([]);
+        //             setLocalAddress([])
+        //             setCartTotal(0);
+        //             setOpenCart(false);
+        //             setDate('')
+        //             getProfileData()
+        //             localStorage.removeItem("addCartDetail");
+        //             props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
+        //             router.push("/Mybooking");
+        //         } else {
+        //             props.toaster && props.toaster({ type: "error", message: res?.data?.message });
+        //         }
+        //     },
+        //     (err) => {
+        //         props.loader && props.loader(false);
+        //         props.toaster && props.toaster({ type: "error", message: err?.message });
+        //     }
+        // );
+        localStorage.setItem("checkoutData", JSON.stringify(newData));
+        router.push('/payment?from=cart')
 
-                    router.push("/Mybooking");
-                } else {
-                    props.toaster && props.toaster({ type: "error", message: res?.data?.message });
-                }
-            },
-            (err) => {
-                props.loader && props.loader(false);
-                props.toaster && props.toaster({ type: "error", message: err?.message });
-            }
-        );
     };
 
     function formatDate(dateString) {
@@ -508,7 +475,7 @@ const Navbar = (props) => {
 
         const data = {
             price: CartTotal.toFixed(2),
-            currency: "USD" // Consider making this dynamic
+            currency: constant.currency // Consider making this dynamic
         };
 
         console.log(data);
@@ -1220,7 +1187,8 @@ const Navbar = (props) => {
                                     return;
                                 } else {
                                     createProductRquest();
-                                    // payment()
+                                    
+
                                 }
                             }}
                         >

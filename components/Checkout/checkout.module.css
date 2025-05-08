@@ -139,7 +139,7 @@
   height: 100%;
 }
 
-.cart_disc > * {
+.cart_disc>* {
   display: block;
 }
 
@@ -148,7 +148,7 @@
   overflow: hidden;
 }
 
-.price_description > * {
+.price_description>* {
   display: block;
   margin-bottom: 2px;
 }
@@ -191,14 +191,14 @@
   border: 1px solid var(--deep_gray);
 }
 
-.payment_card > * {
+.payment_card>* {
   margin-top: 5px;
   font-size: 16px;
   font-weight: 500;
   letter-spacing: 0.5px;
 }
 
-.payment_card_label > input:checked ~ .payment_card {
+.payment_card_label>input:checked~.payment_card {
   background-color: var(--white);
   border: 1px solid var(--secondary);
 }
@@ -258,12 +258,14 @@
 
 @media (max-width: 425px) {
   .top {
-    padding-top: 35px;
+      padding-top: 35px;
   }
+
   .card {
-    margin: 20px auto 65px;
+      margin: 20px auto 65px;
   }
+
   .nav span {
-    display: none;
+      display: none;
   }
 }
