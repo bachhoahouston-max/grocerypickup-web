@@ -172,7 +172,7 @@
   "Review": "Ôn tập",
   "No history available": "Không có lịch sử nào",
   "How many stars would you give to them": "Bạn sẽ cho họ bao nhiêu ngôi sao?",
-  "Description": "Sự miêu tả",
+  "Short Description": "Mô tả ngắn",
   "All Categories": "Tất cả danh mục",
   "Search Result": "Kết quả tìm kiếm",
   "No Products": "Không có sản phẩm",
@@ -216,5 +216,19 @@
   "Employee will Bring Products out":"Nhân viên sẽ mang sản phẩm ra",
   "Sale will start soon":"Chương trình giảm giá sẽ sớm bắt đầu",
   "Sale is live":"Bán hàng đang diễn ra",
-  "Sale has ended":"Khuyến mại đã kết thúc"
+  "Sale has ended":"Khuyến mại đã kết thúc",
+  "Long Description":"Mô tả dài",
+  "Check Delivery Availability":"Kiểm tra tình trạng giao hàng",
+  "Enter Zipcode":"Nhập mã Zip",
+  "Check":"Kiểm tra",
+  "Please enter a pincode.":"Vui lòng nhập mã PIN.",
+  "✅ Delivery is available in this Zipcode.":"✅ Có dịch vụ giao hàng tại mã bưu chính này.",
+  "❌ Delivery is not available in this Zipcode.":"❌ Không giao hàng tại mã bưu chính này.",
+  "Enter Company Name":"Nhập tên công ty",
+  "This is business address":"Đây là địa chỉ kinh doanh",
+  "Delivery Expected":"Dự kiến ​​giao hàng",
+  "Tracking Number":"Số theo dõi",
+  "Track":"Theo dõi",
+  "Secret Code":"Mã bí mật"
+
 }

@@ -19,6 +19,7 @@ import StarIcon from '@mui/icons-material/Star';
 import moment from 'moment';
 import { useTranslation } from "react-i18next";
 import constant from "@/services/constant";
+import { RxCross2 } from "react-icons/rx";
 
 function ProductDetails(props) {
   const { t } = useTranslation()
@@ -40,7 +41,10 @@ function ProductDetails(props) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInCart, setIsInCart] = React.useState(false);
   const [availableQty, setAvailableQty] = React.useState(0);
-  // console.log(selectedPrice)
+  const [pincode, setPincode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+
 
   useEffect(() => {
     if (router?.query?.id) {
@@ -160,7 +164,7 @@ function ProductDetails(props) {
       if (existingItem) {
         if (existingItem.qty > 1) {
           existingItem.qty -= 1;
-          existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty );
+          existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty);
         } else {
 
           const index = draft.indexOf(existingItem);
@@ -214,6 +218,36 @@ function ProductDetails(props) {
       (err) => {
         props.loader(false);
         console.log(err);
+        props.toaster({ type: "error", message: err?.message });
+      }
+    );
+  };
+
+  const checkAvailability = async () => {
+    if (!pincode) {
+      setMessage("Please enter a pincode.");
+      return;
+    }
+    // setLoading(true);
+    setMessage("");
+    props.loader(true);
+    Api("post", "checkAvailable", { pincode }, router).then(
+      (res) => {
+        props.loader(false);
+        console.log(res.data)
+        console.log(res)
+        if (res.available) {
+          props.toaster({ type: "error", message: "Delivery is available!" });
+          setMessage("✅ Delivery is available in this Zipcode.");
+        } else {
+          props.toaster({ type: "error", message: "Delivery is not available" });
+          setMessage("❌ Delivery is not available in this Zipcode.");
+        }
+      },
+      (err) => {
+        props.loader(false);
+        console.log(err);
+        setMessage('Error checking availability.');
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -447,10 +481,36 @@ function ProductDetails(props) {
                     {t("Shipment Delivery is not available")}
                   </p>
                 )}
+                <h3 className="text-black font-normal text-[17px] mt-4 mb-1">
+                  {t("Check Delivery Availability")}</h3>
 
-                {/* <p className="text-red-500 font-normal text-[17px] mt-1">
-                  * {t("Note : Tax is included in this price")}
-                </p> */}
+                <div className="grid md:grid-cols-3 gap-2 relative min-w-sm">
+                  <input
+                    type="number"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value)}
+                    placeholder={t("Enter Zipcode")}
+                    className="p-2 border border-gray-300 rounded w-full mb-4 text-black focus:outline-none focus:ring-2 focus:ring-custom-green text-bold col-span-2 "
+                  />
+                  {pincode && (
+                    <RxCross2 className="absolute right-[155px] top-3 text-black"
+                      onClick={() => {
+                        setPincode("");
+                        setMessage("")
+                      }}
+                    />
+                  )}
+
+
+                  <button
+                    onClick={checkAvailability}
+                    // disabled={loading}
+                    className='w-full p-2 text-white rounded bg-custom-gold hover:bg-custom-gold  transition duration-200 col-span-1 h-10.5'
+                  >
+                    {t("Check")}
+                  </button>
+                </div>
+                <div className="mt-1 text-gray-700">{t(message)}</div>
 
               </div>
             </div>
@@ -463,12 +523,12 @@ function ProductDetails(props) {
                 {t("About Product")}
               </p>
               <p className="text-black font-medium md:text-xl text-base pt-2">
-                {t("Description")} :{" "}
+                {t("Short Description")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
                   {productsId?.long_description}
                 </span>
               </p>
-             
+
             </div>
             <div className="flex flex-col justify-start items-start">
               <p className="text-black font-medium md:text-xl text-base">
@@ -477,12 +537,7 @@ function ProductDetails(props) {
                   {productsId?.origin}
                 </span>
               </p>
-              {/* <p className="text-black font-medium md:text-xl text-base pt-2">
-                {t("Self Life")} :{" "}
-                <span className="text-custom-newGray font-normal md:text-xl text-base">
-                  {productsId?.selflife}
-                </span>
-              </p> */}
+
               <p className="text-black font-medium md:text-xl text-base pt-2">
                 {t("Manufacturer Name")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
@@ -497,32 +552,41 @@ function ProductDetails(props) {
               </p>
             </div>
             <div className="col-span-2">
-                <p className="text-black font-semibold md:text-xl text-base pt-1">
-                  {t("Disclaimer")} :
-                </p>
-                <span
-                  className="text-black font-normal md:text-xl text-base"
-                  dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
-                />
-              </div>
-              <div className="col-span-2">
-                <p className="text-black font-semibold md:text-xl text-base pt-1">
-                  {t("Warning")} :
-                </p>
-                <span
-                  className="text-black font-normal md:text-xl text-base"
-                  dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
-                />
-              </div>
-               <div className="col-span-2">
-                <p className="text-black font-semibold md:text-xl text-base pt-1">
-                  {t("Return Policy")} :
-                </p>
-                <span
-                  className="text-black font-normal md:text-xl text-base"
-                  dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
-                />
-              </div>
+              <p className="text-black font-semibold md:text-xl text-base pt-1">
+                {t("Long Description")} :
+              </p>
+              <span
+                className="text-black font-normal md:text-xl text-base">
+                {productsId?.long_description}
+              </span>
+            </div>
+            <div className="col-span-2">
+              <p className="text-black font-semibold md:text-xl text-base pt-1">
+                {t("Disclaimer")} :
+              </p>
+              <span
+                className="text-black font-normal md:text-xl text-base"
+                dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
+              />
+            </div>
+            <div className="col-span-2">
+              <p className="text-black font-semibold md:text-xl text-base pt-1">
+                {t("Warning")} :
+              </p>
+              <span
+                className="text-black font-normal md:text-xl text-base"
+                dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
+              />
+            </div>
+            <div className="col-span-2">
+              <p className="text-black font-semibold md:text-xl text-base pt-1">
+                {t("Return Policy")} :
+              </p>
+              <span
+                className="text-black font-normal md:text-xl text-base"
+                dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
+              />
+            </div>
           </div>
         </div>
 

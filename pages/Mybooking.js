@@ -20,8 +20,8 @@ function Mybooking(props) {
     const [expandedBookingId, setExpandedBookingId] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const [parkingNo, setParkingNo] = useState("");
-    const [carColor,setCarColor] = useState("");
-    const [carBrand,setCarBrand] = useState("");
+    const [carColor, setCarColor] = useState("");
+    const [carBrand, setCarBrand] = useState("");
     const [Id, setId] = useState("")
     const [otp, setOtp] = useState("")
     const [isGenerating, setIsGenerating] = useState(false);
@@ -37,8 +37,8 @@ function Mybooking(props) {
         e.preventDefault();
         const data = {
             parkingNo,
-            carColor:carColor,
-            carBrand:carBrand,
+            carColor: carColor,
+            carBrand: carBrand,
             id: Id,
             SecretCode: secretCode
         };
@@ -73,7 +73,7 @@ function Mybooking(props) {
     let secretCode1 = Math.floor(1000 + Math.random() * 9000);
 
     const getSecrectCode = () => {
-      
+
         const data = {
             id: Id,
             SecretCode: secretCode1
@@ -102,7 +102,7 @@ function Mybooking(props) {
             });
     };
 
-    
+
     useEffect(() => {
         getBookingsByUser();
     }, []);
@@ -164,198 +164,158 @@ function Mybooking(props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-3 md:mx-auto md:gap-12 gap-4 max-w-6xl">
                     {bookingsData && bookingsData.length > 0 ? (
                         bookingsData.map((booking, key) => (
-                            <div key={key} className="bg-white md:p-2 py-4 p-2.5 rounded-md border-2 border-[#999999] h-auto self-start lg:w-[578px] xl:w-[590px]">
-                                <div className="flex items-center justify-between cursor-pointer" >
-                                    <div className="flex flex-col justify-start w-full">
-                                        <div className="flex flex-row justify-between items-center mb-2">
-                                            <div className="bg-custom-green text-white rounded-full 
-                                            md:h-[50px] h-[40px] md:w-[50px] w-[40px] flex items-center justify-center mr-1 md:text-[24px] text-[18px]">
+                            <div key={key} className="bg-white rounded-lg shadow-md border border-gray-200 hover:border-gray-300 transition-all mb-4">
+                                {/* Header - Order ID and Date */}
+                                <div className="bg-gray-50 p-4 rounded-t-lg border-b border-gray-200">
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex items-center space-x-3">
+                                            <div className="bg-custom-green text-white rounded-full h-10 w-10 flex items-center justify-center font-semibold">
                                                 {key + 1}
                                             </div>
-                                            {booking?.status === 'Completed' ? (
-                                                <p className="">
-                                                </p>
-                                            ) : (
-                                                booking?.SecretCode && (
-                                                    <p className="px-2 py-2 md:text-[16px] text-[14px] text-black md:w-[440px] w-[230px]">
-                                                        {t("Secret Code is")} {booking.SecretCode} {t("Please do not share this with anyone")}.
-                                                    </p>
-                                                )
-                                            )}
-                                            {booking?.isShipmentDelivery && (
-                                                <p className="text-black  md:text-[16px] text-[14px]">
-                                                    {t("Delivery expected by")} {formatDate2(new Date(new Date(booking.createdAt).setDate(new Date(booking.createdAt).getDate() + 3)))} 11 PM
-                                                </p>
-                                            )}
-
-
-                                            <div className="flex items-center">
-
-                                                {/* <Invoice order={booking} /> */}
-                                              
-                                                <div>
-                                                    {expandedBookingId === booking._id ? (
-                                                        <IoIosArrowUp className="text-2xl text-black"
-                                                            onClick={() => toggleBooking(booking._id)}
-                                                        />
-                                                    ) : (
-                                                        <IoIosArrowDown className="text-2xl text-black"
-                                                            onClick={() => toggleBooking(booking._id)} />
-                                                    )}
-                                                </div>
-                                            </div>
+                                            <h3 className="text-sm md:text-lg font-medium text-gray-800">
+                                                {t("My Order")} - <span className="text-gray-600">{formatDate(booking.createdAt) || "N/A"}</span>
+                                            </h3>
                                         </div>
-                                        <div className="flex justify-between">
-                                            <p className="text-[15px] text-black md:text-[20px]">
-                                                {t("My Order")} ({formatDate(booking.createdAt) || "N/A"})</p>
+                                        <div className="flex justify-center items-center space-x-2">
                                             {booking?.status === 'Completed' ? (
-                                                <p className=" md:py-2 py-0 text-[15px] text-green-500 rounded">
+                                                <span className="px-3  md:w-full w-[110px] py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
                                                     {t("Order Delivered")}
-                                                </p>
-                                            ) : booking?.status === 'Pending' ? (
-                                                <>
-                                                    <div className="flex md:flex-row flex-col  justify-end items-end">
-                                                        {booking?.isDriveUp && (
-                                                            <p
-                                                                onClick={() => toggleModal(booking._id)}
-                                                                className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded "
-                                                            >
-                                                                {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
-                                                            </p>
-                                                        )}
-
-                                                         {booking?.isOrderPickup && (
-                                                            <p
-                                                                onClick={() => toggleModal2(booking._id)}
-                                                                className="px-3 py-1.5 bg-custom-gold md:text-[16px] md:mr-2 mr-0 text-[14px] text-white rounded md:w-22 w-20"
-                                                            >
-                                                                {t("I'm here")}
-                                                            </p>
-                                                        )}
-                                                        <p className="md:py-2 text-right pr-2 w-44 py-0 text-[16px] text-red-500 rounded">
-                                                            {t("Order Pending")}
-                                                        </p>
-                                                    </div>
-                                                </>
+                                                </span>
                                             ) : (
-                                                (booking?.isLocalDelivery || booking?.isOrderPickup) && (
-                                                    <p className="px-1 py-2 text-[16px] text-red-500 rounded">
-                                                        {t("Order Pending")}
-                                                    </p>
-                                                )
+                                                <span className="md:px-3 px-2 md:w-full w-[110px] py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
+                                                    {t("Order Pending")}
+                                                </span>
                                             )}
-
+                                            <button onClick={() => toggleBooking(booking._id)} className="p-1 rounded-full hover:bg-gray-200">
+                                                {expandedBookingId === booking._id ? (
+                                                    <IoIosArrowUp className="text-xl text-gray-600" />
+                                                ) : (
+                                                    <IoIosArrowDown className="text-xl text-gray-600" />
+                                                )}
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
 
-                                {isOpen && (
-                                    <div className="fixed top-0 left-0 w-screen h-screen bg-black/10 flex justify-center items-center z-50">
-                                        <div className="relative w-[320px] md:w-[400px] h-auto bg-white rounded-lg shadow-lg">
-                                            <div className="p-6">
-                                                <button
-                                                    onClick={toggleModal}
-                                                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer"
-                                                >
-                                                    <IoIosClose className="text-3xl " />
-                                                </button>
-                                                <h2 className="text-xl font-semibold mb-4 text-black text-center">{t("Employee will Bring Products out")}</h2>
-                                                <form onSubmit={handleSubmit}>
-                                                    <label htmlFor="parkingNo" className="block mb-2 text-black">
-                                                        {t("Parking Spot")}:
-                                                    </label>
-                                                    <select
-                                                        id="parkingNo"
-                                                        value={parkingNo}
-                                                        onChange={(e) => setParkingNo(e.target.value)}
-                                                        className="border text-black border-gray-300 rounded p-2 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
-                                                        required
-                                                    >
-                                                        <option value="">{t("Select Parking Spot")}</option>
-                                                        <option value="1">1</option>
-                                                        <option value="2">2</option>
-                                                        <option value="3">3</option>
-                                                        <option value="4">4</option>
-                                                        <option value="3">5</option>
-                                                        <option value="4">6</option>
-                                                    </select>
-
-                                                    <label htmlFor="carBrand" className="block mb-2 text-black">
-                                                        {t("Car Brand")}:
-                                                    </label>
-                                                    <input
-                                                        id="carBrand"
-                                                        name="carBrand"
-                                                        value={carBrand}
-                                                        onChange={(e) => setCarBrand(e.target.value)}
-                                                        className="border text-black border-gray-300 rounded p-1.5 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
-                                                        required
-                                                    />
-                                                       
-                                                    <label htmlFor="CarColor" className="block mb-2 text-black">
-                                                        {t("Car Color")}:
-                                                    </label>
-                                                    <input
-                                                        id="CarColor"
-                                                        name="CarColor"
-                                                        value={carColor}
-                                                        onChange={(e) => setCarColor(e.target.value)}
-                                                        className="border text-black border-gray-300 rounded p-1.5 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-black"
-                                                        required
-                                                    />
-                                                       
-                                                   
-
-                                                    <div className="flex justify-end gap-4">
-                                                        <button
-                                                            type="button"
-                                                            onClick={toggleModal}
-                                                            className="px-4 py-2 text-black bg-gray-300 rounded hover:bg-gray-400 transition"
-                                                        >
-                                                            {t("Cancel")}
-                                                        </button>
-                                                        <button
-                                                            type="submit"
-                                                            className="px-4 py-2 bg-custom-gold text-white rounded hover:bg-gray-800 transition cursor-pointer"
-                                                        >
-                                                            {t("Submit")}
-                                                        </button>
+                                {/* Secret Code and Tracking Info - Always visible */}
+                                {(booking?.SecretCode || booking?.isShipmentDelivery || booking?.trackingNo) && (
+                                    <div className="p-4 border-b border-gray-200 bg-gray-50">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            {booking?.SecretCode && booking?.status !== 'Completed' && (
+                                                <div className="flex items-center">
+                                                    <div className="p-2 bg-yellow-100 rounded-lg mr-3">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-600" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                                                        </svg>
                                                     </div>
-                                                </form>
+                                                    <div>
+                                                        <p className="text-sm text-gray-500">{t("Secret Code")}</p>
+                                                        <p className="text-base font-medium text-gray-800">{booking.SecretCode}</p>
+                                                    </div>
+                                                </div>
+                                            )}
 
-                                            </div>
+                                            {booking?.isShipmentDelivery && (
+                                                <div className="flex items-center">
+                                                    <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                                            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h2a1 1 0 001-1v-4a1 1 0 00-.293-.707l-2-2A1 1 0 0012 6h-1V5a1 1 0 00-1-1H3z" />
+                                                        </svg>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-sm text-gray-500">{t("Delivery Expected")}</p>
+                                                        <p className="text-base font-medium text-gray-800">
+                                                            {formatDate2(new Date(new Date(booking.createdAt).setDate(new Date(booking.createdAt).getDate() + 3)))} 11 PM
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            {booking?.trackingNo && booking?.trackingLink && (
+                                                <div className="flex items-center md:col-span-2">
+                                                    <div className="p-2 bg-indigo-100 rounded-lg mr-3">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-600" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                                                        </svg>
+                                                    </div>
+                                                    <div className="flex-grow">
+                                                        <p className="text-sm text-gray-500">{t("Tracking Number")}</p>
+                                                        <div className="flex items-center space-x-3">
+                                                            <p className="text-[13px] font-medium text-gray-800">{booking.trackingNo}</p>
+                                                            <a href={booking.trackingLink} target="_blank" rel="noopener noreferrer" className="inline-block">
+                                                               
+                                                                <button className="px-4 py-1.5 bg-custom-green text-white text-[13px] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-custom-gold">
+                                                                    {t("Track")}
+                                                                </button>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 )}
 
-                                <div className={expandedBookingId === booking._id ? "block mt-4" : "hidden"}>
-                                    <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-white p-3 rounded-[10px] border border-gray-200">
+                                {/* Action Buttons */}
+                                {booking?.status === 'Pending' && (booking?.isDriveUp || booking?.isOrderPickup) && (
+                                    <div className="px-4 py-3 bg-white border-b border-gray-200">
+                                        <div className="flex flex-wrap gap-2 justify-end">
+                                            {booking?.isDriveUp && (
+                                                <button
+                                                    onClick={() => toggleModal(booking._id)}
+                                                    className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                                >
+                                                    {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
+                                                </button>
+                                            )}
+
+                                            {booking?.isOrderPickup && (
+                                                <button
+                                                    onClick={() => toggleModal2(booking._id)}
+                                                    className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                                >
+                                                    {t("I'm here")}
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Expanded Order Details */}
+                                <div className={expandedBookingId === booking._id ? "p-4" : "hidden"}>
+                                    <div className="rounded-lg border border-gray-200 overflow-hidden">
                                         {booking.productDetail.map((product, index) => (
-                                            <div key={index} className="col-span-2 flex gap-5"
+                                            <div
+                                                key={index}
+                                                className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer ${index !== booking.productDetail.length - 1 ? 'border-b border-gray-200' : ''
+                                                    }`}
                                                 onClick={() => { router.push(`/myorder/${booking._id}?product_id=${product._id}`) }}
                                             >
-                                                <img
-                                                    className="w-20 h-20 text-gray-600 rounded-[10px] object-contain border border-gray-200"
-                                                    src={product.image?.[0] || "/api/placeholder/100/100"}
-                                                    alt="Product"
-                                                />
-                                                <div>
-                                                    <p className="text-black text-base font-bold">
-                                                        {product.product?.name}
-                                                    </p>
-                                                    <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        {t("Quantity")}: {product.qty || 1}
-                                                    </p>
-                                                    <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        {t("Order Id")}: {booking.orderId || 1}
-                                                    </p>
+                                                <div className="flex-shrink-0">
+                                                    <img
+                                                        className="w-16 h-16 rounded-md object-contain border border-gray-200 bg-white p-1"
+                                                        src={product.image?.[0] || "/api/placeholder/100/100"}
+                                                        alt={product.product?.name || "Product"}
+                                                    />
                                                 </div>
+                                                <div className="ml-4 flex-grow">
+                                                    <p className="text-gray-800 font-medium">{product.product?.name}</p>
+                                                    <div className="flex flex-col items-start mt-1 text-[14px] text-gray-600">
+                                                        <span className="mr-4">{t("Quantity")}: {product.qty || 1}</span>
+                                                        <span>{t("Order Id")}: {booking.orderId || 1}</span>
+                                                    </div>
+                                                </div>
+                                            
                                             </div>
                                         ))}
-                                        <div className="flex flex-col justify-center items-end">
-                                            <p className="text-gray-600 text-base font-bold">
-                                                {t("Total")}: $ {booking.total || "0.00"}
-                                            </p>
+                                    </div>
+
+                                    {/* Order Total */}
+                                    <div className="mt-4 flex justify-end">
+                                        <div className="bg-gray-50 px-6 py-3 rounded-lg border border-gray-200">
+                                            <p className="text-sm text-gray-500">{t("Total")}</p>
+                                            <p className="text-xl font-semibold text-gray-800">$ {booking.total || "0.00"}</p>
                                         </div>
                                     </div>
                                 </div>

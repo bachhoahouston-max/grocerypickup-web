@@ -44,7 +44,7 @@ const Navbar = (props) => {
     const [productsId, setProductsId] = useState([]);
     const [pickupOption, setPickupOption] = useState("orderPickup");
     const [totalTax, setTotalTax] = useState(0)
-  
+
     const [profileData, setProfileData] = useState({
         username: '',
         mobile: '',
@@ -78,6 +78,8 @@ const Navbar = (props) => {
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
         address: "",
+        isBusinessAddress:"",
+        BusinessAddress: "",
         name: "",
         lastname: "",
         email: "",
@@ -185,7 +187,7 @@ const Navbar = (props) => {
         date.setDate(date.getDate() + 1);
         return date;
     })();
-    
+
 
     const closeDrawers = async () => {
         setOpenCart(false);
@@ -236,23 +238,23 @@ const Navbar = (props) => {
             });
     };
 
-    const [cost,setCost] = useState("")
-    
+    const [cost, setCost] = useState("")
+
     const getShippingCost = async () => {
-      props.loader(true);
-      try {
-        const res = await Api('get', 'getShippingCost', '', props.router);
-        props.loader(false);
-        setCost(res?.shippingCosts[0].ShippingCost || 0);
-      } catch (err) {
-        props.loader(false);
-        props.toaster({ type: 'error', message: err?.message });
-      }
+        props.loader(true);
+        try {
+            const res = await Api('get', 'getShippingCost', '', props.router);
+            props.loader(false);
+            setCost(res?.shippingCosts[0].ShippingCost || 0);
+        } catch (err) {
+            props.loader(false);
+            props.toaster({ type: 'error', message: err?.message });
+        }
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         getShippingCost()
-    },[])
+    }, [])
 
     useEffect(() => {
         const sumWithInitial = cartData?.reduce(
@@ -305,7 +307,7 @@ const Navbar = (props) => {
         localStorage.removeItem("addCartDetail");
     };
 
-   
+
     const cartClose = (item, i) => {
         const nextState = produce(cartData, (draftState) => {
             if (i !== -1) {
@@ -318,12 +320,22 @@ const Navbar = (props) => {
 
     const createProductRquest = (e) => {
         // e.preventDefault();
-   
+
         if (pickupOption === 'localDelivery') {
             if (!localAddress.dateOfDelivery) {
                 return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
             }
         }
+
+        if (localAddress.isBusinessAddress) {
+            if (!localAddress.BusinessAddress) {
+                return props.toaster({ 
+                    type: "error", 
+                    message: "Business Address is required if 'This is business address' is checked." 
+                });
+            }
+        }
+        
 
         if (pickupOption === 'driveUp') {
             if (!date) {
@@ -374,13 +386,13 @@ const Navbar = (props) => {
                 return false;
             }
         }
-       
+
 
         let newData = {
             productDetail: data,
             total: mainTotal.toFixed(2),
             user: user._id,
-            Email:user.email,
+            Email: user.email,
             Local_address: {
                 ...localAddress,
                 name: localAddress.name,
@@ -388,6 +400,7 @@ const Navbar = (props) => {
                 address: localAddress.address,
                 email: localAddress.email,
                 lastname: localAddress.lastname,
+                BusinessAddress: localAddress.BusinessAddress,
                 dateOfDelivery: localAddress.dateOfDelivery,
                 location: {
                     type: 'Point',
@@ -925,8 +938,8 @@ const Navbar = (props) => {
                                         required
                                     />
 
-                                  
-                                    
+
+
                                     <input
                                         type="text"
                                         name="phoneNumber"
@@ -936,8 +949,8 @@ const Navbar = (props) => {
                                         className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
                                         required
                                     />
-                                    
-                                    
+
+
                                     <AddressInput
                                         setProfileData={setProfileData}
                                         profileData={localAddress}
@@ -945,6 +958,30 @@ const Navbar = (props) => {
                                         className=" m-1 border rounded-lg py-2 pl-2 md:pl-4 md:pr-2 pr-7 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  !z-[999999999] text-xs md:text-sm md:w-[608px] w-[295px]"
                                         required
                                     />
+                                    <label className="flex items-center space-x-2 ps-2">
+                                        <input
+                                            type="checkbox"
+                                            checked={localAddress.isBusinessAddress || false}
+                                            onChange={(e) =>
+                                                setLocalAddress({
+                                                    ...localAddress,
+                                                    isBusinessAddress: e.target.checked
+                                                })
+                                            }
+                                        />
+                                        <span className='text-sm mt-1 mb-1'>{t("This is business address")}</span>
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="BusinessAddress"
+                                        placeholder={t("Enter Company Name")}
+                                        value={localAddress.BusinessAddress}
+                                        onChange={handleInputChange1}
+                                        className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  text-sm md:w-[608px] w-[295px]"
+                                        required
+                                    />
+
                                 </div>
                             </div>
                         </div>
@@ -1187,7 +1224,7 @@ const Navbar = (props) => {
                                     return;
                                 } else {
                                     createProductRquest();
-                                    
+
 
                                 }
                             }}

@@ -172,7 +172,7 @@
   "Review": "Review",
   "No history available": "No history available",
   "How many stars would you give to them": "How many stars would you give to them",
-  "Description": "Description",
+  "Short Description": "Description",
   "All Categories": "All Categories",
   "Search Result": "Search Result",
   "No Products": "No Products",
@@ -216,6 +216,19 @@
     "Employee will Bring Products out":"Employee will Bring Products out",
     "Sale will start soon":"Sale will start soon",
     "Sale is live":"Sale is live",
-    "Sale has ended":"Sale has ended"
+    "Sale has ended":"Sale has ended",
+    "Long Description":"Long Description",
+    "Check Delivery Availability":"Check Delivery Availability",
+    "Enter Zipcode":"Enter Zipcode",
+    "Check":"Check",
+    "Please enter a pincode.":"Please enter a pincode.",
+    "✅ Delivery is available in this Zipcode.":"✅ Delivery is available in this Zipcode.",
+    "❌ Delivery is not available in this Zipcode.":"❌ Delivery is not available in this Zipcode.",
+    "Enter Company Name":"Enter Company Name",
+    "This is business address":"This is business address",
+      "Delivery Expected":"Delivery Expected",
+      "Tracking Number":"Tracking Number",
+      "Track":"Track",
+      "Secret Code":"Secret Code"
   
 }
