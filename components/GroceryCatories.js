@@ -24,51 +24,44 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     const [availableQty, setAvailableQty] = useState(1);
 
     const handleAddToCart = () => {
-        setCartData((prevCartData) => {
-            const existingItem = prevCartData.find((f) => f._id === item?._id);
-
-            if (!existingItem) {
-                const newItem = {
-                    ...item,
-                    selectedColor: item?.varients[0] || {},
-                    selectedImage: item?.varients[0]?.image[0] || "",
-                    qty: 1,
-                    price: item.price_slot[0]?.our_price,
-                    total: Number(item.price_slot?.[0]?.our_price ?? 0),
-                    price_slot: item.price_slot[0],
-                    tax: item?.tax
-                };
-
-                const updatedCart = [...prevCartData, newItem];
-                localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-                return updatedCart;
-            }
-            return prevCartData;
-        });
+        const itemQuantity = Number(item?.Quantity ?? 0);
+    
+        // Outside check — good for immediate feedback
+        if (itemQuantity <= 0) {
+            toaster({ type: "error", message: "This item is currently out of stock. Please choose a different item." });
+            return;
+        }
+    
+        const existingItem = cartData.find((f) => f._id === item?._id);
+    
+        // Prevent adding again if already in cart (optional)
+        if (existingItem) {
+            toaster({ type: "info", message: "Item already in cart." });
+            return;
+        }
+    
+        const newItem = {
+            ...item,
+            selectedColor: item?.varients?.[0] || {},
+            selectedImage: item?.varients?.[0]?.image?.[0] || "",
+            qty: 1,
+            price: item.price_slot?.[0]?.our_price ?? 0,
+            total: Number(item.price_slot?.[0]?.our_price ?? 0),
+            price_slot: item.price_slot?.[0] || {},
+            tax: item?.tax,
+        };
+    
+        const updatedCart = [...cartData, newItem];
+    
+        setCartData(updatedCart);
+        localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+    
         toaster({ type: "success", message: "Product added to cart" });
     };
-
-    // const handleRemoveFromCart = () => {
-    //     let updatedCart = [...cartData];
-    //     const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
-    //     const price = parseFloat(item?.price_slot[0]?.our_price);
-
-    //     if (existingItemIndex !== -1) {
-    //         const nextState = produce(updatedCart, (draft) => {
-    //             if (draft[existingItemIndex].qty > 1) {
-    //                 draft[existingItemIndex].qty -= 1;
-    //                 draft[existingItemIndex].total = (price * draft[existingItemIndex].qty).toFixed(2);
-    //             } else {
-    //                 draft.splice(existingItemIndex, 1);
-    //             }
-    //         });
-    //         updatedCart = nextState;
-    //     }
-
-    //     setCartData(updatedCart);
-    //     localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-    // };
-
+    
+    
+    
+    
     useEffect(() => {
         if (user && user.token) {
             getProductById();
@@ -198,29 +191,25 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                     <div
                         className="bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
                         onClick={() => {
-                            const currentItem = cartData.find((cartItem) => cartItem._id === item._id);
-
-                            if (currentItem && currentItem.qty > 1) {
-                                const updatedCart = cartData.map((cartItem) =>
-                                    cartItem._id === item._id
-                                        ? {
-                                            ...cartItem,
-                                            qty: cartItem.qty - 1,
-                                            total: (
-                                                (cartItem.price || 0) *
-                                                (cartItem.qty - 1)
-                                            ).toFixed(2),
-                                        }
-                                        : cartItem
-                                );
-
-                                setCartData(updatedCart);
-                                localStorage.setItem(
-                                    "addCartDetail",
-                                    JSON.stringify(updatedCart)
-                                );
-                            }
+                           
+                        
+                            const updatedCart = cartData.map((cartItem) =>
+                                cartItem._id === item._id
+                                    ? {
+                                        ...cartItem,
+                                        qty: cartItem.qty - 1,
+                                        total: (
+                                            (cartItem.price || 0) *
+                                            (cartItem.qty - 1)
+                                        ).toFixed(2),
+                                    }
+                                    : cartItem
+                            );
+                        
+                            setCartData(updatedCart);
+                            localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
                         }}
+                        
                     >
                         <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
                     </div>
@@ -232,25 +221,30 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                     <div
                         className="md:px-2 px-1 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                         onClick={() => {
-                            const updatedCart = cartData.map((cartItem) =>
-                                cartItem._id === item._id
-                                    ? {
+                            const updatedCart = cartData.map((cartItem) => {
+                                if (cartItem._id === item._id) {
+                                    if (cartItem.qty + 1 > item.Quantity) {
+                                        toaster({
+                                            type: "error",
+                                            message: "Item is not available in this quantity in stock. Please choose a different item.",
+                                        });
+                                        return cartItem; 
+                                    }
+                                    return {
                                         ...cartItem,
                                         qty: cartItem.qty + 1,
-                                        total: (
-                                            (cartItem.price || 0) *
-                                            (cartItem.qty + 1)
-                                        ).toFixed(2),
-                                    }
-                                    : cartItem
-                            );
-
+                                        total: ((cartItem.price || 0) * (cartItem.qty + 1)).toFixed(2),
+                                    };
+                                }
+                        
+                                // Return all other items unchanged
+                                return cartItem;
+                            });
+                        
                             setCartData(updatedCart);
-                            localStorage.setItem(
-                                "addCartDetail",
-                                JSON.stringify(updatedCart)
-                            );
+                            localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
                         }}
+                        
                     >
                         <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
                     </div>

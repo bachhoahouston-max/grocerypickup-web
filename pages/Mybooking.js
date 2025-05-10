@@ -9,7 +9,7 @@ import generatePDF, { usePDF, Margin } from "react-to-pdf";
 import ReactToPrint from "react-to-print";
 import { useTranslation } from "react-i18next";
 import Invoice from "../components/Invoice"
-
+import Swal from 'sweetalert2';
 
 function Mybooking(props) {
     const ref = useRef();
@@ -64,6 +64,41 @@ function Mybooking(props) {
                 console.log(err);
                 props.toaster({ type: "error", message: err?.message });
             });
+    };
+
+
+
+    const cancelOrder = (id) => {
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to cancel your order?",
+            showCancelButton: true,
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'No, keep it',
+            confirmButtonColor: "#F38529",
+            cancelButtonColor: "#F38529",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = { id };
+                props.loader(true);
+                Api("post", "cancalOrder", data, router)
+                    .then((res) => {
+                        props.loader(false);
+                        if (res.status) {
+                            props.toaster({ type: "success", message: "Order canceled successfully" });
+                            getBookingsByUser();
+                        } else {
+                            props.toaster({ type: "error", message: res.message || "Failed to cancel order" });
+                        }
+                    })
+                    .catch((err) => {
+                        props.loader(false);
+                        console.log(err);
+                        props.toaster({ type: "error", message: err?.message || "Something went wrong" });
+                    });
+            }
+        });
     };
 
     const toggleModal2 = (id) => {
@@ -166,7 +201,7 @@ function Mybooking(props) {
                         bookingsData.map((booking, key) => (
                             <div key={key} className="bg-white rounded-lg shadow-md border border-gray-200 hover:border-gray-300 transition-all mb-4">
                                 {/* Header - Order ID and Date */}
-                                <div className="bg-gray-50 p-4 rounded-t-lg border-b border-gray-200">
+                                <div className="bg-gray-50 p-4 rounded-t-lg  border-gray-200">
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center space-x-3">
                                             <div className="bg-custom-green text-white rounded-full h-10 w-10 flex items-center justify-center font-semibold">
@@ -177,15 +212,38 @@ function Mybooking(props) {
                                             </h3>
                                         </div>
                                         <div className="flex justify-center items-center space-x-2">
-                                            {booking?.status === 'Completed' ? (
-                                                <span className="px-3  md:w-full w-[110px] py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                                                    {t("Order Delivered")}
-                                                </span>
-                                            ) : (
-                                                <span className="md:px-3 px-2 md:w-full w-[110px] py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
-                                                    {t("Order Pending")}
-                                                </span>
-                                            )}
+                                            {(() => {
+                                                switch (booking?.status) {
+                                                    case 'Completed':
+                                                        return (
+                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                                                {t("Order Delivered")}
+                                                            </span>
+                                                        );
+                                                    case 'Pending':
+                                                        return (
+                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
+                                                                {t("Order Pending")}
+                                                            </span>
+                                                        );
+                                                    case 'Return':
+                                                        return (
+                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                                                                {t("Order Returned")}
+                                                            </span>
+                                                        );
+                                                    case 'Cancel':
+                                                        return (
+                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                                                                {t("Order Cancelled")}
+                                                            </span>
+                                                        );
+                                                    default:
+                                                        return null;
+                                                }
+                                            })()}
+
+
                                             <button onClick={() => toggleBooking(booking._id)} className="p-1 rounded-full hover:bg-gray-200">
                                                 {expandedBookingId === booking._id ? (
                                                     <IoIosArrowUp className="text-xl text-gray-600" />
@@ -199,7 +257,7 @@ function Mybooking(props) {
 
                                 {/* Secret Code and Tracking Info - Always visible */}
                                 {(booking?.SecretCode || booking?.isShipmentDelivery || booking?.trackingNo) && (
-                                    <div className="p-4 border-b border-gray-200 bg-gray-50">
+                                    <div className="p-4 border-gray-200 bg-gray-50">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             {booking?.SecretCode && booking?.status !== 'Completed' && (
                                                 <div className="flex items-center">
@@ -244,7 +302,7 @@ function Mybooking(props) {
                                                         <div className="flex items-center space-x-3">
                                                             <p className="text-[13px] font-medium text-gray-800">{booking.trackingNo}</p>
                                                             <a href={booking.trackingLink} target="_blank" rel="noopener noreferrer" className="inline-block">
-                                                               
+
                                                                 <button className="px-4 py-1.5 bg-custom-green text-white text-[13px] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-custom-gold">
                                                                     {t("Track")}
                                                                 </button>
@@ -256,10 +314,39 @@ function Mybooking(props) {
                                         </div>
                                     </div>
                                 )}
+                                <div className="px-4 py-3 bg-white border-b border-gray-200">
+                                    <div className="flex flex-wrap gap-2 justify-end">
 
+                                        {/* <button
+                                                onClick={() => cancelOrder(booking._id)}
+                                                className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer"
+                                            >
+                                                {t("Cancel Order")}
+                                            </button> */}
+
+                                        {(() => {
+                                            const createdTime = new Date(booking.createdAt);
+                                            const now = new Date();
+                                            const diffInMinutes = (now - createdTime) / (1000 * 60);
+
+                                            return booking?.status === 'Pending' && diffInMinutes <= 15;
+                                        })() && (
+                                                <div className="px-4 py-4 bg-white border-t border-gray-200 mt-4 flex justify-end">
+                                                    <button
+                                                        onClick={() => cancelOrder(booking._id)}
+                                                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+                                                    >
+                                                        {t("Cancel Order")}
+                                                    </button>
+                                                </div>
+                                            )}
+
+
+                                    </div>
+                                </div>
                                 {/* Action Buttons */}
                                 {booking?.status === 'Pending' && (booking?.isDriveUp || booking?.isOrderPickup) && (
-                                    <div className="px-4 py-3 bg-white border-b border-gray-200">
+                                    <div className=" px-4 py-3 bg-white border-b border-gray-200">
                                         <div className="flex flex-wrap gap-2 justify-end">
                                             {booking?.isDriveUp && (
                                                 <button
@@ -306,7 +393,7 @@ function Mybooking(props) {
                                                         <span>{t("Order Id")}: {booking.orderId || 1}</span>
                                                     </div>
                                                 </div>
-                                            
+
                                             </div>
                                         ))}
                                     </div>

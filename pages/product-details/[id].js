@@ -100,6 +100,11 @@ function ProductDetails(props) {
       return;
     }
 
+    if (productsId.Quantity === 0) {
+      props.toaster({ type: "error", message: "This item currently  out of stock. Please choose a different Item" });
+      return;
+     }
+
     const existingItem = cartData.find((f) =>
       f._id === productsId._id && f.price_slot?.value === selectedPrice.value
     );
@@ -136,24 +141,39 @@ function ProductDetails(props) {
       message: "Item added to cart",
     });
   };
-  const handleIncreaseQty = () => {
-    const nextState = produce(cartData, (draft) => {
-      // Find the existing item in the cart based on product ID and price slot
-      const existingItem = draft.find((item) =>
-        item._id === productsId._id && item.price_slot.value === selectedPrice.value
-      );
 
-      if (existingItem) {
-        existingItem.qty += 1; // Increment quantity
-        existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty)
-      } else {
-        console.error("Item not found in cart for increasing quantity.");
-      }
-    });
+ const handleIncreaseQty = () => {
+  const nextState = produce(cartData, (draft) => {
+    const existingItem = draft.find(
+      (item) =>
+        item._id === productsId._id &&
+        item.price_slot.value === selectedPrice.value
+    );
 
-    setCartData(nextState);
-    localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-  };
+    if (!existingItem) {
+      console.error("Item not found in cart for increasing quantity.");
+      return;
+    }
+
+    if (existingItem.qty + 1 > productsId.Quantity) {
+      props.toaster({
+        type: "error",
+        message:
+          "Item is not available in this quantity in stock. Please choose a different item.",
+      });
+      return;
+    }
+
+    existingItem.qty += 1;
+    existingItem.total = (
+      parseFloat(existingItem.price_slot?.our_price || 0) * existingItem.qty
+    ).toFixed(2);
+  });
+
+  setCartData(nextState);
+  localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+};
+
 
   const handleDecreaseQty = () => {
     const nextState = produce(cartData, (draft) => {
@@ -336,7 +356,7 @@ function ProductDetails(props) {
       <section className="bg-white w-full md:pt-10 pt-14 md:pb-5 pb-5 ">
         <div className="max-w-7xl  mx-auto w-full md:px-4 px-5">
           <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
-            <div className="border border-black p-[10px] rounded-[15px]">
+            <div className=" p-[10px] rounded-[15px]">
               <Carousel
                 className="h-full w-full"
                 responsive={responsive}
@@ -484,13 +504,13 @@ function ProductDetails(props) {
                 <h3 className="text-black font-normal text-[17px] mt-4 mb-1">
                   {t("Check Delivery Availability")}</h3>
 
-                <div className="grid md:grid-cols-3 gap-2 relative min-w-sm">
+                <div className="grid md:grid-cols-3 grid-cols-3 gap-2 relative w-full md:min-w-sm">
                   <input
                     type="number"
                     value={pincode}
                     onChange={(e) => setPincode(e.target.value)}
                     placeholder={t("Enter Zipcode")}
-                    className="p-2 border border-gray-300 rounded w-full mb-4 text-black focus:outline-none focus:ring-2 focus:ring-custom-green text-bold col-span-2 "
+                    className="p-2 border border-gray-300 rounded w-full mb-4 text-black focus:outline-none focus:ring-2 focus:ring-custom-green text-bold md:col-span-2 col-span-2"
                   />
                   {pincode && (
                     <RxCross2 className="absolute right-[155px] top-3 text-black"

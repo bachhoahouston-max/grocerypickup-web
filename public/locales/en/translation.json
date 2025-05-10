@@ -229,6 +229,10 @@
       "Delivery Expected":"Delivery Expected",
       "Tracking Number":"Tracking Number",
       "Track":"Track",
-      "Secret Code":"Secret Code"
+      "Secret Code":"Secret Code",
+      "Select Zipcode":"Select Zipcode",
+      "Order Returned":"Order Returned",
+      "Order Cancelled":"Order Cancelled",
+      "Cancel Order":"Cancel Order"
   
 }

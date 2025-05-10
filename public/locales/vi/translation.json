@@ -229,6 +229,10 @@
   "Delivery Expected":"Dự kiến ​​giao hàng",
   "Tracking Number":"Số theo dõi",
   "Track":"Theo dõi",
-  "Secret Code":"Mã bí mật"
+  "Secret Code":"Mã bí mật",
+  "Select Zipcode":"Chọn mã Zip",
+  "Order Returned":"Đơn hàng bị trả lại",
+  "Order Cancelled":"Đơn hàng đã bị hủy",
+  "Cancel Order":"Hủy đơn hàng"
 
 }

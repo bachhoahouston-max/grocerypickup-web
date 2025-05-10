@@ -77,8 +77,9 @@ const Navbar = (props) => {
 
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
+        zipcode:"",
         address: "",
-        isBusinessAddress:"",
+        isBusinessAddress: "",
         BusinessAddress: "",
         name: "",
         lastname: "",
@@ -193,6 +194,33 @@ const Navbar = (props) => {
         setOpenCart(false);
     };
 
+    const [pincodes, setPincodes] = useState([]);
+
+    const getAllPincodes = () => {
+        props.loader(true);
+        Api('get', 'getPinCode', null, router)
+            .then((res) => {
+                props.loader(false);
+                if (res?.error) {
+                    props.toaster({ type: 'error', message: res?.error });
+                } else {
+                    setPincodes(res.pincodes || []); // Make sure it's an array
+                }
+            })
+            .catch((err) => {
+                props.loader(false);
+                props.toaster({
+                    type: 'error',
+                    message: err?.message || 'Failed to fetch pincodes',
+                });
+            });
+    };
+
+
+
+    useEffect(() => {
+        getAllPincodes();
+    }, []);
 
     useEffect(() => {
         const userDetails = localStorage.getItem('userDetail');
@@ -329,13 +357,21 @@ const Navbar = (props) => {
 
         if (localAddress.isBusinessAddress) {
             if (!localAddress.BusinessAddress) {
-                return props.toaster({ 
-                    type: "error", 
-                    message: "Business Address is required if 'This is business address' is checked." 
+                return props.toaster({
+                    type: "error",
+                    message: "Business Address is required if 'This is business address' is checked."
                 });
             }
         }
-        
+        if (pickupOption === 'localDelivery' && pickupOption === 'ShipmentDelivery') {
+            if (!localAddress.zipcode) {
+                return props.toaster({
+                    type: "error",
+                    message: "Please Select a ZIP code. We only deliver to the selected ZIP codes"
+                });
+            }
+        }
+
 
         if (pickupOption === 'driveUp') {
             if (!date) {
@@ -946,10 +982,24 @@ const Navbar = (props) => {
                                         placeholder={t("Phone Number")}
                                         value={localAddress.phoneNumber}
                                         onChange={handleInputChange1}
-                                        className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
                                         required
                                     />
 
+                                    <select
+                                        name="zipcode"
+                                        value={localAddress.zipcode}
+                                        onChange={handleInputChange1}
+                                        className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-2 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                        required
+                                    >
+                                        <option value="">{t("Select Zipcode")}</option>
+                                        {pincodes.map((zipcode, index) => (
+                                            <option key={index} value={zipcode.pincode}>
+                                                {zipcode.pincode}
+                                            </option>
+                                        ))}
+                                    </select>
 
                                     <AddressInput
                                         setProfileData={setProfileData}
@@ -1089,16 +1139,25 @@ const Navbar = (props) => {
                                             className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                                             onClick={() => {
                                                 const nextState = produce(cartData, (draft) => {
+                                                    if (draft[i].qty + 1 > item.Quantity) {
+                                                        props.toaster({
+                                                            type: "error",
+                                                            message: "Item is not available in this quantity in stock. Please choose a different item.",
+                                                        });
+                                                        return;
+                                                    }
+                                            
                                                     draft[i].qty += 1;
+                                            
                                                     const price = parseFloat(draft[i]?.price_slot?.our_price);
-
-                                                    draft[i].total = (price * draft[i].qty)
+                                                    draft[i].total = price * draft[i].qty;
                                                     draft[i].total += draft[i].total <= 35 ? deliveryCharge : 0;
-
                                                 });
+                                            
                                                 setCartData(nextState);
                                                 localStorage.setItem("addCartDetail", JSON.stringify(nextState));
                                             }}
+                                            
                                         >
                                             <IoAddSharp className="h-[30px] w-[30px] text-white" />
                                         </div>

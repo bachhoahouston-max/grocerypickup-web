@@ -135,7 +135,7 @@ function Myhistory(props) {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-3 md:mx-auto md:gap-12 gap-8 max-w-6xl">
                     {groupedBookingsArray && groupedBookingsArray.length > 0 ? (
                         groupedBookingsArray.map((booking, key) => (
-                            <div key={key} className="bg-white md:p-4 p-2.5 rounded-md border-2 border-[#999999] h-auto self-start">
+                            <div key={key} className="bg-white md:p-4 p-2.5 h-auto self-start rounded-lg shadow-md border border-gray-200 hover:border-gray-300 transition-all">
                                 <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleBooking(booking._id)}>
                                     <div className="flex flex-col justify-start w-full">
                                         <div className="flex flex-row justify-between items-center mb-4">
