@@ -48,6 +48,7 @@ export default function Home(props) {
       }
     );
   };
+
   const fetchCategories = () => {
     props.loader(true);
     Api("get", "getCategory", null, router).then(
@@ -77,15 +78,15 @@ export default function Home(props) {
     );
   };
 
-  const fetchProducts = () => {
+  const fetchProducts = ( page = 1, limit = 12) => {
     props.loader(true);
-    Api("get", "getProduct", null, router).then(
+    Api("get", `getProduct?page=${page}&limit=${limit}`, null, router).then(
       (res) => {
         props.loader(false);
         if (res.data && Array.isArray(res.data)) {
           console.log("All products", res.data);
           setProductList(res.data);
-          setIscatdata(false); // Ensure iscatdata is false to show all products initially
+          setIscatdata(false); 
         } else {
           console.error("Unexpected response format:", res);
           props.toaster({ type: "error", message: "Unexpected response format" });
@@ -98,6 +99,7 @@ export default function Home(props) {
       }
     );
   };
+
 
   const handleCategoryClick = (categoryId) => {
     setSelectedCategory(categoryId);
@@ -139,12 +141,10 @@ export default function Home(props) {
     const calculateCountdown = () => {
         
         const nowIndia = new Date().getTime();
-        
         const newCountdown = saleData.map(sale => {
             const startDate = new Date(sale.startDateTime).getTime();
             const endDate = new Date(sale.endDateTime).getTime();
             
-           
             if (nowIndia < startDate) {
                 return { ...sale, timeLeft: null, status: t('Sale will start soon') };
             } else if (nowIndia >= startDate && nowIndia < endDate) {
@@ -290,7 +290,7 @@ export default function Home(props) {
 
       <div className="bg-white w-full">
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
-          <div className="container mx-auto px-6 md:px-0 xl:w-full md:max-w-7xl">
+          <div className="container mx-auto px-6 md:px-0 xl:w-full md:max-w-8xl lg:max-w-9xl">
             <div className="flex justify-center flex-col items-center mt-4">
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">
                 {t("Popular Products")}</h1>
@@ -301,7 +301,7 @@ export default function Home(props) {
 
             <div className="flex md:flex-row flex-col ">
               {/* Sidebar */}
-              <div className=" hidden md:flex flex-col md:w-1/5 lg:w-1/4 w-full">
+              <div className=" hidden md:flex flex-col md:w-1/6 lg:w-1/4 w-full">
                 <ul className="rounded-lg p-4 space-y-2">
                   <li
                     onClick={() => handleCategoryClick1('/categories/all')}
@@ -331,10 +331,10 @@ export default function Home(props) {
               </div>
 
               {/* Product Grid */}
-              <div className="relative w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0 ">
+              <div className="relative w-full md:w-5/6 grid md:grid-cols-4 lg:grid-cols-6 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
                 {iscatdata ? (
                   productsData.length > 0 ? (
-                    productsData.slice(0, 8).map((item, i) => (
+                    productsData.slice(0, 12).map((item, i) => (
                       <GroceryCatories
                         loader={props.loader}
                         toaster={props.toaster}
@@ -349,7 +349,7 @@ export default function Home(props) {
                   )
                 ) : (
                   productList.length > 0 ? (
-                    productList.slice(0, 8).map((item, i) => (
+                    productList.slice(0, 12).map((item, i) => (
                       <GroceryCatories
                         loader={props.loader}
                         toaster={props.toaster}
@@ -368,7 +368,7 @@ export default function Home(props) {
           </div>
         </section>
       </div>
-      <div className="container mx-auto max-w-7xl py-12 md:px-4 px-5">
+      <div className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faBoxOpen} className="text-xl text-[#F38529] mb-2" />
