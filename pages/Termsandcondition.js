@@ -1,6 +1,10 @@
 
 import React from 'react';
 import { useTranslation } from "react-i18next";
+import { Api } from '@/services/service';
+import { useRouter } from 'next/router';
+import { useEffect,useState } from 'react';
+
 function Termsandcondition
     (props) {
     const { t } = useTranslation()
