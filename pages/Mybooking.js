@@ -301,12 +301,14 @@ function Mybooking(props) {
                                                         <p className="text-sm text-gray-500">{t("Tracking Number")}</p>
                                                         <div className="flex items-center space-x-3">
                                                             <p className="text-[13px] font-medium text-gray-800">{booking.trackingNo}</p>
-                                                            <a href={booking.trackingLink} target="_blank" rel="noopener noreferrer" className="inline-block">
-
-                                                                <button className="px-4 py-1.5 bg-custom-green text-white text-[13px] rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-custom-gold">
-                                                                    {t("Track")}
-                                                                </button>
-                                                            </a>
+                                                           
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex-grow">
+                                                        <p className="text-sm text-gray-500">{t("Company Name")}</p>
+                                                        <div className="flex items-center space-x-3">
+                                                            <p className="text-[13px] font-medium text-gray-800">{booking.trackingLink}</p>
+                                                           
                                                         </div>
                                                     </div>
                                                 </div>
@@ -387,7 +389,8 @@ function Mybooking(props) {
                                                     />
                                                 </div>
                                                 <div className="ml-4 flex-grow">
-                                                    <p className="text-gray-800 font-medium">{product.product?.name}</p>
+                                                    <p className="text-gray-800 font-medium">
+                                                        {product.product?.name.slice(0,24)+('...')}</p>
                                                     <div className="flex flex-col items-start mt-1 text-[14px] text-gray-600">
                                                         <span className="mr-4">{t("Quantity")}: {product.qty || 1}</span>
                                                         <span>{t("Order Id")}: {booking.orderId || 1}</span>

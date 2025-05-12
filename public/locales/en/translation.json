@@ -100,7 +100,7 @@
   "Full Name": "Full Name",
   "Phone number": "Phone number",
   "My Query": "My Query",
-  "Send Query": "Send Query",
+  "Send Message": "Send Message",
   "Great Words From People": "Great Words From People",
   "Here's what our customers and partners are saying about their experience — from the freshness of our products to the ease of grocery pickup": "Here's what our customers and partners are saying about their experience — from the freshness of our products to the ease of grocery pickup",
   "The quality and freshness of the groceries are top-notch. I love how easy it is to order and pick up a real time-saver for busy people like me": "The quality and freshness of the groceries are top-notch. I love how easy it is to order and pick up a real time-saver for busy people like me",
@@ -179,7 +179,7 @@
   "ADD": "ADD",
   "Shipment Delivery is available": "Shipment Delivery is available",
   "Shipment Delivery is not available": "Shipment Delivery is not available",
-  "About Product": "About Produc",
+  "About Product": "About Product",
   "Country of Origin": "Country of Origin",
   "Self Life": "Self Life",
   "Manufacturer Name": "Manufacturer Name",
@@ -233,6 +233,9 @@
       "Select Zipcode":"Select Zipcode",
       "Order Returned":"Order Returned",
       "Order Cancelled":"Order Cancelled",
-      "Cancel Order":"Cancel Order"
+      "Cancel Order":"Cancel Order",
+      "Message":"Message",
+      "Note: We currently deliver only to selected ZIP codes":"Note: We currently deliver only to selected ZIP codes",
+      "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time":"Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time"
   
 }

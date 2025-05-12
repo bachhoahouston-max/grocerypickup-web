@@ -1,8 +1,46 @@
-import React from 'react';
 import { useTranslation } from "react-i18next";
+import React, { useState, useEffect } from 'react';
+import { Api } from '@/services/service';
+import { useRouter } from "next/router";
 
-function PrivacyPolicy() {
+function PrivacyPolicy(props) {
     const { t } = useTranslation()
+    const [privacyPolicy, setPrivacyPolicy] = useState({
+        privacy: ''
+    });
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+
+    const getPrivacyPolicy = () => {
+        props.loader(true);  // Show the loader while fetching
+        Api("get", "/content", router).then(
+            (res) => {
+                props.loader(false);  // Hide the loader after fetching
+
+                console.log("API Response =>", res.data);
+
+                if (res?.status) {
+                    setPrivacyPolicy({ privacy: res?.data[0]?.privacy, id: res?.data[0]?._id });
+                    setLoading(false);  // Successfully fetched data, update loading state
+                } else {
+                    props.toaster({ type: "error", message: res?.data?.message });
+                    setLoading(false);  // Even if there's an error, we need to stop the loading
+                }
+            },
+            (err) => {
+                props.loader(false);  // Hide loader if there's an error
+                console.log("API Error =>", err);
+                props.toaster({ type: "error", message: err?.data?.message });
+                props.toaster({ type: "error", message: err?.message });
+                setLoading(false);  // Stop loading in case of error
+            }
+        );
+    };
+
+    useEffect(() => {
+        getPrivacyPolicy();
+    }, []);
+
     return (
         <div className="relative min-h-screen">
             <img
@@ -15,48 +53,16 @@ function PrivacyPolicy() {
                     {t("Privacy Policy")}
                 </p>
             </div>
-            <div className="text-black mx-auto text-start w-[80%] space-x-2 mb-4 mt-12 min-h-screen">
-                <p> ✅ 
-                    At GroceryPickup Store , we strive to ensure every order meets your expectations. However, we understand that sometimes things can go wrong. That’s why we’ve made our return policy simple and fair.
-               </p>
-                    <p className='text-black pt-4 font-bold'>
-                    🛒 What Can Be Returned? </p>
-                <p>
-                    We accept returns or replacements in the following cases:
+            <section className="bg-white w-full flex flex-col justify-center items-center">
+                <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
 
-                    Items that are damaged during delivery or pickup
-
-                    Items that are expired or spoiled upon arrival
-
-                    Items that were not what you ordered
-
-                    <p className='text-black pt-4 font-bold'>⏳ Return Window </p>   
-                    You must report the issue within 48 hours of receiving the product.
-
-                    Returns requested after 48 hours may not be accepted, especially for perishable goods.
-
-                    <p className='text-black pt-4 font-bold'> 🚚 How to Request a Return </p>
-                    Contact our support team via chat, phone, or email.
-
-                    Provide your order number and a photo of the item.
-
-                    Our team will review your request and arrange a replacement or refund.
-
-                    <p className='text-black pt-4 font-bold'> 💳 Refunds & Replacements </p>  
-                    Refunds will be issued to your original payment method or as store credit, based on your preference.
-
-                    For damaged or incorrect items, we may also offer free replacements.
-
-                    <p className='text-black pt-4 font-bold'>  🚫 Non-returnable Items </p>  
-                    Fresh produce that was delivered in good condition
-
-                    Opened or used products (unless proven damaged/expired)
-
-                    Items returned after the allowed window
-
-                    <p className='text-black pt-4 font-bold'>   ✅ Customer Satisfaction First </p> 
-                    We aim to provide high-quality service and fresh products. If something doesn’t feel right, we’re here to help — your satisfaction is our top priority.</p>
-            </div>
+                    {loading ? (
+                        <p className="text-base text-black font-normal md:pb-5">Loading...</p>
+                    ) : (
+                        <div className="text-[18px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: privacyPolicy?.privacy }} />
+                    )}
+                </div>
+            </section>
         </div>
     );
 }

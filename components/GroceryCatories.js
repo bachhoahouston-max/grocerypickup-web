@@ -25,21 +25,21 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
     const handleAddToCart = () => {
         const itemQuantity = Number(item?.Quantity ?? 0);
-    
+
         // Outside check — good for immediate feedback
         if (itemQuantity <= 0) {
             toaster({ type: "error", message: "This item is currently out of stock. Please choose a different item." });
             return;
         }
-    
+
         const existingItem = cartData.find((f) => f._id === item?._id);
-    
+
         // Prevent adding again if already in cart (optional)
         if (existingItem) {
             toaster({ type: "info", message: "Item already in cart." });
             return;
         }
-    
+
         const newItem = {
             ...item,
             selectedColor: item?.varients?.[0] || {},
@@ -50,18 +50,18 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             price_slot: item.price_slot?.[0] || {},
             tax: item?.tax,
         };
-    
+
         const updatedCart = [...cartData, newItem];
-    
+
         setCartData(updatedCart);
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-    
+
         toaster({ type: "success", message: "Product added to cart" });
     };
-    
-    
-    
-    
+
+
+
+
     useEffect(() => {
         if (user && user.token) {
             getProductById();
@@ -173,16 +173,20 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 {item.categoryName}
             </h2>
             <p className="text-sm md:text-base text-black font-semibold pt-1">
-                {item.name}
+                {item.name.slice(0, 18) + ("...")}
             </p>
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
                 <p className="text-custom-gold text-lg md:text-xl font-semibold">
                     {constant.currency}{(item?.price_slot[0]?.our_price)}
-                    <del className="font-medium text-sm text-custom-black ml-2">
-                        {constant.currency}{(item?.price_slot[0]?.other_price )}
 
-                    </del>
+                    {item?.price_slot[0]?.other_price && (
+                        <del className="font-medium text-sm text-custom-black ml-2">
+                            {constant.currency}{(item?.price_slot[0]?.other_price)}
+                        </del>
+                    )}
+
+
                 </p>
             </div>
 
@@ -191,25 +195,27 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                     <div
                         className="bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
                         onClick={() => {
-                           
-                        
-                            const updatedCart = cartData.map((cartItem) =>
-                                cartItem._id === item._id
-                                    ? {
-                                        ...cartItem,
-                                        qty: cartItem.qty - 1,
-                                        total: (
-                                            (cartItem.price || 0) *
-                                            (cartItem.qty - 1)
-                                        ).toFixed(2),
+                            const updatedCart = cartData.map((cartItem) => {
+                                if (cartItem._id === item._id) {
+                                    if (cartItem.qty > 1) {
+                                        const newQty = cartItem.qty - 1;
+                                        return {
+                                            ...cartItem,
+                                            qty: newQty,
+                                            total: (newQty * (cartItem.price || 0)).toFixed(2),
+                                        };
+                                    } else {
+                                        return cartItem; // Don't change anything if qty is 1
                                     }
-                                    : cartItem
-                            );
+                                }
+                                return cartItem;
+                            });
                         
                             setCartData(updatedCart);
                             localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
                         }}
                         
+
                     >
                         <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
                     </div>
@@ -228,7 +234,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                                             type: "error",
                                             message: "Item is not available in this quantity in stock. Please choose a different item.",
                                         });
-                                        return cartItem; 
+                                        return cartItem;
                                     }
                                     return {
                                         ...cartItem,
@@ -236,15 +242,15 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                                         total: ((cartItem.price || 0) * (cartItem.qty + 1)).toFixed(2),
                                     };
                                 }
-                        
+
                                 // Return all other items unchanged
                                 return cartItem;
                             });
-                        
+
                             setCartData(updatedCart);
                             localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
                         }}
-                        
+
                     >
                         <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
                     </div>

@@ -103,7 +103,7 @@ function ProductDetails(props) {
     if (productsId.Quantity === 0) {
       props.toaster({ type: "error", message: "This item currently  out of stock. Please choose a different Item" });
       return;
-     }
+    }
 
     const existingItem = cartData.find((f) =>
       f._id === productsId._id && f.price_slot?.value === selectedPrice.value
@@ -142,37 +142,37 @@ function ProductDetails(props) {
     });
   };
 
- const handleIncreaseQty = () => {
-  const nextState = produce(cartData, (draft) => {
-    const existingItem = draft.find(
-      (item) =>
-        item._id === productsId._id &&
-        item.price_slot.value === selectedPrice.value
-    );
+  const handleIncreaseQty = () => {
+    const nextState = produce(cartData, (draft) => {
+      const existingItem = draft.find(
+        (item) =>
+          item._id === productsId._id &&
+          item.price_slot.value === selectedPrice.value
+      );
 
-    if (!existingItem) {
-      console.error("Item not found in cart for increasing quantity.");
-      return;
-    }
+      if (!existingItem) {
+        console.error("Item not found in cart for increasing quantity.");
+        return;
+      }
 
-    if (existingItem.qty + 1 > productsId.Quantity) {
-      props.toaster({
-        type: "error",
-        message:
-          "Item is not available in this quantity in stock. Please choose a different item.",
-      });
-      return;
-    }
+      if (existingItem.qty + 1 > productsId.Quantity) {
+        props.toaster({
+          type: "error",
+          message:
+            "Item is not available in this quantity in stock. Please choose a different item.",
+        });
+        return;
+      }
 
-    existingItem.qty += 1;
-    existingItem.total = (
-      parseFloat(existingItem.price_slot?.our_price || 0) * existingItem.qty
-    ).toFixed(2);
-  });
+      existingItem.qty += 1;
+      existingItem.total = (
+        parseFloat(existingItem.price_slot?.our_price || 0) * existingItem.qty
+      ).toFixed(2);
+    });
 
-  setCartData(nextState);
-  localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-};
+    setCartData(nextState);
+    localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+  };
 
 
   const handleDecreaseQty = () => {
@@ -398,7 +398,7 @@ function ProductDetails(props) {
                   <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
                   <p className="md:text-[18px] text-[14px]">{productsId?.categoryName}</p>
                   <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
-                  <p className="md:text-[18px] text-[14px]"> {productsId?.name} </p>
+                  <p className="md:text-[18px] text-[14px] w-full"> {productsId?.name} </p>
                 </div>
                 <div className="pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
                   {priceSlot &&
@@ -424,14 +424,17 @@ function ProductDetails(props) {
                               }
                             `}
                           >
-                            <img
-                              className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
-                              src="/Star.png"
-                            />
-                            <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
-                              {percentageDifference?.toFixed(2)}%<br />
-                              {t("off")}
-                            </p>
+                            {data?.other_price && (<>
+                              <img
+                                className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
+                                src="/Star.png"
+                              />
+                              <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
+                                {percentageDifference?.toFixed(2)}%<br />
+                                {t("off")}
+                              </p>
+                            </>
+                            )}
                             <p className="text-black font-normal text-base pt-1">
                               {data.value} {data.unit}
                             </p>
@@ -441,9 +444,12 @@ function ProductDetails(props) {
                             </p>
                             <p className="text-custom-black font-semibold text-sm pt-2">
 
-                              <span className="text-black font-normal line-through">
-                                {constant.currency}{(data?.other_price)}
-                              </span>
+                              {data?.other_price && (
+                                <span className="text-black font-normal line-through">
+                                  {constant.currency}{(data?.other_price)}
+                                </span>
+                              )}
+
                             </p>
                           </div>
                         </div>
@@ -454,13 +460,16 @@ function ProductDetails(props) {
                 <div className="pt-3 mt-2 px-4  border-custom-darkPurple">
                   <p className="text-custom-gold font-semibold text-lg">
                     {constant.currency}{(selectedPrice?.our_price)}{" "}
-                    <span className="text-custom-black text-sm font-normal line-through">
-                      {constant.currency}{(selectedPrice?.other_price)}{" "}
-                    </span>{" "}
-                    <span className="text-sm text-custom-black">
-
-                      {(((selectedPrice?.other_price - selectedPrice?.our_price) / selectedPrice?.other_price) * 100).toFixed(2)}%
-                    </span>
+                    {selectedPrice?.other_price && (
+                      <span className="text-custom-black text-sm font-normal line-through">
+                        {constant.currency}{(selectedPrice?.other_price)}{" "}
+                      </span>
+                    )}
+                    {selectedPrice?.other_price && (
+                      <span className="text-sm text-custom-black">
+                        {(((selectedPrice?.other_price - selectedPrice?.our_price) / selectedPrice?.other_price) * 100).toFixed(2)}%
+                      </span>
+                    )}
                   </p>
                 </div>
 
@@ -501,7 +510,8 @@ function ProductDetails(props) {
                     {t("Shipment Delivery is not available")}
                   </p>
                 )}
-                <h3 className="text-black font-normal text-[17px] mt-4 mb-1">
+
+                {/* <h3 className="text-black font-normal text-[17px] mt-4 mb-1">
                   {t("Check Delivery Availability")}</h3>
 
                 <div className="grid md:grid-cols-3 grid-cols-3 gap-2 relative w-full md:min-w-sm">
@@ -530,7 +540,7 @@ function ProductDetails(props) {
                     {t("Check")}
                   </button>
                 </div>
-                <div className="mt-1 text-gray-700">{t(message)}</div>
+                <div className="mt-1 text-gray-700">{t(message)}</div> */}
 
               </div>
             </div>
@@ -564,12 +574,12 @@ function ProductDetails(props) {
                   {productsId?.manufacturername}
                 </span>
               </p>
-              <p className="text-black font-medium md:text-xl text-base pt-2">
+              {/* <p className="text-black font-medium md:text-xl text-base pt-2">
                 {t("Manufacturer Address")} :{" "}
                 <span className="text-custom-newGray font-normal md:text-xl text-base">
                   {productsId?.manufactureradd}
                 </span>
-              </p>
+              </p> */}
             </div>
             <div className="col-span-2">
               <p className="text-black font-semibold md:text-xl text-base pt-1">

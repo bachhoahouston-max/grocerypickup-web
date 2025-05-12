@@ -100,7 +100,7 @@
   "Full Name": "Tên đầy đủ",
   "Phone number": "Số điện thoại",
   "My Query": "Truy vấn của tôi",
-  "Send Query": "Gửi truy vấn",
+  "Send Message": "Gửi tin nhắn",
   "Great Words From People": "Những lời tuyệt vời từ mọi người",
   "Here's what our customers and partners are saying about their experience — from the freshness of our products to the ease of grocery pickup": "Sau đây là những gì khách hàng và đối tác của chúng tôi nói về trải nghiệm của họ — từ độ tươi ngon của sản phẩm đến sự dễ dàng khi nhận hàng tạp hóa",
   "The quality and freshness of the groceries are top-notch. I love how easy it is to order and pick up a real time-saver for busy people like me": "Chất lượng và độ tươi của hàng tạp hóa là hàng đầu. Tôi thích cách dễ dàng để đặt hàng và nhận hàng, tiết kiệm thời gian thực sự cho những người bận rộn như tôi",
@@ -233,6 +233,9 @@
   "Select Zipcode":"Chọn mã Zip",
   "Order Returned":"Đơn hàng bị trả lại",
   "Order Cancelled":"Đơn hàng đã bị hủy",
-  "Cancel Order":"Hủy đơn hàng"
+  "Cancel Order":"Hủy đơn hàng",
+  "Message":"Tin nhắn",
+  "Note: We currently deliver only to selected ZIP codes":"Lưu ý: Hiện tại chúng tôi chỉ giao hàng đến các mã ZIP được chọn",
+  "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time":"Lưu ý: Hiện tại chúng tôi giao hàng đến 49/50 tiểu bang của Hoa Kỳ. Thật không may, chúng tôi không giao hàng đến Hawaii vào thời điểm này"
 
 }

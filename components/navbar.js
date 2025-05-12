@@ -77,7 +77,7 @@ const Navbar = (props) => {
 
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
-        zipcode:"",
+        zipcode: "",
         address: "",
         isBusinessAddress: "",
         BusinessAddress: "",
@@ -347,7 +347,6 @@ const Navbar = (props) => {
     };
 
     const createProductRquest = (e) => {
-        // e.preventDefault();
 
         if (pickupOption === 'localDelivery') {
             if (!localAddress.dateOfDelivery) {
@@ -363,7 +362,7 @@ const Navbar = (props) => {
                 });
             }
         }
-        if (pickupOption === 'localDelivery' && pickupOption === 'ShipmentDelivery') {
+        if (pickupOption === 'localDelivery') {
             if (!localAddress.zipcode) {
                 return props.toaster({
                     type: "error",
@@ -378,7 +377,8 @@ const Navbar = (props) => {
                 return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
             }
         }
-        setOpenCart(false)
+
+        // setOpenCart(false)
 
         let data = [];
         let cart = localStorage.getItem("addCartDetail");
@@ -397,8 +397,6 @@ const Navbar = (props) => {
                 isShipmentAvailable: element.isShipmentAvailable
             });
         });
-
-        console.log("qsdcfvgbn", data)
 
         const isLocalDelivery = pickupOption === 'localDelivery';
         const isOrderPickup = pickupOption === 'orderPickup';
@@ -478,6 +476,8 @@ const Navbar = (props) => {
         //     }
         // );
         localStorage.setItem("checkoutData", JSON.stringify(newData));
+        // props.loader && props.loader(true);
+        setOpenCart(false)
         router.push('/payment?from=cart')
 
     };
@@ -508,42 +508,6 @@ const Navbar = (props) => {
         );
     };
 
-
-    const payment = () => {
-        setOpenCart(false);
-        const cur = {
-            "$": "USD",
-            "£": "GBP",
-            "€": "EUR"
-        };
-
-        if (!user?._id) {
-            props.toaster({ type: "error", message: "Please login for Shopping" });
-            return; // Early return to prevent further execution
-        }
-
-        const data = {
-            price: CartTotal.toFixed(2),
-            currency: constant.currency // Consider making this dynamic
-        };
-
-        console.log(data);
-        props.loader(true);
-
-        Api("post", `poststripe`, data, router).then(
-            (res) => {
-                props.loader(false);
-                console.log("Payment called", res);
-                setClientSecret(res.clientSecret);
-                router.push(`/payment?clientSecret=${res.clientSecret}&price=${CartTotal}`);
-            },
-            (err) => {
-                console.error(err); // Use console.error for errors
-                props.loader(false);
-                props.toaster({ type: "error", message: err?.message || "An error occurred" });
-            }
-        );
-    };
 
     return (
         <>
@@ -914,8 +878,13 @@ const Navbar = (props) => {
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
                             <div className="flex items-center justify-center w-full">
                                 <div className="relative md:grid-cols-2 grid-cols-1 ">
-                                    <h1 className="text-lg font-semibold mb-4">
-                                        {t("Delivery Info")}</h1>
+                                    <h1 className="text-lg font-semibold ">
+                                        {t("Delivery Info")}
+                                    </h1>
+                                    {pickupOption === 'localDelivery' && (
+                                        <p className='text-red-500 text-sm py-1  mb-2'>
+                                            {t("Note: We currently deliver only to selected ZIP codes")}.</p>
+                                    )}
                                     {pickupOption === 'localDelivery' && (
                                         <div className="relative inline-block">
                                             <input
@@ -986,20 +955,22 @@ const Navbar = (props) => {
                                         required
                                     />
 
-                                    <select
-                                        name="zipcode"
-                                        value={localAddress.zipcode}
-                                        onChange={handleInputChange1}
-                                        className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-2 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                        required
-                                    >
-                                        <option value="">{t("Select Zipcode")}</option>
-                                        {pincodes.map((zipcode, index) => (
-                                            <option key={index} value={zipcode.pincode}>
-                                                {zipcode.pincode}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {pickupOption === 'localDelivery' && (
+                                        <select
+                                            name="zipcode"
+                                            value={localAddress.zipcode}
+                                            onChange={handleInputChange1}
+                                            className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-2 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                            required
+                                        >
+                                            <option value="">{t("Select Zipcode")}</option>
+                                            {pincodes.map((zipcode, index) => (
+                                                <option key={index} value={zipcode.pincode}>
+                                                    {zipcode.pincode}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    )}
 
                                     <AddressInput
                                         setProfileData={setProfileData}
@@ -1008,6 +979,9 @@ const Navbar = (props) => {
                                         className=" m-1 border rounded-lg py-2 pl-2 md:pl-4 md:pr-2 pr-7 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  !z-[999999999] text-xs md:text-sm md:w-[608px] w-[295px]"
                                         required
                                     />
+                                    {pickupOption === 'ShipmentDelivery' && (
+                                        <p className='text-red-500 text-sm py-1 pl-2 md:pl-1 md:pr-2 pr-7'> {t("Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time")}. </p>
+                                    )}
                                     <label className="flex items-center space-x-2 ps-2">
                                         <input
                                             type="checkbox"
@@ -1087,7 +1061,7 @@ const Navbar = (props) => {
                                     />
                                     <div className="pt-2 flex-1">
                                         <p className="text-custom-purple font-semibold text-base pl-3">
-                                            {item?.name}
+                                            {item.name.slice(0, 18) + ("...")}
                                         </p>
                                         <p className="text-custom-newGrayColors font-normal text-sm pt-2">
                                             <span className="pl-3">
@@ -1099,9 +1073,12 @@ const Navbar = (props) => {
                                             <span className="pl-3">
                                                 {constant.currency}{(item?.price_slot?.our_price)}
                                             </span>{" "}
-                                            <span className="line-through">
-                                                {constant.currency}{(item?.price_slot?.other_price)}
-                                            </span>
+                                            {item?.price_slot?.other_price && (
+                                                <span className="line-through">
+                                                    {constant.currency}{(item?.price_slot?.other_price)}
+                                                </span>
+                                            )}
+
                                         </p>
                                     </div>
                                     <div className="flex justify-end items-start md:hidden">
@@ -1146,18 +1123,18 @@ const Navbar = (props) => {
                                                         });
                                                         return;
                                                     }
-                                            
+
                                                     draft[i].qty += 1;
-                                            
+
                                                     const price = parseFloat(draft[i]?.price_slot?.our_price);
                                                     draft[i].total = price * draft[i].qty;
                                                     draft[i].total += draft[i].total <= 35 ? deliveryCharge : 0;
                                                 });
-                                            
+
                                                 setCartData(nextState);
                                                 localStorage.setItem("addCartDetail", JSON.stringify(nextState));
                                             }}
-                                            
+
                                         >
                                             <IoAddSharp className="h-[30px] w-[30px] text-white" />
                                         </div>
@@ -1169,9 +1146,13 @@ const Navbar = (props) => {
                                 <div className="md:flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-5 hidden ">
                                     <p className="text-custom-purple font-semibold text-base">
                                         {constant.currency}{item?.total}
-                                        <del className="text-custom-red font-normal text-xs ml-2">
-                                            {constant.currency}{(item?.price_slot?.other_price)}
-                                        </del>
+                                        {item?.price_slot?.other_price && (
+                                            <del className="text-custom-red font-normal text-xs ml-2">
+                                                {constant.currency}{(item?.price_slot?.other_price)}
+                                            </del>
+                                        )}
+
+
                                     </p>
                                     <IoMdClose
                                         className="w-[22px] h-[22px] text-custom-newGray ml-1 cursor-pointer"

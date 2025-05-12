@@ -134,14 +134,14 @@ const FeedbackForm = (props) => {
                       
 
                         <div>
-                            <label className="block text-gray-700 text-[16px]">{t("My Query")} *</label>
+                            <label className="block text-gray-700 text-[16px]">{t("Message")} *</label>
                             <textarea
                                 name="query"
                                 rows="3"
                                 value={formData.query}
                                 onChange={handleChange}
                                 className={`text-gray-700 w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md ${errors.query ? 'border-red-500' : ''}`}
-                               placeholder= {t("My Query")} 
+                               placeholder= {t("Message")} 
                                 required
                             >
                             </textarea>
@@ -149,7 +149,7 @@ const FeedbackForm = (props) => {
                         </div>
                     </div>
                     <div className="text-center mt-6">
-                        <button type="submit" className="bg-[#F38529] text-white py-2 px-6 rounded-md">{t("Send Query")}</button>
+                        <button type="submit" className="bg-[#F38529] text-white py-2 px-6 rounded-md">{t("Send Message")}</button>
                     </div>
                 </form>
             </div>
