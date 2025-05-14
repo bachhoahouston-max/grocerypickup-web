@@ -42,10 +42,11 @@ const Invoice = ({ order }) => {
         name: item?.product?.name || "Unknown",
         qty: item?.qty || 1,
         price: item?.price || 0,
+        tax: item?.tax || 0,
       })) || [],
   };
 
-  const total = orderData.items.reduce((sum, i) => sum + i.qty * i.price, 0);
+  const total = orderData.items.reduce((sum, i) => sum + i.price, 0);
 
   const downloadInvoice = async () => {
     const input = invoiceRef.current;
@@ -173,7 +174,7 @@ const Invoice = ({ order }) => {
                   border: "1px solid #e5e7eb",
                 }}
               >
-                Unit Price
+                Tax
               </th>
               <th
                 style={{
@@ -214,7 +215,7 @@ const Invoice = ({ order }) => {
                     textAlign: "right",
                   }}
                 >
-                  ${item.price}
+                  ${item.tax}
                 </td>
                 <td
                   style={{
@@ -223,7 +224,7 @@ const Invoice = ({ order }) => {
                     textAlign: "right",
                   }}
                 >
-                  ${item.qty * item.price}
+                  ${item.price}
                 </td>
               </tr>
             ))}
@@ -264,15 +265,15 @@ const Invoice = ({ order }) => {
           <div style={{ width: "50%", marginLeft: "50%" }}>
             <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
               <span style={{ color: "#000" }}>Subtotal</span>
-              <span style={{marginLeft: "20px"}}>${total}</span>
+              <span style={{marginLeft: "50px"}}>${total}</span>
             </div>
             <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
               <span style={{ color: "#000" }}>Discount</span>
-              <span style={{marginLeft: "20px"}}>${order?.discount ? parseFloat(order.discount) : 0.0}</span>
+              <span style={{marginLeft: "50px"}}>${order?.discount ? parseFloat(order.discount) : 0.0}</span>
             </div>
             <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
               <span style={{ color: "#000" }}>Tax (0%)</span>
-              <span style={{marginLeft: "20px"}}>${0.0}</span>
+              <span style={{marginLeft: "50px"}}>${0.0}</span>
             </div>
             <div
               style={{
@@ -284,7 +285,7 @@ const Invoice = ({ order }) => {
               }}
             >
               <span>Total</span>
-              <span style={{marginLeft: "20px"}}>
+              <span style={{marginLeft: "50px"}}>
                 ${total - (order?.discount ? parseFloat(order.discount) : 0.0)}
               </span>
             </div>
