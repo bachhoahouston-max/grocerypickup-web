@@ -27,7 +27,7 @@ function Api(method, url, data, router, params) {
           if (err?.response?.status === 401) {
             if (typeof window !== "undefined") {
               localStorage.removeItem("userDetail");
-              router.push("/signIn");
+              router?.push("/signIn");
             }
           }
           reject(err.response.data);
@@ -64,7 +64,7 @@ function ApiFormData(method, url, data, router) {
           if (err?.response?.status === 401) {
             if (typeof window !== "undefined") {
               localStorage.removeItem("userDetail");
-              router.push("/");
+              router?.push("/");
             }
           }
           reject(err.response.data);

@@ -6,7 +6,6 @@ import { IoIosArrowDown, IoIosArrowUp, IoIosClose } from "react-icons/io"; // Im
 import { userContext } from "./_app";
 import { GoDownload } from "react-icons/go";
 import generatePDF, { usePDF, Margin } from "react-to-pdf";
-import ReactToPrint from "react-to-print";
 import { useTranslation } from "react-i18next";
 import Invoice from "../components/Invoice"
 import Swal from 'sweetalert2';
@@ -241,6 +240,8 @@ function Mybooking(props) {
                                                 {t("My Order")} - <span className="text-gray-600">{formatDate(booking.createdAt) || "N/A"}</span>
                                             </h3>
                                         </div>
+                                <Invoice order={booking} />
+
                                         <div className="flex justify-center items-center space-x-2">
                                             {(() => {
                                                 switch (booking?.status) {
@@ -278,8 +279,6 @@ function Mybooking(props) {
                                                         return null;
                                                 }
                                             })()}
-
-
                                             <button onClick={() => toggleBooking(booking._id)} className="p-1 rounded-full hover:bg-gray-200">
                                                 {expandedBookingId === booking._id ? (
                                                     <IoIosArrowUp className="text-xl text-gray-600" />
@@ -290,7 +289,6 @@ function Mybooking(props) {
                                         </div>
                                     </div>
                                 </div>
-
 
                                 {(booking?.SecretCode || booking?.isShipmentDelivery || booking?.trackingNo) && (
                                     <div className="p-4 border-gray-200 bg-gray-50">
