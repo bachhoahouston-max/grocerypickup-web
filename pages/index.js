@@ -78,7 +78,7 @@ export default function Home(props) {
     );
   };
 
-  const fetchProducts = ( page = 1, limit = 12) => {
+  const fetchProducts = (page = 1, limit = 12) => {
     props.loader(true);
     Api("get", `getProduct?page=${page}&limit=${limit}`, null, router).then(
       (res) => {
@@ -86,7 +86,7 @@ export default function Home(props) {
         if (res.data && Array.isArray(res.data)) {
           console.log("All products", res.data);
           setProductList(res.data);
-          setIscatdata(false); 
+          setIscatdata(false);
         } else {
           console.error("Unexpected response format:", res);
           props.toaster({ type: "error", message: "Unexpected response format" });
@@ -139,81 +139,81 @@ export default function Home(props) {
 
   useEffect(() => {
     const calculateCountdown = () => {
-        
-        const nowIndia = new Date().getTime();
-        const newCountdown = saleData.map(sale => {
-            const startDate = new Date(sale.startDateTime).getTime();
-            const endDate = new Date(sale.endDateTime).getTime();
-            
-            if (nowIndia < startDate) {
-                return { ...sale, timeLeft: null, status: t('Sale will start soon') };
-            } else if (nowIndia >= startDate && nowIndia < endDate) {
-                const distance = endDate - nowIndia;
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                return {
-                    ...sale,
-                    timeLeft: { days, hours, minutes, seconds },
-                    status: t('Sale is live')
-                };
-            } else {
-                return { ...sale, timeLeft: null, status: t('Sale has ended') };
-            }
-        });
-        
-        setCountdown(newCountdown);
+
+      const nowIndia = new Date().getTime();
+      const newCountdown = saleData.map(sale => {
+        const startDate = new Date(sale.startDateTime).getTime();
+        const endDate = new Date(sale.endDateTime).getTime();
+
+        if (nowIndia < startDate) {
+          return { ...sale, timeLeft: null, status: t('Sale will start soon') };
+        } else if (nowIndia >= startDate && nowIndia < endDate) {
+          const distance = endDate - nowIndia;
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          return {
+            ...sale,
+            timeLeft: { days, hours, minutes, seconds },
+            status: t('Sale is live')
+          };
+        } else {
+          return { ...sale, timeLeft: null, status: t('Sale has ended') };
+        }
+      });
+
+      setCountdown(newCountdown);
     };
-    
+
     calculateCountdown();
     const interval = setInterval(calculateCountdown, 1000);
     return () => clearInterval(interval);
-}, [saleData]);
+  }, [saleData]);
 
 
   return (
     <div className="">
-      <MainHeader 
-      loader={props.loader}
-      toaster={props.toaster}
+      <MainHeader
+        loader={props.loader}
+        toaster={props.toaster}
       />
       <div className="container mb-8 md:mt-8 mt-4 mx-auto bg-white max-w-7xl md:px-0 px-6">
         {sellProduct.length > 0 && (
           <>
             <div className="flex items-center justify-between">
               <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">{t("Flash Sale")}</h1>
-             
+
               <div>
                 <h1 className="text-black m-2 text-[14px]"> {t("Sale Status")}: </h1>
                 <div className="flex flex-col space-y-4">
-                {countdown.map((sale, index) => (
-                                <div key={index} className="p-4 bg-white rounded-lg shadow-lg">
-                                    {/* <h3 className="text-xl text-black font-semibold">Status</h3> */}
-                                    {sale.timeLeft ? (
-                                        <div className="flex space-x-4 mt-2">
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-2xl text-black font-bold">{sale.timeLeft.days}</span>
-                                                <span className="text-sm text-gray-500">{t("Days")}</span>
-                                            </div>
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-2xl text-black font-bold">{sale.timeLeft.hours}</span>
-                                                <span className="text-sm text-gray-500">{t("Hours")}</span>
-                                            </div>
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-2xl text-black font-bold">{sale.timeLeft.minutes}</span>
-                                                <span className="text-sm text-gray-500">{t("Minutes")}</span>
-                                            </div>
-                                            <div className="flex flex-col items-center">
-                                                <span className="text-2xl text-black font-bold">{sale.timeLeft.seconds}</span>
-                                                <span className="text-sm text-gray-500">{t("Seconds")}</span>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <p className="mt-2 text-red-600">{sale.status}</p>
-                                    )}
-                                </div>
-                            ))}
+                  {countdown.map((sale, index) => (
+                    <div key={index} className="p-4 bg-white rounded-lg shadow-lg">
+                      {/* <h3 className="text-xl text-black font-semibold">Status</h3> */}
+                      {sale.timeLeft ? (
+                        <div className="flex space-x-4 mt-2">
+                          <div className="flex flex-col items-center">
+                            <span className="text-2xl text-black font-bold">{sale.timeLeft.days}</span>
+                            <span className="text-sm text-gray-500">{t("Days")}</span>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <span className="text-2xl text-black font-bold">{sale.timeLeft.hours}</span>
+                            <span className="text-sm text-gray-500">{t("Hours")}</span>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <span className="text-2xl text-black font-bold">{sale.timeLeft.minutes}</span>
+                            <span className="text-sm text-gray-500">{t("Minutes")}</span>
+                          </div>
+                          <div className="flex flex-col items-center">
+                            <span className="text-2xl text-black font-bold">{sale.timeLeft.seconds}</span>
+                            <span className="text-sm text-gray-500">{t("Seconds")}</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="mt-2 text-red-600">{sale.status}</p>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -234,59 +234,6 @@ export default function Home(props) {
         )}
       </div>
 
-      {/* <div className="hidden md:flex flex-col container mx-auto bg-white max-w-7xl md:px-0 px-6">
-        <div className="text-center mb-8 flex flex-col items-center justify-center">
-          <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">{t("Categories")}</h1>
-          <p className="text-gray-600 mt-4 w-full md:w-[50%] text-center text-[13px] md:text-[16px] italic">
-          {t("Browse through a wide range of categories from fresh produce to pantry staples. We've got everything you need, all in one place")}..
-          </p>
-        </div>
-        <div className="flex flex-col md:flex-row justify-center items-start md:space-x-4">
-          <div className="mb-4 md:mb-0 w-full md:w-1/3 ms-0 md:ms-4  cursor-pointer">
-            <div>
-              <div className="">
-                {category.slice(0, 4).map((category, index) => (
-                  <div key={index} className="mb-4 bg-[#F7F7F8] flex flex-col py-[18px] cursor-pointer rounded-sm justify-center items-center"
-                    onClick={() => { router.push(`/categories/${category?.slug}`) }}
-                  >
-                    <p className="text-custom-black md:mb-2 mb-1 font-semibold 
-                    md:text-[16px] text-[14px]">
-                      {category.name}
-                    </p>
-                    <p className="cursor-pointer text-[#767C7D] md:text-[14px] text-[13px]">(65 {" "} 
-                      {t("items")})</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mb-4 bg-[#F7F7F8] flex flex-col py-6 md:py-7 cursor-pointer rounded-sm justify-center items-center">
-                <p className="text-custom-green mb-2 font-semibold text-[16px]"
-                  onClick={() => handleCategoryClick1('/categories/all')}
-                >
-                  {t("View More")}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-2 w-full md:w-2/3">
-            <div className="w-full md:w-1/2">
-              <img
-                alt="A beautifully decorated cake with flowers and berries on a green cake stand"
-                className="shadow-md"
-                src="./Rectangle2.png"
-              />
-            </div>
-            <div className="w-full md:w-1/2">
-              <img
-                alt="A glass of green smoothie with kiwi slices and a straw"
-                className="shadow-md"
-                src="./Rectangle1.png"
-              />
-            </div>
-          </div>
-        </div>
-      </div> */}
-
 
       <div className="bg-white w-full">
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
@@ -295,7 +242,7 @@ export default function Home(props) {
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">
                 {t("Popular Products")}</h1>
               <p className="text-center w-full text-[13px] md:text-[16px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
-              {t("Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers")}
+                {t("Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers")}
               </p>
             </div>
 
@@ -359,12 +306,17 @@ export default function Home(props) {
                         url={`/product-details/${item?.slug}`} />
                     ))
                   ) : (
-                    <div className="flex justify-center md:text-[24px] items-center text-[18px] text-gray-500">{t("No products available")}.</div>
+                    <div className="absolute top-48 left-64 col-span-4 flex justify-center text-[24px] items-center text-gray-500 ">{t("No products available")}.</div>
                   )
                 )}
               </div>
-            </div>
 
+            </div>
+            <div className=" flex justify-center items-center">
+              <p className="text-custom-green underline  text-lg px-3 py-2 rounded-sm cursor-pointer"
+                onClick={() => handleCategoryClick1('/categories/all')}
+              >{t("View More")} </p>
+            </div>
           </div>
         </section>
       </div>

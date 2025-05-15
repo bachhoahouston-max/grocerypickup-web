@@ -153,11 +153,12 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 <img
                     src={item.varients[0].image[0]}
                     alt="Product image"
-                    className="w-full p-1 md:h-44 h-36 object-cover rounded-xl cursor-pointer"
+                    className="w-full p-1 md:h-44 h-36 object-contain rounded-xl cursor-pointer"
                     onClick={() => {
                         router.push(url);
                     }}
                 />
+
                 <div className='absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[36px] md:h-[45px] h-[36px] flex justify-center items-center md:mb-1 mb-2'
                     onClick={addremovefavourite}
                 >
@@ -210,11 +211,11 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                                 }
                                 return cartItem;
                             });
-                        
+
                             setCartData(updatedCart);
                             localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
                         }}
-                        
+
 
                     >
                         <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
