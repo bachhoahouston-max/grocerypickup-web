@@ -452,33 +452,33 @@ const Navbar = (props) => {
         };
 
         console.log(newData)
-        // props.loader && props.loader(true);
-        // Api("post", "createProductRquest", newData, router).then(
-        //     (res) => {
-        //         props.loader && props.loader(false);
-        //         if (res.status) {
-        //             setCartData([]);
-        //             setLocalAddress([])
-        //             setCartTotal(0);
-        //             setOpenCart(false);
-        //             setDate('')
-        //             getProfileData()
-        //             localStorage.removeItem("addCartDetail");
-        //             props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
-        //             router.push("/Mybooking");
-        //         } else {
-        //             props.toaster && props.toaster({ type: "error", message: res?.data?.message });
-        //         }
-        //     },
-        //     (err) => {
-        //         props.loader && props.loader(false);
-        //         props.toaster && props.toaster({ type: "error", message: err?.message });
-        //     }
-        // );
         localStorage.setItem("checkoutData", JSON.stringify(newData));
-        // props.loader && props.loader(true);
-        setOpenCart(false)
-        router.push('/payment?from=cart')
+        props.loader && props.loader(true);
+        Api("post", "createProductRquest", newData, router).then(
+            (res) => {
+                props.loader && props.loader(false);
+                if (res.status) {
+                    setCartData([]);
+                    setLocalAddress([])
+                    setCartTotal(0);
+                    setOpenCart(false);
+                    setDate('')
+                    getProfileData()
+                    localStorage.removeItem("addCartDetail");
+                    props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
+                    router.push("/Mybooking");
+                } else {
+                    props.toaster && props.toaster({ type: "error", message: res?.data?.message });
+                }
+            },
+            (err) => {
+                props.loader && props.loader(false);
+                props.toaster && props.toaster({ type: "error", message: err?.message });
+            }
+        );
+       
+        // setOpenCart(false)
+        // router.push('/payment?from=cart')
 
     };
 

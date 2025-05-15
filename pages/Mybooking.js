@@ -9,6 +9,7 @@ import generatePDF, { usePDF, Margin } from "react-to-pdf";
 import { useTranslation } from "react-i18next";
 import Invoice from "../components/Invoice"
 import Swal from 'sweetalert2';
+import { MdFileDownload } from "react-icons/md"
 
 function Mybooking(props) {
     const ref = useRef();
@@ -240,38 +241,38 @@ function Mybooking(props) {
                                                 {t("My Order")} - <span className="text-gray-600">{formatDate(booking.createdAt) || "N/A"}</span>
                                             </h3>
                                         </div>
-                                <Invoice order={booking} />
+                                       
 
-                                        <div className="flex justify-center items-center space-x-2">
+                                        <div className="flex justify-center items-center space-x-1">
                                             {(() => {
                                                 switch (booking?.status) {
                                                     case 'Completed':
                                                         return (
-                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                                            <span className="px-3 w-full py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium text-center ">
                                                                 {t("Order Delivered")}
                                                             </span>
                                                         );
                                                     case 'Pending':
                                                         return (
-                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
+                                                            <span className="px-3 w-full py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium text-center">
                                                                 {t("Order Pending")}
                                                             </span>
                                                         );
                                                     case 'Return Requested':
                                                         return (
-                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                                                            <span className="px-3 w-full  py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium text-center">
                                                                 {t("Order Return Requested")}
                                                             </span>
                                                         );
                                                     case 'Return':
                                                         return (
-                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                                                            <span className="px-3 w-full py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium text-center">
                                                                 {t("Order Returned")}
                                                             </span>
                                                         );
                                                     case 'Cancel':
                                                         return (
-                                                            <span className="px-3 md:w-full w-[110px] py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                                                            <span className="px-3 w-full py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium text-center">
                                                                 {t("Order Cancelled")}
                                                             </span>
                                                         );
@@ -279,14 +280,17 @@ function Mybooking(props) {
                                                         return null;
                                                 }
                                             })()}
+                                             <Invoice order={booking} />
                                             <button onClick={() => toggleBooking(booking._id)} className="p-1 rounded-full hover:bg-gray-200">
                                                 {expandedBookingId === booking._id ? (
-                                                    <IoIosArrowUp className="text-xl text-gray-600" />
+                                                    <IoIosArrowUp className="text-xl cursor-pointer text-gray-600" />
                                                 ) : (
-                                                    <IoIosArrowDown className="text-xl text-gray-600" />
+                                                    <IoIosArrowDown className="text-xl cursor-pointer text-gray-600" />
                                                 )}
                                             </button>
+                                           
                                         </div>
+
                                     </div>
                                 </div>
 

@@ -1,10 +1,13 @@
-import React, { useRef } from "react";
+import React, { useRef,useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { MdFileDownload } from "react-icons/md"
 
 const Invoice = ({ order }) => {
   const invoiceRef = useRef(null);
+  const [showTooltip, setShowTooltip] = useState(false);
 
+  
   const invoiceId =
     order?.orderId || order?._id || `INV-${Math.floor(Math.random() * 10000)}`;
   const orderDate =
@@ -27,7 +30,7 @@ const Invoice = ({ order }) => {
     order?.Local_address?.pinCode || "111111"
   }`;
   const website =
-    window.location.origin || "https://www.tropicanasupermarket.com";
+    window.location.origin || "https://www.bachhoahouston.com";
 
   const orderData = {
     id: invoiceId,
@@ -52,7 +55,6 @@ const Invoice = ({ order }) => {
     const input = invoiceRef.current;
     if (!input) return;
 
-    // Wait for rendering just in case
     await new Promise((res) => setTimeout(res, 500));
 
     const canvas = await html2canvas(input, {
@@ -72,12 +74,22 @@ const Invoice = ({ order }) => {
 
   return (
     <div className="bg-gray-50">
+    <div className="relative inline-block">
       <button
         onClick={downloadInvoice}
-        className="h-fit w-fit bg-custom-green text-white text-xs py-1 px-2 rounded cursor-pointer"
+        className="h-fit w-fit text-gray-700 py-1 px-2 rounded cursor-pointer"
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
-        Download Invoice
+        <MdFileDownload className="text-xl" />
       </button>
+
+      {showTooltip && (
+        <div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2.5 py-2 rounded shadow-lg z-10 w-[115px]">
+          Download Invoice
+        </div>
+      )}
+    </div>
 
       {/* Hidden off-screen invoice */}
       <div
