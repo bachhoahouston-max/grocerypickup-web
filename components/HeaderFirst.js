@@ -29,9 +29,13 @@ const HeaderFirst = (props) => {
       };
       document.addEventListener("mousedown", handleClickOutside);
       return () => document.removeEventListener("mousedown", handleClickOutside);
-      CategoryData()
+      
     }, []);
 
+    useEffect(()=>{
+        CategoryData();
+    },[])
+    
     const CategoryData = () => {
         props.loader(true);
 
