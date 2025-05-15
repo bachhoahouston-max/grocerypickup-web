@@ -465,8 +465,9 @@ const Navbar = (props) => {
                     setDate('')
                     getProfileData()
                     localStorage.removeItem("addCartDetail");
-                    props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
                     router.push("/Mybooking");
+                    props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
+                    
                 } else {
                     props.toaster && props.toaster({ type: "error", message: res?.data?.message });
                 }

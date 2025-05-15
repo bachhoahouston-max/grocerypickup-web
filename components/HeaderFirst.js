@@ -20,21 +20,17 @@ const HeaderFirst = (props) => {
     const { i18n } = useTranslation();
     const { t } = useTranslation();
 
-    // Close dropdown when clicking outside
+    
     useEffect(() => {
-        CategoryData();
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setDropdownOpen(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
+      const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+          setDropdownOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+      CategoryData()
     }, []);
-
 
     const CategoryData = () => {
         props.loader(true);
@@ -82,73 +78,81 @@ const HeaderFirst = (props) => {
             <div className=" mt-2 mx-auto px-4 py-2 flex justify-center items-center ">
                 <div className="hidden flex-1 lg:flex justify-center space-x-6">
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'home' ? 'text-custom-green' : 'text-custom-black'}`}
-                        onClick={(e) => { 
+                        onClick={(e) => {
                             e.preventDefault();
                             handleNavigation('/', 'home');
-                         }}
+                        }}
                     >
                         {t("Home")}
                     </p>
                     <div className="relative flex" ref={dropdownRef}>
                         <button
                             className={`text-base font-medium cursor-pointer inline-flex items-center ${selectedTab === 'AllCategory' ? 'text-custom-green' : 'text-custom-black'}`}
-                            onClick={(e) => { 
+                            onClick={(e) => {
                                 e.preventDefault();
                                 handleNavigation('/AllCategory', 'AllCategory');
                             }}
                         >
-                           {t("Categories")} 
+                            {t("Categories")}
                         </button>
-                        <IoIosArrowDown className="text-2xl cursor-pointer ml-1 text-black"
+
+
+                        <IoIosArrowDown
+                            className="text-2xl cursor-pointer ml-1 text-black"
                             onClick={(e) => {
                                 e.stopPropagation();
-                                setDropdownOpen(prev => !prev); // Toggle 
+                                setDropdownOpen((prev) => !prev);
                             }}
                         />
+
                         {dropdownOpen && (
                             <div className="absolute top-full left-0 mt-4 bg-custom-gold shadow-lg rounded-xl w-[241px] overflow-hidden z-20 pt-3 pb-4">
-                                {category.slice(0, 6).map((category, index) => (
-                                    <div key={index} className='flex flex-col justify-between'>
-                                        <div 
-                                            className='flex flex-row justify-between cursor-pointer' 
+                                {category.slice(0, 6).map((cat, index) => (
+                                    <div key={index} className="flex flex-col justify-between">
+                                        <div
+                                            className="flex flex-row justify-between cursor-pointer"
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
-                                                handleNavigation(`/categories/${category?.slug}`, 'category');
+                                                setDropdownOpen(false); // Close dropdown
+                                                handleNavigation(`/categories/${cat?.slug}`, "category");
                                             }}
                                         >
                                             <p className="px-4 py-1.5 text-white text-[16px]">
-                                                {category.name}
+                                                {cat.name}dcv
                                             </p>
-                                            <IoIosArrowForward className='text-2xl mt-2 mr-1 text-white' />
+                                            <IoIosArrowForward className="text-2xl mt-2 mr-1 text-white" />
                                         </div>
                                     </div>
                                 ))}
+
                                 <p
                                     className="px-4 py-1.5 text-white text-[16px] cursor-pointer"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        handleNavigation('/categories/all', 'allCategories');
+                                        setDropdownOpen(false); // Close dropdown
+                                        handleNavigation("/categories/all", "allCategories");
                                     }}
                                 >
-                                   {t("See All Categories")} 
+                                    {t("See All Categories")}
                                 </p>
                             </div>
                         )}
+
                     </div>
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'AboutUs' ? 'text-custom-green' : 'text-custom-black'}`}
-                        onClick={(e) => { 
+                        onClick={(e) => {
                             e.preventDefault();
                             handleNavigation('/AboutUs', 'AboutUs');
                         }}>
                         {t("About Us")}
                     </p>
                     <p className={`text-base font-medium cursor-pointer ml-2 ${selectedTab === 'Contact' ? 'text-custom-green' : 'text-custom-black'}`}
-                        onClick={(e) => { 
+                        onClick={(e) => {
                             e.preventDefault();
                             handleNavigation('/ContactUs', 'Contact');
                         }}>
-                       {t("Contact")} 
+                        {t("Contact")}
                     </p>
                 </div>
             </div>
@@ -158,7 +162,7 @@ const HeaderFirst = (props) => {
                     <a href="tel:832-230-9288" className="text-custom-black cursor-pointer font-semibold">832-230-9288</a>
                 </div>
                 <div className="hidden lg:flex rounded-lg">
-                    <select className="bg-white w-full font-normal text-sm text-black outline-none cursor-pointer" 
+                    <select className="bg-white w-full font-normal text-sm text-black outline-none cursor-pointer"
                         value={lang}
                         onChange={(e) => handleClick(e.target.value)}
                     >
@@ -167,7 +171,7 @@ const HeaderFirst = (props) => {
                     </select>
                 </div>
             </div>
-        </nav>
+        </nav >
     );
 };
 

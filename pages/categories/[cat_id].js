@@ -106,7 +106,7 @@ function Categories(props) {
         );
     };
 
-    const getproductByCategory = async (cat, page = 1, limit = 12) => {
+    const getproductByCategory = async (cat, page = 1, limit = 18) => {
         props.loader(true);
         // setCategoryLoading(true);
         let url = `getProductBycategoryId?page=${page}&limit=${limit}`;
@@ -141,16 +141,16 @@ function Categories(props) {
     return (
         <div className="bg-white w-full min-h-screen">
             <section className="bg-white w-full  relative flex flex-col justify-center items-center">
-                <div className="max-w-7xl mx-auto w-full md:px-0 px-5 md:pt-5 pt-5 md:pb-10 pb-0">
+                <div className="lg:max-w-9xl md:max-w-9xl mx-auto w-full md:px-8 px-5 md:pt-5 pt-5 md:pb-10 pb-0">
                     <div className="flex justify-center flex-col items-center mt-2" > <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">{t("Popular Products")}</h1>
                         <p className="text-center w-full text-[13px] md:text-[16px] md:w-[50%] text-gray-500 mb-6 mt-2 italic">
                         {t("Browse through a wide range of categories from fresh produce to pantry staples. We've got everything you need, all in one place")}.
                         </p>
                     </div>
 
-                    <div className='grid md:grid-cols-5 grid-cols-1 w-full md:gap-5'>
+                    <div className='grid md:grid-cols-6 mx-auto grid-cols-1 w-full md:gap-3'>
 
-                        <div className='bg-custom-green md:flex hidden flex-col w-full px-5 py-5'>
+                        <div className='bg-custom-green col-span-1.5 md:flex hidden flex-col w-full px-5 py-5'>
                             <div className='border-b border-custom-gray'>
                                 <div className='flex justify-between items-center w-full  pb-5'>
                                     <p className='text-white font-semibold text-lg'>{t("Sort By")}</p>
@@ -261,8 +261,8 @@ function Categories(props) {
                                 </div>
                             </div>
                         </Drawer>
-                        <div className='col-span-4 md:mt-0 mt-8 '>
-                            <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2  mb-6 space-x-2  justify-between">
+                        <div className='col-span-5  md:mt-0 mt-8 '>
+                            <div className="grid lg:grid-cols-5 xl:grid-cols-6 md:grid-cols-4 grid-cols-2  mb-6 space-x-2  justify-between">
                                 {productList.length > 0 ? (
                                     productList.map((item, i) => (
                                         <div key={i} className='p-1 w-full md:mb-5 mb-2'>
@@ -281,7 +281,7 @@ function Categories(props) {
                             </div>
                         </div>
 
-                        <div className="col-span-5 w-full flex justify-center mt-8 mb-8">
+                        <div className="col-span-6 w-full flex justify-center mt-8 mb-8">
                             {productList?.length > 0 && paginationData?.totalPages > 1 && (
                                 <div className="flex items-center space-x-2">
                                     {/* Previous button */}
