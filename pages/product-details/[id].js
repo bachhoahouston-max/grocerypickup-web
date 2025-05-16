@@ -427,7 +427,7 @@ function ProductDetails(props) {
                             {data?.other_price && (<>
                               <img
                                 className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
-                                src="/Star.png"
+                                src="/star.png"
                               />
                               <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
                                 {percentageDifference?.toFixed(2)}%<br />
@@ -547,84 +547,89 @@ function ProductDetails(props) {
           </div>
         </div>
         <div className="w-full bg-[#FFF5CB] md:my-10 my-5 md:px-16 py-5 px-4">
-          <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
-            <div className="flex flex-col justify-start items-start">
-              <p className="text-black md:text-2xl text-xl font-bold">
+          <p className="text-black text-xl md:text-2xl font-bold mb-4">
                 {t("About Product")}
               </p>
-              <p className="text-black font-medium md:text-xl text-base pt-2">
-                {t("Short Description")} :{" "}
-                <span className="text-custom-newGray font-normal md:text-xl text-base">
-                  {productsId?.long_description}
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-6 w-full">
+            {/* About Product Section */}
+             
+            <div className="flex flex-col gap-3">
+             
+              <p className="text-black text-base md:text-xl font-medium">
+                {t("Short Description")}:{" "}
+                <span className="text-custom-newGray font-normal mt-1">
+                  {productsId?.short_description}
                 </span>
               </p>
-
             </div>
-            <div className="flex flex-col justify-start items-start">
-              <p className="text-black font-medium md:text-xl text-base">
-                {t("Country of Origin")} :{" "}
-                <span className="text-custom-newGray font-normal md:text-xl text-base">
+
+            {/* Country & Manufacturer Info */}
+            <div className="flex flex-col gap-3">
+              <p className="text-black text-base md:text-xl font-medium">
+                {t("Country of Origin")}:{" "}
+                <span className="text-custom-newGray font-normal mt-1">
                   {productsId?.origin}
                 </span>
               </p>
-
-              <p className="text-black font-medium md:text-xl text-base pt-2">
-                {t("Manufacturer Name")} :{" "}
-                <span className="text-custom-newGray font-normal md:text-xl text-base">
+              <p className="text-black text-base md:text-xl font-medium">
+                {t("Manufacturer Name")}:{" "}
+                <span className="text-custom-newGray font-normal  mt-1">
                   {productsId?.manufacturername}
                 </span>
               </p>
-              {/* <p className="text-black font-medium md:text-xl text-base pt-2">
-                {t("Manufacturer Address")} :{" "}
-                <span className="text-custom-newGray font-normal md:text-xl text-base">
-                  {productsId?.manufactureradd}
-                </span>
-              </p> */}
             </div>
-            <div className="col-span-2">
-              <p className="text-black font-semibold md:text-xl text-base pt-1">
-                {t("Long Description")} :
+
+            {/* Long Description */}
+            <div className="md:col-span-2">
+              <p className="text-black text-base md:text-xl font-semibold mb-2">
+                {t("Long Description")}:
               </p>
-              <span
-                className="text-black font-normal md:text-xl text-base">
+              <p className="text-black text-base md:text-xl font-normal leading-relaxed">
                 {productsId?.long_description}
-              </span>
-            </div>
-            <div className="col-span-2">
-              <p className="text-black font-semibold md:text-xl text-base pt-1">
-                {t("Disclaimer")} :
               </p>
-              <span
-                className="text-black font-normal md:text-xl text-base"
+            </div>
+
+            {/* Disclaimer */}
+            <div className="md:col-span-2">
+              <p className="text-black text-base md:text-xl font-semibold mb-2">
+                {t("Disclaimer")}:
+              </p>
+              <div
+                className="text-black text-base md:text-xl font-normal leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
               />
             </div>
-            <div className="col-span-2">
-              <p className="text-black font-semibold md:text-xl text-base pt-1">
-                {t("Warning")} :
+
+            {/* Warning */}
+            <div className="md:col-span-2">
+              <p className="text-black text-base md:text-xl font-semibold mb-2">
+                {t("Warning")}:
               </p>
-              <span
-                className="text-black font-normal md:text-xl text-base"
+              <div
+                className="text-black text-base md:text-xl font-normal leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
               />
             </div>
-            <div className="col-span-2">
-              <p className="text-black font-semibold md:text-xl text-base pt-1">
-                {t("Return Policy")} :
+
+            {/* Return Policy */}
+            <div className="md:col-span-2">
+              <p className="text-black text-base md:text-xl font-semibold mb-2">
+                {t("Return Policy")}:
               </p>
-              <span
-                className="text-black font-normal md:text-xl text-base"
+              <div
+                className="text-black text-base md:text-xl font-normal leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
               />
             </div>
           </div>
+
         </div>
 
         <div className="bg-white w-full md:pt-10 md:pb-10 pb-5 max-w-7xl md:ms-12 ms-4">
           <p className="text-black text-xl font-bold md:mb-10 mb-5">
             {t("Similar Products")}
           </p>
-          <div className="grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-5">
+          <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-5">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories
@@ -643,7 +648,7 @@ function ProductDetails(props) {
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             {t("You might also like")}
           </p>
-          <div className="grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-5 md:ms-14 ms-4">
+          <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-5 md:ms-14 ms-4">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories

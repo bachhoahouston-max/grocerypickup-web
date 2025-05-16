@@ -159,8 +159,8 @@
   "Parking Spot": "Điểm đậu xe",
   "Delivery expected by": "Dự kiến ​​giao hàng bởi",
   "Order Pending": "Lệnh đang chờ xử lý",
-  "Parking Information": "",
-  "Parking No:": "Số bãi đậu xe:",
+  "Parking Information": "Thông tin đỗ xe",
+  "Parking Pickup Spot": "Điểm đón xe",
   "Enter Parking Number": "Nhập số đỗ xe",
   "Cancel": "Hủy bỏ",
   "Quantity": "Số lượng",
@@ -236,6 +236,11 @@
   "Cancel Order":"Hủy đơn hàng",
   "Message":"Tin nhắn",
   "Note: We currently deliver only to selected ZIP codes":"Lưu ý: Hiện tại chúng tôi chỉ giao hàng đến các mã ZIP được chọn",
-  "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time":"Lưu ý: Hiện tại chúng tôi giao hàng đến 49/50 tiểu bang của Hoa Kỳ. Thật không may, chúng tôi không giao hàng đến Hawaii vào thời điểm này"
+  "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time":"Lưu ý: Hiện tại chúng tôi giao hàng đến 49/50 tiểu bang của Hoa Kỳ. Thật không may, chúng tôi không giao hàng đến Hawaii vào thời điểm này",
+  "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.":"*Lưu ý: Đơn hàng đặt trước 2 giờ chiều sẽ được nhận trong ngày. Đơn hàng đặt sau 2 giờ chiều sẽ được nhận vào ngày hôm sau.",
+  "Car Color":"Màu xe",
+  "Enter Car color":"Nhập màu xe",
+  "Car Brand":"Thương hiệu xe hơi",
+  "Enter Car brand":"Nhập thương hiệu xe hơi"
 
 }

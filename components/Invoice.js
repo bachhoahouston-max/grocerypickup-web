@@ -1,4 +1,4 @@
-import React, { useRef,useState } from "react";
+import React, { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { MdFileDownload } from "react-icons/md"
@@ -7,34 +7,39 @@ const Invoice = ({ order }) => {
   const invoiceRef = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
-  
+
   const invoiceId =
-    order?.orderId || order?._id || `INV-${Math.floor(Math.random() * 10000)}`;
-  const orderDate =
-    new Date(order?.createdAt || Date.now()).toLocaleDateString("en-IN", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }) +
-    " " +
-    new Date(order?.createdAt || Date.now()).toLocaleTimeString("en-IN", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  const customerCompleteAddress = `${
-    order?.Local_address?.address || "Unknown"
-  }, ${order?.Local_address?.city || "Unknown"}, ${
-    order?.Local_address?.state || "Unknown"
-  }, ${order?.Local_address?.country || "Unknown"} - ${
-    order?.Local_address?.pinCode || "111111"
-  }`;
+    order?.orderId || order?._id;
+     const createdAt = new Date(order?.createdAt || Date.now());
+
+  // Format date as MM/DD/YY
+   const formattedDate = `${String(createdAt.getMonth() + 1).padStart(2, '0')}/${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getFullYear()).slice()}`;
+
+  // Format time as HH:MM:SS AM/PM
+  const formattedTime = createdAt.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true, // Use hour12 to get AM/PM format
+  });
+
+  // Final combined format
+  const orderDateTime = `${formattedDate} ${formattedTime}`;
+
+  // const customerCompleteAddress = `${
+  //   order?.Local_address?.address || "Unknown"
+  // }, ${order?.Local_address?.city || "Unknown"}, ${
+  //   order?.Local_address?.state || "Unknown"
+  // }, ${order?.Local_address?.country || "Unknown"} - ${
+  //   order?.Local_address?.pinCode || "111111"
+  // }`;
+
   const website =
     window.location.origin || "https://www.bachhoahouston.com";
 
   const orderData = {
     id: invoiceId,
-    date: orderDate,
+    date: orderDateTime,
     customer: {
       name: order?.Local_address?.name || "Unknown",
       address: order?.Local_address?.address || "Unknown",
@@ -74,22 +79,22 @@ const Invoice = ({ order }) => {
 
   return (
     <div className="bg-gray-50">
-    <div className="relative inline-block">
-      <button
-        onClick={downloadInvoice}
-        className="h-fit w-fit text-gray-700 py-1 px-2 rounded cursor-pointer"
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <MdFileDownload className="text-xl" />
-      </button>
+      <div className="relative inline-block">
+        <button
+          onClick={downloadInvoice}
+          className="h-fit w-fit text-gray-700 py-1 px-2 rounded cursor-pointer"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          <MdFileDownload className="text-xl" />
+        </button>
 
-      {showTooltip && (
-        <div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2.5 py-2 rounded shadow-lg z-10 w-[115px]">
-          Download Invoice
-        </div>
-      )}
-    </div>
+        {showTooltip && (
+          <div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2.5 py-2 rounded shadow-lg z-10 w-[115px]">
+            Download Invoice
+          </div>
+        )}
+      </div>
 
       {/* Hidden off-screen invoice */}
       <div
@@ -119,7 +124,7 @@ const Invoice = ({ order }) => {
             <h1
               style={{ fontSize: "2rem", fontWeight: "bold", color: "#f38529" }}
             >
-              Grocery Pickup Store
+              BACH HOA HOUSTON
             </h1>
             <p style={{ fontSize: "0.875rem" }}>{website}</p>
           </div>
@@ -277,15 +282,15 @@ const Invoice = ({ order }) => {
           <div style={{ width: "50%", marginLeft: "50%" }}>
             <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
               <span style={{ color: "#000" }}>Subtotal</span>
-              <span style={{marginLeft: "50px"}}>${total}</span>
+              <span style={{ marginLeft: "50px" }}>${total}</span>
             </div>
             <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
               <span style={{ color: "#000" }}>Discount</span>
-              <span style={{marginLeft: "50px"}}>${order?.discount ? parseFloat(order.discount) : 0.0}</span>
+              <span style={{ marginLeft: "50px" }}>${order?.discount ? parseFloat(order.discount) : 0.0}</span>
             </div>
             <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
               <span style={{ color: "#000" }}>Tax (0%)</span>
-              <span style={{marginLeft: "50px"}}>${0.0}</span>
+              <span style={{ marginLeft: "50px" }}>${0.0}</span>
             </div>
             <div
               style={{
@@ -297,7 +302,7 @@ const Invoice = ({ order }) => {
               }}
             >
               <span>Total</span>
-              <span style={{marginLeft: "50px"}}>
+              <span style={{ marginLeft: "50px" }}>
                 ${total - (order?.discount ? parseFloat(order.discount) : 0.0)}
               </span>
             </div>
@@ -305,8 +310,8 @@ const Invoice = ({ order }) => {
         </div>
 
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
-          <p>Thank you for shopping with Grocery Pickup Store</p>
-          <p>For queries, contact us at email@addess.com</p>
+          <p>Thank you for shopping with BACH HOA HOUSTON</p>
+          <p>For queries, contact us at contact@bachhoahouston.com</p>
         </div>
       </div>
     </div>

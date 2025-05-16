@@ -19,7 +19,7 @@ function Mybooking(props) {
     const [bookingsData, setBookingsData] = useState([]);
     const [expandedBookingId, setExpandedBookingId] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
-    const [parkingNo, setParkingNo] = useState("");
+    const [parkingNo, setParkingNo] = useState(1);
     const [carColor, setCarColor] = useState("");
     const [carBrand, setCarBrand] = useState("");
     const [Id, setId] = useState("")
@@ -32,11 +32,13 @@ function Mybooking(props) {
     }
 
     let secretCode = Math.floor(1000 + Math.random() * 9000);
-
+    const onClose = () => {
+        setIsOpen(false);
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = {
-            parkingNo,
+            parkingNo:parkingNo,
             carColor: carColor,
             carBrand: carBrand,
             id: Id,
@@ -55,6 +57,8 @@ function Mybooking(props) {
                     getBookingsByUser();
                     setIsOpen(false);
                     setParkingNo('');
+                    setCarBrand("")
+                    setCarColor("")
                 } else {
                     props.toaster({ type: "error", message: "Failed to Add Parking No." });
                 }
@@ -134,16 +138,11 @@ function Mybooking(props) {
         });
     };
 
-    const toggleModal2 = (id) => {
-        setId(id)
-        getSecrectCode()
-    }
     let secretCode1 = Math.floor(1000 + Math.random() * 9000);
 
-    const getSecrectCode = () => {
-
+    const getSecrectCode = (id) => {
         const data = {
-            id: Id,
+            id: id,
             SecretCode: secretCode1
         };
 
@@ -241,7 +240,7 @@ function Mybooking(props) {
                                                 {t("My Order")} - <span className="text-gray-600">{formatDate(booking.createdAt) || "N/A"}</span>
                                             </h3>
                                         </div>
-                                       
+
 
                                         <div className="flex justify-center items-center space-x-1">
                                             {(() => {
@@ -276,11 +275,17 @@ function Mybooking(props) {
                                                                 {t("Order Cancelled")}
                                                             </span>
                                                         );
+                                                        case 'Shipped':
+                                                        return (
+                                                            <span className="px-3 w-full py-1.5 bg-green-100 text-green-300 rounded-full text-sm font-medium text-center">
+                                                                {t("Order Shipped")}
+                                                            </span>
+                                                        );
                                                     default:
                                                         return null;
                                                 }
                                             })()}
-                                             <Invoice order={booking} />
+                                            <Invoice order={booking} />
                                             <button onClick={() => toggleBooking(booking._id)} className="p-1 rounded-full hover:bg-gray-200">
                                                 {expandedBookingId === booking._id ? (
                                                     <IoIosArrowUp className="text-xl cursor-pointer text-gray-600" />
@@ -288,7 +293,7 @@ function Mybooking(props) {
                                                     <IoIosArrowDown className="text-xl cursor-pointer text-gray-600" />
                                                 )}
                                             </button>
-                                           
+
                                         </div>
 
                                     </div>
@@ -394,7 +399,7 @@ function Mybooking(props) {
                                             {booking?.isDriveUp && (
                                                 <button
                                                     onClick={() => toggleModal(booking._id)}
-                                                    className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 cursor-pointer"
+                                                    className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md cursor-pointer"
                                                 >
                                                     {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
                                                 </button>
@@ -402,8 +407,8 @@ function Mybooking(props) {
 
                                             {booking?.isOrderPickup && (
                                                 <button
-                                                    onClick={() => toggleModal2(booking._id)}
-                                                    className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                                    onClick={() => getSecrectCode(booking._id)}
+                                                    className="px-4 py-2 bg-custom-gold  text-white text-sm font-medium rounded-md cursor-pointer"
                                                 >
                                                     {t("I'm here")}
                                                 </button>
@@ -411,6 +416,78 @@ function Mybooking(props) {
                                         </div>
                                     </div>
                                 )}
+
+                                {isOpen && (
+                                    <div className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-50 px-4">
+                                        <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+                                            <h2 className="text-2xl font-semibold mb-4 text-gray-800">{t("Parking Information")}</h2>
+                                            <form onSubmit={handleSubmit} className="space-y-4">
+                                                <div>
+                                                    <label htmlFor="carBrand" className="block text-gray-700 font-medium mb-1">
+                                                        {t("Car Brand")}
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        id="carBrand"
+                                                        value={carBrand}
+                                                        onChange={(e) => setCarBrand(e.target.value)}
+                                                        required
+                                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-black"
+                                                        placeholder={t("Enter Car brand")}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="carColor" className="block text-gray-700 font-medium mb-1">
+                                                        {t("Car Color")}
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        id="carColor"
+                                                        value={carColor}
+                                                        onChange={(e) => setCarColor(e.target.value)}
+                                                        required
+                                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-black"
+                                                        placeholder={t("Enter Car color")}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label htmlFor="pickupSpot" className="block text-gray-700 font-medium mb-1">
+                                                        {t("Parking Pickup Spot")}
+                                                    </label>
+                                                    <select
+                                                        id="pickupSpot"
+                                                        value={parkingNo}
+                                                        onChange={(e) => setParkingNo(e.target.value)}
+                                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-black"
+                                                    >
+                                                        {[1, 2, 3, 4, 5, 6].map((num) => (
+                                                            <option key={num} value={num}>
+                                                                {num}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                <div className="flex justify-end space-x-3 pt-4">
+                                                    <button
+                                                        type="button"
+                                                        onClick={onClose}
+                                                        className="px-4 py-2 rounded-md border border-amber-500 text-amber-500 hover:bg-amber-50 transition cursor-pointer"
+                                                    >
+                                                        {t("Cancel")}
+                                                    </button>
+                                                    <button
+                                                        type="submit"
+                                                        className="px-4 py-2 rounded-md bg-custom-green text-white hover:bg-amber-600 transition cursor-pointer"
+                                                    >
+                                                        {t("Submit")}
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                )
+                                }
+
 
                                 {/* Expanded Order Details */}
                                 <div className={expandedBookingId === booking._id ? "p-4" : "hidden"}>
@@ -450,7 +527,7 @@ function Mybooking(props) {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div >
                         ))
                     ) : (
                         <div className="flex justify-center items-center md:mt-5 w-full md:h-[300px] h-[200px] col-span-2">
@@ -459,9 +536,9 @@ function Mybooking(props) {
                             </p>
                         </div>
                     )}
-                </div>
+                </div >
 
-            </div>
+            </div >
         </>
     );
 }

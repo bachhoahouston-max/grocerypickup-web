@@ -107,7 +107,7 @@ const Navbar = (props) => {
                 },
             });
         }
-    }, [profileData, cartData]);
+    }, []);
 
     const handleDateChange1 = (date) => {
         setLocalAddress({ ...localAddress, dateOfDelivery: date });
@@ -180,8 +180,20 @@ const Navbar = (props) => {
     };
 
     const minDate = (() => {
-        return new Date(); // Includes today
+        const now = new Date();
+        const currentHour = now.getHours(); // returns 0–23
+
+        if (currentHour >= 14) {
+            // If time is 2 PM or later, return tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(now.getDate() + 1);
+            return tomorrow;
+        }
+
+        // Else, return today
+        return now;
     })();
+
 
     const minDate1 = (() => {
         const date = new Date();
@@ -454,7 +466,7 @@ const Navbar = (props) => {
         console.log(newData)
         localStorage.setItem("checkoutData", JSON.stringify(newData));
         props.loader && props.loader(true);
-        
+
         // Api("post", "createProductRquest", newData, router).then(
         //     (res) => {
         //         props.loader && props.loader(false);
@@ -468,7 +480,7 @@ const Navbar = (props) => {
         //             localStorage.removeItem("addCartDetail");
         //             router.push("/Mybooking");
         //             props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
-                    
+
         //         } else {
         //             props.toaster && props.toaster({ type: "error", message: res?.data?.message });
         //         }
@@ -478,7 +490,7 @@ const Navbar = (props) => {
         //         props.toaster && props.toaster({ type: "error", message: err?.message });
         //     }
         // );
-       
+
         setOpenCart(false)
         router.push('/payment?from=cart')
 
@@ -945,8 +957,6 @@ const Navbar = (props) => {
                                         required
                                     />
 
-
-
                                     <input
                                         type="text"
                                         name="phoneNumber"
@@ -1016,22 +1026,28 @@ const Navbar = (props) => {
 
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
                         {cartData && cartData.length > 0 ? (
-                            <div className="flex justify-start items-center gap-5">
-                                <div className="md:w-[45px] w-[35px] h-[30px] md:h-[35px] rounded-[8px] bg-custom-green flex justify-center items-center">
-                                    <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
+                            <>
+                                <div className="flex justify-start items-center gap-5">
+                                    <div className="md:w-[45px] w-[35px] h-[30px] md:h-[35px] rounded-[8px] bg-custom-green flex justify-center items-center">
+                                        <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
+                                    </div>
+                                    <div>
+                                        <p className="text-black font-semibold text-[18px]">
+
+                                            {pickupOption === 'orderPickup' || pickupOption === 'driveUp'
+                                                ? t("Pick up in 2 Hours")
+                                                : pickupOption === 'localDelivery'
+                                                    ? t("Delivery is next day")
+                                                    : t("Delivery in 3 to 5 business days")}
+                                        </p>
+                                    </div>
                                 </div>
-                                <p className="text-black font-semibold text-[18px]">
-
-                                    {pickupOption === 'orderPickup' || pickupOption === 'driveUp'
-                                        ? t("Pick up in 2 Hours")
-                                        : pickupOption === 'localDelivery'
-                                            ? t("Delivery is next day")
-                                            : t("Delivery in 3 to 5 business days")}
-
-
-                                </p>
-
-                            </div>
+                                {(pickupOption === 'orderPickup' || pickupOption === 'driveUp') && (
+                                    <p className="text-red-500 text-sm py-1 mb-2 px-2">
+                                        {t("*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.")}
+                                    </p>
+                                )}
+                            </>
                         ) : (
                             <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
 

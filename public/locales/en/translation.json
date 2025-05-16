@@ -160,7 +160,7 @@
   "Delivery expected by": "Delivery expected by",
   "Order Pending": "Order Pending",
   "Parking Information": "Parking Information",
-  "Parking No:": "Parking No:",
+  "Parking Pickup Spot": "Parking Pickup Spot",
   "Enter Parking Number": "Enter Parking Number",
   "Cancel": "Cancel",
   "Quantity": "Quantity",
@@ -236,6 +236,11 @@
       "Cancel Order":"Cancel Order",
       "Message":"Message",
       "Note: We currently deliver only to selected ZIP codes":"Note: We currently deliver only to selected ZIP codes",
-      "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time":"Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time"
+      "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time":"Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time",
+      "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.":"*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.",
+      "Car Color":"Car Color",
+      "Enter Car color":"Enter Car color",
+      "Car Brand":"Car Brand",
+      "Enter Car brand":"Enter Car brand"
   
 }
