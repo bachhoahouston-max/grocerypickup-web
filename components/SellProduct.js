@@ -11,7 +11,7 @@ import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useTranslation } from 'react-i18next';
 
-const SellProduct = ({ item, i, url, loader, toaster }) => {
+const SellProduct = ({ item, i, url, loader, toaster ,timeLeft }) => {
     const router = useRouter();
     const { t } = useTranslation()
     const [cartData, setCartData] = useContext(cartContext);
@@ -84,7 +84,7 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
                 loader(false);
                 if (res.status) {
                     setSaleData(res.data)
-                    console.log("dfghj", res.data)
+                    // console.log("dfghj", res.data)
                 }
             },
             (err) => {
@@ -105,7 +105,7 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
     return (
         <div
             key={i}
-            className="bg-white w-full max-w-[350px] h-full md:h-[389px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 border items-center flex flex-col mt-2 relative"
+            className="bg-white w-full max-w-[350px] h-full md:h-[369px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 border items-center flex flex-col mt-2 relative"
         >
             <div className='relative'>
                 <img
@@ -116,19 +116,20 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
 
             </div>
 
-            <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
+            <h2 className="text-xs text-gray-400 font-normal mt-4 ">
                 {item.categoryName}
             </h2>
             <p className="text-sm md:text-base text-black font-semibold pt-1">
-                {item.name}
+                {item.name.slice(0,15)+("...")}
             </p>
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
                 <p className="text-custom-gold text-lg md:text-xl font-semibold">
                     ${sellprice}
-                    <del className="font-medium text-sm text-custom-black ml-2">
+                    {}
+                    {/* <del className="font-medium text-sm text-custom-black ml-2">
                         ${item.price_slot[0].our_price}
-                    </del>
+                    </del> */}
                 </p>
             </div>
 
@@ -166,7 +167,7 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
                         {t("Add")}
                     </button>
                 ) : (
-                    <div className="w-[120px] md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-gray-500 flex justify-center items-center border border-gray-300 rounded-[6px]">
+                    <div className="w-[120px] bg-custom-gold md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center border border-gray-300 rounded-[6px]">
                         {t("Start Soon")}
                     </div>
                 )

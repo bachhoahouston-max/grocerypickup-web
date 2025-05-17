@@ -69,7 +69,6 @@ export default function Home(props) {
       (res) => {
         props.loader(false);
         setSellProduct(res.data);
-        console.log("====>", res.data)
       },
       (err) => {
         props.loader(false);
@@ -84,7 +83,6 @@ export default function Home(props) {
       (res) => {
         props.loader(false);
         if (res.data && Array.isArray(res.data)) {
-          console.log("All products", res.data);
           setProductList(res.data);
           setIscatdata(false);
         } else {
@@ -115,7 +113,6 @@ export default function Home(props) {
       (res) => {
         props.loader(false);
         if (res.data && Array.isArray(res.data)) {
-          console.log("Category products", res.data);
           setProductsData(res.data);
           setIscatdata(true);
         } else {
@@ -171,6 +168,8 @@ export default function Home(props) {
     return () => clearInterval(interval);
   }, [saleData]);
 
+  const sell = countdown.map((sale) => sale.timeLeft)
+  
 
   return (
     <div className="">
@@ -178,52 +177,123 @@ export default function Home(props) {
         loader={props.loader}
         toaster={props.toaster}
       />
-      <div className="container mb-8 md:mt-8 mt-4 mx-auto bg-white max-w-7xl md:px-0 px-6">
+      <div className="container mb-8 md:mt-12 lg:mt-18 mt-4 mx-auto bg-white max-w-9xl md:px-6 px-6">
         {sellProduct.length > 0 && (
           <>
             <div className="flex items-center justify-between">
-              <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">{t("Flash Sale")}</h1>
+              {/* <h1 className="text-[20px] md:text-2xl font-bold mt-4 text-black">{t("Flash Sale")}</h1> */}
 
-              <div>
-                <h1 className="text-black m-2 text-[14px]"> {t("Sale Status")}: </h1>
-                <div className="flex flex-col space-y-4">
+              <div className="w-full">
+                <div className="flex items-center mb-3">
+                  <div className="w-1 h-6 bg-[#F38529] rounded-full mr-2"></div>
+                  <h2 className="text-gray-800 font-bold text-lg">{t("Sale Status")}</h2>
+                </div>
+
+                <div className="space-y-3">
                   {countdown.map((sale, index) => (
-                    <div key={index} className="p-4 bg-white rounded-lg shadow-lg">
-                      {/* <h3 className="text-xl text-black font-semibold">Status</h3> */}
+                    <div
+                      key={index}
+                      className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden"
+                    >
                       {sale.timeLeft ? (
-                        <div className="flex space-x-4 mt-2">
-                          <div className="flex flex-col items-center">
-                            <span className="text-2xl text-black font-bold">{sale.timeLeft.days}</span>
-                            <span className="text-sm text-gray-500">{t("Days")}</span>
+                        <div>
+                          {/* Status header */}
+                          <div className="bg-[#F38529] bg-opacity-10 px-4 py-2 border-b border-[#F38529] border-opacity-20">
+                            <div className="flex items-center">
+                              <span className="h-2 w-2 rounded-full bg-[#F38529] mr-2"></span>
+                              <span className="font-medium text-sm md:text-[16px] text-white">
+                                {sale.status || t("Sale in progress")}
+                              </span>
+                            </div>
                           </div>
-                          <div className="flex flex-col items-center">
-                            <span className="text-2xl text-black font-bold">{sale.timeLeft.hours}</span>
-                            <span className="text-sm text-gray-500">{t("Hours")}</span>
-                          </div>
-                          <div className="flex flex-col items-center">
-                            <span className="text-2xl text-black font-bold">{sale.timeLeft.minutes}</span>
-                            <span className="text-sm text-gray-500">{t("Minutes")}</span>
-                          </div>
-                          <div className="flex flex-col items-center">
-                            <span className="text-2xl text-black font-bold">{sale.timeLeft.seconds}</span>
-                            <span className="text-sm text-gray-500">{t("Seconds")}</span>
+
+                          {/* Countdown display */}
+                          <div className="grid grid-cols-4 divide-x divide-gray-100">
+                            {/* Days */}
+                            <div className="flex flex-col items-center py-3">
+                              <div className="relative mb-1">
+                                <span className="text-xl md:text-3xl font-bold text-[#F38529]">
+                                  {sale.timeLeft.days < 10 ? `0${sale.timeLeft.days}` : sale.timeLeft.days}
+                                </span>
+                              </div>
+                              <span className="text-xs text-gray-500">{t("Days")}</span>
+                            </div>
+
+                            {/* Hours */}
+                            <div className="flex flex-col items-center py-3">
+                              <div className="relative mb-1">
+                                <span className="text-xl md:text-3xl font-bold text-[#F38529]">
+                                  {sale.timeLeft.hours < 10 ? `0${sale.timeLeft.hours}` : sale.timeLeft.hours}
+                                </span>
+                              </div>
+                              <span className="text-xs text-gray-500">{t("Hours")}</span>
+                            </div>
+
+                            {/* Minutes */}
+                            <div className="flex flex-col items-center py-3">
+                              <div className="relative mb-1">
+                                <span className="text-xl md:text-3xl font-bold text-[#F38529]">
+                                  {sale.timeLeft.minutes < 10 ? `0${sale.timeLeft.minutes}` : sale.timeLeft.minutes}
+                                </span>
+                              </div>
+                              <span className="text-xs text-gray-500">{t("Minutes")}</span>
+                            </div>
+
+                            {/* Seconds */}
+                            <div className="flex flex-col items-center py-3">
+                              <div className="relative mb-1">
+                                <span className="text-2xl md:text-3xl font-bold text-[#F38529]">
+                                  {sale.timeLeft.seconds < 10 ? `0${sale.timeLeft.seconds}` : sale.timeLeft.seconds}
+                                </span>
+                              </div>
+                              <span className="text-xs text-gray-500">{t("Seconds")}</span>
+                            </div>
                           </div>
                         </div>
                       ) : (
-                        <p className="mt-2 text-red-600">{sale.status}</p>
+                        <div className="px-4 py-3">
+                          <div className="flex items-center">
+                            <span className="h-2 w-2 rounded-full bg-red-500 mr-2"></span>
+                            <span className="font-medium text-red-600">
+                              {sale.status || t("Sale ended")}
+                            </span>
+                          </div>
+                        </div>
                       )}
                     </div>
                   ))}
                 </div>
+
+                <style>
+                  {`
+                    @keyframes moveCenterToRight {
+                    0% {
+                     transform: translateX(0);
+                       }
+                    100% {
+                    transform: translateX(50vw);
+                    }
+                   }
+                  .animate-moveCenterToRight {
+                   animation: moveCenterToRight 20s linear infinite;
+                  }
+                 `}
+                </style>
+                <div className="flex justify-center overflow-hidden w-[320px] md:w-full">
+                  <p className="text-gray-800 font-bold text-lg whitespace-nowrap animate-moveCenterToRight mt-2">
+                    🔥 Hurry! Our biggest limited-time sale is live grab your favorite products at unbeatable prices before the timer runs out!
+                  </p>
+                </div>
               </div>
+
             </div>
-            <div className="md:mt-4 mt-4 relative w-full md:w-4/5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
+            <div className="md:mt-4 mt-4 relative w-full md:w-5/5 grid md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-7 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
               {sellProduct.map((item, i) => (
                 <SellProduct
                   loader={props.loader}
                   toaster={props.toaster}
                   key={i}
-                  timeleft={sale.timeLeft}
+                  timeleft={sell}
                   item={item}
                   i={i}
                   url={`/product-details/${item?.slug}`}
