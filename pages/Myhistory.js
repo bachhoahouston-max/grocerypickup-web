@@ -144,19 +144,24 @@ function Myhistory(props) {
                                                 {key + 1}
                                             </div>
                                             <div className="flex items-center">
+                                                <p className="text-green-500 m-1">Order {booking.status}</p>
                                                 {expandedHistoryId === booking._id ? (
                                                     <IoIosArrowUp className="text-2xl text-black" />
                                                 ) : (
                                                     <IoIosArrowDown className="text-2xl text-black" />
                                                 )}
                                             </div>
+                                            {/* <p>{booking.status}</p> */}
                                         </div>
                                         <p className="text-[16px] text-black md:text-[24px]">
                                             {t("My History")} ({formatDate(booking.createdAt) || "N/A"})</p>
-                                        <div className="flex flex-col justify-end items-end mr-3 mt-[-24px]">
+                                        <div className="flex flex-col justify-start items-start mt-3 ">
                                             <p className="text-gray-600 md:text-base text-[15px] font-bold">
                                                 {t("Total")}: $ {booking?.total || "0.00"}
                                             </p>
+                                            <p className="text-gray-600 md:text-base text-[15px] font-bold">
+                                                        {t("Order Id")}: {booking?.orderId}
+                                                    </p>
                                         </div>
                                     </div>
                                 </div>
@@ -172,14 +177,12 @@ function Myhistory(props) {
                                                 />
                                                 <div className="flex-grow">
                                                     <p className="text-black md:text-base text-[13px] font-bold">
-                                                        {product?.product?.name}
+                                                        {product?.product?.name.slice(0,22)+("...")}
                                                     </p>
                                                     <p className="text-gray-600 text-xs font-bold pt-[6px]">
                                                         {t("Quantity")}: {product.qty || 1}
                                                     </p>
-                                                    <p className="text-gray-600 text-xs font-bold pt-[6px]">
-                                                        {t("Order Id")}: {booking?.orderId}
-                                                    </p>
+                                                    
                                                 </div>
                                                 <div className="justify-start items-start">
                                                     <button

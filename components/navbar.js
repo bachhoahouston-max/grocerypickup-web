@@ -477,7 +477,7 @@ const Navbar = (props) => {
                     setCartTotal(0);
                     setOpenCart(false);
                     setDate('')
-                    
+
                     localStorage.removeItem("addCartDetail");
                     router.push("/Mybooking");
                     props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
@@ -548,26 +548,33 @@ const Navbar = (props) => {
                         onChange={(text) => {
                             setSearchData(text.target.value);
                         }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                router.push(`/Search/${serchData}`);
+                            }
+                        }}
                         placeholder={t("Search for products...")}
-                        className=" md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#F38529] rounded-l-md focus:outline-none pr-10"
+                        className="relative md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#F38529] rounded-l-md focus:outline-none pr-10"
                     />
 
                     <button
-                        className="py-[4.5px] xl:py-[9px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer  rounded-r-md"
-                        onClick={() => { router.push(`/Search/${serchData}`); }}
+                        className="py-[4.5px] xl:py-[9px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer rounded-r-md"
+                        onClick={() => {
+                            router.push(`/Search/${serchData}`);
+                        }}
                     >
                         <FontAwesomeIcon icon={faSearch} className='text-white relative' />
                     </button>
-                    {serchData && ( // Conditionally render the cross icon
+                    {/* {serchData && (
                         <div
                             onClick={() => setSearchData('')}
-                            className=" absolute flex justify-center items-center right-6 2xl:right-72 xl:right-48 lg:right-40 
-                              cursor-pointer" // Positioning the cross icon
+                            className="absolute right-[55px] md:right-[65px] cursor-pointer flex items-center"
                         >
-                            <RxCross2 className="md:h-4 mx-1 md:w-4 w-3 h-3 font-bold text-black" />
+                            <RxCross2 className="h-4 w-4 text-gray-500 hover:text-black" />
                         </div>
-                    )}
+                    )} */}
                 </div>
+
 
                 <div className="xl:mr-20 lg:mr-12  mr-2 flex">
                     <div className="hidden md:flex items-center space-x-4 mr-4">
