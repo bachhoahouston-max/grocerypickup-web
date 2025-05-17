@@ -90,6 +90,7 @@ const Navbar = (props) => {
 
 
     useEffect(() => {
+        // getProfileData();
         if (profileData) {
             setLocalAddress({
                 dateOfDelivery: "",
@@ -107,7 +108,7 @@ const Navbar = (props) => {
                 },
             });
         }
-    }, []);
+    }, [profileData]);
 
     const handleDateChange1 = (date) => {
         setLocalAddress({ ...localAddress, dateOfDelivery: date });
@@ -476,7 +477,7 @@ const Navbar = (props) => {
                     setCartTotal(0);
                     setOpenCart(false);
                     setDate('')
-                    getProfileData()
+                    
                     localStorage.removeItem("addCartDetail");
                     router.push("/Mybooking");
                     props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });

@@ -11,7 +11,7 @@ import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useTranslation } from 'react-i18next';
 
-const SellProduct = ({ item, i, url, loader, toaster ,timeLeft }) => {
+const SellProduct = ({ item, i, url, loader, toaster, timeLeft }) => {
     const router = useRouter();
     const { t } = useTranslation()
     const [cartData, setCartData] = useContext(cartContext);
@@ -28,7 +28,7 @@ const SellProduct = ({ item, i, url, loader, toaster ,timeLeft }) => {
         if (existingItemIndex === -1) {
             const newItem = {
                 ...item,
-                selectedColor: item?.varients[0],
+                // selectedColor: item?.varients[0],
                 image: item?.varients[0]?.image[0],
                 total: price,
                 qty: 1,
@@ -120,13 +120,13 @@ const SellProduct = ({ item, i, url, loader, toaster ,timeLeft }) => {
                 {item.categoryName}
             </h2>
             <p className="text-sm md:text-base text-black font-semibold pt-1">
-                {item.name.slice(0,15)+("...")}
+                {item.name.slice(0, 14) + ("...")}
             </p>
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
                 <p className="text-custom-gold text-lg md:text-xl font-semibold">
                     ${sellprice}
-                    {}
+                    { }
                     {/* <del className="font-medium text-sm text-custom-black ml-2">
                         ${item.price_slot[0].our_price}
                     </del> */}
@@ -159,6 +159,11 @@ const SellProduct = ({ item, i, url, loader, toaster ,timeLeft }) => {
                 </div>
             ) : (
                 timeLeft ? (
+                    <div className="w-[120px] bg-custom-gold md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center border border-gray-300 rounded-[6px]">
+                        {t("Start Soon")}
+                    </div>
+                ) : (
+
                     <button
                         className="font-bold bg-custom-gold w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
                         onClick={handleAddToCart}
@@ -166,10 +171,6 @@ const SellProduct = ({ item, i, url, loader, toaster ,timeLeft }) => {
                         <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
                         {t("Add")}
                     </button>
-                ) : (
-                    <div className="w-[120px] bg-custom-gold md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center border border-gray-300 rounded-[6px]">
-                        {t("Start Soon")}
-                    </div>
                 )
             )}
 

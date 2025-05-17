@@ -277,7 +277,7 @@ function Mybooking(props) {
                                                         );
                                                         case 'Shipped':
                                                         return (
-                                                            <span className="px-3 w-full py-1.5 bg-green-100 text-green-300 rounded-full text-sm font-medium text-center">
+                                                            <span className="px-3 w-full py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium text-center">
                                                                 {t("Order Shipped")}
                                                             </span>
                                                         );
