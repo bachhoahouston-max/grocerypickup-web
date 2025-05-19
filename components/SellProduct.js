@@ -11,7 +11,7 @@ import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useTranslation } from 'react-i18next';
 
-const SellProduct = ({ item, i, url, loader, toaster, timeLeft }) => {
+const SellProduct = ({ item, i, url, loader, toaster }) => {
     const router = useRouter();
     const { t } = useTranslation()
     const [cartData, setCartData] = useContext(cartContext);
@@ -20,15 +20,16 @@ const SellProduct = ({ item, i, url, loader, toaster, timeLeft }) => {
     const [user] = useContext(userContext);
     const [isFavorite, setIsFavorite] = useState(false);
     const [saleData, setSaleData] = useState([])
+    const [countdown, setCountdown] = useState([]);
 
-    const handleAddToCart = (item) => {
+    const handleAddToCart = () => {
         let updatedCart = [...cartData];
         const existingItemIndex = updatedCart.findIndex((f) => f._id === item?._id);
         const price = parseFloat(sellprice);
         if (existingItemIndex === -1) {
             const newItem = {
                 ...item,
-                // selectedColor: item?.varients[0],
+                selectedColor: item?.varients[0],
                 image: item?.varients[0]?.image[0],
                 total: price,
                 qty: 1,
@@ -95,6 +96,46 @@ const SellProduct = ({ item, i, url, loader, toaster, timeLeft }) => {
         );
     };
 
+    useEffect(() => {
+        const calculateCountdown = () => {
+
+            const nowIndia = new Date().getTime();
+            const newCountdown = saleData.map(sale => {
+                const startDate = new Date(sale.startDateTime).getTime();
+                const endDate = new Date(sale.endDateTime).getTime();
+
+                if (nowIndia < startDate) {
+                    return { ...sale, timeLeft: null, status: t('Sale will start soon') };
+                } else if (nowIndia >= startDate && nowIndia < endDate) {
+                    const distance = endDate - nowIndia;
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                    return {
+                        ...sale,
+                        timeLeft: { days, hours, minutes, seconds },
+                        status: t('Sale is live')
+                    };
+                } else {
+                    return { ...sale, timeLeft: null, status: t('Sale has ended') };
+                }
+            });
+
+            setCountdown(newCountdown);
+        };
+
+        calculateCountdown();
+        const interval = setInterval(calculateCountdown, 1000);
+        return () => clearInterval(interval);
+    }, [saleData]);
+
+    const currentSale = countdown[0]; // Or find it by sale.productId === currentProductId
+    const sell = currentSale?.status === "Sale is live";
+
+    // const sell = countdown.map((sale) => sale.timeLeft)
+    console.log(sell)
+
 
     const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
     const itemQuantity = cartItem ? cartItem.qty : 0;
@@ -158,12 +199,7 @@ const SellProduct = ({ item, i, url, loader, toaster, timeLeft }) => {
                     </div>
                 </div>
             ) : (
-                timeLeft ? (
-                    <div className="w-[120px] bg-custom-gold md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center border border-gray-300 rounded-[6px]">
-                        {t("Start Soon")}
-                    </div>
-                ) : (
-
+                sell ? (
                     <button
                         className="font-bold bg-custom-gold w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
                         onClick={handleAddToCart}
@@ -171,6 +207,11 @@ const SellProduct = ({ item, i, url, loader, toaster, timeLeft }) => {
                         <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
                         {t("Add")}
                     </button>
+                ) : (
+                    <div className="w-[120px] bg-custom-gold md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center border border-gray-300 rounded-[6px]">
+                        {t("Start Soon")}
+                    </div>
+
                 )
             )}
 

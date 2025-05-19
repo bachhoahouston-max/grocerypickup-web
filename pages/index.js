@@ -169,7 +169,8 @@ export default function Home(props) {
   }, [saleData]);
 
   const sell = countdown.map((sale) => sale.timeLeft)
-  
+  //  console.log(countdown)
+  // console.log(sell)
 
   return (
     <div className="">
@@ -293,7 +294,7 @@ export default function Home(props) {
                   loader={props.loader}
                   toaster={props.toaster}
                   key={i}
-                  timeleft={sell}
+                  // timeleft={sell}
                   item={item}
                   i={i}
                   url={`/product-details/${item?.slug}`}
