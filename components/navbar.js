@@ -189,7 +189,6 @@ const Navbar = (props) => {
 
 
     useEffect(() => {
-        // getProfileData();
         if (profileData) {
             setLocalAddress({
                 dateOfDelivery: "",
@@ -413,6 +412,7 @@ const Navbar = (props) => {
             const itemTotal = Number(currentValue?.total || 0);
             const taxRate = Number(currentValue?.tax || 0); // percentage
             const taxAmount = (itemTotal * taxRate) / 100;
+            //  taxAmount = taxAmount.toFixed(2)
             return accumulator + taxAmount;
         }, 0);
 
@@ -485,16 +485,18 @@ const Navbar = (props) => {
             }
         }
 
-        if (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') {
-            if (!localAddress.address) {
-                return props.toaster({
-                    type: "error",
-                    message: "Please Enter address"
-                });
-            }
-        }
-
         console.log("Local Address Fields:", localAddress);
+
+        // if (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') {
+        //     if (!localAddress.address) {
+        //         return props.toaster({
+        //             type: "error",
+        //             message: "Please Enter address"
+        //         });
+        //     }
+        // }
+
+ 
         if (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') {
             const { email, name, phoneNumber, lastname } = localAddress;
 
@@ -605,7 +607,7 @@ const Navbar = (props) => {
                     setCartTotal(0);
                     setOpenCart(false);
                     setDate('')
-
+                    getProfileData()
                     localStorage.removeItem("addCartDetail");
                     router.push("/Mybooking");
                     props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
