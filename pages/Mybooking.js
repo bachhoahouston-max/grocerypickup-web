@@ -38,7 +38,7 @@ function Mybooking(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = {
-            parkingNo:parkingNo,
+            parkingNo: parkingNo,
             carColor: carColor,
             carBrand: carBrand,
             id: Id,
@@ -274,7 +274,7 @@ function Mybooking(props) {
                                                                 {t("Order Cancelled")}
                                                             </span>
                                                         );
-                                                        case 'Shipped':
+                                                    case 'Shipped':
                                                         return (
                                                             <span className="px-3 w-full py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium text-center">
                                                                 {t("Order Shipped")}
@@ -314,8 +314,7 @@ function Mybooking(props) {
                                                     </div>
                                                 </div>
                                             )}
-
-                                            {booking?.isShipmentDelivery && (
+                                            {booking?.isShipmentDelivery && (booking?.status === "Pending" || booking?.status === "Shipped") && (
                                                 <div className="flex items-center">
                                                     <div className="p-2 bg-blue-100 rounded-lg mr-3">
                                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600" viewBox="0 0 20 20" fill="currentColor">
@@ -331,6 +330,7 @@ function Mybooking(props) {
                                                     </div>
                                                 </div>
                                             )}
+
 
                                             {booking?.trackingNo && booking?.trackingLink && (
                                                 <div className="flex items-center md:col-span-2">
