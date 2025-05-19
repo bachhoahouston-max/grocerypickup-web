@@ -55,6 +55,7 @@ const Navbar = (props) => {
     const [error, setError] = useState(null);
     const [selectedCoupon, setSelectedCoupon] = useState(null);
     const [appliedCoupon, setAppliedCoupon] = useState(null);
+    const [afterCoupanTotal, setAfterCoupanTotal] = useState(mainTotal)
 
     useEffect(() => {
         const fetchCoupons = async () => {
@@ -98,12 +99,39 @@ const Navbar = (props) => {
     };
 
     const handleApplyCoupon = () => {
-        if (selectedCoupon) {
-            setAppliedCoupon(selectedCoupon);
-            console.log('Applied coupon:', selectedCoupon.code);
-            return selectedCoupon.code;
-        }
-    };
+    if (!selectedCoupon) return;
+
+    // Check if the coupon is active
+    if (!selectedCoupon.isActive) {
+        props.toaster({ type: "error", message: "This coupon is not active" });
+        return;
+    }
+
+    // Set applied coupon
+    setAppliedCoupon(selectedCoupon);
+
+    const value = selectedCoupon.discountValue;
+    const type = selectedCoupon.discountType;
+
+    if (type === "fixed") {
+        setAfterCoupanTotal(prev => prev - value);
+    } else if (type === "percentage") {
+        const discountValue = (afterCoupanTotal * value) / 100;
+        setAfterCoupanTotal(prev => prev - discountValue);
+    }
+
+    // Show success toast
+    props.toaster({ type: "success", message: "Coupon applied successfully" });
+
+    console.log('Applied coupon:', selectedCoupon.code);
+
+    // Reset UI state
+    setSearchTerm('');
+    setOpenModel(false);
+
+    return selectedCoupon.code;
+};
+
 
     const formatDate1 = (dateString) => {
         if (!dateString) return 'No expiry date';
@@ -408,6 +436,7 @@ const Navbar = (props) => {
         setTotalTax(totalTax);
         setDeliveryCharge(delivery);
         setMainTotal(finalTotal);
+        setAfterCoupanTotal(finalTotal)
     }, [cartData, openCart, pickupOption]);
 
     const emptyCart = async () => {
@@ -810,88 +839,7 @@ const Navbar = (props) => {
                 </div>
             </header>
 
-            {openModel && (
-                <div className="w-full max-w-md mx-auto z-50">
-                    <div className="mb-6">
-                        <h2 className="text-xl font-semibold mb-2 text-black">Apply Coupon</h2>
-                <p onClick={()=> setOpenModel(false)} className='text-black'>X</p>
-                        {/* Search input */}
-                        <div className="relative">
-                            <input
-                                type="text"
-                                className="w-full px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                                placeholder="Enter coupon code or search available coupons"
-                                value={searchTerm}
-                                onChange={handleSearchChange}
-                            />
-                            <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
-                            {searchTerm && (
-                                <button
-                                    className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
-                                    onClick={() => setSearchTerm('')}
-                                >
-                                    <X size={20} />
-                                </button>
-                            )}
-                        </div>
 
-                        {/* Applied coupon display */}
-                        {appliedCoupon && (
-                            <div className="mt-2 p-2 bg-green-100 text-green-800 rounded-md flex items-center">
-                                <Check size={16} className="mr-2" />
-                                <span>Coupon <strong>{appliedCoupon.code}</strong> applied!</span>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Available coupons list */}
-                    <div className="border rounded-md overflow-hidden">
-                        <div className="bg-gray-100 px-4 py-2 font-medium text-black">Available Coupons</div>
-                        <div className="max-h-64 overflow-y-auto">
-                            {filteredCoupons.length === 0 ? (
-                                <div className="p-4 text-center text-gray-500">
-                                    No coupons found matching "{searchTerm}"
-                                </div>
-                            ) : (
-                                filteredCoupons.map((coupon) => (
-                                    <div
-                                        key={coupon._id}
-                                        className={`p-4 border-b cursor-pointer hover:bg-gray-50 flex justify-between ${selectedCoupon?._id === coupon._id ? 'bg-blue-50' : ''}`}
-                                        onClick={() => handleCouponSelect(coupon)}
-                                    >
-                                        <div>
-                                            <div className="font-medium text-black">{coupon.code}</div>
-                                            <div className="text-sm text-gray-600">{coupon.description || 'No description'}</div>
-                                            <div className="text-sm text-gray-600">
-                                                {coupon.discountType === 'percentage'
-                                                    ? `${coupon.discountValue}% off`
-                                                    : `₹${coupon.discountValue} off`}
-                                            </div>
-                                            <div className="text-xs text-gray-500">
-                                                Expires: {formatDate(coupon.expiryDate)}
-                                            </div>
-                                        </div>
-                                        {selectedCoupon?._id === coupon._id && (
-                                            <div className="flex items-center">
-                                                <Check size={20} className="text-blue-500" />
-                                            </div>
-                                        )}
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Apply button */}
-                    <button
-                        className="mt-4 w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                        disabled={!selectedCoupon}
-                        onClick={handleApplyCoupon}
-                    >
-                        Apply Coupon
-                    </button>
-                </div>
-            )}
             {/* Cart Drawer */}
             <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
                 <div className={`md:w-[750px] w-[360px]  relative  bg-custom-green  pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""} 
@@ -1461,12 +1409,135 @@ const Navbar = (props) => {
                                     {t("Apply Coupan")}
                                 </p>
 
+                                {appliedCoupon && (
+                                    <div className="mt-3 p-2 bg-green-100 text-green-800 rounded-md flex items-center justify-between">
+                                        <div className="flex items-center">
+                                            <Check size={16} className="mr-2" />
+                                            <span>
+                                                Coupon <strong>{appliedCoupon.code}</strong> applied!
+                                            </span>
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                setAppliedCoupon(null);
+                                                setSelectedCoupon(null);
+                                                setSearchTerm('');
+                                                setAfterCoupanTotal(mainTotal)
+                                            }}
+                                            className="text-red-600 hover:text-red-800 text-sm ml-4"
+                                        >
+                                            <X size={18} />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
-                            {/* <div className="flex justify-between items-center w-full pt-1">
-                                <p className="text-red-500 font-normal text-base">
-                                    * {t("Note : Tax is included in this price")}"
-                                </p>
-                            </div> */}
+
+                            {openModel && (
+                                <div className="w-full  mx-auto">
+                                    <div className="mb-6">
+                                        <div className="flex justify-between items-center mb-2">
+                                            {/* <h2 className="text-xl font-semibold text-black">Apply Coupon</h2> */}
+
+                                        </div>
+
+                                        {/* Search input */}
+                                        <div className='flex'>
+                                            <div className="relative w-full">
+                                                <input
+                                                    type="text"
+                                                    className="w-full px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                                                    placeholder="Enter coupon code or search available coupons"
+                                                    value={searchTerm}
+                                                    onChange={handleSearchChange}
+                                                />
+                                                <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+                                                {searchTerm && (
+                                                    <button
+                                                        className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+                                                        onClick={() => setSearchTerm('')}
+                                                    >
+                                                        <X size={20} />
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <p onClick={() => setOpenModel(false)} className="text-black cursor-pointer text-lg font-bold mx-2 pt-1"><X size={32} /></p>
+                                        </div>
+                                        {/* Applied coupon display with remove */}
+                                        {appliedCoupon && (
+                                            <div className="mt-3 p-2 bg-green-100 text-green-800 rounded-md flex items-center justify-between">
+                                                <div className="flex items-center">
+                                                    <Check size={16} className="mr-2" />
+                                                    <span>
+                                                        Coupon <strong>{appliedCoupon.code}</strong> applied!
+                                                    </span>
+                                                </div>
+                                                <button
+                                                    onClick={() => {
+                                                        setAppliedCoupon(null);
+                                                        setSelectedCoupon(null);
+                                                        setSearchTerm('');
+                                                    }}
+                                                    className="text-red-600 hover:text-red-800 text-sm ml-4"
+                                                >
+                                                    <X size={18} />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Show available coupon list only if not applied and search is active */}
+                                    {!appliedCoupon && searchTerm && (
+                                        <div className="border rounded-md overflow-hidden">
+                                            <div className="bg-gray-100 px-4 py-2 font-medium text-black">Available Coupons</div>
+                                            <div className="max-h-64 overflow-y-auto">
+                                                {filteredCoupons.length === 0 ? (
+                                                    <div className="p-4 text-center text-gray-500">
+                                                        No coupons found matching "{searchTerm}"
+                                                    </div>
+                                                ) : (
+                                                    filteredCoupons.map((coupon) => (
+                                                        <div
+                                                            key={coupon._id}
+                                                            className={`p-4 border-b cursor-pointer hover:bg-gray-50 flex justify-between ${selectedCoupon?._id === coupon._id ? 'bg-blue-50' : ''}`}
+                                                            onClick={() => handleCouponSelect(coupon)}
+                                                        >
+                                                            <div>
+                                                                <div className="font-medium text-black">{coupon.code}</div>
+                                                                <div className="text-sm text-gray-600">
+                                                                    {coupon.discountType === 'percentage'
+                                                                        ? `${coupon.discountValue}% off`
+                                                                        : `₹${coupon.discountValue} off`}
+                                                                </div>
+                                                                <div className="text-xs text-gray-500">
+                                                                    Expires: {formatDate(coupon.expiryDate)}
+                                                                </div>
+                                                            </div>
+                                                            {selectedCoupon?._id === coupon._id && (
+                                                                <div className="flex items-center">
+                                                                    <Check size={20} className="text-blue-500" />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ))
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Apply button */}
+                                    {!appliedCoupon && (
+                                        <button
+                                            className="mt-4 w-full py-2 bg-custom-green text-white rounded-md  focus:outline-none  disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                            disabled={!selectedCoupon}
+                                            onClick={handleApplyCoupon}
+                                        >
+                                            Apply Coupon
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+
+
                         </div>
                     )}
 
@@ -1487,7 +1558,7 @@ const Navbar = (props) => {
                                 }
                             }}
                         >
-                            {t("CONTINUE TO PAY")}  {constant.currency}{mainTotal}
+                            {t("CONTINUE TO PAY")}  {constant.currency}{afterCoupanTotal}
                         </button>
                     )}
                 </div>
