@@ -242,6 +242,9 @@
       "Enter Car color":"Enter Car color",
       "Car Brand":"Car Brand",
       "Enter Car brand":"Enter Car brand",
-      "Start Soon":"Start Soon"
+      "Start Soon":"Start Soon",
+      "Are you sure? Do you really want to cancel your order?":"Are you sure? Do you really want to cancel your order?",
+      "Yes, cancel it!":"Yes, cancel it!",
+      "No, keep it":"No, keep it"
   
 }

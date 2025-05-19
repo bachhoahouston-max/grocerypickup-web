@@ -85,7 +85,10 @@ const Navbar = (props) => {
         lastname: "",
         email: "",
         phoneNumber: "",
-        location: { type: 'Point', coordinates: [null, null] }, // Initialize with null values
+        location: {
+            type: 'Point', coordinates: [profileData.lat || null,
+            profileData.lng || null]
+        }, // Initialize with null values
     });
 
 
@@ -108,7 +111,7 @@ const Navbar = (props) => {
                 },
             });
         }
-    }, [profileData]);
+    }, [profileData.email, profileData.lastname, profileData.mobile, profileData.username]);
 
     const handleDateChange1 = (date) => {
         setLocalAddress({ ...localAddress, dateOfDelivery: date });
@@ -375,6 +378,7 @@ const Navbar = (props) => {
                 });
             }
         }
+
         if (pickupOption === 'localDelivery') {
             if (!localAddress.zipcode) {
                 return props.toaster({
@@ -383,6 +387,33 @@ const Navbar = (props) => {
                 });
             }
         }
+
+        if (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') {
+            if (!localAddress.address) {
+                return props.toaster({
+                    type: "error",
+                    message: "Please Enter address"
+                });
+            }
+        }
+
+        console.log("Local Address Fields:", localAddress);
+        if (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') {
+            const { email, name, phoneNumber, lastname } = localAddress;
+
+            if (
+                !email?.trim() ||
+                !name?.trim() ||
+                !phoneNumber?.toString().trim() ||
+                !lastname?.trim()
+            ) {
+                return props.toaster({
+                    type: "error",
+                    message: "Please Enter Delivery Info"
+                });
+            }
+        }
+
 
 
         if (pickupOption === 'driveUp') {
@@ -1189,14 +1220,14 @@ const Navbar = (props) => {
                                 </div>
 
                                 {/* Shipment availability notification */}
-                                <div className='flex md:col-span-9 col-span-2 w-full md:-mt-10 mt-0'>
+                                <div className='flex md:col-span-9 col-span-2 w-full md:-mt-8 mt-0'>
                                     {pickupOption === 'ShipmentDelivery' && (
                                         item.isShipmentAvailable ? (
-                                            <p className="text-green-500 text-sm md:text-base md:mt-3 mt-2 w-full md:text-center">
+                                            <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
                                                 {t("Product is available for Shipment Delivery")}
                                             </p>
                                         ) : (
-                                            <p className="text-red-500 text-sm md:text-base md:mt-3 mt-2 w-full  md:text-center">
+                                            <p className="text-red-500 text-sm md:text-base md:mt-3 mt-4 w-full  md:text-center">
                                                 {t("Product is Not available for Shipment Delivery")}
                                             </p>
                                         )

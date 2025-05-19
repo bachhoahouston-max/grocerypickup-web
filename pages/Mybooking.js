@@ -75,8 +75,7 @@ function Mybooking(props) {
     const cancelOrder = (id) => {
 
         Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you really want to cancel your order?",
+            text: "Are you sure? Do you really want to cancel your order?",
             showCancelButton: true,
             confirmButtonText: 'Yes, cancel it!',
             cancelButtonText: 'No, keep it',

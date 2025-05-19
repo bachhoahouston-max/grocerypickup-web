@@ -242,6 +242,10 @@
   "Enter Car color":"Nhập màu xe",
   "Car Brand":"Thương hiệu xe hơi",
   "Enter Car brand":"Nhập thương hiệu xe hơi",
-  "Start Soon":"Bắt đầu sớm"
+  "Start Soon":"Bắt đầu sớm",
+  "Are you sure? Do you really want to cancel your order?":"Bạn có chắc chắn không? Bạn có thực sự muốn hủy đơn hàng của mình không?",
+  "Yes, cancel it!":"Vâng, hủy nó đi!",
+  "No, keep it":"Không, giữ nó"
+
 
 }
