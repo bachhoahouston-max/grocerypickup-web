@@ -1154,7 +1154,7 @@ const Navbar = (props) => {
 
                                                     const price = parseFloat(draft[i]?.price_slot?.our_price);
                                                     draft[i].total = price * draft[i].qty;
-                                                    draft[i].total += draft[i].total <= 35 ? deliveryCharge : 0;
+                                                    // draft[i].total += draft[i].total <= 35 ? deliveryCharge : 0;
                                                 });
 
                                                 setCartData(nextState);

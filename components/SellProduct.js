@@ -133,10 +133,6 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
     const currentSale = countdown[0]; // Or find it by sale.productId === currentProductId
     const sell = currentSale?.status === "Sale is live";
 
-    // const sell = countdown.map((sale) => sale.timeLeft)
-    console.log(sell)
-
-
     const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
     const itemQuantity = cartItem ? cartItem.qty : 0;
 
