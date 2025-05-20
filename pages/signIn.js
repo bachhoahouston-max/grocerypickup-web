@@ -15,42 +15,52 @@ const SignIn = (props) => {
     const [user, setUser] = useContext(userContext);
     const [eyeIcon, setEyeIcon] = useState(false);
 
-    const submit = (e) => {
-        e.preventDefault();
-        const data = {
-            username: userDetail.email.toLowerCase(),
-            password: userDetail.password,
-        };
-        props.loader(true);
-        Api("post", "login", data, router).then(
-            (res) => {
-                console.log("res================>", res);
-                props.loader(false);
-
-                if (res?.status) {
-                    router.push("/");
-                    localStorage.setItem("userDetail", JSON.stringify(res.data));
-                    localStorage.setItem("token", res.data.token);
-                    setUser(res.data)
-                    setUserDetail({
-                        email: "",
-                        password: "",
-                    });
-                    props.toaster({ type: "success", message: 'You are successfully logged in' });
-
-                } else {
-                    console.log(res?.data?.message);
-                    props.toaster({ type: "error", message: res?.data?.message });
-                }
-            },
-            (err) => {
-                props.loader(false);
-                console.log(err);
-                props.toaster({ type: "error", message: err?.data?.message });
-                props.toaster({ type: "error", message: err?.message });
-            }
-        );
+   const submit = (e) => {
+    e.preventDefault();
+    const data = {
+        username: userDetail.email.toLowerCase(),
+        password: userDetail.password,
     };
+
+    props.loader(true);
+
+    Api("post", "login", data, router).then(
+        (res) => {
+            props.loader(false);
+            console.log("res================>", res);
+
+            if (res?.status) {
+                const userData = res.data;
+
+                // Check if user is suspended
+                if (userData.status === "Suspended") {
+                    props.toaster({
+                        type: "error",
+                        message: "Your account has been suspended by our team. Please contact support."
+                    });
+                    return;
+                }
+
+                // Proceed with login
+                router.push("/");
+                localStorage.setItem("userDetail", JSON.stringify(userData));
+                localStorage.setItem("token", userData.token);
+                setUser(userData);
+                setUserDetail({ email: "", password: "" });
+
+                props.toaster({ type: "success", message: 'You are successfully logged in' });
+            } else {
+                props.toaster({ type: "error", message: res?.data?.message });
+            }
+        },
+        (err) => {
+            props.loader(false);
+            console.log(err);
+            props.toaster({ type: "error", message: err?.data?.message || err?.message });
+        }
+    );
+};
+
 
     return (
         <>

@@ -99,7 +99,7 @@ const Footer = () => {
 
       <div className="flex justify-center pb-12 md:pb-6">
         <div className=" border-white mt-4 text-[16px] pt-4 text-center text-white">
-          <p>{t("Copyright @bachhoahouston 2025 - Thank you")}.</p>
+          <p>{t("Copyright @ 2025 Bach Hoa Houston. All rights reserved")}.</p>
         </div>
       </div>
     </footer>

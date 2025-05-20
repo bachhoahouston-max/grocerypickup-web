@@ -99,38 +99,39 @@ const Navbar = (props) => {
     };
 
     const handleApplyCoupon = () => {
-    if (!selectedCoupon) return;
+        if (!selectedCoupon) return;
 
-    // Check if the coupon is active
-    if (!selectedCoupon.isActive) {
-        props.toaster({ type: "error", message: "This coupon is not active" });
-        return;
-    }
+        if (!selectedCoupon.isActive) {
+            props.toaster({ type: "error", message: "This coupon is not active" });
+            return;
+        }
 
-    // Set applied coupon
-    setAppliedCoupon(selectedCoupon);
+        const today = new Date();
+        const expiryDate = new Date(selectedCoupon.expiryDate);
+        if (today > expiryDate) {
+            props.toaster({ type: "error", message: "This coupon has expired" });
+            return;
+        }
 
-    const value = selectedCoupon.discountValue;
-    const type = selectedCoupon.discountType;
+        setAppliedCoupon(selectedCoupon);
 
-    if (type === "fixed") {
-        setAfterCoupanTotal(prev => prev - value);
-    } else if (type === "percentage") {
-        const discountValue = (afterCoupanTotal * value) / 100;
-        setAfterCoupanTotal(prev => prev - discountValue);
-    }
+        const value = selectedCoupon.discountValue;
+        const type = selectedCoupon.discountType;
 
-    // Show success toast
-    props.toaster({ type: "success", message: "Coupon applied successfully" });
+        if (type === "fixed") {
+            setAfterCoupanTotal(prev => prev - value);
+        } else if (type === "percentage") {
+            const discountValue = (afterCoupanTotal * value) / 100;
+            setAfterCoupanTotal(prev => prev - discountValue);
+        }
 
-    console.log('Applied coupon:', selectedCoupon.code);
+        props.toaster({ type: "success", message: "Coupon applied successfully" });
+        setSearchTerm('');
+        setOpenModel(false);
 
-    // Reset UI state
-    setSearchTerm('');
-    setOpenModel(false);
+        return selectedCoupon.code;
+    };
 
-    return selectedCoupon.code;
-};
 
 
     const formatDate1 = (dateString) => {
@@ -377,14 +378,21 @@ const Navbar = (props) => {
             });
     };
 
-    const [cost, setCost] = useState("")
+
+    const [currentLocalCost, setCurrentLocalCost] = useState(0);
+    const [currentShipmentCost, setCurrentShipmentCost] = useState(0);
 
     const getShippingCost = async () => {
         props.loader(true);
         try {
             const res = await Api('get', 'getShippingCost', '', props.router);
             props.loader(false);
-            setCost(res?.shippingCosts[0].ShippingCost || 0);
+
+            if (res.shippingCosts && res.shippingCosts.length > 0) {
+                const costs = res.shippingCosts[0];
+                setCurrentLocalCost(costs.ShippingCostforLocal || 0);
+                setCurrentShipmentCost(costs.ShipmentCostForShipment || 0);
+            }
         } catch (err) {
             props.loader(false);
             props.toaster({ type: 'error', message: err?.message });
@@ -412,7 +420,6 @@ const Navbar = (props) => {
             const itemTotal = Number(currentValue?.total || 0);
             const taxRate = Number(currentValue?.tax || 0); // percentage
             const taxAmount = (itemTotal * taxRate) / 100;
-            //  taxAmount = taxAmount.toFixed(2)
             return accumulator + taxAmount;
         }, 0);
 
@@ -421,9 +428,12 @@ const Navbar = (props) => {
 
         let delivery = 0;
 
-        if (pickupOption === "localDelivery" || pickupOption === "ShipmentDelivery") {
-            delivery = sumWithInitial <= 35 ? cost : 0;
-        } else if (pickupOption === "orderPickup" || pickupOption === "driveUp") {
+        if (pickupOption === "localDelivery") {
+            delivery = sumWithInitial <= 35 ? currentLocalCost : 0;
+        } else if (pickupOption === "ShipmentDelivery") {
+            delivery = sumWithInitial <= 200 ? currentShipmentCost : 0;
+        }
+        else if (pickupOption === "orderPickup" || pickupOption === "driveUp") {
             delivery = 0;
         }
 
@@ -496,7 +506,7 @@ const Navbar = (props) => {
         //     }
         // }
 
- 
+
         if (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') {
             const { email, name, phoneNumber, lastname } = localAddress;
 
@@ -567,7 +577,7 @@ const Navbar = (props) => {
 
         let newData = {
             productDetail: data,
-            total: mainTotal.toFixed(2),
+            total: afterCoupanTotal.toFixed(2),
             user: user._id,
             Email: user.email,
             Local_address: {
@@ -1359,38 +1369,30 @@ const Navbar = (props) => {
                                 </p>
                             </div>
 
-                            {(pickupOption === "orderPickup" || pickupOption === "driveUp") ? (
-                                <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
-                                    <p className="text-black font-normal text-base">
-                                        {t("Delivery Fee")}
-                                    </p>
-                                    <p className="text-green-500 font-normal text-base">
-                                        {t("Free")}
-                                    </p>
-                                </div>
-                            ) : (
-                                <>
-                                    {CartTotal < 35 ? (
-                                        <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
-                                            <p className="text-black font-normal text-base">
-                                                {t("Delivery Fee")}
-                                            </p>
-                                            <p className="text-custom-black font-normal text-base">
-                                                {constant.currency}{deliveryCharge}
-                                            </p>
-                                        </div>
+                            <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
+                                <p className="text-black font-normal text-base">{t("Delivery Fee")}</p>
+
+                                {pickupOption === "orderPickup" || pickupOption === "driveUp" ? (
+                                    <p className="text-green-500 font-normal text-base">{t("Free")}</p>
+                                ) : pickupOption === "localDelivery" ? (
+                                    CartTotal < 35 ? (
+                                        <p className="text-custom-black font-normal text-base">
+                                            {constant.currency} {currentLocalCost}
+                                        </p>
                                     ) : (
-                                        <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
-                                            <p className="text-black font-normal text-base">
-                                                {t("Delivery Fee")}
-                                            </p>
-                                            <p className="text-green-500 font-normal text-base">
-                                                {t("Free")}
-                                            </p>
-                                        </div>
-                                    )}
-                                </>
-                            )}
+                                        <p className="text-green-500 font-normal text-base">{t("Free")}</p>
+                                    )
+                                ) : pickupOption === "ShipmentDelivery" ? (
+                                    CartTotal < 200 ? (
+                                        <p className="text-custom-black font-normal text-base">
+                                            {constant.currency} {currentShipmentCost}
+                                        </p>
+                                    ) : (
+                                        <p className="text-green-500 font-normal text-base">{t("Free")}</p>
+                                    )
+                                ) : null}
+                            </div>
+
 
 
 
@@ -1404,15 +1406,15 @@ const Navbar = (props) => {
                                     {constant.currency}{mainTotal}
                                 </p>
                             </div>
-                            <div className="flex justify-between items-center w-full pt-1 hover:underline cursor-pointer">
+                            <div className="flex md:flex-row flex-col justify-start md:justify-between items-start md:items-center w-full pt-1 hover:underline cursor-pointer">
                                 <p className="text-custom-black font-normal text-base"
                                     onClick={() => setOpenModel(true)}
                                 >
-                                    {t("Apply Coupan")}
+                                    {t("Apply Coupon")}
                                 </p>
 
                                 {appliedCoupon && (
-                                    <div className="mt-3 p-2 bg-green-100 text-green-800 rounded-md flex items-center justify-between">
+                                    <div className="mt-3 p-2 bg-green-100 text-green-800 rounded-md flex items-center justify-between w-full md:w-[400px]">
                                         <div className="flex items-center">
                                             <Check size={16} className="mr-2" />
                                             <span>
@@ -1447,12 +1449,12 @@ const Navbar = (props) => {
                                             <div className="relative w-full">
                                                 <input
                                                     type="text"
-                                                    className="w-full px-10 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-                                                    placeholder="Enter coupon code or search available coupons"
+                                                    className="w-full md:px-10 ps-6 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black md:text-[16px] text-sm"
+                                                    placeholder="Enter coupon code or search coupons"
                                                     value={searchTerm}
                                                     onChange={handleSearchChange}
                                                 />
-                                                <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+                                                <Search className="absolute left-1 md:left-3 top-2.5 text-gray-400" size={20} />
                                                 {searchTerm && (
                                                     <button
                                                         className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
@@ -1462,7 +1464,7 @@ const Navbar = (props) => {
                                                     </button>
                                                 )}
                                             </div>
-                                            <p onClick={() => setOpenModel(false)} className="text-black cursor-pointer text-lg font-bold mx-2 pt-1"><X size={32} /></p>
+                                            <p onClick={() => setOpenModel(false)} className="text-black cursor-pointer text-[20px] font-bold md:mx-2 mx-1 pt-1"> <X size={28} /></p>
                                         </div>
                                         {/* Applied coupon display with remove */}
                                         {appliedCoupon && (

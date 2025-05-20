@@ -21,9 +21,9 @@ const Testimonials = () => {
                         <img
                             alt="Portrait of Ahmed Saeed"
                             className="absolute top-[-45px] md:left-40 left-32 w-20 h-20 md:w-24 md:h-24 rounded-full mx-auto mb-8"
-                            src="https://storage.googleapis.com/a1aa/image/1MdlyNcbY16TApF_cHcFWQMQT3JO1HAK2iiV9QUhqNA.jpg"
+                            src="/yen_tran.jpg"
                         />
-                        <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">Ahmed Saeed</h3>
+                        <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">Yen Tran</h3>
                         <p className="text-gray-500 mb-4 text-xs md:text-base">Co Founder</p>
                         <p className="text-gray-600 mb-4 px-6 text-xs md:text-base text-center">
                             {t("The quality and freshness of the groceries are top-notch. I love how easy it is to order and pick up a real time-saver for busy people like me")}
@@ -42,9 +42,9 @@ const Testimonials = () => {
                         <img
                             alt="Portrait of John Doe"
                             className="absolute top-[-45px] md:left-40 left-32 w-20 h-20 md:w-24 md:h-24 rounded-full mx-auto mb-8"
-                            src="https://storage.googleapis.com/a1aa/image/8wI3Cv5Mv_0IebpC_sZ0kyGk6lNq-ZP4mrQHIhWcJZI.jpg"
+                            src="/David_jran.jpg"
                         />
-                        <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">John Doe</h3>
+                        <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">David Tran</h3>
                         <p className="text-gray-500 mb-4 text-xs md:text-base">Co Founder</p>
                         <p className="text-gray-600 mb-4 px-6 text-xs md:text-base text-center">
                             {t("This service has changed how I shop. Everything is well-organized, on time, and perfectly packed. Highly recommend to anyone looking for convenience and quality")}
@@ -63,9 +63,9 @@ const Testimonials = () => {
                         <img
                             alt="Portrait of Jane Smith"
                             className="absolute top-[-45px] md:left-40 left-32 w-20 h-20 md:w-24 md:h-24 rounded-full mx-auto mb-8"
-                            src="https://storage.googleapis.com/a1aa/image/1MdlyNcbY16TApF_cHcFWQMQT3JO1HAK2iiV9QUhqNA.jpg"
+                            src="/Chau_le.jpg"
                         />
-                        <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">Jane Smith</h3>
+                        <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">Chau Le</h3>
                         <p className="text-gray-500 mb-4 text-xs md:text-base">Co Founder</p>
                         <p className="text-gray-600 mb-4 px-6 text-xs md:text-base text-center">
                             {t("From the intuitive website to the freshness of each item — every part of the experience feels premium. It's reliable, efficient, and customer-focused")}.

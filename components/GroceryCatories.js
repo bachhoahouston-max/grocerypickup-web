@@ -147,13 +147,13 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     return (
         <div
             key={i}
-            className="bg-white w-full max-w-[350px] h-full md:h-[389px] rounded-lg md:p-2 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative"
+            className="bg-white w-[380px] md:w-full max-w-[380px] h-full md:h-[389px] rounded-lg md:p-2 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative"
         >
             <div className='relative'>
                 <img
                     src={item.varients[0].image[0]}
                     alt="Product image"
-                    className="w-full p-1 md:h-44 h-36 object-contain rounded-xl cursor-pointer"
+                    className="md:w-full w-40 p-1 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
                     onClick={() => {
                         router.push(url);
                     }}
