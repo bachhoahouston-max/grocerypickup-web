@@ -5,14 +5,12 @@ import { useRouter } from 'next/router';
 import { LuBoomBox } from "react-icons/lu";
 import { useTranslation } from 'react-i18next';
 const AboutUs = () => {
-    const {t} = useTranslation()
+    const { t } = useTranslation()
     const router = useRouter();
 
     const teamMembers = [
-        { name: 'John Peter', role: 'COO', imgSrc: '/Bill.png' },
-        { name: 'Priya Mehra', role: 'Head of Product', imgSrc: '/Beverly.png' },
-        { name: 'Rahul Sharma', role: 'Marketing Director', imgSrc: '/Claudia.png' },
-        { name: 'John Sena', role: 'COO', imgSrc: '/Avatar.png' },
+        { name: 'Steve Ong', role: 'President', imgSrc: '/presedent.jpg' },
+        { name: 'Katy Truong', role: 'CEO', imgSrc: '/ceo.jpg' },
     ];
 
     const services = [
@@ -64,14 +62,14 @@ const AboutUs = () => {
                                 </div>
                                 {/* <h3 className="text-xl font-semibold mb-4 text-black">Lorem Ipsum</h3> */}
                                 <p className="text-gray-600 w-[90%]">{t("We provide the freshest, most reliable groceries, ensuring every product meets high-quality standards. Our customers trust us for freshness and consistency")}.
-                                   .</p>
+                                    .</p>
                             </div>
                         </div>
 
                         <div className="mb-4">
                             <div className="bg-white md:px-8 px-4 py-6 md:py-12 rounded-lg shadow-lg">
                                 <div className={`bg-red-100 text-orange-800 px-8 py-2 rounded-full inline-block mb-4`}>
-                               {t("Customer-Centric Approach")} 
+                                    {t("Customer-Centric Approach")}
                                 </div>
                                 {/* <h3 className="text-xl font-semibold mb-4 text-black">Lorem Ipsum</h3> */}
                                 <p className="text-gray-600 w-[90%]"> {t("Our focus is on you. With easy ordering, quick delivery, and a commitment to customer satisfaction, we make grocery shopping simple and stress-free")}..</p>
@@ -81,7 +79,7 @@ const AboutUs = () => {
                         <div className="mb-4">
                             <div className="bg-white md:px-8 px-4 py-6 md:py-12 rounded-lg shadow-lg">
                                 <div className={`bg-orange-200 text-orange-400 px-8 py-2 rounded-full inline-block mb-4`}>
-                                {t("Convenience at Your Doorstep")}
+                                    {t("Convenience at Your Doorstep")}
                                 </div>
                                 {/* <h3 className="text-xl font-semibold mb-4 text-black">Lorem Ipsum</h3> */}
                                 <p className="text-gray-600 w-[90%]">{t("From local produce to pantry essentials, we bring the best directly to you. Enjoy the convenience of a hassle-free, fast, and reliable shopping experience")}..</p>
@@ -103,25 +101,41 @@ const AboutUs = () => {
                         <p className="text-[#F38529] font-semibold text-[16px]">
                             {t("Bringing Freshness & Convenience Together")}</p>
                         <h1 className="text-2xl md:text-[24px] font-bold mt-2 w-full text-black">
-                        {t("We combine quality products with hassle-free shopping to make your daily grocery experience smoother and smarter")}.
+                            {t("We combine quality products with hassle-free shopping to make your daily grocery experience smoother and smarter")}.
                         </h1>
                         <p className="text-gray-700 mt-4 md:mb-2 mb-8 text-[16px] w-full">
-                        {t("We are a modern grocery pickup and delivery service committed to making your daily shopping easier, faster, and more reliable. With a wide range of fresh produce, pantry staples, and household essentials, we bring convenience to your doorstep. Trusted by hundreds of families, we continue to grow by focusing on quality, customer satisfaction, and a seamless shopping experience")}.
+                            {t("We are a modern grocery pickup and delivery service committed to making your daily shopping easier, faster, and more reliable. With a wide range of fresh produce, pantry staples, and household essentials, we bring convenience to your doorstep. Trusted by hundreds of families, we continue to grow by focusing on quality, customer satisfaction, and a seamless shopping experience")}.
                         </p>
                     </div>
                 </div>
             </div>
             <div className="bg-white">
-                {/* Our Team Section */}
+               
                 <div className="max-w-7xl container mx-auto">
-                    <div className="mb-20 md:mx-0 mx-6">
-                        <h2 className="text-xl font-semibold mb-16 mt-12 text-black">{t("Our Team")}</h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    <div className="md:mb-20 mb-10 md:mx-0 mx-6">
+                        <h2 className="text-2xl md:text-3xl font-semibold mb-8 md:mb-16 mt-12 text-black">
+                            {t("Our Team")}
+                        </h2>
+
+                        <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-2 gap-4 md:gap-6">
                             {teamMembers.map((member, index) => (
-                                <div key={index} className="bg-[#F5F5F5] flex flex-col justify-center items-center px-4  md:py-4 py-2 rounded-[20px] w-full h-auto shadow">
-                                    <img alt={`Avatar of ${member.name}`} className="mx-auto mb-2" height="100" src={member.imgSrc} width="100" />
-                                    <h3 className="text-center font-semibold mb-2 text-black">{member.name}</h3>
-                                    <p className="text-center text-gray-500">{member.role}</p>
+                                <div
+                                    key={index}
+                                    className="bg-[#F5F5F5] flex flex-col justify-center items-center p-4 md:p-6 rounded-[20px] w-full h-auto shadow hover:shadow-md transition-shadow duration-300"
+                                >
+                                    <div className="w-[220px] h-[280px]  md:w-[300px] md:h-[350px] rounded-xl overflow-hidden mb-4 ">
+                                        <img
+                                            alt={`${member.name}`}
+                                            className="w-full h-full object-cover"
+                                            src={member.imgSrc}
+                                        />
+                                    </div>
+                                    <h3 className="text-lg md:text-xl font-semibold mb-2 text-black">
+                                        {member.name}
+                                    </h3>
+                                    <p className="text-sm md:text-base text-gray-500">
+                                        {member.role}
+                                    </p>
                                 </div>
                             ))}
                         </div>
@@ -133,22 +147,22 @@ const AboutUs = () => {
                         <h2 className="text-xl font-semibold mb-14 pt-14 text-black md:mx-0 mx-6">
                             {t("Our Services")}</h2>
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-20 md:mx-0 mx-6">
-                                <div className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
-                                    <LuBoomBox className='md:text-5xl text-4xl mb-2' />
-                                    <p className="md:text-[19px] text-[16px]">{t("Online Payment")}</p>
-                                </div>
-                                <div className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
-                                    <LuBoomBox className='md:text-5xl text-4xl mb-2' />
-                                    <p className="md:text-[19px] text-[16px]">{t("Maintenance Request Management")}</p>
-                                </div>
-                                <div className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
-                                    <LuBoomBox className='md:text-5xl text-4xl mb-2' />
-                                    <p className="md:text-[19px] text-[16px]">{t("Stakeholder Communication")}</p>
-                                </div>
-                                <div className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
-                                    <LuBoomBox className='md:text-5xl text-4xl mb-2' />
-                                    <p className="md:text-[19px] text-[16px]">{t("Document Management")}</p>
-                                </div>
+                            <div className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
+                                <LuBoomBox className='md:text-5xl text-4xl mb-2' />
+                                <p className="md:text-[19px] text-[16px]">{t("Online Payment")}</p>
+                            </div>
+                            <div className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
+                                <LuBoomBox className='md:text-5xl text-4xl mb-2' />
+                                <p className="md:text-[19px] text-[16px]">{t("Maintenance Request Management")}</p>
+                            </div>
+                            <div className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
+                                <LuBoomBox className='md:text-5xl text-4xl mb-2' />
+                                <p className="md:text-[19px] text-[16px]">{t("Stakeholder Communication")}</p>
+                            </div>
+                            <div className="bg-custom-green rounded-[18px] w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
+                                <LuBoomBox className='md:text-5xl text-4xl mb-2' />
+                                <p className="md:text-[19px] text-[16px]">{t("Document Management")}</p>
+                            </div>
                         </div>
                     </div>
                 </div>

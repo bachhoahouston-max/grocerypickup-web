@@ -24,7 +24,7 @@ const Testimonials = () => {
                             src="/yen_tran.jpg"
                         />
                         <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">Yen Tran</h3>
-                        <p className="text-gray-500 mb-4 text-xs md:text-base">Co Founder</p>
+                        <p className="text-gray-500 mb-4 text-xs md:text-base">Customer</p>
                         <p className="text-gray-600 mb-4 px-6 text-xs md:text-base text-center">
                             {t("The quality and freshness of the groceries are top-notch. I love how easy it is to order and pick up a real time-saver for busy people like me")}
                         </p>
@@ -45,7 +45,7 @@ const Testimonials = () => {
                             src="/David_jran.jpg"
                         />
                         <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">David Tran</h3>
-                        <p className="text-gray-500 mb-4 text-xs md:text-base">Co Founder</p>
+                        <p className="text-gray-500 mb-4 text-xs md:text-base">Customer</p>
                         <p className="text-gray-600 mb-4 px-6 text-xs md:text-base text-center">
                             {t("This service has changed how I shop. Everything is well-organized, on time, and perfectly packed. Highly recommend to anyone looking for convenience and quality")}
                         </p>
@@ -66,7 +66,7 @@ const Testimonials = () => {
                             src="/Chau_le.jpg"
                         />
                         <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">Chau Le</h3>
-                        <p className="text-gray-500 mb-4 text-xs md:text-base">Co Founder</p>
+                        <p className="text-gray-500 mb-4 text-xs md:text-base">Customer</p>
                         <p className="text-gray-600 mb-4 px-6 text-xs md:text-base text-center">
                             {t("From the intuitive website to the freshness of each item — every part of the experience feels premium. It's reliable, efficient, and customer-focused")}.
                         </p>
