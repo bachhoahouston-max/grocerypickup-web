@@ -28,7 +28,7 @@ const Footer = () => {
               onClick={() => router.push('/')}
             />
             <p className="text-[16px] md:text-[19px] text-white">
-              {t("Your digital partner for personal and professional growth")} </p>
+              {t("Your digital partner for growth, with a commitment to quality")} </p>
             <div className="flex space-x-4 mt-4">
               <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaLinkedinIn />

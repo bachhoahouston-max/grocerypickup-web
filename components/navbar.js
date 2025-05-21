@@ -368,6 +368,21 @@ const Navbar = (props) => {
                         lat: res?.data?.location?.coordinates[1],
                         lng: res?.data?.location?.coordinates[0],
                     });
+                    setLocalAddress({
+                        dateOfDelivery: "",
+                        address: res.data.address || '',
+                        name: res.data.username || '',
+                        lastname: res.data.lastname|| '',
+                        email: res.data?.email|| "",
+                        phoneNumber: res.data.number|| '',
+                        location: {
+                            type: 'Point',
+                            coordinates: [
+                                 res?.data?.location?.coordinates[1] || null,
+                                res?.data?.location?.coordinates[0]|| null
+                            ],
+                        },
+                    });
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
                 }
@@ -456,18 +471,33 @@ const Navbar = (props) => {
         setParkingNo('')
         setPickupOption("orderPickup")
         localStorage.removeItem("addCartDetail");
+        setAppliedCoupon(null);
+        setSelectedCoupon(null);
+        setSearchTerm('');
+        getProfileData()
     };
 
 
-    const cartClose = (item, i) => {
-        const nextState = produce(cartData, (draftState) => {
-            if (i !== -1) {
-                draftState.splice(i, 1);
-            }
-        });
-        setCartData(nextState);
-        localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-    };
+const cartClose = (item, i) => {
+  const nextState = produce(cartData, (draftState) => {
+    if (i !== -1) {
+      draftState.splice(i, 1);
+    }
+  });
+
+  setCartData(nextState);
+  localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+
+  // ✅ Only run this when the cart becomes empty after removal
+  if (nextState.length === 0) {
+    setAppliedCoupon(null);
+    setSelectedCoupon(null);
+    setSearchTerm('');
+    getProfileData();
+  }
+};
+
+
 
     const createProductRquest = (e) => {
 
@@ -574,35 +604,37 @@ const Navbar = (props) => {
             }
         }
 
-
         let newData = {
             productDetail: data,
             total: afterCoupanTotal.toFixed(2),
             user: user._id,
             Email: user.email,
-            Local_address: {
-                ...localAddress,
-                name: localAddress.name,
-                phoneNumber: localAddress.phoneNumber,
-                address: localAddress.address,
-                email: localAddress.email,
-                lastname: localAddress.lastname,
-                BusinessAddress: localAddress.BusinessAddress,
-                dateOfDelivery: localAddress.dateOfDelivery,
-                location: {
-                    type: 'Point',
-                    coordinates: [
-                        localAddress.location.coordinates[0] || null,
-                        localAddress.location.coordinates[1] || null
-                    ],
+            isOrderPickup,
+            isDriveUp,
+            isLocalDelivery,
+            isShipmentDelivery,
+            dateOfDelivery,
+            ...((isShipmentDelivery || isLocalDelivery) && {
+                Local_address: {
+                    ...localAddress,
+                    name: localAddress.name,
+                    phoneNumber: localAddress.phoneNumber,
+                    address: localAddress.address,
+                    email: localAddress.email,
+                    lastname: localAddress.lastname,
+                    BusinessAddress: localAddress.BusinessAddress,
+                    dateOfDelivery: localAddress.dateOfDelivery,
+                    location: {
+                        type: 'Point',
+                        coordinates: [
+                            localAddress.location.coordinates[0] || null,
+                            localAddress.location.coordinates[1] || null
+                        ],
+                    },
                 },
-            },
-            isOrderPickup: isOrderPickup,
-            isDriveUp: isDriveUp,
-            isLocalDelivery: isLocalDelivery,
-            isShipmentDelivery: isShipmentDelivery,
-            dateOfDelivery: dateOfDelivery,
+            })
         };
+
 
         console.log(newData)
         localStorage.setItem("checkoutData", JSON.stringify(newData));

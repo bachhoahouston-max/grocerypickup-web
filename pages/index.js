@@ -349,7 +349,7 @@ export default function Home(props) {
               </div>
 
               {/* Product Grid */}
-              <div className="relative w-full md:w-5/6 grid md:grid-cols-4 lg:grid-cols-6 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
+              <div className="relative w-full md:w-5/6 grid md:grid-cols-4 lg:grid-cols-6 grid-cols-2 gap-2.5 mx-auto md:mx-2 md:space-x-2 space-x-0">
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData.slice(0, 12).map((item, i) => (
@@ -391,6 +391,7 @@ export default function Home(props) {
           </div>
         </section>
       </div>
+      
       <div className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
           <div className="bg-white p-4 shadow-md text-center">

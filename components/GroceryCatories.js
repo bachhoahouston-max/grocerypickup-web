@@ -147,13 +147,13 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     return (
         <div
             key={i}
-            className="bg-white w-full max-w-[380px] h-full md:h-[389px] rounded-lg md:p-2 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative"
+            className="bg-white w-full max-w-[350px] h-full md:h-[389px] rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative"
         >
             <div className='relative'>
                 <img
                     src={item.varients[0].image[0]}
                     alt="Product image"
-                    className="md:w-full w-40 p-1 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
+                    className="md:w-full w-56 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
                     onClick={() => {
                         router.push(url);
                     }}
@@ -192,9 +192,9 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             </div>
 
             {itemQuantity > 0 ? (
-                <div className="bg-gray-100 w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
+                <div className="bg-gray-100 w-[120px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
                     <div
-                        className="bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
+                        className="bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-2 py-1.5 items-center"
                         onClick={() => {
                             const updatedCart = cartData.map((cartItem) => {
                                 if (cartItem._id === item._id) {
@@ -218,7 +218,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
 
                     >
-                        <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
+                        <IoRemoveSharp className="md:h-[23px] h-[20px] w-[30px] md:w-[25px] text-white" />
                     </div>
 
 
@@ -226,7 +226,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                         {itemQuantity}
                     </p>
                     <div
-                        className="md:px-2 px-1 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                        className="md:px-2 px-2 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                         onClick={() => {
                             const updatedCart = cartData.map((cartItem) => {
                                 if (cartItem._id === item._id) {

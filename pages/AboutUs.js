@@ -10,7 +10,7 @@ const AboutUs = () => {
 
     const teamMembers = [
         { name: 'Steve Ong', role: 'President', imgSrc: '/presedent.jpg' },
-        { name: 'Katy Truong', role: 'CEO', imgSrc: '/ceo.jpg' },
+        { name: 'Katy Truong', role: 'CEO', imgSrc: '/katy.jpg' },
     ];
 
     const services = [
