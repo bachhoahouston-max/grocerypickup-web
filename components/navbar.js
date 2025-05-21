@@ -57,27 +57,36 @@ const Navbar = (props) => {
     const [appliedCoupon, setAppliedCoupon] = useState(null);
     const [afterCoupanTotal, setAfterCoupanTotal] = useState(mainTotal)
 
-    useEffect(() => {
-        const fetchCoupons = async () => {
-            props.loader(true);
-            Api("get", "GetAllCoupons", "", router).then(
-                (res) => {
-                    props.loader(false);
-                    console.log("res================> form data :: ", res);
-                    setCoupons(res.data || []);
-                    setFilteredCoupons(res.data || []);
-                },
-                (err) => {
-                    props.loader(false);
-                    console.log(err);
-                    props.toaster({ type: "error", message: err?.message });
-                }
-            );
+   useEffect(() => {
+    const fetchCoupons = async () => {
+        props.loader(true);
+        Api("get", "GetAllCoupons", "", router).then(
+            (res) => {
+                props.loader(false);
+                console.log("res================> form data :: ", res);
 
-        };
+                const currentDate = new Date();
 
-        fetchCoupons();
-    }, []);
+                // Filter valid coupons
+                const validCoupons = (res.data || []).filter(coupon => {
+                    const expiryDate = new Date(coupon.expiryDate);
+                    return expiryDate > currentDate && coupon.isActive;
+                });
+                console.log("coupan",validCoupons)
+                setCoupons(validCoupons);
+                setFilteredCoupons(validCoupons);
+            },
+            (err) => {
+                props.loader(false);
+                console.log(err);
+                props.toaster({ type: "error", message: err?.message });
+            }
+        );
+    };
+
+    fetchCoupons();
+}, []);
+
 
     useEffect(() => {
         if (searchTerm.trim() === '') {
@@ -263,7 +272,6 @@ const Navbar = (props) => {
             (res) => {
                 props.loader(false);
                 if (res.data && Array.isArray(res.data)) {
-                    console.log("All products", res.data);
                     setAllProduct(res.data);
 
                 } else {
@@ -438,9 +446,6 @@ const Navbar = (props) => {
             return accumulator + taxAmount;
         }, 0);
 
-        console.log("Tax:", totalTax);
-
-
         let delivery = 0;
 
         if (pickupOption === "localDelivery") {
@@ -453,8 +458,6 @@ const Navbar = (props) => {
         }
 
         const finalTotal = sumWithInitial + totalTax + delivery;
-
-        console.log("Final Total:", finalTotal);
 
         setCartItem(sumWithInitial1);
         setCartTotal(sumWithInitial);
