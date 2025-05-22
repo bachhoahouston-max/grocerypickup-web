@@ -40,7 +40,7 @@
   "Select Date of Delivery": "Select Date of Delivery",
   "Select date": "Select date",
   "Delivery Info": "Delivery Info",
-  "Delivery in 3 or 5 business days": "Delivery in 3 or 5 business days",
+  "Delivery in 3 to 5 business days": "Delivery in 3 to 5 business days",
   "Your cart is empty": "Your cart is empty",
   "Browse Products": "Browse Products",
   "Product is available for Shipment Delivery": "Product is available for Shipment Delivery",
@@ -245,6 +245,10 @@
       "Start Soon":"Start Soon",
       "Are you sure? Do you really want to cancel your order?":"Are you sure? Do you really want to cancel your order?",
       "Yes, cancel it!":"Yes, cancel it!",
-      "No, keep it":"No, keep it"
+      "No, keep it":"No, keep it",
+      "Apply Coupon":"Apply Coupon",
+      "Coupon":"Coupon",
+      "applied!":"applied!",
+      "Enter coupon code or search coupons":"Enter coupon code or search coupons"
   
 }

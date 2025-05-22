@@ -4,13 +4,16 @@ import { useRouter } from "next/router";
 import GroceryCategories from "@/components/GroceryCatories";
 import ShopFasterTropicana from "@/components/ShopFasterMarketplace"
 import { useTranslation } from "react-i18next";
+
 function Favourite(props) {
   const router = useRouter();
   const {t} = useTranslation()
   const [favouriteList, setFavouriteList] = useState([]);
 
   useEffect(() => {
+
     getFavourite();
+
   }, []);
 
   const getFavourite = async () => {

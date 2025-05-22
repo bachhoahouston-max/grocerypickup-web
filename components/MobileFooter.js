@@ -31,7 +31,7 @@ function MobileFooter() {
                 />
 
                 {cartData.length > 0 && (
-                    <div className="absolute bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-[9px] -top-1 right-12">
+                    <div className="absolute bg-custom-green text-white rounded-full w-5 h-5 flex items-center justify-center text-[9px] -top-1 right-12">
                         {cartData.length}
                     </div>
                 )}

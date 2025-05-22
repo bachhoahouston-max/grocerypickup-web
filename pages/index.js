@@ -308,7 +308,7 @@ export default function Home(props) {
 
       <div className="bg-white w-full">
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
-          <div className="container mx-auto px-6 md:px-0 xl:w-full md:max-w-8xl lg:max-w-9xl">
+          <div className="container mx-auto px-6 md:px-0  md:max-w-9xl lg:max-w-9xl">
             <div className="flex justify-center flex-col items-center mt-4">
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">
                 {t("Popular Products")}</h1>
@@ -319,7 +319,7 @@ export default function Home(props) {
 
             <div className="flex md:flex-row flex-col ">
               {/* Sidebar */}
-              <div className=" hidden md:flex flex-col md:w-1/6 lg:w-1/4 w-full">
+              <div className=" hidden md:flex flex-col md:w-1/6  w-full">
                 <ul className="rounded-lg p-4 space-y-2">
                   <li
                     onClick={() => handleCategoryClick1('/categories/all')}
@@ -349,7 +349,7 @@ export default function Home(props) {
               </div>
 
               {/* Product Grid */}
-              <div className="relative w-full md:w-5/6 grid md:grid-cols-4 lg:grid-cols-6 grid-cols-2 gap-2.5 mx-auto md:mx-2 md:space-x-2 space-x-0">
+              <div className="relative w-full md:w-5/6 grid md:grid-cols-5 lg:grid-cols-6 grid-cols-2 gap-2.5 mx-auto md:mx-2 md:space-x-2 space-x-0">
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData.slice(0, 12).map((item, i) => (

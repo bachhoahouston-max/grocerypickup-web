@@ -30,21 +30,21 @@ const Footer = () => {
             <p className="text-[16px] md:text-[19px] text-white">
               {t("Your digital partner for growth, with a commitment to quality")} </p>
             <div className="flex space-x-4 mt-4">
-              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
+              {/* <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaLinkedinIn />
-              </a>
-              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
+              </a> */}
+              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="https://www.instagram.com/bachhoahouston/">
                 <FaInstagram />
               </a>
-              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
+              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="https://www.facebook.com/groups/1861501697993458">
                 <FaFacebookF />
               </a>
-              <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
+              {/* <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaXTwitter />
               </a>
               <a className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center" href="#">
                 <FaYoutube />
-              </a>
+              </a> */}
             </div>
             <div className='mt-6 text-white'> <ul>
               <li className="flex items-center mb-2">

@@ -1003,7 +1003,7 @@ const cartClose = (item, i) => {
                                             {t("Next Day Delivery")} </span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
-                                            {t("Cut of time 8 pm ")}</span>
+                                            {t("Cut of time 8 pm")}</span>
                                     </label>
                                 </div>
                                 <div className="flex items-center">
@@ -1453,7 +1453,7 @@ const cartClose = (item, i) => {
                                         <div className="flex items-center">
                                             <Check size={16} className="mr-2" />
                                             <span>
-                                                Coupon <strong>{appliedCoupon.code}</strong> applied!
+                                                {t("Coupon")} <strong>{appliedCoupon.code}</strong> {("applied!")}
                                             </span>
                                         </div>
                                         <button
@@ -1485,7 +1485,7 @@ const cartClose = (item, i) => {
                                                 <input
                                                     type="text"
                                                     className="w-full md:px-10 ps-6 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black md:text-[16px] text-sm"
-                                                    placeholder="Enter coupon code or search coupons"
+                                                    placeholder={t("Enter coupon code or search coupons")}
                                                     value={searchTerm}
                                                     onChange={handleSearchChange}
                                                 />
@@ -1570,7 +1570,7 @@ const cartClose = (item, i) => {
                                             disabled={!selectedCoupon}
                                             onClick={handleApplyCoupon}
                                         >
-                                            Apply Coupon
+                                            {t("Apply Coupon")}
                                         </button>
                                     )}
                                 </div>
