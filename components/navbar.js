@@ -1003,7 +1003,7 @@ const cartClose = (item, i) => {
                                             {t("Next Day Delivery")} </span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
-                                            {t("Cut of time 4 pm")}</span>
+                                            {t("Cut of time 8 pm ")}</span>
                                     </label>
                                 </div>
                                 <div className="flex items-center">
@@ -1084,7 +1084,7 @@ const cartClose = (item, i) => {
                                     </h1>
                                     {pickupOption === 'localDelivery' && (
                                         <p className='text-red-500 text-sm py-1  mb-2'>
-                                            {t("Note: We currently deliver only to selected ZIP codes")}.</p>
+                                            {t("Note: We currently deliver only to selected ZIP codes. Orders placed before 8 pm are eligible for next day delivery. Orders placed after 8pm will be available for delivery in 2 days")}.</p>
                                     )}
                                     {pickupOption === 'localDelivery' && (
                                         <div className="relative inline-block">
