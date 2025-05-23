@@ -10,7 +10,8 @@ import { FaArrowRight } from "react-icons/fa6";
 import GroceryCatories from "@/components/GroceryCatories";
 import SellProduct from "@/components/SellProduct";
 import { useTranslation } from "react-i18next";
-
+import { languageContext } from "@/pages/_app";
+import { useContext } from 'react';
 
 export default function Home(props) {
   const { t } = useTranslation()
@@ -24,6 +25,11 @@ export default function Home(props) {
   const [saleData, setSaleData] = useState([])
   const [countdown, setCountdown] = useState([]);
 
+
+      const [lang, setLang] = useState(null);
+      const [globallang, setgloballang] = useContext(languageContext);
+      const { i18n } = useTranslation();
+  
   useEffect(() => {
     fetchCategories();
     fetchProducts();
@@ -172,8 +178,30 @@ export default function Home(props) {
   //  console.log(countdown)
   // console.log(sell)
 
+     function handleClick(idx) {
+        try {
+            setLang(idx);
+            const language = idx || "en";
+            console.log(language);
+            i18n.changeLanguage(language);
+            setgloballang(language);
+            localStorage.setItem("LANGUAGE", language);
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
   return (
     <div className="">
+      <div className="rounded-lg flex md:hidden justify-end m-2">
+        <select className="bg-white w-[50px] font-normal text-sm text-black outline-none cursor-pointer border border-custom-green p-1 rounded-[5px]"
+          value={lang}
+          onChange={(e) => handleClick(e.target.value)}
+        >
+
+          <option value={"en"}>EN</option>
+          <option value={"vi"}>VI</option>
+        </select>
+      </div>
       <MainHeader
         loader={props.loader}
         toaster={props.toaster}
@@ -391,7 +419,7 @@ export default function Home(props) {
           </div>
         </section>
       </div>
-      
+
       <div className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
           <div className="bg-white p-4 shadow-md text-center">
