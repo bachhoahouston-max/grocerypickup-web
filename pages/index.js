@@ -339,7 +339,7 @@ export default function Home(props) {
           <div className="container mx-auto px-6 md:px-0  md:max-w-9xl lg:max-w-9xl">
             <div className="flex justify-center flex-col items-center mt-4">
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">
-                {t("The World Best Sellers")}</h1>
+                {t("Best Selling Products")}</h1>
               <p className="text-center w-full text-[13px] md:text-[16px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
                 {t("Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers")}
               </p>
@@ -356,7 +356,7 @@ export default function Home(props) {
                     <span> {t("View All")}</span>
                     <FaArrowRight />
                   </li>
-                  {category.slice(0, 4).map((cat, index) => (
+                  {category.slice(0, 13).map((cat, index) => (
                     <li
                       key={index}
                       onClick={() => handleCategoryClick(cat._id)}
@@ -367,13 +367,13 @@ export default function Home(props) {
                     </li>
                   ))}
                 </ul>
-                <div className="md:flex hidden ms-4 mt-4">
+                {/* <div className="md:flex hidden ms-4 mt-4">
                   <img
                     src="./Rectangle3.png"
                     alt="Decorative image"
                     className="w-full h-[496px]"
                   />
-                </div>
+                </div> */}
               </div>
 
               {/* Product Grid */}
