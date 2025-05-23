@@ -88,7 +88,16 @@ const Footer = () => {
               <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">{("Other Links")}</h3>
               <ul>
                 <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/Myhistory')}>{t("History")}</a></li>
+
                 <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/Mybooking')}>{t("My Order")}</a></li>
+
+                 <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/JoinOurDelievryTeam')}>{t(" Join our delivery team")}</a></li>
+
+                <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" 
+                onClick={() => router.push('/HelpCenter')}>{t("⁠Help Center")}</a></li>
+
+                 <li className="md:pb-2 pb-1 cursor-pointer"><a className="text-[16px] md:text-[17px]" onClick={() => router.push('/ProductRecallInfo')}>{t("⁠Product Recall Information")}</a></li>
+
               </ul>
             </div>
             </div>

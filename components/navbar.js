@@ -57,35 +57,36 @@ const Navbar = (props) => {
     const [appliedCoupon, setAppliedCoupon] = useState(null);
     const [afterCoupanTotal, setAfterCoupanTotal] = useState(mainTotal)
 
-   useEffect(() => {
-    const fetchCoupons = async () => {
-        props.loader(true);
-        Api("get", "GetAllCoupons", "", router).then(
-            (res) => {
-                props.loader(false);
-                console.log("res================> form data :: ", res);
+    useEffect(() => {
+        const fetchCoupons = async () => {
+            props.loader(true);
+            Api("get", "GetAllCoupons", "", router).then(
+                (res) => {
+                    props.loader(false);
+                    console.log("res================> form data :: ", res);
 
-                const currentDate = new Date();
+                    const currentDate = new Date();
+                    // Filter valid coupons
+                    const validCoupons = (res.data || []).filter(coupon => {
+                        const expiryDate = new Date(coupon.expiryDate);
+                        return expiryDate > currentDate && coupon.isActive;
+                    });
+                    console.log("coupan", validCoupons)
+                    setCoupons(validCoupons);
+                    setFilteredCoupons(validCoupons);
+                },
+                (err) => {
+                    props.loader(false);
+                    console.log(err);
+                    props.toaster({ type: "error", message: err?.message });
+                }
+            );
+        };
+        if (user?.token) {
+            fetchCoupons();
+        }
 
-                // Filter valid coupons
-                const validCoupons = (res.data || []).filter(coupon => {
-                    const expiryDate = new Date(coupon.expiryDate);
-                    return expiryDate > currentDate && coupon.isActive;
-                });
-                console.log("coupan",validCoupons)
-                setCoupons(validCoupons);
-                setFilteredCoupons(validCoupons);
-            },
-            (err) => {
-                props.loader(false);
-                console.log(err);
-                props.toaster({ type: "error", message: err?.message });
-            }
-        );
-    };
-
-    fetchCoupons();
-}, []);
+    }, []);
 
 
     useEffect(() => {
@@ -380,14 +381,14 @@ const Navbar = (props) => {
                         dateOfDelivery: "",
                         address: res.data.address || '',
                         name: res.data.username || '',
-                        lastname: res.data.lastname|| '',
-                        email: res.data?.email|| "",
-                        phoneNumber: res.data.number|| '',
+                        lastname: res.data.lastname || '',
+                        email: res.data?.email || "",
+                        phoneNumber: res.data.number || '',
                         location: {
                             type: 'Point',
                             coordinates: [
-                                 res?.data?.location?.coordinates[1] || null,
-                                res?.data?.location?.coordinates[0]|| null
+                                res?.data?.location?.coordinates[1] || null,
+                                res?.data?.location?.coordinates[0] || null
                             ],
                         },
                     });
@@ -481,24 +482,24 @@ const Navbar = (props) => {
     };
 
 
-const cartClose = (item, i) => {
-  const nextState = produce(cartData, (draftState) => {
-    if (i !== -1) {
-      draftState.splice(i, 1);
-    }
-  });
+    const cartClose = (item, i) => {
+        const nextState = produce(cartData, (draftState) => {
+            if (i !== -1) {
+                draftState.splice(i, 1);
+            }
+        });
 
-  setCartData(nextState);
-  localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+        setCartData(nextState);
+        localStorage.setItem("addCartDetail", JSON.stringify(nextState));
 
-  // ✅ Only run this when the cart becomes empty after removal
-  if (nextState.length === 0) {
-    setAppliedCoupon(null);
-    setSelectedCoupon(null);
-    setSearchTerm('');
-    getProfileData();
-  }
-};
+        // ✅ Only run this when the cart becomes empty after removal
+        if (nextState.length === 0) {
+            setAppliedCoupon(null);
+            setSelectedCoupon(null);
+            setSearchTerm('');
+            getProfileData();
+        }
+    };
 
 
 

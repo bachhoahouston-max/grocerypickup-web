@@ -60,7 +60,7 @@ const HeaderFirst = (props) => {
     function handleClick(idx) {
         try {
             setLang(idx);
-            const language = idx || "vi";
+            const language = idx || "en";
             console.log(language);
             i18n.changeLanguage(language);
             setgloballang(language);
@@ -123,7 +123,7 @@ const HeaderFirst = (props) => {
                                             }}
                                         >
                                             <p className="px-4 py-1.5 text-white text-[16px]">
-                                                {cat.name}dcv
+                                                {cat.name}
                                             </p>
                                             <IoIosArrowForward className="text-2xl mt-2 mr-1 text-white" />
                                         </div>
@@ -165,13 +165,14 @@ const HeaderFirst = (props) => {
                     <BiPhoneCall className="text-[#F38529] text-3xl" />
                     <a href="tel:832-230-9288" className="text-custom-black cursor-pointer font-semibold">832-230-9288</a>
                 </div>
-                <div className="hidden lg:flex rounded-lg">
+                <div className="rounded-lg">
                     <select className="bg-white w-full font-normal text-sm text-black outline-none cursor-pointer"
                         value={lang}
                         onChange={(e) => handleClick(e.target.value)}
                     >
-                        <option value={"vi"}>Vietnamese</option>
+                        
                         <option value={"en"}>English</option>
+                        <option value={"vi"}>Vietnamese</option>
                     </select>
                 </div>
             </div>

@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 
 const Category = (props) => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   const [category, setCategory] = useState([]);
   const router = useRouter();
-  
+
   useEffect(() => {
     CategoryData();
   }, []);
@@ -31,25 +31,33 @@ const Category = (props) => {
 
   return (
     <>
-      <div className="max-w-7xl md:mt-0 mt-8 md:px-0 px-10 mx-auto bg-white">
+      <div className="max-w-7xl md:mt-0 mt-8 md:px-4 px-4 mx-auto bg-white">
         <h2 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
-          {t("All Categories")}</h2>
-        <div className="mb-4 grid md:grid-cols-4 grid-cols-2 md:gap-0 gap-8">
-          {category.map((cat, index) => (
-            <div key={index} className="rounded-lg h-full flex flex-col items-center cursor-pointer "
-            
-            >
-              <div className='bg-custom-green p-4 rounded-[12px] h-36 md:h-[207px] md:w-[241px] w-[145px] mr-4'
-              onClick={() => { router.push(`/categories/${cat?.slug}`) }}
-              >
-                <img alt={cat.label} className="w-full md:h-36 h-24 object-cover mb-2 " src={cat.image} />
-              </div>
-              <p className="text-center text-black text-md md:text-[21px] font-semibold mt-4 md:w-[60%] w-full mb-4">{cat.name}</p>
-            </div>
+          {t("All Categories")}
+        </h2>
 
+        <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-6">
+          {category.map((cat, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-md hover:shadow-lg transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center md:py-4"
+              onClick={() => router.push(`/categories/${cat?.slug}`)}
+            >
+              <div className="w-full h-36 md:h-48 rounded-lg overflow-hidden mb-3">
+                <img
+                  src={cat.image}
+                  alt={cat.label}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="text-center text-black text-sm md:text-lg font-medium md:mb-0 mb-4">
+                {cat.name}
+              </p>
+            </div>
           ))}
         </div>
       </div>
+
       <section className="w-full md:flex hidden md:pt-10 pt-5 pb-5">
         <ShopFasterTropicana />
       </section>

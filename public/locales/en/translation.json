@@ -96,7 +96,7 @@
   "Other Links": "Other Links",
   "Contact Us": "Contact Us",
   "Copyright @ 2025 Bach Hoa Houston. All rights reserved": "Copyright @ 2025 Bach Hoa Houston. All rights reserved",
-  "Popular Products": "Popular Products",
+  "The World Best Sellers": "The World Best Sellers",
   "Full Name": "Full Name",
   "Phone number": "Phone number",
   "My Query": "My Query",
@@ -249,6 +249,11 @@
       "Apply Coupon":"Apply Coupon",
       "Coupon":"Coupon",
       "applied!":"applied!",
-      "Enter coupon code or search coupons":"Enter coupon code or search coupons"
+      "Enter coupon code or search coupons":"Enter coupon code or search coupons",
+      "⁠Help Center":"⁠Help Center",
+      "Join our delivery team":"Join our delivery team",
+      "⁠Product Recall Information":"⁠Product Recall Information",
+      "Quick delivery in next day":"Quick delivery in next day",
+      "Customer":"Customer"
   
 }

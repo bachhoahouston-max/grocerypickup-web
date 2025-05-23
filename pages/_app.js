@@ -53,7 +53,7 @@ function App({ Component, pageProps }) {
   };
 
   useEffect(() => {
-    const defaultLanguage = 'vi';
+    const defaultLanguage = 'en';
     localStorage.setItem("LANGUAGE", defaultLanguage);
     i18n.changeLanguage(defaultLanguage);
     setgloballang(defaultLanguage);

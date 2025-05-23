@@ -79,7 +79,7 @@ export default function Home(props) {
 
   const fetchProducts = (page = 1, limit = 12) => {
     props.loader(true);
-    Api("get", `getProduct?page=${page}&limit=${limit}`, null, router).then(
+    Api("get", `getTopSoldProduct?page=${page}&limit=${limit}`, null, router).then(
       (res) => {
         props.loader(false);
         if (res.data && Array.isArray(res.data)) {
@@ -311,7 +311,7 @@ export default function Home(props) {
           <div className="container mx-auto px-6 md:px-0  md:max-w-9xl lg:max-w-9xl">
             <div className="flex justify-center flex-col items-center mt-4">
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">
-                {t("Popular Products")}</h1>
+                {t("The World Best Sellers")}</h1>
               <p className="text-center w-full text-[13px] md:text-[16px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
                 {t("Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers")}
               </p>
@@ -409,8 +409,8 @@ export default function Home(props) {
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faTruck} className="text-xl text-[#F38529] mb-4" />
-            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">{t("Delivery in 5 Days")}</h3>
-            <p className="text-gray-500 text-[13px] md:text-[16px]">{t("Quick delivery within just 5 days")}</p>
+            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">{t("Next Day Delivery")}</h3>
+            <p className="text-gray-500 text-[13px] md:text-[16px]">{t("Quick delivery in next day")}</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faLock} className="text-xl text-[#F38529] mb-4" />

@@ -46,19 +46,21 @@ function MainHeader({ toaster, loader }) {
     return (
         <>
             {carouselImg?.length > 0 ?
-                (<div className="w-screen md:h-screen">
-                    {carouselImg?.[0] && (
-                        <div className="relative w-full min-h-[280px] h-[40vh] sm:h-[60vh] md:h-[70vh] lg:h-[85vh] xl:h-screen bg-gray-200 object-contain">
-                            <img
-                                className="w-full h-full object-cover"
-                                src={carouselImg[0]?.image || '/fallback.jpg'}
-                                alt="Carousel"
-                            />
-                        </div>
+                (
+                    <div className="w-screen md:h-screen">
+                        {carouselImg?.[0] && (
+                            <div className=" md:w-full min-h-[280px] w-[100vw] h-[40vh] sm:h-[60vh] md:h-[70vh] lg:h-[85vh] xl:h-screen object-contain">
+                                <img
+                                    className="w-full h-full object-cover"
+                                    src={carouselImg[0]?.image || '/fallback.jpg'}
+                                    alt="Carousel"
+                                />
+                            </div>
+                        )}
+                    </div>
 
 
-                    )}
-                </div>
+
                 ) :
                 (<div className="bg-[url('/image98.png')]  bg-cover bg-no-repeat md:h-[620px] md:p-0 ">
                     <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5 max-w-7xl mx-auto h-full px-4 md:px-20 lg:px-32 xl:px-20 2xl:px-5">
