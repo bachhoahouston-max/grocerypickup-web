@@ -100,10 +100,11 @@ function ProductDetails(props) {
       return;
     }
 
-    if (productsId.Quantity === 0) {
-      props.toaster({ type: "error", message: "This item currently  out of stock. Please choose a different Item" });
+    if (productsId.Quantity <= 0) {
+      props.toaster({ type: "error", message: "This item is currently out of stock. Please choose a different item." });
       return;
     }
+
 
     const existingItem = cartData.find((f) =>
       f._id === productsId._id && f.price_slot?.value === selectedPrice.value
@@ -548,13 +549,13 @@ function ProductDetails(props) {
         </div>
         <div className="w-full bg-[#FFF5CB] md:my-10 my-5 md:px-16 py-5 px-4">
           <p className="text-black text-xl md:text-2xl font-bold mb-4">
-                {t("About Product")}
-              </p>
+            {t("About Product")}
+          </p>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-6 w-full">
             {/* About Product Section */}
-             
+
             <div className="flex flex-col gap-3">
-             
+
               <p className="text-black text-base md:text-xl font-medium">
                 {t("Short Description")}:{" "}
                 <span className="text-custom-newGray font-normal mt-1">

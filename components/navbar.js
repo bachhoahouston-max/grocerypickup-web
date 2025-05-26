@@ -184,6 +184,8 @@ const Navbar = (props) => {
 
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
+        ApartmentNo:"",
+        SecurityGateCode:"",
         zipcode: "",
         address: "",
         isBusinessAddress: "",
@@ -202,7 +204,6 @@ const Navbar = (props) => {
     useEffect(() => {
         if (profileData) {
             setLocalAddress({
-                dateOfDelivery: "",
                 address: profileData.address || '',
                 name: profileData.username || '',
                 lastname: profileData.lastname || '',
@@ -625,6 +626,8 @@ const Navbar = (props) => {
                     phoneNumber: localAddress.phoneNumber,
                     address: localAddress.address,
                     email: localAddress.email,
+                    ApartmentNo:localAddress.ApartmentNo,
+                    SecurityGateCode:localAddress.SecurityGateCode,
                     lastname: localAddress.lastname,
                     BusinessAddress: localAddress.BusinessAddress,
                     dateOfDelivery: localAddress.dateOfDelivery,
@@ -1206,6 +1209,25 @@ const Navbar = (props) => {
                                         required
                                     />
 
+                                    <input
+                                        type="text"
+                                        name="ApartmentNo"
+                                        placeholder={t("Enter Apartment # ")}
+                                        value={localAddress.ApartmentNo}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                        
+                                    />
+
+                                    <input
+                                        type="text"
+                                        name="SecurityGateCode"
+                                        placeholder={t("Security Gate Code")}
+                                        value={localAddress.SecurityGateCode}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+                                    
+                                    />
                                 </div>
                             </div>
                         </div>

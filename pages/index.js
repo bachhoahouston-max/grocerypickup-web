@@ -89,6 +89,8 @@ export default function Home(props) {
       (res) => {
         props.loader(false);
         if (res.data && Array.isArray(res.data)) {
+          console.log(res.data);
+          
           setProductList(res.data);
           setIscatdata(false);
         } else {
