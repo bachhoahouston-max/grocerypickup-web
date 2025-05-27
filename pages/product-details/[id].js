@@ -123,6 +123,7 @@ function ProductDetails(props) {
         selectedColor: productsId.selectedColor || productsId.varients?.[0] || {},
         selectedImage: productsId.selectedImage || productsId.varients?.[0]?.image?.[0] || "",
         qty: 1,
+        BarCode: productsId.varients?.[0]?.BarCode || "",
         total: ourPrice.toFixed(2),
         our_price: ourPrice,
         price_slot: selectedPrice,
@@ -458,7 +459,7 @@ function ProductDetails(props) {
                     })}
                 </div>
 
-                <div className="pt-3 mt-2 px-4  border-custom-darkPurple">
+                {/* <div className="pt-3 mt-2 px-4  border-custom-darkPurple">
                   <p className="text-custom-gold font-semibold text-lg">
                     {constant.currency}{(selectedPrice?.our_price)}{" "}
                     {selectedPrice?.other_price && (
@@ -472,7 +473,7 @@ function ProductDetails(props) {
                       </span>
                     )}
                   </p>
-                </div>
+                </div> */}
 
                 {isInCart ? (
                   <>

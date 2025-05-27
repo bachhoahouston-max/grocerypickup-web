@@ -184,8 +184,8 @@ const Navbar = (props) => {
 
     const [localAddress, setLocalAddress] = useState({
         dateOfDelivery: "",
-        ApartmentNo:"",
-        SecurityGateCode:"",
+        ApartmentNo: "",
+        SecurityGateCode: "",
         zipcode: "",
         address: "",
         isBusinessAddress: "",
@@ -441,12 +441,15 @@ const Navbar = (props) => {
             0
         );
 
-        const totalTax = cartData?.reduce((accumulator, currentValue) => {
-            const itemTotal = Number(currentValue?.total || 0);
-            const taxRate = Number(currentValue?.tax || 0); // percentage
-            const taxAmount = (itemTotal * taxRate) / 100;
-            return accumulator + taxAmount;
-        }, 0);
+        const totalTax = parseFloat(
+            cartData?.reduce((accumulator, currentValue) => {
+                const itemTotal = Number(currentValue?.total || 0);
+                const taxRate = Number(currentValue?.tax || 0); // percentage
+                const taxAmount = (itemTotal * taxRate) / 100;
+                return accumulator + taxAmount;
+            }, 0).toFixed(2)
+        );
+
 
         let delivery = 0;
 
@@ -560,7 +563,7 @@ const Navbar = (props) => {
 
 
 
-        if (pickupOption === 'driveUp') {
+        if (pickupOption === 'driveUp' || pickupOption === 'orderPickup') {
             if (!date) {
                 return props.toaster({ type: "error", message: "Please Enter Delivery Date" });
             }
@@ -577,6 +580,7 @@ const Navbar = (props) => {
             data.push({
                 product: element?._id,
                 image: element.selectedColor?.image,
+                BarCode:element.BarCode,
                 color: element.selectedColor?.color || "",
                 total: element.total,
                 price: element.total,
@@ -589,7 +593,7 @@ const Navbar = (props) => {
         const isLocalDelivery = pickupOption === 'localDelivery';
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
-        const dateOfDelivery = isDriveUp && date ? date : null;
+       const dateOfDelivery = (isDriveUp || isOrderPickup) && date ? date : null;
         const isShipmentDelivery = pickupOption === 'ShipmentDelivery';
 
         const unavailableProducts = data.filter(item => item.isShipmentAvailable === false);
@@ -626,8 +630,8 @@ const Navbar = (props) => {
                     phoneNumber: localAddress.phoneNumber,
                     address: localAddress.address,
                     email: localAddress.email,
-                    ApartmentNo:localAddress.ApartmentNo,
-                    SecurityGateCode:localAddress.SecurityGateCode,
+                    ApartmentNo: localAddress.ApartmentNo,
+                    SecurityGateCode: localAddress.SecurityGateCode,
                     lastname: localAddress.lastname,
                     BusinessAddress: localAddress.BusinessAddress,
                     dateOfDelivery: localAddress.dateOfDelivery,
@@ -1031,53 +1035,49 @@ const Navbar = (props) => {
                         </div>
                     )}
 
-                    {cartData.length > 0 && pickupOption === 'driveUp' && (
-                        <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
-                            <div className="flex items-center justify-center">
-                                <div className="text-center">
-                                    <h1 className="text-lg font-semibold mb-4">
-                                        {t("Select of Date Pick up")}</h1>
-                                    <div className="relative inline-block">
-                                        <input
-                                            type="text"
-                                            value={date ? formatDate(date) : t("Select date")} // Check if date is valid
-                                            placeholder={t("Select date")}
-                                            className="border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none"
-                                            readOnly
-                                            required
-                                            onClick={handleIconClick}
-                                        />
-                                        <span
-                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
-                                            onClick={handleIconClick}
-                                        >
-                                            <FaRegCalendarAlt />
-                                        </span>
-                                        {isOpen && (
-                                            <div className="absolute z-10 mt-1">
-                                                <DatePicker
-                                                    selected={date}
-                                                    onChange={handleDateChange}
-                                                    inline
-                                                    minDate={minDate}
-                                                    onClickOutside={() => setIsOpen(false)}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                    {/* <input
+                    {cartData.length > 0 && (pickupOption === 'driveUp' || pickupOption === 'orderPickup') && (
+                        <div className="bg-white w-full rounded-[8px] shadow-md p-4 md:p-6 mt-5">
+                            <div className="text-center">
+                                <h1 className="text-xl font-semibold text-gray-800 mb-4">
+                                    {t("Select a Pickup Date")}
+                                </h1>
+
+                                <div className="relative inline-block text-left">
+                                    <input
                                         type="text"
-                                        name="parkingNo"
-                                        placeholder="Designated Parking No"
-                                        value={parkingNo}
-                                        onChange={handleInputChange2}
-                                        className="m-1 border rounded-lg py-2 pl-4 pr-10 text-gray-600 focus:outline-none"
-                                        required
-                                    /> */}
+                                        value={date ? formatDate(date) : t("Select date")}
+                                        placeholder={t("Select date")}
+                                        className="border border-gray-300 rounded-lg py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400"
+                                        readOnly
+                                        onClick={handleIconClick}
+                                    />
+                                    <span
+                                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-orange-500 cursor-pointer"
+                                        onClick={handleIconClick}
+                                    >
+                                        <FaRegCalendarAlt size={18} />
+                                    </span>
+
+                                    {isOpen && (
+                                        <div className="absolute z-20 mt-2 shadow-lg">
+                                            <DatePicker
+                                                selected={date}
+                                                onChange={handleDateChange}
+                                                inline
+                                                minDate={minDate}
+                                                onClickOutside={() => setIsOpen(false)}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
+
+                                <p className="text-sm text-red-500 mt-3">
+                                    *Note: If your original pickup date is missed, we’ll hold your order until the end of the next business day. A 5% restocking fee applies for cancellations or refunds.
+                                </p>
                             </div>
                         </div>
                     )}
+
 
                     {cartData.length > 0 && (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') && (
                         <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
@@ -1182,6 +1182,25 @@ const Navbar = (props) => {
                                         className=" m-1 border rounded-lg py-2 pl-2 md:pl-4 md:pr-2 pr-7 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  !z-[999999999] text-xs md:text-sm md:w-[608px] w-[295px]"
                                         required
                                     />
+                                    <input
+                                        type="text"
+                                        name="ApartmentNo"
+                                        placeholder={t("Enter Apartment # ")}
+                                        value={localAddress.ApartmentNo}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+
+                                    />
+
+                                    <input
+                                        type="text"
+                                        name="SecurityGateCode"
+                                        placeholder={t("Security Gate Code")}
+                                        value={localAddress.SecurityGateCode}
+                                        onChange={handleInputChange1}
+                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
+
+                                    />
                                     {pickupOption === 'ShipmentDelivery' && (
                                         <p className='text-red-500 text-sm py-1 pl-2 md:pl-1 md:pr-2 pr-7'> {t("Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time")}. </p>
                                     )}
@@ -1209,25 +1228,7 @@ const Navbar = (props) => {
                                         required
                                     />
 
-                                    <input
-                                        type="text"
-                                        name="ApartmentNo"
-                                        placeholder={t("Enter Apartment # ")}
-                                        value={localAddress.ApartmentNo}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                        
-                                    />
 
-                                    <input
-                                        type="text"
-                                        name="SecurityGateCode"
-                                        placeholder={t("Security Gate Code")}
-                                        value={localAddress.SecurityGateCode}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                    
-                                    />
                                 </div>
                             </div>
                         </div>

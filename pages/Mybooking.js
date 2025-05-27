@@ -229,72 +229,157 @@ function Mybooking(props) {
                         bookingsData.map((booking, key) => (
                             <div key={key} className="bg-white rounded-lg shadow-md border border-gray-200 hover:border-gray-300 transition-all mb-2 p-1">
                                 {/* Header - Order ID and Date */}
-                                <div className="bg-gray-50 p-4 rounded-t-lg">
-                                    <div className="flex justify-between items-center">
-                                        <div className="flex items-center space-x-3">
-                                            <div className="bg-custom-green text-white rounded-full h-10 w-10 flex items-center justify-center font-semibold">
-                                                {key + 1}
+                                <div className="bg-gray-50 p-3 md:p-4 rounded-t-lg">
+                                    <div className="space-y-3 md:space-y-0">
+                                        {/* Mobile Layout - Stacked */}
+                                        <div className="block md:hidden space-y-3">
+                                            {/* Header with Number and Toggle */}
+                                            <div className="flex justify-between items-center">
+                                                <div className="flex items-center space-x-3">
+                                                    <div className="bg-custom-green text-white rounded-full h-8 w-8 flex items-center justify-center font-semibold text-sm">
+                                                        {key + 1}
+                                                    </div>
+
+                                                </div>
+                                                <div className="flex">
+                                                    <Invoice order={booking} />
+                                                    <button onClick={() => toggleBooking(booking._id)} className="p-1 rounded-full hover:bg-gray-200">
+                                                        {expandedBookingId === booking._id ? (
+                                                            <IoIosArrowUp className="text-lg cursor-pointer text-gray-600" />
+                                                        ) : (
+                                                            <IoIosArrowDown className="text-lg cursor-pointer text-gray-600" />
+                                                        )}
+                                                    </button>
+
+                                                </div>
                                             </div>
-                                            <h3 className="text-sm md:text-lg font-medium text-gray-800">
-                                                {t("My Order")} - <span className="text-gray-600">{formatDate(booking.createdAt) || "N/A"}</span>
-                                            </h3>
+
+                                            {/* Order Info */}
+                                            <div className="space-y-1">
+                                                <h3 className="text-sm font-medium text-gray-800">
+                                                    {t("My Order")} - <span className="text-gray-600">{formatDate(booking.createdAt) || "N/A"}</span>
+                                                </h3>
+                                                <p className="text-sm font-medium text-gray-800">
+                                                    {t("Order Id")}: {booking.orderId || 1}
+                                                </p>
+                                            </div>
+
+                                            {/* Status Badge */}
+                                            <div className="flex justify-start">
+                                                {(() => {
+                                                    switch (booking?.status) {
+                                                        case 'Completed':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                                                    {t("Order Delivered")}
+                                                                </span>
+                                                            );
+                                                        case 'Pending':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
+                                                                    {t("Order Pending")}
+                                                                </span>
+                                                            );
+                                                        case 'Return Requested':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                                                                    {t("Order Return Requested")}
+                                                                </span>
+                                                            );
+                                                        case 'Return':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                                                                    {t("Order Returned")}
+                                                                </span>
+                                                            );
+                                                        case 'Cancel':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                                                                    {t("Order Cancelled")}
+                                                                </span>
+                                                            );
+                                                        case 'Shipped':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                                                    {t("Order Shipped")}
+                                                                </span>
+                                                            );
+                                                        default:
+                                                            return null;
+                                                    }
+                                                })()}
+                                            </div>
                                         </div>
 
+                                        {/* Desktop Layout - Original Horizontal */}
+                                        <div className="hidden md:flex justify-between items-center">
+                                            <div className="flex items-center space-x-3">
+                                                <div className="bg-custom-green text-white rounded-full h-10 w-10 flex items-center justify-center font-semibold">
+                                                    {key + 1}
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <h3 className="text-lg font-medium text-gray-800">
+                                                        {t("My Order")} - <span className="text-gray-600">{formatDate(booking.createdAt) || "N/A"}</span>
+                                                    </h3>
+                                                    <p className="text-lg font-medium text-gray-800">
+                                                        {t("Order Id")}: {booking.orderId || 1}
+                                                    </p>
+                                                </div>
+                                            </div>
 
-                                        <div className="flex justify-center items-center space-x-1">
-                                            {(() => {
-                                                switch (booking?.status) {
-                                                    case 'Completed':
-                                                        return (
-                                                            <span className="px-3 w-full py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium text-center ">
-                                                                {t("Order Delivered")}
-                                                            </span>
-                                                        );
-                                                    case 'Pending':
-                                                        return (
-                                                            <span className="px-3 w-full py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium text-center">
-                                                                {t("Order Pending")}
-                                                            </span>
-                                                        );
-                                                    case 'Return Requested':
-                                                        return (
-                                                            <span className="px-3 w-full  py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium text-center">
-                                                                {t("Order Return Requested")}
-                                                            </span>
-                                                        );
-                                                    case 'Return':
-                                                        return (
-                                                            <span className="px-3 w-full py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium text-center">
-                                                                {t("Order Returned")}
-                                                            </span>
-                                                        );
-                                                    case 'Cancel':
-                                                        return (
-                                                            <span className="px-3 w-full py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium text-center">
-                                                                {t("Order Cancelled")}
-                                                            </span>
-                                                        );
-                                                    case 'Shipped':
-                                                        return (
-                                                            <span className="px-3 w-full py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium text-center">
-                                                                {t("Order Shipped")}
-                                                            </span>
-                                                        );
-                                                    default:
-                                                        return null;
-                                                }
-                                            })()}
-                                            <Invoice order={booking} />
-                                            <button onClick={() => toggleBooking(booking._id)} className="p-1 rounded-full hover:bg-gray-200">
-                                                {expandedBookingId === booking._id ? (
-                                                    <IoIosArrowUp className="text-xl cursor-pointer text-gray-600" />
-                                                ) : (
-                                                    <IoIosArrowDown className="text-xl cursor-pointer text-gray-600" />
-                                                )}
-                                            </button>
-
+                                            <div className="flex justify-center items-center space-x-2">
+                                                {(() => {
+                                                    switch (booking?.status) {
+                                                        case 'Completed':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                                                    {t("Order Delivered")}
+                                                                </span>
+                                                            );
+                                                        case 'Pending':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                                                    {t("Order Pending")}
+                                                                </span>
+                                                            );
+                                                        case 'Return Requested':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                                                    {t("Order Return Requested")}
+                                                                </span>
+                                                            );
+                                                        case 'Return':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                                                    {t("Order Returned")}
+                                                                </span>
+                                                            );
+                                                        case 'Cancel':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                                                    {t("Order Cancelled")}
+                                                                </span>
+                                                            );
+                                                        case 'Shipped':
+                                                            return (
+                                                                <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                                                    {t("Order Shipped")}
+                                                                </span>
+                                                            );
+                                                        default:
+                                                            return null;
+                                                    }
+                                                })()}
+                                                <Invoice order={booking} />
+                                                <button onClick={() => toggleBooking(booking._id)} className="p-1 rounded-full hover:bg-gray-200">
+                                                    {expandedBookingId === booking._id ? (
+                                                        <IoIosArrowUp className="text-xl cursor-pointer text-gray-600" />
+                                                    ) : (
+                                                        <IoIosArrowDown className="text-xl cursor-pointer text-gray-600" />
+                                                    )}
+                                                </button>
+                                            </div>
                                         </div>
-
                                     </div>
                                 </div>
 
@@ -510,7 +595,7 @@ function Mybooking(props) {
                                                         {product.product?.name.slice(0, 24) + ('...')}</p>
                                                     <div className="flex flex-col items-start mt-1 text-[14px] text-gray-600">
                                                         <span className="mr-4">{t("Quantity")}: {product.qty || 1}</span>
-                                                        <span>{t("Order Id")}: {booking.orderId || 1}</span>
+                                                        {/* <span>{t("Order Id")}: {booking.orderId || 1}</span> */}
                                                     </div>
                                                 </div>
 

@@ -44,6 +44,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             ...item,
             selectedColor: item?.varients?.[0] || {},
             selectedImage: item?.varients?.[0]?.image?.[0] || "",
+            BarCode: item?.varients?.[0]?.BarCode || "",
             qty: 1,
             price: item.price_slot?.[0]?.our_price ?? 0,
             total: Number(item.price_slot?.[0]?.our_price ?? 0),

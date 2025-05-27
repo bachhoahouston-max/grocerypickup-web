@@ -36,7 +36,7 @@ const Category = (props) => {
           {t("All Categories")}
         </h2>
 
-        <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-6 mb-4">
           {category.map((cat, index) => (
             <div
               key={index}
