@@ -123,7 +123,7 @@ function ProductDetails(props) {
         selectedColor: productsId.selectedColor || productsId.varients?.[0] || {},
         selectedImage: productsId.selectedImage || productsId.varients?.[0]?.image?.[0] || "",
         qty: 1,
-        BarCode: productsId.varients?.[0]?.BarCode || "",
+        BarCode: productsId?.BarCode || "",
         total: ourPrice.toFixed(2),
         our_price: ourPrice,
         price_slot: selectedPrice,
