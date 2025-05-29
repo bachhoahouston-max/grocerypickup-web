@@ -286,9 +286,10 @@ function ProductDetails(props) {
     ).then(
       (res) => {
         props.loader(false);
-
+        console.log(res?.data)
         const sameItem = res?.data?.filter((f) => f._id !== router?.query?.id);
         SetProductList(sameItem);
+        console.log("same item", sameItem)
       },
       (err) => {
         props.loader(false);
@@ -627,45 +628,7 @@ function ProductDetails(props) {
 
         </div>
 
-        <div className="bg-white w-full md:pt-10 md:pb-10 pb-5 max-w-7xl md:ms-12 ms-4">
-          <p className="text-black text-xl font-bold md:mb-10 mb-5">
-            {t("Similar Products")}
-          </p>
-          <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-5">
-            {productList.map((item, i) => (
-              <div key={i} className="w-full md:mb-5">
-                <GroceryCategories
-                  loader={props.loader}
-                  toaster={props.toaster}
-                  item={item}
-                  i={i}
-                  url={`/product-details/${item?.slug}`}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-white  max-w-7xl">
-          <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
-            {t("You might also like")}
-          </p>
-          <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-5 md:ms-14 ms-4">
-            {productList.map((item, i) => (
-              <div key={i} className="w-full md:mb-5">
-                <GroceryCategories
-                  loader={props.loader}
-                  toaster={props.toaster}
-                  item={item}
-                  i={i}
-                  url={`/product-details/${item?.slug}`}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {productsId?.reviews && (
+        {productReviews[0]?.rating && (
           <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
             <p className='text-black text-xl font-bold'>{t("Ratings & Reviews")}</p>
             <div className='w-full'>
@@ -718,6 +681,45 @@ function ProductDetails(props) {
             </div>
           </div>
         )}
+        <div className="bg-white max-w-8xl ">
+          <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
+            {t("Similar Products")}
+          </p>
+          <div className="grid md:grid-cols-6 lg:grid-cols-8 grid-cols-2 md:gap-2 gap-5 md:mx-10 ms-4">
+            {productList.map((item, i) => (
+              <div key={i} className="w-full md:mb-5">
+                <GroceryCategories
+                  loader={props.loader}
+                  toaster={props.toaster}
+                  item={item}
+                  i={i}
+                  url={`/product-details/${item?.slug}`}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white  max-w-8xl">
+          <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
+            {t("You might also like")}
+          </p>
+          <div className="grid md:grid-cols-6 lg:grid-cols-8 grid-cols-2 md:gap-2 gap-5 md:mx-10 ms-4">
+            {productList.map((item, i) => (
+              <div key={i} className="w-full md:mb-5">
+                <GroceryCategories
+                  loader={props.loader}
+                  toaster={props.toaster}
+                  item={item}
+                  i={i}
+                  url={`/product-details/${item?.slug}`}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+
 
       </section>
 

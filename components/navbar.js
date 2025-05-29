@@ -176,10 +176,7 @@ const Navbar = (props) => {
         setIsOpen(!isOpen);
     };
 
-    const handleDateChange = (date) => {
-        setDate(date);
-        setIsOpen(false);
-    };
+
 
 
     const [localAddress, setLocalAddress] = useState({
@@ -220,10 +217,25 @@ const Navbar = (props) => {
         }
     }, [profileData.email, profileData.lastname, profileData.mobile, profileData.username]);
 
+   
+    const getLocalDateOnly = (date) => {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    };
+
+
     const handleDateChange1 = (date) => {
-        setLocalAddress({ ...localAddress, dateOfDelivery: date });
+        const localDateOnly = getLocalDateOnly(date);
+        setLocalAddress({ ...localAddress, dateOfDelivery: localDateOnly });
         setIsOpen(false);
     };
+
+
+    const handleDateChange = (date) => {
+        const localDateOnly = getLocalDateOnly(date);
+        setDate(localDateOnly);
+        setIsOpen(false);
+    };
+
 
     const handleInputChange1 = (e) => {
         const { name, value } = e.target;
@@ -580,7 +592,7 @@ const Navbar = (props) => {
             data.push({
                 product: element?._id,
                 image: element.selectedColor?.image,
-                BarCode:element.BarCode,
+                BarCode: element.BarCode,
                 color: element.selectedColor?.color || "",
                 total: element.total,
                 price: element.total,
@@ -593,7 +605,7 @@ const Navbar = (props) => {
         const isLocalDelivery = pickupOption === 'localDelivery';
         const isOrderPickup = pickupOption === 'orderPickup';
         const isDriveUp = pickupOption === 'driveUp';
-       const dateOfDelivery = (isDriveUp || isOrderPickup) && date ? date : null;
+        const dateOfDelivery = (isDriveUp || isOrderPickup) && date ? date : null;
         const isShipmentDelivery = pickupOption === 'ShipmentDelivery';
 
         const unavailableProducts = data.filter(item => item.isShipmentAvailable === false);
@@ -1072,7 +1084,7 @@ const Navbar = (props) => {
                                 </div>
 
                                 <p className="text-sm text-red-500 mt-3">
-                                    *Note: If your original pickup date is missed, we’ll hold your order until the end of the next business day. A 5% restocking fee applies for cancellations or refunds.
+                                    *Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee.
                                 </p>
                             </div>
                         </div>

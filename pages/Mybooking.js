@@ -477,29 +477,33 @@ function Mybooking(props) {
 
                                 </div>
                                 {/* Action Buttons */}
-                                {booking?.status === 'Pending' && (booking?.isDriveUp || booking?.isOrderPickup) && (
-                                    <div className=" px-4 py-3 bg-white border-b border-gray-200">
-                                        <div className="flex flex-wrap gap-2 justify-end">
-                                            {booking?.isDriveUp && (
-                                                <button
-                                                    onClick={() => toggleModal(booking._id)}
-                                                    className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md cursor-pointer"
-                                                >
-                                                    {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
-                                                </button>
-                                            )}
+                                {booking?.status === 'Pending' &&
+                                    (booking?.isDriveUp || booking?.isOrderPickup) &&
+                                    booking?.createdAt &&
+                                    (new Date() - new Date(booking.createdAt)) >= 30 * 60 * 1000 && (
+                                        <div className="px-4 py-3 bg-white border-b border-gray-200">
+                                            <div className="flex flex-wrap gap-2 justify-end">
+                                                {booking?.isDriveUp && (
+                                                    <button
+                                                        onClick={() => toggleModal(booking._id)}
+                                                        className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md cursor-pointer"
+                                                    >
+                                                        {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
+                                                    </button>
+                                                )}
 
-                                            {booking?.isOrderPickup && (
-                                                <button
-                                                    onClick={() => getSecrectCode(booking._id)}
-                                                    className="px-4 py-2 bg-custom-gold  text-white text-sm font-medium rounded-md cursor-pointer"
-                                                >
-                                                    {t("I'm here")}
-                                                </button>
-                                            )}
+                                                {booking?.isOrderPickup && (
+                                                    <button
+                                                        onClick={() => getSecrectCode(booking._id)}
+                                                        className="px-4 py-2 bg-custom-gold text-white text-sm font-medium rounded-md cursor-pointer"
+                                                    >
+                                                        {t("I'm here")}
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )}
+
 
                                 {isOpen && (
                                     <div className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-50 px-4">

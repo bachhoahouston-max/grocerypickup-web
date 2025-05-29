@@ -144,7 +144,7 @@ function Categories(props) {
                 <div className="lg:max-w-9xl md:max-w-9xl mx-auto w-full md:px-8 px-5 md:pt-5 pt-5 md:pb-10 pb-0">
                     <div className="flex justify-center flex-col items-center mt-2" > <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">{t("Popular Products")}</h1>
                         <p className="text-center w-full text-[13px] md:text-[16px] md:w-[50%] text-gray-500 mb-6 mt-2 italic">
-                        {t("Browse through a wide range of categories from fresh produce to pantry staples. We've got everything you need, all in one place")}.
+                            {t("Browse through a wide range of categories from fresh produce to pantry staples. We've got everything you need, all in one place")}.
                         </p>
                     </div>
 
@@ -232,7 +232,7 @@ function Categories(props) {
                                                     }}
                                                         checked={item?.value === selectedSortBy}
                                                     />}
-                                                label={t(`${item?.name}`)}/>))}
+                                                label={t(`${item?.name}`)} />))}
                                         </FormGroup>
                                     </FormControl>}
                                 </div>
@@ -288,47 +288,69 @@ function Categories(props) {
                                     <button
                                         onClick={() => handlePageChange(paginationData.currentPage - 1)}
                                         disabled={paginationData.currentPage === 1}
-                                        className={`px-3.5 py-3 rounded-md ${paginationData.currentPage === 1 ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-custom-gold text-white '}`}
+                                        className={`px-3.5 py-3 rounded-md ${paginationData.currentPage === 1
+                                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                                : 'bg-custom-gold text-white'
+                                            }`}
                                     >
                                         <FaChevronLeft />
                                     </button>
 
+                                    {/* Page numbers */}
+                                    {Array.from({ length: paginationData.totalPages }, (_, i) => i + 1)
+                                        .filter((page) => {
+                                            return (
+                                                page <= 2 || // first two pages
+                                                page > paginationData.totalPages - 2 || // last two pages
+                                                Math.abs(page - paginationData.currentPage) <= 1 // current +/- 1
+                                            );
+                                        })
+                                        .reduce((acc, page, index, arr) => {
+                                            // Insert ellipsis if gap between pages
+                                            if (index > 0 && page - arr[index - 1] > 1) {
+                                                acc.push('ellipsis');
+                                            }
+                                            acc.push(page);
+                                            return acc;
+                                        }, [])
+                                        .map((item, index) => {
+                                            if (item === 'ellipsis') {
+                                                return (
+                                                    <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
+                                                        ...
+                                                    </span>
+                                                );
+                                            }
 
-                                    {Array.from({ length: Math.min(5, paginationData.totalPages) }).map((_, idx) => {
-
-                                        let pageNum;
-                                        if (paginationData.totalPages <= 5) {
-                                            pageNum = idx + 1;
-                                        } else if (paginationData.currentPage <= 3) {
-                                            pageNum = idx + 1;
-                                        } else if (paginationData.currentPage >= paginationData.totalPages - 2) {
-                                            pageNum = paginationData.totalPages - 4 + idx;
-                                        } else {
-                                            pageNum = paginationData.currentPage - 2 + idx;
-                                        }
-
-                                        return (
-                                            <button
-                                                key={pageNum}
-                                                onClick={() => handlePageChange(pageNum)}
-                                                className={`w-10 h-10 flex items-center justify-center rounded-md ${pageNum === paginationData.currentPage ? 'bg-custom-gold text-white' : 'text-black bg-gray-200'}`}
-                                            >
-                                                {pageNum}
-                                            </button>
-                                        );
-                                    })}
+                                            return (
+                                                <button
+                                                    key={item}
+                                                    onClick={() => handlePageChange(item)}
+                                                    className={`w-10 h-10 flex items-center justify-center rounded-md ${item === paginationData.currentPage
+                                                            ? 'bg-custom-gold text-white'
+                                                            : 'text-black bg-gray-200'
+                                                        }`}
+                                                >
+                                                    {item}
+                                                </button>
+                                            );
+                                        })}
 
                                     {/* Next button */}
                                     <button
                                         onClick={() => handlePageChange(paginationData.currentPage + 1)}
                                         disabled={paginationData.currentPage === paginationData.totalPages}
-                                        className={`px-3.5 py-3 rounded-md ${paginationData.currentPage === paginationData?.totalPages ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-custom-gold text-white'}`}
+                                        className={`px-3.5 py-3 rounded-md ${paginationData.currentPage === paginationData.totalPages
+                                                ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                                                : 'bg-custom-gold text-white'
+                                            }`}
                                     >
                                         <FaChevronRight />
                                     </button>
                                 </div>
                             )}
                         </div>
+
                     </div>
                 </div>
 
