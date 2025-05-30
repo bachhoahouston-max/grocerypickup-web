@@ -55,8 +55,8 @@ const Navbar = (props) => {
     const [error, setError] = useState(null);
     const [selectedCoupon, setSelectedCoupon] = useState(null);
     const [appliedCoupon, setAppliedCoupon] = useState(null);
-    const [afterCoupanTotal, setAfterCoupanTotal] = useState(mainTotal)
-
+    const [afterCoupanTotal, setAfterCoupanTotal] = useState(mainTotal);
+    const [deliverytip, setdeliverytip] = useState(0);
     useEffect(() => {
         const fetchCoupons = async () => {
             props.loader(true);
@@ -217,7 +217,7 @@ const Navbar = (props) => {
         }
     }, [profileData.email, profileData.lastname, profileData.mobile, profileData.username]);
 
-   
+
     const getLocalDateOnly = (date) => {
         return new Date(date.getFullYear(), date.getMonth(), date.getDate());
     };
@@ -474,15 +474,15 @@ const Navbar = (props) => {
             delivery = 0;
         }
 
-        const finalTotal = sumWithInitial + totalTax + delivery;
-
+       const finalTotal = (sumWithInitial + totalTax + delivery + Number(deliverytip)).toFixed(2);
+    
         setCartItem(sumWithInitial1);
         setCartTotal(sumWithInitial);
         setTotalTax(totalTax);
         setDeliveryCharge(delivery);
         setMainTotal(finalTotal);
         setAfterCoupanTotal(finalTotal)
-    }, [cartData, openCart, pickupOption]);
+    }, [cartData, openCart, pickupOption, deliverytip]);
 
     const emptyCart = async () => {
         setCartData([]);
@@ -1439,7 +1439,23 @@ const Navbar = (props) => {
                                     {constant.currency}{totalTax || 0}
                                 </p>
                             </div>
-
+                            <div className="flex justify-between items-center w-full pt-3 ">
+                                <p className="text-black font-normal text-base">
+                                    {t("Delivery Tip (optional)")}
+                                    <p className='text-black font-normal text-[12px]'>100% of tip goes directly to your driver</p>
+                                </p>
+                                <div>
+                                   
+                                    <select className='p-2 border rounded-sm' value={deliverytip} onChange={(e)=> setdeliverytip(e.target.value)}>
+                                        <option value="">Select a tip</option>
+                                        <option value="5">$5</option>
+                                        <option value="10">$10</option>
+                                        <option value="15">$15</option>
+                                        <option value="20">$20</option>
+                                    </select>
+                                   
+                                </div>
+                            </div>
                             <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                 <p className="text-black font-normal text-base">{t("Delivery Fee")}</p>
 
