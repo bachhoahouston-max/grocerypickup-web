@@ -1448,10 +1448,10 @@ const Navbar = (props) => {
                                    
                                     <select className='p-2 border rounded-sm' value={deliverytip} onChange={(e)=> setdeliverytip(e.target.value)}>
                                         <option value="">Select a tip</option>
+                                        <option value="0">$0</option>
+                                        <option value="2">$2</option>
                                         <option value="5">$5</option>
-                                        <option value="10">$10</option>
-                                        <option value="15">$15</option>
-                                        <option value="20">$20</option>
+                                        <option value="8">$8</option>
                                     </select>
                                    
                                 </div>
