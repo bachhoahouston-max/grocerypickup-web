@@ -502,7 +502,8 @@ function Mybooking(props) {
                                                 )}
                                             </div>
                                         </div>
-                                    )}
+                                    )
+                                    }
 
 
                                 {isOpen && (

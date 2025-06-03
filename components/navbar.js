@@ -474,14 +474,23 @@ const Navbar = (props) => {
             delivery = 0;
         }
 
-       const finalTotal = (sumWithInitial + totalTax + delivery + Number(deliverytip)).toFixed(2);
-    
+        if (pickupOption === "localDelivery") {
+            const finalTotal = (sumWithInitial + totalTax + delivery + Number(deliverytip));
+            setMainTotal(finalTotal);
+            setAfterCoupanTotal(finalTotal)
+        } else {
+            const finalTotal = (sumWithInitial + totalTax + delivery);
+            setMainTotal(finalTotal);
+            setAfterCoupanTotal(finalTotal)
+        }
+
+
         setCartItem(sumWithInitial1);
         setCartTotal(sumWithInitial);
         setTotalTax(totalTax);
         setDeliveryCharge(delivery);
-        setMainTotal(finalTotal);
-        setAfterCoupanTotal(finalTotal)
+        // setMainTotal(finalTotal);
+        // setAfterCoupanTotal(finalTotal)
     }, [cartData, openCart, pickupOption, deliverytip]);
 
     const emptyCart = async () => {
@@ -1302,7 +1311,7 @@ const Navbar = (props) => {
                                     />
                                     <div className="pt-2 flex-1">
                                         <p className="text-custom-purple font-semibold text-base pl-3">
-                                            {item.name.slice(0, 18) + ("...")}
+                                            {item.name}
                                         </p>
                                         <p className="text-custom-newGrayColors font-normal text-sm pt-2">
                                             <span className="pl-3">
@@ -1439,23 +1448,28 @@ const Navbar = (props) => {
                                     {constant.currency}{totalTax || 0}
                                 </p>
                             </div>
-                            <div className="flex justify-between items-center w-full pt-3 ">
-                                <p className="text-black font-normal text-base">
-                                    {t("Delivery Tip (optional)")}
-                                    <p className='text-black font-normal text-[12px]'>100% of tip goes directly to your driver</p>
-                                </p>
-                                <div>
-                                   
-                                    <select className='p-2 border rounded-sm' value={deliverytip} onChange={(e)=> setdeliverytip(e.target.value)}>
-                                        <option value="">Select a tip</option>
-                                        <option value="0">$0</option>
-                                        <option value="2">$2</option>
-                                        <option value="5">$5</option>
-                                        <option value="8">$8</option>
-                                    </select>
-                                   
+
+                            {pickupOption === "localDelivery" && (
+                                <div className="flex justify-between items-center w-full pt-3 ">
+                                    <p className="text-black font-normal text-base">
+                                        {t("Delivery Tip (optional)")}
+                                        <p className='text-black font-normal text-[12px]'>100% of tip goes directly to your driver</p>
+                                    </p>
+                                    <div>
+
+                                        <select className='p-2 border rounded-sm' value={deliverytip} onChange={(e) => setdeliverytip(e.target.value)}>
+                                            <option value="">Select a tip</option>
+                                            <option value="0">$0</option>
+                                            <option value="2">$2</option>
+                                            <option value="5">$5</option>
+                                            <option value="8">$8</option>
+                                        </select>
+
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+
+
                             <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
                                 <p className="text-black font-normal text-base">{t("Delivery Fee")}</p>
 
