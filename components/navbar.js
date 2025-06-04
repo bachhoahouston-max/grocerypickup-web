@@ -1500,10 +1500,10 @@ const Navbar = (props) => {
 
 
                             <div className="flex justify-between items-center w-full pt-5">
-                                <p className="text-custom-black font-normal text-base">
+                                <p className="text-custom-black font-bold text-base">
                                     {t("Total Payable")}
                                 </p>
-                                <p className="text-custom-black font-medium text-base">
+                                <p className="text-custom-black font-bold text-base">
                                     {constant.currency}{mainTotal}
                                 </p>
                             </div>
