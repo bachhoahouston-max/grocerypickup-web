@@ -1029,7 +1029,7 @@ const Navbar = (props) => {
                                     />
                                     <label htmlFor="localDelivery" className="ml-2">
                                         <span className="font-semibold text-[15px]">
-                                            {t("Next Day Delivery")} </span>
+                                            {t("Next Day Local Delivery")} </span>
                                         <br />
                                         <span className="text-gray-500 text-[13px]">
                                             {t("Cut of time 8 pm")}</span>

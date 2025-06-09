@@ -597,7 +597,7 @@ function Mybooking(props) {
                                                 </div>
                                                 <div className="ml-4 flex-grow">
                                                     <p className="text-gray-800 font-medium">
-                                                        {product.product?.name.slice(0, 24) + ('...')}</p>
+                                                        {product.product?.name.length > 95 ? product.product?.name.slice(0, 95) + "..." : product.product?.name}</p>
                                                     <div className="flex flex-col items-start mt-1 text-[14px] text-gray-600">
                                                         <span className="mr-4">{t("Quantity")}: {product.qty || 1}</span>
                                                         {/* <span>{t("Order Id")}: {booking.orderId || 1}</span> */}
