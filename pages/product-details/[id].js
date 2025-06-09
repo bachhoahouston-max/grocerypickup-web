@@ -549,34 +549,29 @@ function ProductDetails(props) {
             </div>
           </div>
         </div>
-        <div className="w-full bg-[#FFF5CB] md:my-10 my-5 md:px-16 py-5 px-4">
+        <div className="w-full md:my-10 my-5 md:px-16 py-5 px-4">
           <p className="text-black text-xl md:text-2xl font-bold mb-4">
             {t("About Product")}
           </p>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-6 w-full">
             {/* About Product Section */}
-
-            <div className="flex flex-col gap-3">
-
-              <p className="text-black text-base md:text-xl font-medium">
+            <div className="flex flex-col gap-2 col-span-2">
+              <p className="text-black text-base md:text-xl font-medium col-span-2">
                 {t("Short Description")}:{" "}
-                <span className="text-custom-newGray font-normal mt-1">
+                <span className="text-custom-newGray font-normal
+                ">
                   {productsId?.short_description}
                 </span>
               </p>
-            </div>
-
-            {/* Country & Manufacturer Info */}
-            <div className="flex flex-col gap-3">
               <p className="text-black text-base md:text-xl font-medium">
                 {t("Country of Origin")}:{" "}
-                <span className="text-custom-newGray font-normal mt-1">
+                <span className="text-custom-newGray font-normal md:mt-1">
                   {productsId?.origin}
                 </span>
               </p>
               <p className="text-black text-base md:text-xl font-medium">
                 {t("Manufacturer Name")}:{" "}
-                <span className="text-custom-newGray font-normal  mt-1">
+                <span className="text-custom-newGray font-normal md:mt-1">
                   {productsId?.manufacturername}
                 </span>
               </p>
@@ -584,7 +579,7 @@ function ProductDetails(props) {
 
             {/* Long Description */}
             <div className="md:col-span-2">
-              <p className="text-black text-base md:text-xl font-semibold mb-2">
+              <p className="text-black text-base md:text-xl font-semibold">
                 {t("Long Description")}:
               </p>
               <p className="text-black text-base md:text-xl font-normal leading-relaxed">
@@ -593,40 +588,46 @@ function ProductDetails(props) {
             </div>
 
             {/* Disclaimer */}
-            <div className="md:col-span-2">
-              <p className="text-black text-base md:text-xl font-semibold mb-2">
-                {t("Disclaimer")}:
-              </p>
-              <div
-                className="text-black text-base md:text-xl font-normal leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
-              />
-            </div>
+            {productsId?.disclaimer && (
+              <div className="md:col-span-2">
+                <p className="text-black text-base md:text-xl font-semibold ">
+                  {t("Disclaimer")}:
+                </p>
+                <div
+                  className="text-black text-base md:text-xl font-normal leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
+                />
+              </div>
+            )}
 
             {/* Warning */}
-            <div className="md:col-span-2">
-              <p className="text-black text-base md:text-xl font-semibold mb-2">
-                {t("Warning")}:
-              </p>
-              <div
-                className="text-black text-base md:text-xl font-normal leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
-              />
-            </div>
+            {productsId?.Warning && (
+              <div className="md:col-span-2">
+                <p className="text-black text-base md:text-xl font-semibold">
+                  {t("Warning")}:
+                </p>
+                <div
+                  className="text-black text-base md:text-xl font-normal leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
+                />
+              </div>
+            )}
 
             {/* Return Policy */}
-            <div className="md:col-span-2">
-              <p className="text-black text-base md:text-xl font-semibold mb-2">
-                {t("Return Policy")}:
-              </p>
-              <div
-                className="text-black text-base md:text-xl font-normal leading-relaxed"
-                dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
-              />
-            </div>
+            {productsId?.ReturnPolicy && (
+              <div className="md:col-span-2">
+                <p className="text-black text-base md:text-xl font-semibold">
+                  {t("Return Policy")}:
+                </p>
+                <div
+                  className="text-black text-base md:text-xl font-normal leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
+                />
+              </div>
+            )}
           </div>
-
         </div>
+
 
         {productReviews[0]?.rating && (
           <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
@@ -701,7 +702,7 @@ function ProductDetails(props) {
         </div>
 
         <div className="bg-white  max-w-8xl">
-          <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
+          <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 md:ms-12 ms-4">
             {t("You might also like")}
           </p>
           <div className="grid md:grid-cols-6 lg:grid-cols-8 grid-cols-2 md:gap-2 gap-5 md:mx-10 ms-4">

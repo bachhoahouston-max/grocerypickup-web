@@ -57,6 +57,8 @@ const Navbar = (props) => {
     const [appliedCoupon, setAppliedCoupon] = useState(null);
     const [afterCoupanTotal, setAfterCoupanTotal] = useState(mainTotal);
     const [deliverytip, setdeliverytip] = useState(0);
+    const[discount,setDiscount]=useState(0)
+
     useEffect(() => {
         const fetchCoupons = async () => {
             props.loader(true);
@@ -66,7 +68,6 @@ const Navbar = (props) => {
                     console.log("res================> form data :: ", res);
 
                     const currentDate = new Date();
-                    // Filter valid coupons
                     const validCoupons = (res.data || []).filter(coupon => {
                         const expiryDate = new Date(coupon.expiryDate);
                         return expiryDate > currentDate && coupon.isActive;
@@ -82,9 +83,9 @@ const Navbar = (props) => {
                 }
             );
         };
-        if (user?.token) {
-            fetchCoupons();
-        }
+
+        fetchCoupons();
+
 
     }, []);
 
@@ -130,9 +131,11 @@ const Navbar = (props) => {
 
         if (type === "fixed") {
             setAfterCoupanTotal(prev => prev - value);
+            setDiscount(value)
         } else if (type === "percentage") {
             const discountValue = (afterCoupanTotal * value) / 100;
             setAfterCoupanTotal(prev => prev - discountValue);
+            setDiscount(discountValue)
         }
 
         props.toaster({ type: "success", message: "Coupon applied successfully" });
@@ -462,35 +465,30 @@ const Navbar = (props) => {
             }, 0).toFixed(2)
         );
 
-
         let delivery = 0;
 
         if (pickupOption === "localDelivery") {
             delivery = sumWithInitial <= 35 ? currentLocalCost : 0;
         } else if (pickupOption === "ShipmentDelivery") {
             delivery = sumWithInitial <= 200 ? currentShipmentCost : 0;
-        }
-        else if (pickupOption === "orderPickup" || pickupOption === "driveUp") {
+        } else if (pickupOption === "orderPickup" || pickupOption === "driveUp") {
             delivery = 0;
         }
 
+        let finalTotal;
         if (pickupOption === "localDelivery") {
-            const finalTotal = (sumWithInitial + totalTax + delivery + Number(deliverytip));
-            setMainTotal(finalTotal);
-            setAfterCoupanTotal(finalTotal)
+            finalTotal = sumWithInitial + totalTax + delivery + Number(deliverytip);
         } else {
-            const finalTotal = (sumWithInitial + totalTax + delivery);
-            setMainTotal(finalTotal);
-            setAfterCoupanTotal(finalTotal)
+            finalTotal = sumWithInitial + totalTax + delivery;
         }
 
+        setMainTotal(finalTotal); 
+        setAfterCoupanTotal(finalTotal.toFixed(2))
 
         setCartItem(sumWithInitial1);
-        setCartTotal(sumWithInitial);
-        setTotalTax(totalTax);
-        setDeliveryCharge(delivery);
-        // setMainTotal(finalTotal);
-        // setAfterCoupanTotal(finalTotal)
+        setCartTotal(sumWithInitial.toFixed(2)); // Display with 2 decimal places
+        setTotalTax(totalTax.toFixed(2)); // Display with 2 decimal places
+        setDeliveryCharge(delivery.toFixed(2)); // Display with 2 decimal places
     }, [cartData, openCart, pickupOption, deliverytip]);
 
     const emptyCart = async () => {
@@ -636,7 +634,11 @@ const Navbar = (props) => {
 
         let newData = {
             productDetail: data,
-            total: afterCoupanTotal.toFixed(2),
+            total: afterCoupanTotal,
+            totalTax:totalTax,
+            Deliverytip:deliverytip,
+            deliveryfee:deliveryCharge,
+            discount:discount,
             user: user._id,
             Email: user.email,
             isOrderPickup,
@@ -918,7 +920,7 @@ const Navbar = (props) => {
 
             {/* Cart Drawer */}
             <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
-                <div className={`md:w-[750px] w-[360px]  relative  bg-custom-green  pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""} 
+                <div className={`md:w-[750px] w-[360px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""} 
                     ${cartData.length > 1 ? "pb-8" : "pb-40"} `}>
 
                     <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
@@ -1431,23 +1433,55 @@ const Navbar = (props) => {
                     </div>
 
                     {cartData.length > 0 && (
-                        <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
+                        <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-3 mt-5">
                             <div className="flex justify-between items-center w-full">
+                                <p className="text-custom-black font-semibold text-[18px]">
+                                    {t("Cart Summary")}
+                                </p>
+                            </div>
+                            <div className=" pt-2 flex justify-between items-center w-full">
                                 <p className="text-custom-black font-normal text-base">
-                                    {t("Item Total")}
+                                    {t("Subtotal")}
                                 </p>
                                 <p className="text-custom-black font-normal text-base">
                                     {constant.currency}{CartTotal}
                                 </p>
                             </div>
-                            <div className="flex justify-between items-center w-full pt-3 ">
-                                <p className="text-black font-normal text-base">
-                                    {t("Tax")}
-                                </p>
+                            <div className=" pt-2 flex justify-between items-center w-full">
                                 <p className="text-custom-black font-normal text-base">
-                                    {constant.currency}{totalTax || 0}
+                                    {t("Coupon Discount")}
                                 </p>
+
+                                {!appliedCoupon && (
+                                    <p className="text-custom-green font-semibold hover:underline  text-base cursor-pointer"
+                                        onClick={() => setOpenModel(true)}
+                                    >
+                                        {t("Apply Coupon")}
+                                    </p>
+                                )}
+
+
+                                {appliedCoupon && (
+                                    <div className=" text-green-800 rounded-md flex items-center justify-end w-full md:w-[400px]">
+                                        <span className='text-base'>
+                                            {t("Coupon")} <strong>{appliedCoupon.code}</strong> {t("applied!")}
+                                        </span>
+
+                                        <button
+                                            onClick={() => {
+                                                setAppliedCoupon(null);
+                                                setSelectedCoupon(null);
+                                                setSearchTerm('');
+                                                setAfterCoupanTotal(mainTotal)
+                                            }}
+                                            className="text-red-600 hover:text-red-800 text-sm ml-4"
+                                        >
+                                            <X size={18} />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
+
 
                             {pickupOption === "localDelivery" && (
                                 <div className="flex justify-between items-center w-full pt-3 ">
@@ -1470,18 +1504,18 @@ const Navbar = (props) => {
                             )}
 
 
-                            <div className="flex justify-between items-center w-full pt-3 border-b border-b-[#97999B80] pb-4">
-                                <p className="text-black font-normal text-base">{t("Delivery Fee")}</p>
+                            <div className="flex justify-between items-center w-full pt-2">
+                                <p className="text-black font-normal text-base">{t("Delivery Charges")}</p>
 
                                 {pickupOption === "orderPickup" || pickupOption === "driveUp" ? (
-                                    <p className="text-green-500 font-normal text-base">{t("Free")}</p>
+                                    <p className="font-normal text-base">{t("$0.00")}</p>
                                 ) : pickupOption === "localDelivery" ? (
                                     CartTotal < 35 ? (
                                         <p className="text-custom-black font-normal text-base">
                                             {constant.currency} {currentLocalCost}
                                         </p>
                                     ) : (
-                                        <p className="text-green-500 font-normal text-base">{t("Free")}</p>
+                                        <p className="font-normal text-base">{t("$0.00")}</p>
                                     )
                                 ) : pickupOption === "ShipmentDelivery" ? (
                                     CartTotal < 200 ? (
@@ -1489,59 +1523,37 @@ const Navbar = (props) => {
                                             {constant.currency} {currentShipmentCost}
                                         </p>
                                     ) : (
-                                        <p className="text-green-500 font-normal text-base">{t("Free")}</p>
+                                        <p className=" font-normal text-base">{t("$0.00")}</p>
                                     )
                                 ) : null}
                             </div>
 
-
+                            <div className="flex justify-between items-center w-full pt-2">
+                                <p className="text-black font-normal text-base">
+                                    {t("Tax")}
+                                </p>
+                                <p className="text-custom-black font-normal text-base">
+                                    {constant.currency}{totalTax || 0}
+                                </p>
+                            </div>
 
 
 
 
                             <div className="flex justify-between items-center w-full pt-5">
-                                <p className="text-custom-black font-bold text-base">
+                                <p className="text-custom-black font-bold text-[18px]">
                                     {t("Total Payable")}
                                 </p>
                                 <p className="text-custom-black font-bold text-base">
-                                    {constant.currency}{mainTotal}
+                                    {constant.currency}{afterCoupanTotal}
                                 </p>
-                            </div>
-                            <div className="flex md:flex-row flex-col justify-start md:justify-between items-start md:items-center w-full pt-1 hover:underline cursor-pointer">
-                                <p className="text-custom-black font-normal text-base"
-                                    onClick={() => setOpenModel(true)}
-                                >
-                                    {t("Apply Coupon")}
-                                </p>
-
-                                {appliedCoupon && (
-                                    <div className="mt-3 p-2 bg-green-100 text-green-800 rounded-md flex items-center justify-between w-full md:w-[400px]">
-                                        <div className="flex items-center">
-                                            <Check size={16} className="mr-2" />
-                                            <span>
-                                                {t("Coupon")} <strong>{appliedCoupon.code}</strong> {("applied!")}
-                                            </span>
-                                        </div>
-                                        <button
-                                            onClick={() => {
-                                                setAppliedCoupon(null);
-                                                setSelectedCoupon(null);
-                                                setSearchTerm('');
-                                                setAfterCoupanTotal(mainTotal)
-                                            }}
-                                            className="text-red-600 hover:text-red-800 text-sm ml-4"
-                                        >
-                                            <X size={18} />
-                                        </button>
-                                    </div>
-                                )}
                             </div>
 
                             {openModel && (
                                 <div className="w-full  mx-auto">
                                     <div className="mb-6">
                                         <div className="flex justify-between items-center mb-2">
-                                            {/* <h2 className="text-xl font-semibold text-black">Apply Coupon</h2> */}
+                                            
 
                                         </div>
 
@@ -1567,7 +1579,7 @@ const Navbar = (props) => {
                                             </div>
                                             <p onClick={() => setOpenModel(false)} className="text-black cursor-pointer text-[20px] font-bold md:mx-2 mx-1 pt-1"> <X size={28} /></p>
                                         </div>
-                                        {/* Applied coupon display with remove */}
+        
                                         {appliedCoupon && (
                                             <div className="mt-3 p-2 bg-green-100 text-green-800 rounded-md flex items-center justify-between">
                                                 <div className="flex items-center">
@@ -1663,7 +1675,7 @@ const Navbar = (props) => {
                                 }
                             }}
                         >
-                            {t("CONTINUE TO PAY")}  {constant.currency}{afterCoupanTotal}
+                            {t("Proceed To Checkout")}
                         </button>
                     )}
                 </div>

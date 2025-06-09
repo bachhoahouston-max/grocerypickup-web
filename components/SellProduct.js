@@ -157,7 +157,7 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
                 {item.categoryName}
             </h2>
             <p className="text-sm md:text-base text-black font-semibold pt-1">
-                {item.name.slice(0, 14) + ("...")}
+                {item.name.length > 31 ? item.name.slice(0, 31) + "..." : item.name}
             </p>
 
             <div className="flex justify-between items-center md:pt-1 pt-0">

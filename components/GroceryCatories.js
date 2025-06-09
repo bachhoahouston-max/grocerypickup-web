@@ -175,7 +175,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 {item.categoryName}
             </h2>
             <p className="text-sm md:text-base text-black font-semibold pt-1">
-             {item.name.length > 35 ? item.name.slice(0, 35) + "..." : item.name}
+             {item.name.length > 31 ? item.name.slice(0, 31) + "..." : item.name}
 
             </p>
 

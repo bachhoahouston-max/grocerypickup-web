@@ -10,12 +10,12 @@ const Invoice = ({ order }) => {
 
   const invoiceId =
     order?.orderId || order?._id;
-     const createdAt = new Date(order?.createdAt || Date.now());
+  const createdAt = new Date(order?.createdAt || Date.now());
 
-  // Format date as MM/DD/YY
-   const formattedDate = `${String(createdAt.getMonth() + 1).padStart(2, '0')}/${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getFullYear()).slice()}`;
 
-  // Format time as HH:MM:SS AM/PM
+  const formattedDate = `${String(createdAt.getMonth() + 1).padStart(2, '0')}/${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getFullYear()).slice()}`;
+
+
   const formattedTime = createdAt.toLocaleTimeString("en-IN", {
     hour: "2-digit",
     minute: "2-digit",
@@ -23,16 +23,7 @@ const Invoice = ({ order }) => {
     hour12: true, // Use hour12 to get AM/PM format
   });
 
-  // Final combined format
   const orderDateTime = `${formattedDate} ${formattedTime}`;
-
-  // const customerCompleteAddress = `${
-  //   order?.Local_address?.address || "Unknown"
-  // }, ${order?.Local_address?.city || "Unknown"}, ${
-  //   order?.Local_address?.state || "Unknown"
-  // }, ${order?.Local_address?.country || "Unknown"} - ${
-  //   order?.Local_address?.pinCode || "111111"
-  // }`;
 
   const website =
     window.location.origin || "https://www.bachhoahouston.com";
@@ -45,6 +36,7 @@ const Invoice = ({ order }) => {
       address: order?.Local_address?.address || "Unknown",
       phone: order?.Local_address?.phoneNumber || "+1 1111111111",
     },
+    total: order.total,
     items:
       order?.productDetail?.map((item) => ({
         name: item?.product?.name || "Unknown",
@@ -184,15 +176,7 @@ const Invoice = ({ order }) => {
               >
                 Qty
               </th>
-              <th
-                style={{
-                  textAlign: "right",
-                  padding: "0.5rem",
-                  border: "1px solid #e5e7eb",
-                }}
-              >
-                Tax
-              </th>
+
               <th
                 style={{
                   textAlign: "right",
@@ -225,15 +209,7 @@ const Invoice = ({ order }) => {
                 >
                   {item.qty}
                 </td>
-                <td
-                  style={{
-                    padding: "0.5rem",
-                    border: "1px solid #e5e7eb",
-                    textAlign: "right",
-                  }}
-                >
-                  ${item.tax}
-                </td>
+
                 <td
                   style={{
                     padding: "0.5rem",
@@ -252,7 +228,7 @@ const Invoice = ({ order }) => {
                   border: "1px solid #e5e7eb",
                   textAlign: "left",
                 }}
-                colSpan="3"
+                colSpan="2"
               >
                 Total
               </td>
@@ -280,33 +256,37 @@ const Invoice = ({ order }) => {
           }}
         >
           <div style={{ width: "50%", marginLeft: "50%" }}>
-            <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
-              <span style={{ color: "#000" }}>Subtotal</span>
-              <span style={{ marginLeft: "50px" }}>${total}</span>
-            </div>
-            <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
-              <span style={{ color: "#000" }}>Discount</span>
-              <span style={{ marginLeft: "50px" }}>${order?.discount ? parseFloat(order.discount) : 0.0}</span>
-            </div>
-            <div style={{ marginBottom: "0.5rem", textAlign: "right" }}>
-              <span style={{ color: "#000" }}>Tax (0%)</span>
-              <span style={{ marginLeft: "50px" }}>${0.0}</span>
-            </div>
-            <div
-              style={{
-                borderTop: "1px solid #e5e7eb",
-                paddingTop: "0.5rem",
-                fontWeight: "bold",
-                alignItems: "center",
-                textAlign: "right",
-              }}
-            >
-              <span>Total</span>
-              <span style={{ marginLeft: "50px" }}>
-                ${total - (order?.discount ? parseFloat(order.discount) : 0.0)}
-              </span>
+            {[
+              { label: "Subtotal", value: `$${total}` },
+              { label: "Discount", value: `$${parseFloat(order.discount || 0).toFixed(2)}` },
+              { label: "Delivery tip", value: `$${parseFloat(order.Deliverytip || 0).toFixed(2)}` },
+              { label: "Delivery Charges", value: `$${parseFloat(order.deliveryfee || 0).toFixed(2)}` },
+              { label: "Total Tax", value: `$${parseFloat(order.totalTax || 0).toFixed(2)}` },
+            ].map((item, index) => (
+              <div key={index} style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "0.5rem",
+                color: "#000"
+              }}>
+                <span style={{ flex: 1, textAlign: "left" }}>{item.label}</span>
+                <span style={{ width: "100px", textAlign: "right" }}>{item.value}</span>
+              </div>
+            ))}
+
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              borderTop: "1px solid #e5e7eb",
+              paddingTop: "0.5rem",
+              fontWeight: "bold"
+            }}>
+              <span style={{ flex: 1, textAlign: "left" }}>Total</span>
+              <span style={{ width: "100px", textAlign: "right" }}>${parseFloat(order.total).toFixed(2)}</span>
             </div>
           </div>
+
+
         </div>
 
         <div style={{ marginTop: "2rem", textAlign: "center" }}>
