@@ -57,7 +57,7 @@ const Navbar = (props) => {
     const [appliedCoupon, setAppliedCoupon] = useState(null);
     const [afterCoupanTotal, setAfterCoupanTotal] = useState(mainTotal);
     const [deliverytip, setdeliverytip] = useState(0);
-    const[discount,setDiscount]=useState(0)
+    const [discount, setDiscount] = useState(0)
 
     useEffect(() => {
         const fetchCoupons = async () => {
@@ -482,7 +482,7 @@ const Navbar = (props) => {
             finalTotal = sumWithInitial + totalTax + delivery;
         }
 
-        setMainTotal(finalTotal); 
+        setMainTotal(finalTotal);
         setAfterCoupanTotal(finalTotal.toFixed(2))
 
         setCartItem(sumWithInitial1);
@@ -635,10 +635,10 @@ const Navbar = (props) => {
         let newData = {
             productDetail: data,
             total: afterCoupanTotal,
-            totalTax:totalTax,
-            Deliverytip:deliverytip,
-            deliveryfee:deliveryCharge,
-            discount:discount,
+            totalTax: totalTax,
+            Deliverytip: deliverytip,
+            deliveryfee: deliveryCharge,
+            discount: discount,
             user: user._id,
             Email: user.email,
             isOrderPickup,
@@ -1302,133 +1302,119 @@ const Navbar = (props) => {
                             </div>
                         )}
                         {cartData?.map((item, i) => (
-                            <div
-                                key={i}
-                                className="grid md:grid-cols-9 grid-cols-1 w-full md:gap-5 gap-2 mt-5"
-                            >
-                                <div className="flex justify-start items-start col-span-4 md:gap-0 gap-2">
+                            <div key={i} className="grid w-full md:gap-5 gap-2 mt-5">
+                                <div className="flex justify-start md:gap-0 gap-4 items-start  w-full">
                                     <img
-                                        className="md:w-[145px] md:h-[104px] w-[50px] h-[50px] object-contain"
+                                        className="md:w-[145px] md:h-[104px] w-[80px] h-[80px] object-contain"
                                         src={item?.selectedImage || item?.image}
                                     />
-                                    <div className="pt-2 flex-1">
-                                        <p className="text-custom-purple font-semibold text-base pl-3">
+                                    <div className="flex flex-col justify-start items-start md:gap-0 gap-2">
+
+                                        <p className="w-full text-left text-custom-purple  md:text-base text-[14px]">
                                             {item.name}
                                         </p>
-                                        <p className="text-custom-newGrayColors font-normal text-sm pt-2">
-                                            <span className="pl-3">
-                                                {item?.price_slot?.value ?? 1}
-                                            </span>{" "}
-                                            <span>{item?.price_slot?.unit ?? "unit"}</span>
-                                        </p>
-                                        <p className="text-custom-newGrayColors font-normal text-sm pt-2">
-                                            <span className="pl-3">
-                                                {constant.currency}{(item?.price_slot?.our_price)}
-                                            </span>{" "}
-                                            {item?.price_slot?.other_price && (
-                                                <span className="line-through">
-                                                    {constant.currency}{(item?.price_slot?.other_price)}
-                                                </span>
-                                            )}
 
-                                        </p>
-                                    </div>
-                                    <div className="flex justify-end items-start md:hidden">
-                                        <IoMdClose
-                                            className="w-[22px] h-[22px] text-custom-newGray cursor-pointer"
-                                            onClick={() => {
-                                                cartClose(item, i);
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-center items-center  col-span-3 md:mt-0 mt-3">
-                                    <div className="bg-gray-100 w-[153px] h-[39px] rounded-[8px] flex justify-center items-center">
-                                        <div
-                                            className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
-                                            onClick={() => {
-                                                if (item.qty > 1) {
-                                                    const nextState = produce(cartData, (draft) => {
-                                                        draft[i].qty -= 1;
-                                                        const price = parseFloat(draft[i]?.price_slot?.our_price);
-                                                        draft[i].total = (price * draft[i].qty)
-                                                    });
-                                                    setCartData(nextState);
-                                                    localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-                                                }
-                                            }}
-                                        >
-                                            <IoRemoveSharp className="h-[30px] w-[30px] text-white" />
+                                        <div className="flex flex-col md:flex-row justify-center md:gap-20 gap-1 mt-1">
+                                            <div className="md:pt-2 pt-0 flex md:flex-col flex-row">
+                                                <p className="text-custom-newGrayColors font-normal text-sm ">
+                                                    <span className="pl-3">{item?.price_slot?.value ?? 1}</span>{" "}
+                                                    <span>{item?.price_slot?.unit ?? "unit"}</span>
+                                                </p>
+                                                <p className="text-custom-newGrayColors font-normal text-sm ">
+                                                    <span className="pl-3">
+                                                        {constant.currency}{(item?.price_slot?.our_price)}
+                                                    </span>{" "}
+                                                    {item?.price_slot?.other_price && (
+                                                        <span className="line-through">
+                                                            {constant.currency}{(item?.price_slot?.other_price)}
+                                                        </span>
+                                                    )}
+                                                </p>
+                                            </div>
+                                            <div className='flex flex-row justify-center md:gap-20 gap-4'>
+                                                <div className="flex justify-center items-center  md:mt-0 mt-3 md:gap-10 gap-4">
+                                                    <div className="bg-gray-100 md:w-[153px] w-[125px] md:h-[39px] rounded-[8px] flex justify-center items-center">
+                                                        <div
+                                                            className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                                                            onClick={() => {
+                                                                if (item.qty > 1) {
+                                                                    const nextState = produce(cartData, (draft) => {
+                                                                        draft[i].qty -= 1;
+                                                                        const price = parseFloat(draft[i]?.price_slot?.our_price);
+                                                                        draft[i].total = price * draft[i].qty;
+                                                                    });
+                                                                    setCartData(nextState);
+                                                                    localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+                                                                }
+                                                            }}
+                                                        >
+                                                            <IoRemoveSharp className="h-[30px] w-[30px] text-white" />
+                                                        </div>
+                                                        <p className="text-black md:text-xl text-lg font-medium text-center mx-5">
+                                                            {item?.qty}
+                                                        </p>
+                                                        <div
+                                                            className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                                                            onClick={() => {
+                                                                const nextState = produce(cartData, (draft) => {
+                                                                    if (draft[i].qty + 1 > item.Quantity) {
+                                                                        props.toaster({
+                                                                            type: "error",
+                                                                            message: "Item is not available in this quantity in stock. Please choose a different item.",
+                                                                        });
+                                                                        return;
+                                                                    }
+                                                                    draft[i].qty += 1;
+                                                                    const price = parseFloat(draft[i]?.price_slot?.our_price);
+                                                                    draft[i].total = price * draft[i].qty;
+                                                                });
+                                                                setCartData(nextState);
+                                                                localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+                                                            }}
+                                                        >
+                                                            <IoAddSharp className="h-[30px] w-[30px] text-white" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex md:justify-center justify-start md:items-center items-start  md:mt-0 mt-5 gap-5">
+                                                    <p className="text-custom-purple font-semibold text-base">
+                                                        {constant.currency}{item?.total}
+                                                        {item?.price_slot?.other_price && (
+                                                            <del className="text-custom-red font-normal text-xs ml-2">
+                                                                {constant.currency}{(item?.price_slot?.other_price)}
+                                                            </del>
+                                                        )}
+                                                    </p>
+                                                    <IoMdClose
+                                                        className="w-[22px] h-[22px] text-custom-newGray ml-1 cursor-pointer"
+                                                        onClick={() => {
+                                                            cartClose(item, i);
+                                                        }}
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <p className="text-black md:text-xl text-lg font-medium text-center mx-5">
-                                            {item?.qty}
-                                        </p>
-                                        <div
-                                            className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
-                                            onClick={() => {
-                                                const nextState = produce(cartData, (draft) => {
-                                                    if (draft[i].qty + 1 > item.Quantity) {
-                                                        props.toaster({
-                                                            type: "error",
-                                                            message: "Item is not available in this quantity in stock. Please choose a different item.",
-                                                        });
-                                                        return;
-                                                    }
-
-                                                    draft[i].qty += 1;
-
-                                                    const price = parseFloat(draft[i]?.price_slot?.our_price);
-                                                    draft[i].total = price * draft[i].qty;
-                                                    // draft[i].total += draft[i].total <= 35 ? deliveryCharge : 0;
-                                                });
-
-                                                setCartData(nextState);
-                                                localStorage.setItem("addCartDetail", JSON.stringify(nextState));
-                                            }}
-
-                                        >
-                                            <IoAddSharp className="h-[30px] w-[30px] text-white" />
-                                        </div>
-
                                     </div>
                                 </div>
 
-                                {/* Price and close button for desktop */}
-                                <div className="md:flex md:justify-center justify-start md:items-center items-start col-span-2 md:mt-0 mt-5 hidden ">
-                                    <p className="text-custom-purple font-semibold text-base">
-                                        {constant.currency}{item?.total}
-                                        {item?.price_slot?.other_price && (
-                                            <del className="text-custom-red font-normal text-xs ml-2">
-                                                {constant.currency}{(item?.price_slot?.other_price)}
-                                            </del>
-                                        )}
 
-
-                                    </p>
-                                    <IoMdClose
-                                        className="w-[22px] h-[22px] text-custom-newGray ml-1 cursor-pointer"
-                                        onClick={() => {
-                                            cartClose(item, i);
-                                        }}
-                                    />
-                                </div>
-
-                                {/* Shipment availability notification */}
-                                <div className='flex md:col-span-9 col-span-2 w-full md:-mt-8 mt-0'>
+                                <div className='flex text-center w-full md:-mt-6 -mt-3'>
                                     {pickupOption === 'ShipmentDelivery' && (
                                         item.isShipmentAvailable ? (
                                             <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
                                                 {t("Product is available for Shipment Delivery")}
                                             </p>
                                         ) : (
-                                            <p className="text-red-500 text-sm md:text-base md:mt-3 mt-4 w-full  md:text-center">
+                                            <p className="text-red-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
                                                 {t("Product is Not available for Shipment Delivery")}
                                             </p>
                                         )
                                     )}
                                 </div>
+
+
                             </div>
+
                         ))}
                     </div>
 
@@ -1553,7 +1539,7 @@ const Navbar = (props) => {
                                 <div className="w-full  mx-auto">
                                     <div className="mb-6">
                                         <div className="flex justify-between items-center mb-2">
-                                            
+
 
                                         </div>
 
@@ -1579,7 +1565,7 @@ const Navbar = (props) => {
                                             </div>
                                             <p onClick={() => setOpenModel(false)} className="text-black cursor-pointer text-[20px] font-bold md:mx-2 mx-1 pt-1"> <X size={28} /></p>
                                         </div>
-        
+
                                         {appliedCoupon && (
                                             <div className="mt-3 p-2 bg-green-100 text-green-800 rounded-md flex items-center justify-between">
                                                 <div className="flex items-center">

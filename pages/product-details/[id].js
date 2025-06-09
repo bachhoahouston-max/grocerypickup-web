@@ -578,7 +578,7 @@ function ProductDetails(props) {
             </div>
 
             {/* Long Description */}
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 col-span-2">
               <p className="text-black text-base md:text-xl font-semibold">
                 {t("Long Description")}:
               </p>
@@ -589,7 +589,7 @@ function ProductDetails(props) {
 
             {/* Disclaimer */}
             {productsId?.disclaimer && (
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 col-span-2">
                 <p className="text-black text-base md:text-xl font-semibold ">
                   {t("Disclaimer")}:
                 </p>
@@ -602,7 +602,7 @@ function ProductDetails(props) {
 
             {/* Warning */}
             {productsId?.Warning && (
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 col-span-2">
                 <p className="text-black text-base md:text-xl font-semibold">
                   {t("Warning")}:
                 </p>
@@ -615,7 +615,7 @@ function ProductDetails(props) {
 
             {/* Return Policy */}
             {productsId?.ReturnPolicy && (
-              <div className="md:col-span-2">
+              <div className="md:col-span-2 col-span-2">
                 <p className="text-black text-base md:text-xl font-semibold">
                   {t("Return Policy")}:
                 </p>
