@@ -174,9 +174,12 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
                 {item.categoryName}
             </h2>
-            <p className="text-sm md:text-base text-black font-semibold pt-1">
+            <p className=" md:flex hidden text-sm md:text-base text-black font-semibold pt-1">
              {item.name.length > 31 ? item.name.slice(0, 31) + "..." : item.name}
+            </p>
 
+            <p className=" flex md:hidden text-sm md:text-base text-black font-semibold pt-1">
+             {item.name.length > 36 ? item.name.slice(0, 36) + "..." : item.name}
             </p>
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
