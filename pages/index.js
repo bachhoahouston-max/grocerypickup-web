@@ -413,10 +413,11 @@ export default function Home(props) {
               </div>
 
             </div>
-            <div className=" flex justify-center items-center">
-              <p className="text-custom-green underline  text-lg px-3 py-2 rounded-sm cursor-pointer"
+            <div className=" flex justify-center text-custom-green items-center  underline ">
+              <p className=" text-lg px-3 py-2 rounded-sm cursor-pointer"
                 onClick={() => handleCategoryClick1('/categories/all')}
               >{t("View More")} </p>
+              <FaArrowRight />
             </div>
           </div>
         </section>
@@ -439,7 +440,7 @@ export default function Home(props) {
           </div>
           <div className="bg-white p-4 shadow-md text-center">
             <FontAwesomeIcon icon={faTruck} className="text-xl text-[#F38529] mb-4" />
-            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">{t("Next Day Delivery")}</h3>
+            <h3 className="text-[16px] md:text-[18px] font-semibold text-black">{t("Next Day Local Delivery")}</h3>
             <p className="text-gray-500 text-[13px] md:text-[16px]">{t("Quick delivery in next day")}</p>
           </div>
           <div className="bg-white p-4 shadow-md text-center">

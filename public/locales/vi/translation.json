@@ -255,5 +255,15 @@
   "⁠Product Recall Information": "⁠Thông tin thu hồi sản phẩm",
   "Quick delivery in next day": "Giao hàng nhanh trong ngày hôm sau",
   "Customer": "Khách hàng",
-  "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee": "*Lưu ý: Bach Hoa Houston sẽ giữ đơn hàng của bạn cho đến khi đóng cửa ngày làm việc tiếp theo nếu đơn hàng của bạn không được nhận trong ngày nhận hàng đã lên lịch, sau đó đơn hàng của bạn sẽ bị hủy và được hoàn lại tiền trừ đi 5% phí hoàn kho"
+  "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee": "*Lưu ý: Bach Hoa Houston sẽ giữ đơn hàng của bạn cho đến khi đóng cửa ngày làm việc tiếp theo nếu đơn hàng của bạn không được nhận trong ngày nhận hàng đã lên lịch, sau đó đơn hàng của bạn sẽ bị hủy và được hoàn lại tiền trừ đi 5% phí hoàn kho",
+
+  "Cart Summary": "Tóm tắt giỏ hàng",
+  "Subtotal": "Tổng phụ",
+  "Coupon Discount": "Giảm giá mã khuyến mãi",
+  "Delivery Tip (optional)": "Tiền tip giao hàng (không bắt buộc)",
+  "100% of tip goes directly to your driver": "100% tiền tip sẽ được chuyển trực tiếp cho tài xế của bạn",
+  "Select a tip": "Chọn tiền tip",
+  "Delivery Charges": "Phí giao hàng",
+  "Proceed To Checkout": "Tiến hành thanh toán"
+
 }

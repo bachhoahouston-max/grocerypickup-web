@@ -480,7 +480,7 @@ function ProductDetails(props) {
                   <>
                     <div className="flex mt-5">
                       <div
-                        className="h-[42px] w-[44px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                        className="h-[42px] w-[44px] bg-[#5CB447] cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
                         onClick={handleDecreaseQty}
                       >
                         <IoRemoveSharp className="h-[24px] w-[24px] text-white" />
@@ -489,7 +489,7 @@ function ProductDetails(props) {
                         {availableQty}
                       </p>
                       <div
-                        className="h-[42px] w-[44px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                        className="h-[42px] w-[44px] bg-[#5CB447] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                         onClick={handleIncreaseQty}
                       >
                         <IoAddSharp className="h-[24px] w-[24px] text-white" />
@@ -498,7 +498,7 @@ function ProductDetails(props) {
                   </>
                 ) : (
                   <button
-                    className="bg-custom-gold w-[136px] h-[42px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1"
+                    className="bg-[#5CB447] w-[136px] h-[42px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1"
                     onClick={handleAddToCart}
                   >
                     {t("ADD")}
@@ -686,7 +686,7 @@ function ProductDetails(props) {
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             {t("Similar Products")}
           </p>
-          <div className="grid md:grid-cols-6 lg:grid-cols-8 grid-cols-2 md:gap-2 gap-5 md:mx-10 ms-4">
+          <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-5 md:mx-8 ms-4">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories
@@ -701,11 +701,11 @@ function ProductDetails(props) {
           </div>
         </div>
 
-        <div className="bg-white  max-w-8xl">
+        <div className="bg-white max-w-8xl">
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 md:ms-12 ms-4">
             {t("You might also like")}
           </p>
-          <div className="grid md:grid-cols-6 lg:grid-cols-8 grid-cols-2 md:gap-2 gap-5 md:mx-10 ms-4">
+          <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-5 md:mx-8 ms-4">
             {productList.map((item, i) => (
               <div key={i} className="w-full md:mb-5">
                 <GroceryCategories

@@ -255,6 +255,17 @@
       "⁠Product Recall Information":"⁠Product Recall Information",
       "Quick delivery in next day":"Quick delivery in next day",
       "Customer":"Customer",
-      "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee":"*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee"
+      "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee":"*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee",
+
+      "Cart Summary":"Cart Summary",
+      "Subtotal":"Subtotal",
+      "Coupon Discount":"Coupon Discount",
+      "Delivery Tip (optional)":"Delivery Tip (optional)",
+      "100% of tip goes directly to your driver":"100% of tip goes directly to your driver",
+      "Select a tip":"Select a tip",
+      "Delivery Charges":"Delivery Charges",
+      "Proceed To Checkout":"Proceed To Checkout"
+
+
   
 }

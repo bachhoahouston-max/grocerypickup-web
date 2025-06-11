@@ -1095,7 +1095,7 @@ const Navbar = (props) => {
                                 </div>
 
                                 <p className="text-sm text-red-500 mt-3">
-                                    *Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee.
+                                    {t("*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee")}.
                                 </p>
                             </div>
                         </div>
@@ -1305,19 +1305,19 @@ const Navbar = (props) => {
                             <div key={i} className="grid w-full md:gap-5 gap-2 mt-5">
                                 <div className="flex justify-start md:gap-0 gap-4 items-start  w-full">
                                     <img
-                                        className="md:w-[145px] md:h-[104px] w-[80px] h-[80px] object-contain"
+                                        className="md:w-[135px] md:h-[104px] w-[80px] h-[80px] object-contain rounded-[10px]"
                                         src={item?.selectedImage || item?.image}
                                     />
                                     <div className="flex flex-col justify-start items-start md:gap-0 gap-2">
 
-                                        <p className="w-full text-left text-custom-purple  md:text-base text-[14px]">
+                                        <p className="md:pl-3 w-full text-left text-custom-purple  md:text-base text-[14px]">
                                             {item.name}
                                         </p>
 
                                         <div className="flex flex-col md:flex-row justify-center md:gap-20 gap-1 mt-1">
-                                            <div className="md:pt-2 pt-0 flex md:flex-col flex-row">
+                                            <div className="md:pt-2 pt-0 flex md:flex-col flex-row md:w-[80px]">
                                                 <p className="text-custom-newGrayColors font-normal text-sm ">
-                                                    <span className="pl-3">{item?.price_slot?.value ?? 1}</span>{" "}
+                                                    <span className="md:pl-3">{item?.price_slot?.value ?? 1}</span>{" "}
                                                     <span>{item?.price_slot?.unit ?? "unit"}</span>
                                                 </p>
                                                 <p className="text-custom-newGrayColors font-normal text-sm ">
@@ -1473,12 +1473,12 @@ const Navbar = (props) => {
                                 <div className="flex justify-between items-center w-full pt-3 ">
                                     <p className="text-black font-normal text-base">
                                         {t("Delivery Tip (optional)")}
-                                        <p className='text-black font-normal text-[12px]'>100% of tip goes directly to your driver</p>
+                                        <p className='text-black font-normal text-[12px]'>{t("100% of tip goes directly to your driver")}</p>
                                     </p>
                                     <div>
 
                                         <select className='p-2 border rounded-sm' value={deliverytip} onChange={(e) => setdeliverytip(e.target.value)}>
-                                            <option value="">Select a tip</option>
+                                            <option value="">{t('Select a tip')}</option>
                                             <option value="0">$0</option>
                                             <option value="2">$2</option>
                                             <option value="5">$5</option>

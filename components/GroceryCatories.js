@@ -175,7 +175,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 {item.categoryName}
             </h2>
             <p className=" md:flex hidden text-sm md:text-base text-black font-semibold pt-1">
-             {item.name.length > 31 ? item.name.slice(0, 31) + "..." : item.name}
+             {item.name.length > 36 ? item.name.slice(0, 36) + "..." : item.name}
             </p>
 
             <p className=" flex md:hidden text-sm md:text-base text-black font-semibold pt-1">
@@ -199,7 +199,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             {itemQuantity > 0 ? (
                 <div className="bg-gray-100 w-[120px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
                     <div
-                        className="bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-2 py-1.5 items-center"
+                        className="bg-[#5CB447] cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-2 py-1.5 items-center"
                         onClick={() => {
                             const updatedCart = cartData.map((cartItem) => {
                                 if (cartItem._id === item._id) {
@@ -231,7 +231,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                         {itemQuantity}
                     </p>
                     <div
-                        className="md:px-2 px-2 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                        className="md:px-2 px-2 py-1.5 bg-[#5CB447] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                         onClick={() => {
                             const updatedCart = cartData.map((cartItem) => {
                                 if (cartItem._id === item._id) {
@@ -263,7 +263,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 </div>
             ) : (
                 <button
-                    className="font-bold bg-custom-gold w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
+                    className="font-bold bg-[#5CB447] w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
                     onClick={handleAddToCart}
                 >
                     <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold " />
