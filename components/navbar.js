@@ -1393,7 +1393,7 @@ const Navbar = (props) => {
                         <div className="flex justify-center items-center  md:mt-0 mt-3 md:gap-10 gap-4">
                           <div className="bg-gray-100 md:w-[153px] w-[125px] md:h-[39px] rounded-[8px] flex justify-center items-center">
                             <div
-                              className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                              className="h-[39px] w-[51px] bg-[#5CB447] cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
                               onClick={() => {
                                 if (item.qty > 1) {
                                   const nextState = produce(
@@ -1420,7 +1420,7 @@ const Navbar = (props) => {
                               {item?.qty}
                             </p>
                             <div
-                              className="h-[39px] w-[51px] bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                              className="h-[39px] w-[51px] bg-[#5CB447] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                               onClick={() => {
                                 const nextState = produce(cartData, (draft) => {
                                   if (draft[i].qty + 1 > item.Quantity) {
