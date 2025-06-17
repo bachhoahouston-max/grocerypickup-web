@@ -127,7 +127,7 @@ function Categories(props) {
             setPaginationData(res.pagination);
         }, (err) => {
             props.loader(false);
-            setCategoryLoading(false);
+            // setCategoryLoading(false);
             console.log(err);
             props.toaster({ type: "error", message: err?.message });
         });
