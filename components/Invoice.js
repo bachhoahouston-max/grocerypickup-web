@@ -1,20 +1,21 @@
 import React, { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { MdFileDownload } from "react-icons/md"
+import { MdFileDownload } from "react-icons/md";
 
 const Invoice = ({ order }) => {
   const invoiceRef = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
 
-
-  const invoiceId =
-    order?.orderId || order?._id;
+  const invoiceId = order?.orderId || order?._id;
   const createdAt = new Date(order?.createdAt || Date.now());
 
-
-  const formattedDate = `${String(createdAt.getMonth() + 1).padStart(2, '0')}/${String(createdAt.getDate()).padStart(2, '0')}/${String(createdAt.getFullYear()).slice()}`;
-
+  const formattedDate = `${String(createdAt.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}/${String(createdAt.getDate()).padStart(2, "0")}/${String(
+    createdAt.getFullYear()
+  ).slice()}`;
 
   const formattedTime = createdAt.toLocaleTimeString("en-IN", {
     hour: "2-digit",
@@ -25,8 +26,7 @@ const Invoice = ({ order }) => {
 
   const orderDateTime = `${formattedDate} ${formattedTime}`;
 
-  const website =
-    window.location.origin || "https://www.bachhoahouston.com";
+  const website = window.location.origin || "https://www.bachhoahouston.com";
 
   const orderData = {
     id: invoiceId,
@@ -139,7 +139,10 @@ const Invoice = ({ order }) => {
             Billed To:
           </h2>
           <span>{orderData.customer.name}</span>
-          <span>{orderData.customer.address}</span>
+
+          {orderData.customer.address && (
+            <span>{orderData.customer.address}</span>
+          )}
           <span>{orderData.customer.phone}</span>
         </div>
 
@@ -258,35 +261,54 @@ const Invoice = ({ order }) => {
           <div style={{ width: "50%", marginLeft: "50%" }}>
             {[
               { label: "Subtotal", value: `$${total}` },
-              { label: "Discount", value: `$${parseFloat(order.discount || 0).toFixed(2)}` },
-              { label: "Delivery tip", value: `$${parseFloat(order.Deliverytip || 0).toFixed(2)}` },
-              { label: "Delivery Charges", value: `$${parseFloat(order.deliveryfee || 0).toFixed(2)}` },
-              { label: "Total Tax", value: `$${parseFloat(order.totalTax || 0).toFixed(2)}` },
+              {
+                label: "Discount",
+                value: `$${parseFloat(order.discount || 0).toFixed(2)}`,
+              },
+              {
+                label: "Delivery tip",
+                value: `$${parseFloat(order.Deliverytip || 0).toFixed(2)}`,
+              },
+              {
+                label: "Delivery Charges",
+                value: `$${parseFloat(order.deliveryfee || 0).toFixed(2)}`,
+              },
+              {
+                label: "Total Tax",
+                value: `$${parseFloat(order.totalTax || 0).toFixed(2)}`,
+              },
             ].map((item, index) => (
-              <div key={index} style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: "0.5rem",
-                color: "#000"
-              }}>
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "0.5rem",
+                  color: "#000",
+                }}
+              >
                 <span style={{ flex: 1, textAlign: "left" }}>{item.label}</span>
-                <span style={{ width: "100px", textAlign: "right" }}>{item.value}</span>
+                <span style={{ width: "100px", textAlign: "right" }}>
+                  {item.value}
+                </span>
               </div>
             ))}
 
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              borderTop: "1px solid #e5e7eb",
-              paddingTop: "0.5rem",
-              fontWeight: "bold"
-            }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                borderTop: "1px solid #e5e7eb",
+                paddingTop: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
               <span style={{ flex: 1, textAlign: "left" }}>Total</span>
-              <span style={{ width: "100px", textAlign: "right" }}>${parseFloat(order.total).toFixed(2)}</span>
+              <span style={{ width: "100px", textAlign: "right" }}>
+                ${parseFloat(order.total).toFixed(2)}
+              </span>
             </div>
           </div>
-
-
         </div>
 
         <div style={{ marginTop: "2rem", textAlign: "center" }}>

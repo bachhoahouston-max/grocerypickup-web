@@ -52,7 +52,7 @@ const Navbar = (props) => {
   const [pickupOption, setPickupOption] = useState("orderPickup");
   const [totalTax, setTotalTax] = useState(0);
   const [openModel, setOpenModel] = useState(false);
-
+  const [baseCartTotal, setBaseCartTotal] = useState(0);
   const [coupons, setCoupons] = useState([]);
   const [filteredCoupons, setFilteredCoupons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -131,14 +131,15 @@ const Navbar = (props) => {
     const value = selectedCoupon.discountValue;
     const type = selectedCoupon.discountType;
 
+    let discountValue = 0;
+
     if (type === "fixed") {
-      setAfterCoupanTotal((prev) => prev - value);
-      setDiscount(value);
+      discountValue = value;
     } else if (type === "percentage") {
-      const discountValue = (afterCoupanTotal * value) / 100;
-      setAfterCoupanTotal((prev) => prev - discountValue);
-      setDiscount(discountValue);
+      discountValue = (baseCartTotal * value) / 100;
     }
+
+    setDiscount(discountValue); // Just set discount, useEffect will recalculate totals
 
     props.toaster({ type: "success", message: "Coupon applied successfully" });
     setSearchTerm("");
@@ -454,7 +455,7 @@ const Navbar = (props) => {
       cartData
         ?.reduce((accumulator, currentValue) => {
           const itemTotal = Number(currentValue?.total || 0);
-          const taxRate = Number(currentValue?.tax || 0); // percentage
+          const taxRate = Number(currentValue?.tax || 0);
           const taxAmount = (itemTotal * taxRate) / 100;
           return accumulator + taxAmount;
         }, 0)
@@ -467,25 +468,28 @@ const Navbar = (props) => {
       delivery = sumWithInitial <= 35 ? currentLocalCost : 0;
     } else if (pickupOption === "ShipmentDelivery") {
       delivery = sumWithInitial <= 200 ? currentShipmentCost : 0;
-    } else if (pickupOption === "orderPickup" || pickupOption === "driveUp") {
+    } else {
       delivery = 0;
     }
 
+    setBaseCartTotal(sumWithInitial); // Save original value
+    setCartItem(sumWithInitial1);
+    setTotalTax(totalTax.toFixed(2));
+    setDeliveryCharge(delivery.toFixed(2));
+
+    const cartAfterDiscount = sumWithInitial - discount;
     let finalTotal;
+
     if (pickupOption === "localDelivery") {
-      finalTotal = sumWithInitial + totalTax + delivery + Number(deliverytip);
+      finalTotal =
+        cartAfterDiscount + totalTax + delivery + Number(deliverytip);
     } else {
-      finalTotal = sumWithInitial + totalTax + delivery;
+      finalTotal = cartAfterDiscount + totalTax + delivery;
     }
 
-    setMainTotal(finalTotal);
-    setAfterCoupanTotal(finalTotal.toFixed(2));
-
-    setCartItem(sumWithInitial1);
-    setCartTotal(sumWithInitial.toFixed(2)); // Display with 2 decimal places
-    setTotalTax(totalTax.toFixed(2)); // Display with 2 decimal places
-    setDeliveryCharge(delivery.toFixed(2)); // Display with 2 decimal places
-  }, [cartData, openCart, pickupOption, deliverytip]);
+    setCartTotal(finalTotal.toFixed(2)); // Now correct total
+    setMainTotal(finalTotal.toFixed(2));
+  }, [cartData, openCart, pickupOption, deliverytip, discount]);
 
   const emptyCart = async () => {
     setCartData([]);
@@ -646,7 +650,7 @@ const Navbar = (props) => {
 
     let newData = {
       productDetail: data,
-      total: afterCoupanTotal,
+      total: mainTotal,
       totalTax: totalTax,
       Deliverytip: deliverytip,
       deliveryfee: deliveryCharge,
@@ -1526,11 +1530,15 @@ const Navbar = (props) => {
 
                     <button
                       onClick={() => {
-                        setAppliedCoupon(null);
-                        setSelectedCoupon(null);
-                        setSearchTerm("");
-                        setAfterCoupanTotal(mainTotal);
-                      }}
+                            setAppliedCoupon(null);
+                            setSelectedCoupon(null);
+                            setSearchTerm("");
+                            setDiscount(0); // Set 0 instead of null for math operations to work properly
+                            props.toaster({
+                              type: "success",
+                              message: "Coupon removed successfully",
+                            });
+                          }}
                       className="text-red-600 hover:text-red-800 text-sm ml-4"
                     >
                       <X size={18} />
@@ -1604,7 +1612,7 @@ const Navbar = (props) => {
                 </p>
                 <p className="text-custom-black font-bold text-base">
                   {constant.currency}
-                  {afterCoupanTotal}
+                  {mainTotal}
                 </p>
               </div>
 
@@ -1659,6 +1667,11 @@ const Navbar = (props) => {
                             setAppliedCoupon(null);
                             setSelectedCoupon(null);
                             setSearchTerm("");
+                            setDiscount(0); // Set 0 instead of null for math operations to work properly
+                            props.toaster({
+                              type: "success",
+                              message: "Coupon removed successfully",
+                            });
                           }}
                           className="text-red-600 hover:text-red-800 text-sm ml-4"
                         >
@@ -1697,7 +1710,7 @@ const Navbar = (props) => {
                                 <div className="text-sm text-gray-600">
                                   {coupon.discountType === "percentage"
                                     ? `${coupon.discountValue}% off`
-                                    : `₹${coupon.discountValue} off`}
+                                    : `${coupon.discountValue} off`}
                                 </div>
                                 <div className="text-xs text-gray-500">
                                   Expires: {formatDate(coupon.expiryDate)}

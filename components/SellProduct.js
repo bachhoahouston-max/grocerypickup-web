@@ -142,13 +142,13 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
     return (
         <div
             key={i}
-            className="bg-white w-full max-w-[350px] h-full md:h-[369px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 border items-center flex flex-col mt-2 relative"
+            className="bg-white w-full max-w-[350px] h-full md:h-[369px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 items-center flex flex-col mt-2 relative"
         >
             <div className='relative'>
                 <img
                     src={item.varients[0].image[0]}
                     alt="Product image"
-                    className="w-full p-1 md:h-44 h-36 object-cover rounded cursor-pointer"
+                    className="md:w-full w-56 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
                 />
 
             </div>
@@ -157,7 +157,7 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
                 {item.categoryName}
             </h2>
             <p className="text-sm md:text-base text-black font-semibold pt-1">
-                {item.name.length > 31 ? item.name.slice(0, 31) + "..." : item.name}
+                {item.name.length > 36 ? item.name.slice(0, 36) + "..." : item.name}
             </p>
 
             <div className="flex justify-between items-center md:pt-1 pt-0">
