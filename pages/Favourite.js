@@ -2,18 +2,16 @@ import { Api } from "@/services/service";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import GroceryCategories from "@/components/GroceryCatories";
-import ShopFasterTropicana from "@/components/ShopFasterMarketplace"
+import ShopFasterTropicana from "@/components/ShopFasterMarketplace";
 import { useTranslation } from "react-i18next";
 
 function Favourite(props) {
   const router = useRouter();
-  const {t} = useTranslation()
+  const { t } = useTranslation();
   const [favouriteList, setFavouriteList] = useState([]);
 
   useEffect(() => {
-
     getFavourite();
-
   }, []);
 
   const getFavourite = async () => {
@@ -31,6 +29,7 @@ function Favourite(props) {
       }
     );
   };
+
   return (
     <>
       <div className="mx-auto max-w-7xl py-12">
@@ -47,23 +46,25 @@ function Favourite(props) {
           </p>
         </div>
         <div className="grid md:grid-cols-5 grid-cols-2 md:px-0 px-4 w-full md:gap-4 gap-2">
-          {
-            favouriteList.length > 0 ? (favouriteList.map((item, i) => (
-              <div key={i} className='w-full'>
-                <GroceryCategories 
-                item={item?.product}
-                loader={props.loader}
-                toaster={props.toaster}
-                 i={i} 
-                 url={`/product-details/${item?.product?.slug}`} />
+          {favouriteList.length > 0 ? (
+            favouriteList.map((item, i) => (
+              <div key={i} className="w-full">
+                <GroceryCategories
+                  item={item?.product}
+                  loader={props.loader}
+                  toaster={props.toaster}
+                  i={i}
+                  url={`/product-details/${item?.product?.slug}`}
+                />
               </div>
-            ))) : (
-              <div className='flex justify-center items-center col-span-10 h-[200px] md:h-[300px]'>
-                <p className='text-black font-semibold text-xl md:text-2xl text-center'>
-                  {t("No favourites product available")}</p>
-              </div>
-            )
-          }
+            ))
+          ) : (
+            <div className="flex justify-center items-center col-span-10 h-[200px] md:h-[300px]">
+              <p className="text-black font-semibold text-xl md:text-2xl text-center">
+                {t("No favourites product available")}
+              </p>
+            </div>
+          )}
         </div>
       </div>
       <section className="w-full md:pt-10 pt-5 pb-5">

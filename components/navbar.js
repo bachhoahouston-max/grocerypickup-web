@@ -487,7 +487,7 @@ const Navbar = (props) => {
       finalTotal = cartAfterDiscount + totalTax + delivery;
     }
 
-    setCartTotal(finalTotal.toFixed(2)); // Now correct total
+    setCartTotal(cartAfterDiscount.toFixed(2)); // Now correct total
     setMainTotal(finalTotal.toFixed(2));
   }, [cartData, openCart, pickupOption, deliverytip, discount]);
 
