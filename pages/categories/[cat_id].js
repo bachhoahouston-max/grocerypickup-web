@@ -107,7 +107,6 @@ function Categories(props) {
 
     const getproductByCategory = async (cat, page = 1, limit = 18) => {
         props.loader(true);
-        // setCategoryLoading(true);
         let url = `getProductBycategoryId?page=${page}&limit=${limit}`;
 
         if (cat) {
@@ -120,13 +119,12 @@ function Categories(props) {
 
         Api("get", url, "", router).then((res) => {
             props.loader(false);
-            //   setCategoryLoading(false);
             console.log("res================>", res);
             SetProductList(res.data);
             setPaginationData(res.pagination);
         }, (err) => {
             props.loader(false);
-            // setCategoryLoading(false);
+         
             console.log(err);
             props.toaster({ type: "error", message: err?.message });
         });
@@ -283,7 +281,7 @@ function Categories(props) {
                         <div className="col-span-6 w-full flex justify-center mt-8 mb-8">
                             {productList?.length > 0 && paginationData?.totalPages > 1 && (
                                 <div className="flex items-center space-x-2">
-                                    {/* Previous button */}
+                                 
                                     <button
                                         onClick={() => handlePageChange(paginationData.currentPage - 1)}
                                         disabled={paginationData.currentPage === 1}
