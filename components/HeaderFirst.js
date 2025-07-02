@@ -71,7 +71,7 @@ const HeaderFirst = (props) => {
         }
     }
 
-    // Navigation handler function
+   
     const handleNavigation = (path, tab) => {
         console.log(`Navigating to ${path}, setting tab to ${tab}`);
         setSelectedTab(tab);

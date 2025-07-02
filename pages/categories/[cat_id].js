@@ -50,7 +50,6 @@ const sortByData = [
 
 function Categories(props) {
     const router = useRouter()
-    console.log(router)
     const { t } = useTranslation()
     const [productList, SetProductList] = useState([])
     const [category, setCategory] = useState({})

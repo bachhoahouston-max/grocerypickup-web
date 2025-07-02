@@ -4,7 +4,12 @@ import React, { useContext, useEffect, useState } from "react";
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useRouter } from "next/router";
-import { cartContext, openCartContext, userContext, favoriteProductContext } from "../_app";
+import {
+  cartContext,
+  openCartContext,
+  userContext,
+  favoriteProductContext,
+} from "../_app";
 import { Api } from "@/services/service";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -13,18 +18,18 @@ import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { FaCheck } from "react-icons/fa6";
 import { SlArrowRight } from "react-icons/sl";
-import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
-import StarIcon from '@mui/icons-material/Star';
-import moment from 'moment';
+import Box from "@mui/material/Box";
+import Rating from "@mui/material/Rating";
+import StarIcon from "@mui/icons-material/Star";
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 import constant from "@/services/constant";
 import { RxCross2 } from "react-icons/rx";
 
 function ProductDetails(props) {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const router = useRouter();
-  // console.log(router);
+
   const [user, setUser] = useContext(userContext);
   const [productsId, setProductsId] = useState({});
   const [selectedColor, setSelectedColor] = useState("");
@@ -44,7 +49,6 @@ function ProductDetails(props) {
   const [pincode, setPincode] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-
 
   useEffect(() => {
     if (router?.query?.id) {
@@ -96,32 +100,43 @@ function ProductDetails(props) {
 
   const handleAddToCart = () => {
     if (!productsId || !productsId._id || !selectedPrice?.value) {
-      console.error("Invalid product data or price selection:", productsId, selectedPrice);
+      console.error(
+        "Invalid product data or price selection:",
+        productsId,
+        selectedPrice
+      );
       return;
     }
 
     if (productsId.Quantity <= 0) {
-      props.toaster({ type: "error", message: "This item is currently out of stock. Please choose a different item." });
+      props.toaster({
+        type: "error",
+        message:
+          "This item is currently out of stock. Please choose a different item.",
+      });
       return;
     }
 
-
-    const existingItem = cartData.find((f) =>
-      f._id === productsId._id && f.price_slot?.value === selectedPrice.value
+    const existingItem = cartData.find(
+      (f) =>
+        f._id === productsId._id && f.price_slot?.value === selectedPrice.value
     );
 
     const price = parseFloat(selectedPrice?.our_price);
 
-    const ourPrice = parseFloat(
-      (selectedPrice?.our_price)
-    );
-    const percentageDifference = price && ourPrice ? ((price - ourPrice) / price) * 100 : 0;
+    const ourPrice = parseFloat(selectedPrice?.our_price);
+    const percentageDifference =
+      price && ourPrice ? ((price - ourPrice) / price) * 100 : 0;
 
     if (!existingItem) {
       const newProduct = {
         ...productsId,
-        selectedColor: productsId.selectedColor || productsId.varients?.[0] || {},
-        selectedImage: productsId.selectedImage || productsId.varients?.[0]?.image?.[0] || "",
+        selectedColor:
+          productsId.selectedColor || productsId.varients?.[0] || {},
+        selectedImage:
+          productsId.selectedImage ||
+          productsId.varients?.[0]?.image?.[0] ||
+          "",
         qty: 1,
         BarCode: productsId?.BarCode || "",
         total: ourPrice.toFixed(2),
@@ -133,9 +148,11 @@ function ProductDetails(props) {
       const updatedCart = [...cartData, newProduct];
       setCartData(updatedCart);
       localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-      console.log("Product added to cart:", newProduct);
     } else {
-      console.log("Product already in cart with this price slot:", existingItem);
+      console.log(
+        "Product already in cart with this price slot:",
+        existingItem
+      );
     }
 
     props.toaster({
@@ -176,19 +193,20 @@ function ProductDetails(props) {
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
   };
 
-
   const handleDecreaseQty = () => {
     const nextState = produce(cartData, (draft) => {
-      const existingItem = draft.find((item) =>
-        item._id === productsId._id && item.price_slot.value === selectedPrice.value
+      const existingItem = draft.find(
+        (item) =>
+          item._id === productsId._id &&
+          item.price_slot.value === selectedPrice.value
       );
 
       if (existingItem) {
         if (existingItem.qty > 1) {
           existingItem.qty -= 1;
-          existingItem.total = (parseFloat(existingItem.price_slot?.our_price) * existingItem.qty);
+          existingItem.total =
+            parseFloat(existingItem.price_slot?.our_price) * existingItem.qty;
         } else {
-
           const index = draft.indexOf(existingItem);
           if (index > -1) {
             draft.splice(index, 1);
@@ -203,7 +221,6 @@ function ProductDetails(props) {
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
   };
 
-
   const handleIndex = (index) => {
     setPriceIndex(index);
   };
@@ -217,12 +234,9 @@ function ProductDetails(props) {
     Api("get", url, "", router).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
         res.data.qty = 1;
         res.data.total = (res.data?.our_price * res.data.qty).toFixed(2);
         setProductsId(res.data);
-        console.log(res?.data?.minQuantity);
-
         setSelectedColor(res.data?.varients[0]);
         setSelectedImageList(res.data?.varients[0].image);
         setSelectedImage(res.data?.varients[0].image[0]);
@@ -235,7 +249,7 @@ function ProductDetails(props) {
         }
 
         setPriceSlote(res?.data?.price_slot);
-        setSelectedPrice(res?.data?.price_slot[0])
+        setSelectedPrice(res?.data?.price_slot[0]);
       },
       (err) => {
         props.loader(false);
@@ -244,37 +258,6 @@ function ProductDetails(props) {
       }
     );
   };
-
-  const checkAvailability = async () => {
-    if (!pincode) {
-      setMessage("Please enter a pincode.");
-      return;
-    }
-    // setLoading(true);
-    setMessage("");
-    props.loader(true);
-    Api("post", "checkAvailable", { pincode }, router).then(
-      (res) => {
-        props.loader(false);
-        console.log(res.data)
-        console.log(res)
-        if (res.available) {
-          props.toaster({ type: "error", message: "Delivery is available!" });
-          setMessage("✅ Delivery is available in this Zipcode.");
-        } else {
-          props.toaster({ type: "error", message: "Delivery is not available" });
-          setMessage("❌ Delivery is not available in this Zipcode.");
-        }
-      },
-      (err) => {
-        props.loader(false);
-        console.log(err);
-        setMessage('Error checking availability.');
-        props.toaster({ type: "error", message: err?.message });
-      }
-    );
-  };
-
 
   const getproductByCategory = async (category_id, product_id) => {
     props.loader(true);
@@ -286,10 +269,9 @@ function ProductDetails(props) {
     ).then(
       (res) => {
         props.loader(false);
-        console.log(res?.data)
+
         const sameItem = res?.data?.filter((f) => f._id !== router?.query?.id);
         SetProductList(sameItem);
-        console.log("same item", sameItem)
       },
       (err) => {
         props.loader(false);
@@ -309,7 +291,7 @@ function ProductDetails(props) {
       product: productsId?._id,
     };
 
-    console.log(data);
+
     props.loader(true);
     Api("post", "addremovefavourite", data, router).then(
       (res) => {
@@ -318,14 +300,22 @@ function ProductDetails(props) {
           if (isFavorite) {
             props.toaster({ type: "success", message: res.data?.message });
             setFavorite((prevFavorites) => {
-              const updatedFavorites = prevFavorites.filter(fav => fav._id !== productsId._id);
-              localStorage.setItem('favorites', JSON.stringify(updatedFavorites)); // Save to local storage
+              const updatedFavorites = prevFavorites.filter(
+                (fav) => fav._id !== productsId._id
+              );
+              localStorage.setItem(
+                "favorites",
+                JSON.stringify(updatedFavorites)
+              ); // Save to local storage
               return updatedFavorites;
             });
           } else {
             setFavorite((prevFavorites) => {
               const updatedFavorites = [...prevFavorites, productsId];
-              localStorage.setItem('favorites', JSON.stringify(updatedFavorites)); // Save to local storage
+              localStorage.setItem(
+                "favorites",
+                JSON.stringify(updatedFavorites)
+              ); // Save to local storage
               return updatedFavorites;
             });
           }
@@ -344,15 +334,15 @@ function ProductDetails(props) {
 
   // On component mount, retrieve favorites from local storage
   useEffect(() => {
-    const storedFavorites = localStorage.getItem('favorites');
+    const storedFavorites = localStorage.getItem("favorites");
     if (storedFavorites) {
       setFavorite(JSON.parse(storedFavorites));
     }
   }, []);
 
-  const cartItem = productsId._id
+  const cartItem = productsId._id;
   const itemQuantity = cartItem ? cartItem.qty : 0;
-  console.log("", itemQuantity)
+
 
   return (
     <div className="bg-white w-full">
@@ -391,17 +381,20 @@ function ProductDetails(props) {
                     {productsId?.favourite && (
                       <FaHeart className="text-red-700 w-[23px] h-[23px]" />
                     )}
-
                   </div>
-
                 </div>
 
-                <div className="flex text-gray-400 mt-1 mb-1 " >
+                <div className="flex text-gray-400 mt-1 mb-1 ">
                   <p className="md:text-[18px] text-[14px]">{t("Home")}</p>
                   <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
-                  <p className="md:text-[18px] text-[14px]">{productsId?.categoryName}</p>
+                  <p className="md:text-[18px] text-[14px]">
+                    {productsId?.categoryName}
+                  </p>
                   <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
-                  <p className="md:text-[18px] text-[14px] w-full"> {productsId?.name} </p>
+                  <p className="md:text-[18px] text-[14px] w-full">
+                    {" "}
+                    {productsId?.name}{" "}
+                  </p>
                 </div>
                 <div className="pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
                   {priceSlot &&
@@ -415,44 +408,44 @@ function ProductDetails(props) {
                       return (
                         <div key={i}>
                           <div
-
                             onClick={() => {
                               setSelectedPrice(data);
                               setPriceIndex(i);
                             }}
                             className={`bg-custom-lightPurple cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
-                                        ${priceIndex == i
-                                ? "bg-[#FFF5CB]"
-                                : "bg-white"
-                              }
+                                        ${
+                                          priceIndex == i
+                                            ? "bg-[#FFF5CB]"
+                                            : "bg-white"
+                                        }
                             `}
                           >
-                            {data?.other_price && (<>
-                              <img
-                                className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
-                                src="/star.png"
-                              />
-                              <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
-                                {percentageDifference?.toFixed(2)}%<br />
-                                {t("off")}
-                              </p>
-                            </>
+                            {data?.other_price && (
+                              <>
+                                <img
+                                  className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
+                                  src="/star.png"
+                                />
+                                <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
+                                  {percentageDifference?.toFixed(2)}%<br />
+                                  {t("off")}
+                                </p>
+                              </>
                             )}
                             <p className="text-black font-normal text-base pt-1">
                               {data.value} {data.unit}
                             </p>
                             <p className="text-black font-normal text-base pt-1">
-
-                              {constant.currency}{(data?.our_price)}
+                              {constant.currency}
+                              {data?.our_price}
                             </p>
                             <p className="text-custom-black font-semibold text-sm pt-2">
-
                               {data?.other_price && (
                                 <span className="text-black font-normal line-through">
-                                  {constant.currency}{(data?.other_price)}
+                                  {constant.currency}
+                                  {data?.other_price}
                                 </span>
                               )}
-
                             </p>
                           </div>
                         </div>
@@ -544,7 +537,6 @@ function ProductDetails(props) {
                   </button>
                 </div>
                 <div className="mt-1 text-gray-700">{t(message)}</div> */}
-
               </div>
             </div>
           </div>
@@ -558,8 +550,10 @@ function ProductDetails(props) {
             <div className="flex flex-col gap-2 col-span-2">
               <p className="text-black text-base md:text-xl font-medium col-span-2">
                 {t("Short Description")}:{" "}
-                <span className="text-custom-newGray font-normal
-                ">
+                <span
+                  className="text-custom-newGray font-normal
+                "
+                >
                   {productsId?.short_description}
                 </span>
               </p>
@@ -628,57 +622,77 @@ function ProductDetails(props) {
           </div>
         </div>
 
-
         {productReviews[0]?.rating && (
-          <div className='pt-5 max-w-7xl md:ms-14 ms-4'>
-            <p className='text-black text-xl font-bold'>{t("Ratings & Reviews")}</p>
-            <div className='w-full'>
-
-              <p className='text-black  mb-2 mt-2 font-bold md:text-2xl text-base'>
+          <div className="pt-5 max-w-7xl md:ms-14 ms-4">
+            <p className="text-black text-xl font-bold">
+              {t("Ratings & Reviews")}
+            </p>
+            <div className="w-full">
+              <p className="text-black  mb-2 mt-2 font-bold md:text-2xl text-base">
                 {productsId?.rating || "4"}
-                <span className='text-black font-normal md:text-base text-xs'>{" / 5 "}</span>
+                <span className="text-black font-normal md:text-base text-xs">
+                  {" / 5 "}
+                </span>
               </p>
 
               {/* Reviews Grid Layout */}
 
               <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[320px] ">
                 {productReviews?.map((item, i) => (
-                  <div key={i} className='border-2 black-border p-3 rounded-lg shadow-lg'>
-                    <div className='pt-2 flex justify-start items-center'>
-                      <div className='w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center'>
-                        <p className='text-white text-[18px] font-bold'>{item?.posted_by?.username?.charAt(0).toUpperCase()}</p>
+                  <div
+                    key={i}
+                    className="border-2 black-border p-3 rounded-lg shadow-lg"
+                  >
+                    <div className="pt-2 flex justify-start items-center">
+                      <div className="w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center">
+                        <p className="text-white text-[18px] font-bold">
+                          {item?.posted_by?.username?.charAt(0).toUpperCase()}
+                        </p>
                       </div>
-                      <div className='ml-5'>
-                        <div className='flex'>
-                          <p className='text-black font-normal text-[16px]'>{item?.posted_by?.username}</p>
+                      <div className="ml-5">
+                        <div className="flex">
+                          <p className="text-black font-normal text-[16px]">
+                            {item?.posted_by?.username}
+                          </p>
                         </div>
-                        <p className='text-black font-normal text-xs'>
+                        <p className="text-black font-normal text-xs">
                           {moment(item?.createdAt).format("MMM DD, YYYY")}
                         </p>
                       </div>
                     </div>
 
-                    <p className='text-black font-normal text-base pt-5'>{item?.description}</p>
+                    <p className="text-black font-normal text-base pt-5">
+                      {item?.description}
+                    </p>
 
-                    <div className='pt-5 flex gap-2'>
-                      <Box sx={{ width: 200, display: 'flex', alignItems: 'center' }}>
+                    <div className="pt-5 flex gap-2">
+                      <Box
+                        sx={{
+                          width: 200,
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
                         <Rating
                           name="text-feedback"
                           value={item?.rating}
                           readOnly
                           precision={0.5}
-                          emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                          emptyIcon={
+                            <StarIcon
+                              style={{ opacity: 0.55 }}
+                              fontSize="inherit"
+                            />
+                          }
                         />
-                        <Box className='text-black' sx={{ ml: 2 }}>{item?.rating}</Box>
+                        <Box className="text-black" sx={{ ml: 2 }}>
+                          {item?.rating}
+                        </Box>
                       </Box>
                     </div>
                   </div>
                 ))}
               </div>
-
-
-
-
             </div>
           </div>
         )}
@@ -719,9 +733,6 @@ function ProductDetails(props) {
             ))}
           </div>
         </div>
-
-
-
       </section>
 
       <section className="w-full ">

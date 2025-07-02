@@ -220,7 +220,7 @@ const Layout = ({ children, loader, toaster, constant }) => {
                   toaster={toaster}
                   opens={opens}
                 />
-                <HeaderFirst loader={loader} />
+                <HeaderFirst loader={loader} toaster={toaster} />
               </>
             }
           </div>

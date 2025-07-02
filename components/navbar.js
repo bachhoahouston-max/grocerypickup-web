@@ -592,8 +592,6 @@ const Navbar = (props) => {
       }
     }
 
-    // setOpenCart(false)
-
     let data = [];
     let cart = localStorage.getItem("addCartDetail");
 
@@ -610,6 +608,9 @@ const Navbar = (props) => {
         qty: element.qty,
         seller_id: element.userid,
         isShipmentAvailable: element.isShipmentAvailable,
+        isNextDayDeliveryAvailable: element.isNextDayDeliveryAvailable,
+        isCurbSidePickupAvailable: element.isCurbSidePickupAvailable,
+        isInStoreAvailable: element.isInStoreAvailable,
       });
     });
 
@@ -622,9 +623,7 @@ const Navbar = (props) => {
     const unavailableProducts = data.filter(
       (item) => item.isShipmentAvailable === false
     );
-    const availableProducts = data.filter(
-      (item) => item.isShipmentAvailable === true
-    );
+
     const isShipmentAvailable = unavailableProducts.length === 0;
 
     console.log(isShipmentAvailable);
@@ -644,6 +643,56 @@ const Navbar = (props) => {
               "Some products in your cart are not available for shipment. Please remove them or choose a different delivery option.",
           });
         }
+        return false;
+      }
+    }
+
+    if (isLocalDelivery) {
+      const unavailableForNextDay = data.filter(
+        (item) => item.isNextDayDeliveryAvailable === false
+      );
+   
+      if (unavailableForNextDay.length > 0) {
+        props.toaster({
+          type: "error",
+          message:
+            unavailableForNextDay.length === 1
+              ? "One product in your cart is not available for next-day delivery. Please remove it or choose a different delivery option."
+              : "Some products in your cart are not available for next-day delivery. Please remove them or choose a different delivery option.",
+        });
+        return false;
+      }
+    }
+    if (isDriveUp) {
+      const unavailableForDriveUp = data.filter(
+        (item) => item.isCurbSidePickupAvailable === false
+      );
+
+      if (unavailableForDriveUp.length > 0) {
+        props.toaster({
+          type: "error",
+          message:
+            unavailableForDriveUp.length === 1
+              ? "One product in your cart is not available for curbside pickup. Please remove it or choose a different delivery option."
+              : "Some products in your cart are not available for curbside pickup. Please remove them or choose a different delivery option.",
+        });
+        return false;
+      }
+    }
+
+    if (isOrderPickup) {
+      const unavailableForOrderPickup = data.filter(
+        (item) => item.isInStoreAvailable === false
+      );
+
+      if (unavailableForOrderPickup.length > 0) {
+        props.toaster({
+          type: "error",
+          message:
+            unavailableForOrderPickup.length === 1
+              ? "One product in your cart is not available for in-store pickup. Please remove it or choose a different delivery option."
+              : "Some products in your cart are not available for in-store pickup. Please remove them or choose a different delivery option.",
+        });
         return false;
       }
     }
@@ -1530,15 +1579,15 @@ const Navbar = (props) => {
 
                     <button
                       onClick={() => {
-                            setAppliedCoupon(null);
-                            setSelectedCoupon(null);
-                            setSearchTerm("");
-                            setDiscount(0); // Set 0 instead of null for math operations to work properly
-                            props.toaster({
-                              type: "success",
-                              message: "Coupon removed successfully",
-                            });
-                          }}
+                        setAppliedCoupon(null);
+                        setSelectedCoupon(null);
+                        setSearchTerm("");
+                        setDiscount(0); // Set 0 instead of null for math operations to work properly
+                        props.toaster({
+                          type: "success",
+                          message: "Coupon removed successfully",
+                        });
+                      }}
                       className="text-red-600 hover:text-red-800 text-sm ml-4"
                     >
                       <X size={18} />

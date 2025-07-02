@@ -70,7 +70,6 @@ const responsive = {
 
   const getSale = async () => {
     props.loader(true);
-
     Api("get", "getFlashSale", router).then(
       (res) => {
         props.loader(false);
@@ -131,7 +130,6 @@ const responsive = {
       (res) => {
         props.loader(false);
         if (res.data && Array.isArray(res.data)) {
-          console.log(res.data);
           setProductList(res.data);
           setIscatdata(false);
         } else {
@@ -226,8 +224,7 @@ const responsive = {
   }, [saleData]);
 
   const sell = countdown.map((sale) => sale.timeLeft);
-  //  console.log(countdown)
-  // console.log(sell)
+  
 
   function handleClick(idx) {
     try {
@@ -400,7 +397,7 @@ const responsive = {
         )}
       </div>
 
-      <div className="bg-white w-full">
+      <div className="bg-white w-full min-h-screen">
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
           <div className="container mx-auto px-6 md:px-0  md:max-w-9xl lg:max-w-9xl">
             <div className="flex justify-center flex-col items-center mt-4">
@@ -508,7 +505,7 @@ const responsive = {
         </section>
       </div>
 
-      <section className="max-w-7xl mx-auto w-full py-5 md:px-0 px-5">
+      <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
         <div className="md:flex justify-between items-center w-full mb-6">
           <p className="text-black md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
             {t("Explore by Categories")}
