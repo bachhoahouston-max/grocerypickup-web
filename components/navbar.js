@@ -651,7 +651,7 @@ const Navbar = (props) => {
       const unavailableForNextDay = data.filter(
         (item) => item.isNextDayDeliveryAvailable === false
       );
-   
+
       if (unavailableForNextDay.length > 0) {
         props.toaster({
           type: "error",
@@ -960,27 +960,27 @@ const Navbar = (props) => {
           {/* Lock and Heart Icons */}
           <div className="flex items-center justify-end space-x-2">
             <div
-              className="cursor-pointer md:flex hidden"
+              className="relative cursor-pointer md:flex hidden"
               onClick={() => {
                 setOpenCart(true);
                 setMobileMenu(!mobileMenu);
               }}
             >
-              <BsCart2 className="relative md:text-3xl text-[#F38529] text-lg cursor-pointer" />
+              <BsCart2 className=" md:text-3xl text-[#F38529] text-lg cursor-pointer" />
               {cartData.length > 0 && (
-                <div className="absolute bg-[#F38529] text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-10 lg:right-24 xl:right-32 right-11 md:text-[9px] text-[7px] ">
+                <div className="absolute bg-[#F38529] text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center  md:text-[9px] text-[7px] ">
                   {cartData.length}
                 </div>
               )}
             </div>
 
             <div
-              className="cursor-pointer"
+              className="relative cursor-pointer"
               onClick={() => router.push("/Favourite")}
             >
-              <CiHeart className="relative text-[#F38529] text-2xl md:text-3xl  cursor-pointer" />
+              <CiHeart className=" text-[#F38529] text-3xl md:text-3xl  cursor-pointer" />
               {Favorite.length > 0 && (
-                <div className="absolute bg-[#F38529] text-white rounded-full full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center top-8 md:top-10  md:text-[9px] text-[7px] lg:right-16 xl:right-24 right-6 ">
+                <div className="absolute bg-[#F38529] text-white rounded-full full md:w-4.5 w-4 h-4 md:h-4.5 flex items-center justify-center -top-[1px]  md:text-[9px] text-[7px]  ">
                   {Favorite.length}
                 </div>
               )}
@@ -1535,7 +1535,39 @@ const Navbar = (props) => {
                         {t("Product is Not available for Shipment Delivery")}
                       </p>
                     ))}
+
+                  {pickupOption === "driveUp" &&
+                    (item.isCurbSidePickupAvailable ? (
+                      <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                        {t("Product is available for CurbSide Pickup")}
+                      </p>
+                    ) : (
+                      <p className="text-red-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                        {t("Product is Not available for CurbSide Pickup")}
+                      </p>
+                    ))}
+                  {pickupOption === "orderPickup" &&
+                    (item.isInStoreAvailable ? (
+                      <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                        {t("Product is available for In Store Pickup")}
+                      </p>
+                    ) : (
+                      <p className="text-red-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                        {t("Product is Not available for In Store Pickup")}
+                      </p>
+                    ))}
+                  {pickupOption === "localDelivery" &&
+                    (item.isNextDayDeliveryAvailable ? (
+                      <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                        {t("Product is available for Next Day Delivery")}
+                      </p>
+                    ) : (
+                      <p className="text-red-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                        {t("Product is Not available for Next Day Delivery")}
+                      </p>
+                    ))}
                 </div>
+                
               </div>
             ))}
           </div>
