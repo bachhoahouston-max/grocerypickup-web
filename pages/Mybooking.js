@@ -232,7 +232,7 @@ function Mybooking(props) {
 
   return (
     <>
-      <div className="mx-auto max-w-7xl py-12 min-h-screen">
+      <div className="mx-auto max-w-7xl py-12 min-h-screen mt-10 md:mt-2">
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-center text-[35px] md:text-[45px] font-semibold text-black mb-2">
             {t("My")}

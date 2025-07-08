@@ -29,7 +29,7 @@ function Account(props) {
     }
 
     return (
-        <div className={`w-full px-2 md:mt-8 mt-9 pb-4 `}>
+        <div className={`w-full px-2 md:mt-8 mt-20 pb-4 `}>
             <div className='flex justify-center mx-auto  max-w-7xl  items-center gap-3'>
                 {/* <div className="flex md:m-0 ms-4 flex-col justify-between items-center">
                     <h1 className="text-center  text-[30px] md:text-[45px] font-semibold mb-2 text-black">
@@ -98,7 +98,7 @@ function Account(props) {
 
                     </div>
                 )}
-                <div className="flex rounded-lg">
+                {/* <div className="flex rounded-lg">
                     <select className="bg-white border-1 py-1.5 px-1.5 w-full font-normal text-sm text-black outline-none cursor-pointer" 
                         value={lang}
                         onChange={(e) => handleClick(e.target.value)}
@@ -106,7 +106,7 @@ function Account(props) {
                         <option value={"vi"}>Vietnamese</option>
                         <option value={"en"}>English</option>
                     </select>
-                </div>
+                </div> */}
             </div>
             {user?.username && (
                 // <div className="mx-auto max-w-7xl py-6 md:py-12">

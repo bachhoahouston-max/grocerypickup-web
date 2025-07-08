@@ -75,7 +75,7 @@ const FeedbackForm = (props) => {
     };
 
     return (
-        <div className="relative">
+        <div className="relative md:mt-0 mt-14">
             <img
                 src="./image00.png"
                 alt="Return Policy"

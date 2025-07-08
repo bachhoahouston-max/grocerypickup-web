@@ -65,7 +65,7 @@ const SignIn = (props) => {
     return (
         <>
             <div className="font-sans bg-white flex flex-col items-center justify-center">
-                <div className="max-w-7xl mx-auto w-full mt-0 md:mt-2">
+                <div className="max-w-7xl mx-auto w-full mt-12 md:mt-2">
                     <div className="mx-auto ms-6 md:ms-20 md:mt-0 mt-8">
                         <h1 className="text-[34px] md:text-[64px] text-black">{t("Welcome")}</h1>
                         <p className="md:text-[20px] text-[16px] text-[#858080]"> {t("Please enter your sign in details")}.</p>

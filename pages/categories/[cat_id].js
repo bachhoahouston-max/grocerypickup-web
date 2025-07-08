@@ -138,8 +138,8 @@ function Categories(props) {
     return (
         <div className="bg-white w-full min-h-screen">
             <section className="bg-white w-full  relative flex flex-col justify-center items-center">
-                <div className="lg:max-w-9xl md:max-w-9xl mx-auto w-full md:px-8 px-5 md:pt-5 pt-5 md:pb-10 pb-0">
-                    <div className="flex justify-center flex-col items-center mt-2" > <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">{t("Popular Products")}</h1>
+                <div className="lg:max-w-9xl md:max-w-9xl mx-auto w-full md:px-8 px-5 md:pt-5 pt-8 md:pb-10 pb-0">
+                    <div className="flex justify-center flex-col items-center md:mt-8 mt-12" > <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">{t("Popular Products")}</h1>
                         <p className="text-center w-full text-[13px] md:text-[16px] md:w-[50%] text-gray-500 mb-6 mt-2 italic">
                             {t("Browse through a wide range of categories from fresh produce to pantry staples. We've got everything you need, all in one place")}.
                         </p>

@@ -430,14 +430,14 @@ const responsive = {
                     <li
                       key={index}
                       onClick={() => handleCategoryClick(cat._id)}
-                      className={`flex text-[14px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between p-2 ${
+                      className={`flex text-[14px] hover:text-[#F38529] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between p-2 ${
                         selectedCategory === cat._id
-                          ? "text-[#FEC200]"
+                          ? "text-custom-green"
                           : "text-black"
                       } cursor-pointer`}
                     >
-                      <span>{cat.name}</span>
-                      <FaArrowRight />
+                      <span className="">{cat.name}</span>
+                      <FaArrowRight className="" />
                     </li>
                   ))}
                 </ul>
@@ -451,7 +451,7 @@ const responsive = {
               </div>
 
               {/* Product Grid */}
-              <div className="relative w-full md:w-5/6 grid md:grid-cols-5 lg:grid-cols-6 grid-cols-2 gap-2.5 mx-auto md:mx-2 md:space-x-2 space-x-0">
+              <div className="relative w-full md:w-5/6 grid md:grid-cols-5 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto md:mx-1 md:space-x-2 space-x-0">
                 {iscatdata ? (
                   productsData.length > 0 ? (
                     productsData

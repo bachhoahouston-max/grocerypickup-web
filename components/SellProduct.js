@@ -212,7 +212,7 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
             )}
 
 
-            <div className="flex items-center text-black mt-2">
+            {/* <div className="flex items-center text-black mt-2">
                 <div className="flex items-center mr-2">
                     <FaStar className="text-yellow-500 md:text-xl text-sm" />
                     <FaStar className="text-yellow-500 md:text-xl text-sm" />
@@ -221,7 +221,7 @@ const SellProduct = ({ item, i, url, loader, toaster }) => {
                     <FaStar className="text-yellow-500 md:text-xl text-sm" />
                 </div>
                 <span className="text-sm">(4.5)</span>
-            </div>
+            </div> */}
         </div>
     );
 };

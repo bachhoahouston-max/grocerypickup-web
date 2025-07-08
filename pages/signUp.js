@@ -69,7 +69,7 @@ const SignUp = (props) => {
   return (
     <>
       <div className="font-sans bg-white  flex items-center justify-center">
-        <div className="max-w-7xl w-full mt-0 md:mt-6 grid lg:grid-cols-2 md:grid-cols-2 gap-4 py-8">
+        <div className="max-w-7xl w-full mt-12 md:mt-6 grid lg:grid-cols-2 md:grid-cols-2 gap-4 py-8">
           <div>
             <div className="mx-auto ms-6 md:ms-20">
               <h1 className="text-[34px] md:text-[64px] text-black">{t("Welcome")}</h1>

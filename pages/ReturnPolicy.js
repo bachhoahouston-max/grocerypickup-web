@@ -40,7 +40,7 @@ function ReturnPolicy(props) {
 
     const { t } = useTranslation()
     return (
-        <div className="relative min-h-screen">
+        <div className="relative min-h-screen md:mt-4 mt-12">
             <img
                 src="./image00.png"
                 alt="Return Policy"

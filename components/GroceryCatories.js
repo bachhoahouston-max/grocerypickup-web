@@ -148,7 +148,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     return (
         <div
             key={i}
-            className="bg-white w-full max-w-[350px] h-full md:h-[389px] rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative"
+            className="bg-white w-full max-w-[350px] h-full md:h-[359px] rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative"
         >
             <div className='relative'>
                 <img
@@ -271,7 +271,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 </button>
             )}
 
-            <div className="flex items-center text-black mt-2">
+            {/* <div className="flex items-center text-black mt-2">
                 <div className="flex items-center mr-2">
                     <FaStar className="text-[#F38529] md:text-xl text-sm" />
                     <FaStar className="text-[#F38529] md:text-xl text-sm" />
@@ -280,7 +280,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                     <FaStar className="text-[#F38529] md:text-xl text-sm" />
                 </div>
                 <span className="text-sm">(4.5)</span>
-            </div>
+            </div> */}
         </div>
     );
 };

@@ -42,7 +42,7 @@ function Termsandcondition
     }, []);
 
     return (
-        <div className="relative">
+        <div className="relative md:mt-4 mt-12">
             <img
                 src="./image00.png"
                 alt="Return Policy"
@@ -57,7 +57,7 @@ function Termsandcondition
             <section className="bg-white w-full flex flex-col justify-center items-center">
             <div className="max-w-6xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
                 {loading ? (
-                    <p className="text-base text-black font-normal md:pb-5">Loading...</p>
+                    <p className="text-base text-black font-normal md:pb-5 animate-spin">Loading...</p>
                 ) : (
                     <div className="text-[18px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: termsAndConditions }} />
                 )}

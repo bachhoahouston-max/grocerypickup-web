@@ -46,9 +46,6 @@ function ProductDetails(props) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInCart, setIsInCart] = React.useState(false);
   const [availableQty, setAvailableQty] = React.useState(0);
-  const [pincode, setPincode] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (router?.query?.id) {
@@ -221,10 +218,6 @@ function ProductDetails(props) {
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
   };
 
-  const handleIndex = (index) => {
-    setPriceIndex(index);
-  };
-
   const getProductById = async () => {
     let url = `getProductByslug/${router?.query?.id}`;
     if (user?.token) {
@@ -242,7 +235,7 @@ function ProductDetails(props) {
         setSelectedImage(res.data?.varients[0].image[0]);
         getproductByCategory(res.data.category?.slug, res.data._id);
         setProductReviews(res.data?.reviews);
-
+        console.log(res.data?.reviews);
         if (router.query.clientSecret) {
           setShowPayment(false);
           createProductRquest();
@@ -271,6 +264,7 @@ function ProductDetails(props) {
         props.loader(false);
 
         const sameItem = res?.data?.filter((f) => f._id !== router?.query?.id);
+        console.log(sameItem);
         SetProductList(sameItem);
       },
       (err) => {
@@ -290,7 +284,6 @@ function ProductDetails(props) {
     let data = {
       product: productsId?._id,
     };
-
 
     props.loader(true);
     Api("post", "addremovefavourite", data, router).then(
@@ -342,7 +335,6 @@ function ProductDetails(props) {
 
   const cartItem = productsId._id;
   const itemQuantity = cartItem ? cartItem.qty : 0;
-
 
   return (
     <div className="bg-white w-full">
@@ -506,37 +498,6 @@ function ProductDetails(props) {
                     {t("Shipment Delivery is not available")}
                   </p>
                 )}
-
-                {/* <h3 className="text-black font-normal text-[17px] mt-4 mb-1">
-                  {t("Check Delivery Availability")}</h3>
-
-                <div className="grid md:grid-cols-3 grid-cols-3 gap-2 relative w-full md:min-w-sm">
-                  <input
-                    type="number"
-                    value={pincode}
-                    onChange={(e) => setPincode(e.target.value)}
-                    placeholder={t("Enter Zipcode")}
-                    className="p-2 border border-gray-300 rounded w-full mb-4 text-black focus:outline-none focus:ring-2 focus:ring-custom-green text-bold md:col-span-2 col-span-2"
-                  />
-                  {pincode && (
-                    <RxCross2 className="absolute right-[155px] top-3 text-black"
-                      onClick={() => {
-                        setPincode("");
-                        setMessage("")
-                      }}
-                    />
-                  )}
-
-
-                  <button
-                    onClick={checkAvailability}
-                    // disabled={loading}
-                    className='w-full p-2 text-white rounded bg-custom-gold hover:bg-custom-gold  transition duration-200 col-span-1 h-10.5'
-                  >
-                    {t("Check")}
-                  </button>
-                </div>
-                <div className="mt-1 text-gray-700">{t(message)}</div> */}
               </div>
             </div>
           </div>
@@ -622,22 +583,11 @@ function ProductDetails(props) {
           </div>
         </div>
 
-        {productReviews[0]?.rating && (
-          <div className="pt-5 max-w-7xl md:ms-14 ms-4">
-            <p className="text-black text-xl font-bold">
-              {t("Ratings & Reviews")}
-            </p>
+        {productReviews && (
+          <div className="pt-5 max-w-7xl md:ms-14 mx-4">
+            <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
             <div className="w-full">
-              <p className="text-black  mb-2 mt-2 font-bold md:text-2xl text-base">
-                {productsId?.rating || "4"}
-                <span className="text-black font-normal md:text-base text-xs">
-                  {" / 5 "}
-                </span>
-              </p>
-
-              {/* Reviews Grid Layout */}
-
-              <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-4 gap-4 md:w-full w-[320px] ">
+              <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 gap-4 w-[100%]">
                 {productReviews?.map((item, i) => (
                   <div
                     key={i}
@@ -654,6 +604,12 @@ function ProductDetails(props) {
                           <p className="text-black font-normal text-[16px]">
                             {item?.posted_by?.username}
                           </p>
+                          {/* Add verified buyer badge if needed */}
+                          {item?.verified_buyer && (
+                            <span className="ml-2 text-green-600 text-xs">
+                              ✓ Verified Buyer
+                            </span>
+                          )}
                         </div>
                         <p className="text-black font-normal text-xs">
                           {moment(item?.createdAt).format("MMM DD, YYYY")}
@@ -665,38 +621,50 @@ function ProductDetails(props) {
                       {item?.description}
                     </p>
 
-                    <div className="pt-5 flex gap-2">
-                      <Box
-                        sx={{
-                          width: 200,
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Rating
-                          name="text-feedback"
-                          value={item?.rating}
-                          readOnly
-                          precision={0.5}
-                          emptyIcon={
-                            <StarIcon
-                              style={{ opacity: 0.55 }}
-                              fontSize="inherit"
+                    {/* Image display section */}
+                    {item?.images && item?.images?.length > 0 && (
+                      <div className="pt-3">
+                        {item?.images?.length === 1 ? (
+                        
+                          <div className="w-full">
+                            <img
+                              src={item?.images[0]}
+                              alt="Review image"
+                              className="h-[120px] object-fit rounded-lg"
                             />
-                          }
-                        />
-                        <Box className="text-black" sx={{ ml: 2 }}>
-                          {item?.rating}
-                        </Box>
-                      </Box>
-                    </div>
+                          </div>
+                        ) : (
+                       
+                          <div className="grid grid-cols-2 gap-2">
+                            {item?.images?.slice(0, 4).map((image, index) => (
+                              <div key={index} className="relative">
+                                <img
+                                  src={image}
+                                  alt={`Review image ${index + 1}`}
+                                  className="w-full h-full object-fit rounded-lg"
+                                />
+                                
+                                {index === 3 && item?.images?.length > 4 && (
+                                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
+                                    <span className="text-white text-sm font-semibold">
+                                      +{item?.images?.length - 4}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           </div>
         )}
-        <div className="bg-white max-w-8xl ">
+
+        <div className="bg-white max-w-8xl mt-8">
           <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             {t("Similar Products")}
           </p>

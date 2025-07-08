@@ -1,13 +1,12 @@
+
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from 'react';
 import { Api } from '@/services/service';
 import { useRouter } from "next/router";
 
-function ProductRecallInfo(props) {
+function FranchiseOpportunity(props) {
     const { t } = useTranslation()
-    const [JoinOurTeam, setJoinOurTeam] = useState({
-        JoinTeam: ''
-    });
+    const [FranchiseOpportunity, setFranchiseOpportunity] = useState("");
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
@@ -20,7 +19,7 @@ function ProductRecallInfo(props) {
                 console.log("API Response =>", res.data);
 
                 if (res?.status) {
-                    setJoinOurTeam({ JoinTeam: res?.data[0]?.ProductRecallInfo, id: res?.data[0]?._id });
+                    setFranchiseOpportunity(res?.data[0]?.FranchiseOpportunity );
                     setLoading(false);  // Successfully fetched data, update loading state
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message });
@@ -50,7 +49,7 @@ function ProductRecallInfo(props) {
             />
             <div className="absolute top-[34px] md:top-14 left-1/2 transform -translate-x-1/2 flex justify-center items-center ">
                 <p className="text-black font-bold text-[14px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
-                    {t("⁠Product Recall Information")}
+                    {t("Franchise Opportunity")}
                 </p>
             </div>
             <section className="bg-white w-full flex flex-col justify-center items-center">
@@ -59,7 +58,7 @@ function ProductRecallInfo(props) {
                     {loading ? (
                         <p className="text-base text-black font-normal md:pb-5">Loading...</p>
                     ) : (
-                        <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: JoinOurTeam?.JoinTeam }} />
+                        <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: FranchiseOpportunity }} />
                     )}
                 </div>
             </section>
@@ -67,4 +66,4 @@ function ProductRecallInfo(props) {
     );
 }
 
-export default ProductRecallInfo;
+export default FranchiseOpportunity;

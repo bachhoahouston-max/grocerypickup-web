@@ -23,8 +23,8 @@ const AboutUs = () => {
     return (
         <>
             <div className="w-full bg-[#f59b51] mx-auto flex flex-col md:flex-row justify-center items-center">
-                <div className="md:py-14 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
-                    <nav className="mb-4 mt-8 md:mt-12 text-[12px] md:text-start text-center">
+                <div className="md:py-18 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
+                    <nav className="mb-4 mt-18 md:mt-12 text-[14px] md:text-start text-center">
                         <span className="text-white mr-1">{t("Home")} /</span>
                         <span className="text-[#F38529]">{t("About Us")}</span>
                     </nav>
