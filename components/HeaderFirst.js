@@ -81,7 +81,7 @@ const HeaderFirst = (props) => {
     <>
       <nav className="bg-white border-t-1 border-[#F0F1F1] relative">
         <div className=" mt-2 mx-auto px-4 py-2 md:flex hidden justify-center items-center ">
-          <div className="hidden flex-1 lg:flex justify-center space-x-6">
+          <div className="hidden flex-1 lg:flex justify-center space-x-2">
             <p
               className={`text-[18px]  font-bold cursor-pointer ml-2 ${
                 selectedTab === "home"
@@ -218,7 +218,7 @@ const HeaderFirst = (props) => {
           </div>
         </div>
         <div className="xl:right-20 lg:right-12  absolute top-2 px-4 py-2 flex justify-end items-center">
-          <div className="hidden lg:flex items-center space-x-2 mr-6">
+          <div className="hidden lg:flex items-center space-x-2 mr-2">
             <BiPhoneCall className="text-[#F38529] text-3xl" />
             <a
               href="tel:832-230-9288"
