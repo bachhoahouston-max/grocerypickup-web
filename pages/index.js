@@ -19,7 +19,7 @@ import { languageContext } from "@/pages/_app";
 import { useContext } from "react";
 import Carousel from "react-multi-carousel";
 
-import "react-multi-carousel/lib/styles.css"; 
+import "react-multi-carousel/lib/styles.css";
 import ProductCategory from "@/components/ProductCategory";
 
 export default function Home(props) {
@@ -33,7 +33,7 @@ export default function Home(props) {
   const [iscatdata, setIscatdata] = useState(false);
   const [saleData, setSaleData] = useState([]);
   const [countdown, setCountdown] = useState([]);
-
+  const [newArivalsData, setNewArivalsData] = useState([]);
   const [lang, setLang] = useState(null);
   const [globallang, setgloballang] = useContext(languageContext);
   const { i18n } = useTranslation();
@@ -42,31 +42,55 @@ export default function Home(props) {
     fetchCategories();
     fetchProducts();
     fetchSellProduct();
+    getNewArrivals();
     getSale();
   }, []);
 
-const responsive = {
-  superLargeDesktop: {
-    breakpoint: { max: 4000, min: 3000 },
-    items: 7,
-    slidesToSlide: 1
-  },
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 6,
-    slidesToSlide: 1
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 3,
-    slidesToSlide: 1
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 2,
-    slidesToSlide: 1
-  },
-};
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 7,
+      slidesToSlide: 1,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 6,
+      slidesToSlide: 1,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 3,
+      slidesToSlide: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 2,
+      slidesToSlide: 1,
+    },
+  };
+
+    const responsive1 = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 7,
+      slidesToSlide: 1,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 7,
+      slidesToSlide: 1,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 3,
+      slidesToSlide: 1,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 2,
+      slidesToSlide: 1,
+    },
+  };
 
   const getSale = async () => {
     props.loader(true);
@@ -75,6 +99,22 @@ const responsive = {
         props.loader(false);
         if (res.status) {
           setSaleData(res.data);
+        }
+      },
+      (err) => {
+        props.loader(false);
+        console.log(err);
+        props.toaster({ type: "error", message: err?.message });
+      }
+    );
+  };
+  const getNewArrivals = async () => {
+    props.loader(true);
+    Api("get", "getNewArrival", router).then(
+      (res) => {
+        props.loader(false);
+        if (res.status) {
+          setNewArivalsData(res.data);
         }
       },
       (err) => {
@@ -224,7 +264,6 @@ const responsive = {
   }, [saleData]);
 
   const sell = countdown.map((sale) => sale.timeLeft);
-  
 
   function handleClick(idx) {
     try {
@@ -251,6 +290,7 @@ const responsive = {
         </select>
       </div>
       <MainHeader loader={props.loader} toaster={props.toaster} />
+
       <div className="container mb-8 md:mt-12 lg:mt-18 mt-4 mx-auto bg-white max-w-9xl md:px-6 px-6">
         {sellProduct.length > 0 && (
           <>
@@ -537,6 +577,103 @@ const responsive = {
                     item={item}
                     i={i}
                     url={`/categories/${item?.slug}`}
+                  />
+                </div>
+              ))}
+            </Carousel>
+          ) : (
+            <div className="flex justify-center items-center py-8">
+              <p className="text-gray-500 text-lg">
+                {t("No categories available")}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Custom CSS for better carousel styling */}
+        <style jsx>{`
+          .carousel-container {
+            padding: 0 !important;
+          }
+
+          .react-multi-carousel-list {
+            padding: 10px 0;
+          }
+
+          .react-multi-carousel-item {
+            padding: 0 8px;
+          }
+
+          .react-multi-carousel-dot-list {
+            bottom: -30px;
+          }
+
+          .react-multi-carousel-dot button {
+            background: #ddd;
+            border: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+          }
+
+          .react-multi-carousel-dot--active button {
+            background: #f38529;
+          }
+
+          .react-multiple-carousel__arrow {
+            background: #f38529 !important;
+            border: none !important;
+            color: white !important;
+            min-width: 35px !important;
+            min-height: 35px !important;
+          }
+
+          .react-multiple-carousel__arrow:hover {
+            background: #e67419 !important;
+          }
+
+          .react-multiple-carousel__arrow::before {
+            font-size: 14px !important;
+          }
+        `}</style>
+      </section>
+
+      <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
+        <div className="md:flex justify-between items-center w-full mb-6">
+          <p className="text-black md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
+            {t("New Arrivals")}
+          </p>
+        </div>
+
+        <div className="bg-white w-full px-1 md:px-6 2xl:px-0">
+
+          {newArivalsData && newArivalsData.length > 0 ? (
+            <Carousel
+              responsive={responsive1}
+              autoPlay={true}
+              autoPlaySpeed={3000}
+              // infinite={true}
+              // arrows={true}
+              showDots={false}
+              swipeable={true}
+              draggable={true}
+              keyBoardControl={true}
+              customTransition="transform 300ms ease-in-out"
+              transitionDuration={300}
+              containerClass="carousel-container"
+              removeArrowOnDeviceType={["tablet", "mobile"]}
+              dotListClass="custom-dot-list-style"
+              itemClass="px-2"
+            >
+              {newArivalsData.slice(0, 10).map((item, i) => (
+                <div key={item._id || i} className="h-full">
+                  <GroceryCatories
+                    loader={props.loader}
+                    toaster={props.toaster}
+                    key={i}
+                    item={item}
+                    i={i}
+                    url={`/product-details/${item?.slug}`}
                   />
                 </div>
               ))}
