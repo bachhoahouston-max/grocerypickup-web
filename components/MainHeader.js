@@ -92,7 +92,7 @@ function MainHeader({ toaster, loader }) {
             {carouselImg.map((img, idx) => (
               <div
                 key={idx}
-                className="w-full h-[320px] sm:h-[320px] md:h-[500px] lg:h-[720px] xl:h-[100vh]"
+                className="w-full h-[320px] flex items-center justify-center overflow-hidden md:h-[750px]"
               >
                 <img
                   src={img.image || "/fallback.jpg"}

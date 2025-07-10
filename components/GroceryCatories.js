@@ -148,7 +148,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     return (
         <div
             key={i}
-            className="bg-white w-full max-w-[350px] h-full md:h-[359px] rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative"
+            className="bg-white w-full max-w-[350px] h-full md:h-[359vh] rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative max-h-[380px]"
         >
             <div className='relative'>
                 <img

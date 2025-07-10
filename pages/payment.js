@@ -1,21 +1,19 @@
-import { Api } from '@/services/service';
-import React, { useContext, useEffect, useState } from 'react'
+import { Api } from "@/services/service";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import {
-  Elements
-} from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import CheckoutForm from '@/components/Checkout/stripe';
-import { cartContext, openCartContext, userContext } from './_app';
+import CheckoutForm from "@/components/Checkout/stripe";
+import { cartContext, openCartContext, userContext } from "./_app";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_API_KEY);
-import constant from '@/services/constant';
+import constant from "@/services/constant";
 import { useTranslation } from "react-i18next";
-import { TbCoinTaka } from 'react-icons/tb';
+import { TbCoinTaka } from "react-icons/tb";
 
 function Payment(props) {
   const router = useRouter();
   const [profileData, setProfileData] = useState({});
-  const [clientSecret, setClientSecret] = useState('');
+  const [clientSecret, setClientSecret] = useState("");
   const [CartTotal, setCartTotal] = useState(0);
   const [cartData, setCartData] = useContext(cartContext);
   const [CartItem, setCartItem] = useState(0);
@@ -23,10 +21,9 @@ function Payment(props) {
   const [showcart, setShowcart] = useState(false);
   const [user, setUser] = useContext(userContext); // Added missing user context
   const [date, setDate] = useState(""); // Added missing date state
-  
+
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [mainTotal, setMainTotal] = useState(0);
-
 
   const { t } = useTranslation();
 
@@ -43,7 +40,7 @@ function Payment(props) {
   //       console.error("Error loading profile data:", err);
   //     }
   //   };
-    
+
   //   getUserProfile();
   // }, []);
 
@@ -52,10 +49,10 @@ function Payment(props) {
     try {
       const total = localStorage.getItem("checkoutData");
       const parsedData = JSON.parse(total);
-    
+
       if (parsedData) {
-        setProfileData(parsedData)
-        setMainTotal(parsedData.total)
+        setProfileData(parsedData);
+        setMainTotal(parsedData.total);
       }
     } catch (err) {
       console.error("Error loading pickup option:", err);
@@ -68,17 +65,16 @@ function Payment(props) {
     }
   }, [router]);
 
- 
   useEffect(() => {
     const totalData = localStorage.getItem("checkoutData");
     const parsedData = JSON.parse(totalData);
-  
-    if (router.query.from === 'cart') {
+
+    if (router.query.from === "cart") {
       let cart = localStorage.getItem("addCartDetail");
       if (cart) {
         try {
           setCartData(JSON.parse(cart));
-          setCartTotal(parsedData?.total || 0);  // Safely setting the total
+          setCartTotal(parsedData?.total || 0); // Safely setting the total
         } catch (err) {
           console.error("Error parsing cart data:", err);
           props.toaster({ type: "error", message: "Failed to load cart data" });
@@ -89,45 +85,57 @@ function Payment(props) {
       if (cart) {
         try {
           setCartData(JSON.parse(cart));
-          setCartTotal(parsedData?.total || 0);  // Use the same total here too
+          setCartTotal(parsedData?.total || 0); // Use the same total here too
         } catch (err) {
           console.error("Error parsing single cart data:", err);
-          props.toaster({ type: "error", message: "Failed to load product data" });
+          props.toaster({
+            type: "error",
+            message: "Failed to load product data",
+          });
         }
       }
     }
   }, [router.query.from]);
-  
+
   useEffect(() => {
     if (CartTotal > 0 && !router.query.clientSecret && router.query.from) {
       payment();
     }
   }, [CartTotal]);
 
-
   const createProductRquest = () => {
     const total = localStorage.getItem("checkoutData");
     const parsedData = JSON.parse(total);
-  
+
     props.loader && props.loader(true);
     Api("post", "createProductRquest", parsedData, router).then(
       (res) => {
         props.loader && props.loader(false);
         if (res.status) {
-
           setCartData([]);
           router.push("/Mybooking");
           localStorage.removeItem("addCartDetail");
           localStorage.removeItem("checkoutData");
-          props.toaster({ type: "success", message: "Thank you for your order! Your item will be processed shortly." });
-          
+          props.toaster({
+            type: "success",
+            message:
+              "Thank you for your order! Your item will be processed shortly.",
+          });
         } else {
-          props.toaster && props.toaster({ type: "error", message: res?.data?.message || "Order creation failed" });
+          props.toaster &&
+            props.toaster({
+              type: "error",
+              message: res?.data?.message || "Order creation failed",
+            });
         }
       },
       (err) => {
         props.loader && props.loader(false);
-        props.toaster && props.toaster({ type: "error", message: err?.message || "Failed to create order" });
+        props.toaster &&
+          props.toaster({
+            type: "error",
+            message: err?.message || "Failed to create order",
+          });
       }
     );
   };
@@ -144,9 +152,9 @@ function Payment(props) {
   const payment = () => {
     const data = {
       price: mainTotal, // Using mainTotal instead of CartTotal to include tax and shipping
-      currency: "usd" // Consider making this dynamic
+      currency: "usd", // Consider making this dynamic
     };
-    
+
     props.loader(true);
     Api("post", `poststripe`, data, router).then(
       (res) => {
@@ -156,13 +164,19 @@ function Payment(props) {
           // Save client secret to local storage for potential retrieval after page refresh
           localStorage.setItem("stripeClientSecret", res.clientSecret);
         } else {
-          props.toaster({ type: "error", message: "Failed to initialize payment" });
+          props.toaster({
+            type: "error",
+            message: "Failed to initialize payment",
+          });
         }
       },
       (err) => {
         console.error("Payment initialization error:", err);
         props.loader(false);
-        props.toaster({ type: "error", message: err?.message || "Failed to initialize payment" });
+        props.toaster({
+          type: "error",
+          message: err?.message || "Failed to initialize payment",
+        });
       }
     );
   };
@@ -193,8 +207,12 @@ function Payment(props) {
           </div> */}
 
           {clientSecret ? (
-            <div className='w-full mt-5'>
-              <Elements options={options} stripe={stripePromise} key={clientSecret}>
+            <div className="w-full mt-5">
+              <Elements
+                options={options}
+                stripe={stripePromise}
+                key={clientSecret}
+              >
                 <CheckoutForm
                   price={mainTotal}
                   loader={props.loader}
@@ -202,7 +220,7 @@ function Payment(props) {
                   currency={constant.currency}
                   url={`payment`}
                   toaster={props.toaster}
-                   address={profileData?.Local_address?.address}
+                  address={profileData?.Local_address?.address}
                 />
               </Elements>
             </div>
