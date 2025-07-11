@@ -459,7 +459,7 @@ export default function Home(props) {
               responsive={responsive1}
               autoPlay={true}
               autoPlaySpeed={3000}
-              // infinite={true}
+              infinite={true}
               // arrows={true}
               showDots={false}
               swipeable={true}
@@ -563,7 +563,7 @@ export default function Home(props) {
               responsive={responsive1}
               autoPlay={true}
               autoPlaySpeed={3000}
-              // infinite={true}
+              infinite={true}
               // arrows={true}
               showDots={false}
               swipeable={true}
