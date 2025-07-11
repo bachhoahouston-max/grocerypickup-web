@@ -83,7 +83,7 @@ const HeaderFirst = (props) => {
         <div className=" mt-2 mx-auto px-4 py-2 md:flex hidden justify-center items-center ">
           <div className="hidden flex-1 lg:flex justify-center space-x-2">
             <p
-              className={`text-[18px]  font-bold cursor-pointer ml-2 ${
+              className={`text-[18px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
                 selectedTab === "home"
                   ? "text-custom-green"
                   : "text-custom-black hover:!text-[#F38529]"
@@ -95,7 +95,7 @@ const HeaderFirst = (props) => {
             >
               {t("Home")}
             </p>
-            <div className="relative flex" ref={dropdownRef}>
+            <div className="relative flex transition-transform duration-300 hover:-translate-y-[5px]" ref={dropdownRef}>
               <button
                 className={`text-[18px]  font-bold cursor-pointer inline-flex items-center ${
                   selectedTab === "AllCategory"
@@ -157,7 +157,7 @@ const HeaderFirst = (props) => {
             </div>
            
             <p
-              className={`text-[18px] font-bold cursor-pointer ml-2 
+              className={`text-[18px] font-bold transition-transform duration-300 hover:-translate-y-[5px] cursor-pointer ml-2 
     ${
       selectedTab === "FranchiseOpportunity"
         ? "text-custom-green"
@@ -173,7 +173,7 @@ const HeaderFirst = (props) => {
             </p>
 
             <p
-              className={`text-[18px] font-bold cursor-pointer ml-2 
+              className={`text-[18px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 
     ${
       selectedTab === "AboutUs"
         ? "text-custom-green"
@@ -188,7 +188,7 @@ const HeaderFirst = (props) => {
               {t("About Us")}
             </p>
             <p
-              className={`text-[18px]  font-bold cursor-pointer ml-2 ${
+              className={`text-[18px]  font-bold cursor-pointer transition-transform duration-300 hover:-translate-y-[5px] ml-2 ${
                 selectedTab === "Contact"
                   ? "text-custom-green"
                   : "text-custom-black hover:!text-[#F38529]"
@@ -202,7 +202,7 @@ const HeaderFirst = (props) => {
             </p>
 
             <p
-              className={`text-[18px]  font-bold cursor-pointer ml-2 ${
+              className={`text-[18px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
                 selectedTab === "StoreLocation"
                   ? "text-custom-green"
                   : "text-custom-black hover:!text-[#F38529]"
@@ -218,7 +218,7 @@ const HeaderFirst = (props) => {
           </div>
         </div>
         <div className="xl:right-20 lg:right-12  absolute top-2 px-4 py-2 flex justify-end items-center">
-          <div className="hidden lg:flex items-center space-x-2 mr-2">
+          <div className="hidden lg:flex items-center space-x-2 mr-2 transition-transform duration-300 hover:-translate-y-[5px]">
             <BiPhoneCall className="text-[#F38529] text-3xl" />
             <a
               href="tel:832-230-9288"

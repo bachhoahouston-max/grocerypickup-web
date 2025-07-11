@@ -137,13 +137,13 @@ const SellProduct = ({ loader, toaster }) => {
   }, [saleData]);
 
   return (
-    <div className="container mb-8 md:mt-12 lg:mt-18 mt-4 mx-auto bg-white max-w-9xl md:px-6 px-6">
+    <div className="container mb-2 md:mt-10 lg:mt-14 mt-4 mx-auto bg-white max-w-9xl md:px-6 px-6">
       {saleData.length > 0 && (
         <>
           <p className="text-black md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
             Offer of the Week
           </p>
-          <div className="md:mt-4 mt-4 relative w-full md:w-5/5 grid md:grid-cols-5 lg:grid-cols-7 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
+          <div className="md:mt-2 mt-2 relative w-full md:w-5/5 grid md:grid-cols-5 lg:grid-cols-7 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
                 (cartItem) => cartItem._id === item._id
@@ -160,9 +160,11 @@ const SellProduct = ({ loader, toaster }) => {
                 >
                   {/* Countdown Badge */}
                   {currentSale?.status !== "expired" && (
-                    <div className="absolute top-1 left-6 bg-amber-600 shadow-md rounded-md px-2 py-1.5 z-10 text-xs font-medium text-white">
+                    <div className="absolute md:top-1 -top-2 -left-2 md:left-6 bg-[#5CB447]  shadow-md rounded-md px-2 py-1.5 z-10 text-xs font-medium text-white">
                       <p className="text-[12px] font-semibold">
-                        {currentSale?.status}
+                        {currentSale?.status === "active"
+                          ? "Sale end in"
+                          : "sale start soon"}
                       </p>
                       <div className="flex gap-1 text-center text-[10px] font-bold text-white">
                         <div>{currentSale?.days}d</div>:
@@ -190,17 +192,37 @@ const SellProduct = ({ loader, toaster }) => {
                       : item.product?.name}
                   </p>
 
-                  <div className="flex justify-center items-center md:pt-1 pt-0">
-                    <p className="text-custom-gold text-lg md:text-xl font-semibold">
-                      ${item.price}
-                    </p>
+                  <div className="md:flex-row flex-col flex justify-center mb-1 md:gap-2 items-center md:pt-1 pt-0">
+                    <div className="gap-2 flex items-center">
+                      <span className="text-custom-gold text-lg md:text-xl font-semibold">
+                        ${item.price}
+                      </span>
+                      {item.product?.price_slot &&
+                        item.product.price_slot[0]?.our_price && (
+                          <span className="text-sm text-gray-500 line-through">
+                            ${item.product.price_slot[0].our_price}
+                          </span>
+                        )}
+                    </div>
+                    {item.product?.price_slot &&
+                      item.product.price_slot[0]?.our_price && (
+                        <span className="md:text-sm text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded">
+                          {Math.round(
+                            ((item.product.price_slot[0].our_price -
+                              item.price) /
+                              item.product.price_slot[0].our_price) *
+                              100
+                          )}
+                          % OFF
+                        </span>
+                      )}
                   </div>
 
                   {/* Add/Remove or Buttons */}
                   {itemQuantity > 0 ? (
                     <div className="w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex justify-center items-center">
                       <div
-                        className="bg-custom-gold cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
+                        className="bg-[#5CB447]  cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
                         onClick={() => {
                           if (itemQuantity > 1) {
                             handleRemoveFromCart(item);
@@ -213,7 +235,7 @@ const SellProduct = ({ loader, toaster }) => {
                         {itemQuantity}
                       </p>
                       <div
-                        className="md:px-2 px-1 py-1.5 bg-custom-gold cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                        className="md:px-2 px-1 py-1.5 bg-[#5CB447]  cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                         onClick={() => {
                           handleAddToCart(item);
                         }}
@@ -223,18 +245,18 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                   ) : isActive ? (
                     <button
-                      className="font-bold bg-custom-gold w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
+                      className="font-bold bg-[#5CB447]  w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
                       onClick={() => handleAddToCart(item)}
                     >
                       <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
                       <p>{t("Add")}</p>
                     </button>
                   ) : isUpcoming ? (
-                    <div className="w-[120px] bg-gray-300 md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center border border-gray-300 rounded-[6px]">
+                    <div className="w-[120px] bg-[#5CB447]  md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center  rounded-[6px]">
                       {t("Start Soon")}
                     </div>
                   ) : (
-                    <div className="w-[120px] bg-red-200 md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center border border-gray-300 rounded-[6px] text-center">
+                    <div className="w-[120px] bg-[#5CB447]  md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center  rounded-[6px] text-center">
                       {t("Ended")}
                     </div>
                   )}

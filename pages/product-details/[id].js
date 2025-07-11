@@ -138,7 +138,7 @@ function ProductDetails(props) {
         BarCode: productsId?.BarCode || "",
         total: ourPrice.toFixed(2),
         our_price: ourPrice,
-        price_slot: selectedPrice,
+        price: selectedPrice?.our_price,
         percentageDifference: percentageDifference.toFixed(2),
       };
 
@@ -520,7 +520,6 @@ function ProductDetails(props) {
               </p>
             </div>
 
-       
             <div className="md:col-span-2 col-span-2">
               <p className="text-black text-base md:text-xl font-semibold">
                 {t("Long Description")}:
@@ -613,7 +612,6 @@ function ProductDetails(props) {
                     {item?.images && item?.images?.length > 0 && (
                       <div className="pt-3">
                         {item?.images?.length === 1 ? (
-                        
                           <div className="w-full">
                             <img
                               src={item?.images[0]}
@@ -622,7 +620,6 @@ function ProductDetails(props) {
                             />
                           </div>
                         ) : (
-                       
                           <div className="grid grid-cols-2 gap-2">
                             {item?.images?.slice(0, 4).map((image, index) => (
                               <div key={index} className="relative">
@@ -631,7 +628,7 @@ function ProductDetails(props) {
                                   alt={`Review image ${index + 1}`}
                                   className="w-full h-full object-fit rounded-lg"
                                 />
-                                
+
                                 {index === 3 && item?.images?.length > 4 && (
                                   <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
                                     <span className="text-white text-sm font-semibold">

@@ -22,6 +22,14 @@ const sortByData = [
         name: 'Best selling',
         value: 'is_top'
     },
+     {
+        name: 'New Arrivals',
+        value: 'new'
+    },
+    {
+        name: 'Best Bulk Selling',
+        value: 'bulk'
+    },
     {
         name: 'Alphabetically, A-Z',
         value: 'a_z'
@@ -42,10 +50,10 @@ const sortByData = [
         name: 'Date, old to new',
         value: 'old'
     },
-    {
-        name: 'Date, new to old',
-        value: 'new'
-    },
+    // {
+    //     name: 'Date, new to old',
+    //     value: 'new'
+    // },
 ]
 
 function Categories(props) {
@@ -71,6 +79,7 @@ function Categories(props) {
         // if (category?._id) {
         getproductByCategory(router?.query?.cat_id)
         setSelectedCategories(router?.query?.cat_id)
+        setSelectedSortBy(router?.query?.sort_by)
         // }
     }, [router])
 

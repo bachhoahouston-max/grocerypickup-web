@@ -5,7 +5,6 @@ import MobileFooter from "./MobileFooter.js";
 import { useEffect, useState, useContext } from "react";
 import { useRouter } from "next/router.js";
 import { userContext } from "@/pages/_app.js";
-
 import AnnouncementBar from "./announcementBar.js";
 
 const Layout = ({ children, loader, toaster }) => {
@@ -13,34 +12,52 @@ const Layout = ({ children, loader, toaster }) => {
   const [mobile, setMobile] = useState(false);
   const router = useRouter();
   const [opens, setOpens] = useState(true);
-  const [announcementBar, setAnnouncementBar] = useState(true);
+  const [showAnnouncement, setShowAnnouncement] = useState(true);
 
   useEffect(() => {
-    router.events.on("routeChangeComplete", () => loader(false));
-    router.events.on("routeChangeStart", () => loader(true));
-    loader(false);
+    const handleRouteStart = () => loader(true);
+    const handleRouteComplete = () => loader(false);
+
+    router.events.on("routeChangeStart", handleRouteStart);
+    router.events.on("routeChangeComplete", handleRouteComplete);
 
     const handleScroll = () => {
-      if (window.scrollY > 100) setOpens(false);
-      else setOpens(true);
+      if (window.scrollY > 100) {
+        setOpens(false);
+        setShowAnnouncement(false); // Hide on scroll
+      } else {
+        setOpens(true);
+        setShowAnnouncement(true); // Show at top
+      }
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      router.events.off("routeChangeStart", handleRouteStart);
+      router.events.off("routeChangeComplete", handleRouteComplete);
+    };
   }, []);
 
   return (
     <>
       <div className="flex-1 flex-col bg-white relative">
-        <div className="fixed w-full top-0 z-50 bg-white">
-          {announcementBar && (
+        <div className="fixed w-full top-0 z-50 bg-white transition-all duration-300">
+          {/* Animated AnnouncementBar */}
+          <div
+            className={`transition-all duration-500 ease-in-out transform ${
+              showAnnouncement ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
+            }`}
+          >
             <AnnouncementBar
-              announcementBar={announcementBar}
-              setAnnouncementBar={setAnnouncementBar}
+              announcementBar={showAnnouncement}
+              setAnnouncementBar={setShowAnnouncement}
               loader={loader}
-              toaster={loader}
+              toaster={toaster}
             />
-          )}
+          </div>
+
           <Navbar
             user={user}
             setUser={setUser}

@@ -41,7 +41,6 @@ function announcementBar({
     }
   };
 
-  console.log("sdfg",shipmentCostMessage);
   return (
     <>
       <style>

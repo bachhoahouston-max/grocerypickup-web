@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import ShopFasterTropicana from '@/components/ShopFasterMarketplace';
-import { Api } from '@/services/service';
-import { useTranslation } from 'react-i18next';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from "react";
+import ShopFasterTropicana from "@/components/ShopFasterMarketplace";
+import { Api } from "@/services/service";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
 const Category = (props) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const [category, setCategory] = useState([]);
   const router = useRouter();
 
@@ -24,7 +24,10 @@ const Category = (props) => {
       },
       (err) => {
         props.loader(false);
-        props.toaster({ type: "error", message: err?.data?.message || "Failed to load profile" });
+        props.toaster({
+          type: "error",
+          message: err?.data?.message || "Failed to load profile",
+        });
       }
     );
   };
@@ -40,17 +43,17 @@ const Category = (props) => {
           {category.map((cat, index) => (
             <div
               key={index}
-              className="bg-white shadow-md hover:shadow-lg transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center md:py-4"
+              className="bg-white  hover:shadow-lg transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center md:py-4"
               onClick={() => router.push(`/categories/${cat?.slug}`)}
             >
-              <div className="w-full h-36 md:h-48 rounded-lg overflow-hidden mb-3">
+              <div className="w-full h-full rounded-lg overflow-hidden mb-3">
                 <img
                   src={cat.image}
                   alt={cat.label}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <p className="text-center text-black text-sm md:text-lg font-medium md:mb-0 mb-4">
+              <p className="text-center text-black text-lg md:text-xl font-medium md:mb-0 mb-4">
                 {cat.name}
               </p>
             </div>

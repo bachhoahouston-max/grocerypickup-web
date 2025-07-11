@@ -35,13 +35,14 @@ export default function Home(props) {
   const [newArivalsData, setNewArivalsData] = useState([]);
   const [lang, setLang] = useState(null);
   const [globallang, setgloballang] = useContext(languageContext);
+  const [bulkProduct, setBulkProduct] = useState([]);
   const { i18n } = useTranslation();
 
   useEffect(() => {
     fetchCategories();
     fetchProducts();
     getNewArrivals();
-    
+    getBulkProduct();
   }, []);
 
   const responsive = {
@@ -67,7 +68,7 @@ export default function Home(props) {
     },
   };
 
-    const responsive1 = {
+  const responsive1 = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
       items: 7,
@@ -90,6 +91,22 @@ export default function Home(props) {
     },
   };
 
+  const getBulkProduct = async () => {
+    props.loader(true);
+    Api("get", "getBulkProduct", router).then(
+      (res) => {
+        props.loader(false);
+        if (res.status) {
+          setBulkProduct(res.data);
+        }
+      },
+      (err) => {
+        props.loader(false);
+        console.log(err);
+        props.toaster({ type: "error", message: err?.message });
+      }
+    );
+  };
 
   const getNewArrivals = async () => {
     props.loader(true);
@@ -124,8 +141,6 @@ export default function Home(props) {
       }
     );
   };
-
-
 
   const fetchProducts = (page = 1, limit = 12) => {
     props.loader(true);
@@ -194,9 +209,6 @@ export default function Home(props) {
     setIscatdata(false);
   };
 
-
-
-
   function handleClick(idx) {
     try {
       setLang(idx);
@@ -223,7 +235,6 @@ export default function Home(props) {
       </div>
       <MainHeader loader={props.loader} toaster={props.toaster} />
       <SellProduct loader={props.loader} toaster={props.toaster} />
-     
 
       <div className="bg-white w-full min-h-screen">
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
@@ -245,7 +256,7 @@ export default function Home(props) {
                 <ul className="rounded-lg p-4 space-y-2">
                   <li
                     onClick={() => handleCategoryClick1("/categories/all")}
-                    className={`flex text-[14px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between p-2 ${
+                    className={`flex text-[14px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between transition-transform duration-300 hover:-translate-y-[5px] p-2 ${
                       selectedCategory === "all"
                         ? "text-custom-green"
                         : "text-black"
@@ -258,7 +269,7 @@ export default function Home(props) {
                     <li
                       key={index}
                       onClick={() => handleCategoryClick(cat._id)}
-                      className={`flex text-[14px] hover:text-[#F38529] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between p-2 ${
+                      className={`flex text-[14px] hover:text-[#F38529] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold transition-transform duration-300 hover:-translate-y-[5px] items-center justify-between p-2 ${
                         selectedCategory === cat._id
                           ? "text-custom-green"
                           : "text-black"
@@ -320,9 +331,9 @@ export default function Home(props) {
                 )}
               </div>
             </div>
-            <div className=" flex justify-center text-custom-green items-center  underline ">
+            <div className=" transition-transform duration-300 hover:-translate-y-[5px] flex justify-center text-custom-green items-center  underline ">
               <p
-                className=" text-lg px-3 py-2 rounded-sm cursor-pointer"
+                className=" text-lg px-3 py-2 rounded-sm cursor-pointer "
                 onClick={() => handleCategoryClick1("/categories/all")}
               >
                 {t("View More")}{" "}
@@ -333,7 +344,7 @@ export default function Home(props) {
         </section>
       </div>
 
-      <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
+      <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5">
         <div className="md:flex justify-between items-center w-full mb-6">
           <p className="text-black md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
             {t("Explore by Categories")}
@@ -427,14 +438,22 @@ export default function Home(props) {
       </section>
 
       <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5 pb-5">
-        <div className="md:flex justify-between items-center w-full mb-6">
-          <p className="text-black md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
+        
+         <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
+          <p className="text-black md:text-[24px] text-xl font-semibold">
             {t("New Arrivals")}
+          </p>
+          <p
+            className="text-black md:text-[18px] text-[16px] font-semibold hover:text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
+            onClick={() =>
+              router.push("/categories/all?category=all&sort_by=new")
+            }
+          >
+            {t("View All")}
           </p>
         </div>
 
         <div className="bg-white w-full px-1 md:px-6 2xl:px-0">
-
           {newArivalsData && newArivalsData.length > 0 ? (
             <Carousel
               responsive={responsive1}
@@ -523,9 +542,112 @@ export default function Home(props) {
         `}</style>
       </section>
 
+      <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5 pb-5">
+        <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
+          <p className="text-black md:text-[24px] text-xl font-semibold">
+            {t("Bulk Best Sellers")}
+          </p>
+          <p
+            className="text-black md:text-[18px] text-[16px] font-semibold hover:text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
+            onClick={() =>
+              router.push("/categories/all?category=all&sort_by=bulk")
+            }
+          >
+            {t("View All")}
+          </p>
+        </div>
+
+        <div className="bg-white w-full px-1 md:px-6 2xl:px-0">
+          {bulkProduct && bulkProduct.length > 0 ? (
+            <Carousel
+              responsive={responsive1}
+              autoPlay={true}
+              autoPlaySpeed={3000}
+              // infinite={true}
+              // arrows={true}
+              showDots={false}
+              swipeable={true}
+              draggable={true}
+              keyBoardControl={true}
+              customTransition="transform 300ms ease-in-out"
+              transitionDuration={300}
+              containerClass="carousel-container"
+              removeArrowOnDeviceType={["tablet", "mobile"]}
+              dotListClass="custom-dot-list-style"
+              itemClass="px-2"
+            >
+              {bulkProduct.map((item, i) => (
+                <div key={item._id || i} className="h-full">
+                  <GroceryCatories
+                    loader={props.loader}
+                    toaster={props.toaster}
+                    key={i}
+                    item={item}
+                    i={i}
+                    url={`/product-details/${item?.slug}`}
+                  />
+                </div>
+              ))}
+            </Carousel>
+          ) : (
+            <div className="flex justify-center items-center py-8">
+              <p className="text-gray-500 text-lg">
+                {t("No New Bulk Product available")}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Custom CSS for better carousel styling */}
+        <style jsx>{`
+          .carousel-container {
+            padding: 0 !important;
+          }
+
+          .react-multi-carousel-list {
+            padding: 10px 0;
+          }
+
+          .react-multi-carousel-item {
+            padding: 0 8px;
+          }
+
+          .react-multi-carousel-dot-list {
+            bottom: -30px;
+          }
+
+          .react-multi-carousel-dot button {
+            background: #ddd;
+            border: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+          }
+
+          .react-multi-carousel-dot--active button {
+            background: #f38529;
+          }
+
+          .react-multiple-carousel__arrow {
+            background: #f38529 !important;
+            border: none !important;
+            color: white !important;
+            min-width: 35px !important;
+            min-height: 35px !important;
+          }
+
+          .react-multiple-carousel__arrow:hover {
+            background: #e67419 !important;
+          }
+
+          .react-multiple-carousel__arrow::before {
+            font-size: 14px !important;
+          }
+        `}</style>
+      </section>
       <div className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
-          <div className="bg-white p-4 shadow-md text-center">
+          <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
             <FontAwesomeIcon
               icon={faBoxOpen}
               className="text-xl text-[#F38529] mb-2"
@@ -537,7 +659,7 @@ export default function Home(props) {
               {t("Fresh and safely packed for you")}
             </p>
           </div>
-          <div className="bg-white p-4 shadow-md text-center">
+          <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
             <FontAwesomeIcon
               icon={faHeadset}
               className="text-xl text-[#F38529] mb-4"
@@ -549,7 +671,7 @@ export default function Home(props) {
               {t("Help available anytime you need it")}
             </p>
           </div>
-          <div className="bg-white p-4 shadow-md text-center">
+          <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
             <FontAwesomeIcon
               icon={faTruck}
               className="text-xl text-[#F38529] mb-4"
@@ -561,7 +683,7 @@ export default function Home(props) {
               {t("Quick delivery in next day")}
             </p>
           </div>
-          <div className="bg-white p-4 shadow-md text-center">
+          <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
             <FontAwesomeIcon
               icon={faLock}
               className="text-xl text-[#F38529] mb-4"
