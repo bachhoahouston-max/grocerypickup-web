@@ -46,8 +46,8 @@ const AboutUs = () => {
                 <div className="md:flex hidden w-full md:w-auto">
                     <img
                         alt="A bowl of assorted fresh fruits including strawberries, kiwi, blueberries, and watermelon"
-                        className="w-full h-auto"
-                        src="./aboutus-1.png"
+                        className="w-[800px] h-auto"
+                        src="./store.png"
                     />
                 </div>
             </div>

@@ -506,7 +506,7 @@ function ProductDetails(props) {
           <p className="text-black text-xl md:text-2xl font-bold mb-4">
             {t("About Product")}
           </p>
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-6 w-full">
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-3 w-full">
             {/* About Product Section */}
             <div className="flex flex-col gap-2 col-span-2">
               <p className="text-black text-base md:text-xl font-medium col-span-2">
@@ -518,21 +518,9 @@ function ProductDetails(props) {
                   {productsId?.short_description}
                 </span>
               </p>
-              <p className="text-black text-base md:text-xl font-medium">
-                {t("Country of Origin")}:{" "}
-                <span className="text-custom-newGray font-normal md:mt-1">
-                  {productsId?.origin}
-                </span>
-              </p>
-              <p className="text-black text-base md:text-xl font-medium">
-                {t("Manufacturer Name")}:{" "}
-                <span className="text-custom-newGray font-normal md:mt-1">
-                  {productsId?.manufacturername}
-                </span>
-              </p>
             </div>
 
-            {/* Long Description */}
+       
             <div className="md:col-span-2 col-span-2">
               <p className="text-black text-base md:text-xl font-semibold">
                 {t("Long Description")}:
@@ -584,7 +572,7 @@ function ProductDetails(props) {
         </div>
 
         {productReviews && (
-          <div className="pt-5 max-w-7xl md:ms-14 mx-4">
+          <div className=" max-w-7xl md:ms-14 mx-4">
             <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
             <div className="w-full">
               <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 gap-4 w-[100%]">
@@ -665,7 +653,7 @@ function ProductDetails(props) {
         )}
 
         <div className="bg-white max-w-8xl mt-8">
-          <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
+          <p className="text-black text-xl font-bold md:mb-5 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             {t("Similar Products")}
           </p>
           <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-5 md:mx-8 ms-4">

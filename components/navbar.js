@@ -1432,7 +1432,7 @@ const Navbar = (props) => {
                         <p className="text-custom-newGrayColors font-normal text-sm ">
                           <span className="pl-3">
                             {constant.currency}
-                            {item?.price_slot?.our_price}
+                            {item?.price}
                           </span>{" "}
                           {item?.price_slot?.other_price && (
                             <span className="line-through">
@@ -1454,7 +1454,7 @@ const Navbar = (props) => {
                                     (draft) => {
                                       draft[i].qty -= 1;
                                       const price = parseFloat(
-                                        draft[i]?.price_slot?.our_price
+                                        draft[i]?.price
                                       );
                                       draft[i].total = price * draft[i].qty;
                                     }
@@ -1486,7 +1486,7 @@ const Navbar = (props) => {
                                   }
                                   draft[i].qty += 1;
                                   const price = parseFloat(
-                                    draft[i]?.price_slot?.our_price
+                                    draft[i]?.price
                                   );
                                   draft[i].total = price * draft[i].qty;
                                 });

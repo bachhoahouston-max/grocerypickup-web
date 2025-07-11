@@ -453,7 +453,7 @@ export default function Home(props) {
               dotListClass="custom-dot-list-style"
               itemClass="px-2"
             >
-              {newArivalsData.slice(0, 10).map((item, i) => (
+              {newArivalsData.map((item, i) => (
                 <div key={item._id || i} className="h-full">
                   <GroceryCatories
                     loader={props.loader}
