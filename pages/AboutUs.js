@@ -47,7 +47,7 @@ const AboutUs = () => {
                     <img
                         alt="A bowl of assorted fresh fruits including strawberries, kiwi, blueberries, and watermelon"
                         className="w-[800px] h-auto"
-                        src="./store.png"
+                        src="/Store.png"
                     />
                 </div>
             </div>
