@@ -240,16 +240,7 @@ const HeaderFirst = (props) => {
         </div>
       </nav>
 
-      <div className="rounded-lg flex md:hidden justify-center m-2">
-        <select
-          className="bg-white w-[110px] font-normal text-sm text-black outline-none cursor-pointer border p-1 rounded-[5px]"
-          value={lang}
-          onChange={(e) => handleClick(e.target.value)}
-        >
-          <option value={"en"}>English</option>
-          <option value={"vi"}>Vietnamese</option>
-        </select>
-      </div>
+     
     </>
   );
 };

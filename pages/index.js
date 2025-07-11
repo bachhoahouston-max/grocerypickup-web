@@ -28,15 +28,9 @@ export default function Home(props) {
   const [productsData, setProductsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [productList, setProductList] = useState([]);
-  const [sellProduct, setSellProduct] = useState([]);
   const [iscatdata, setIscatdata] = useState(false);
-  const [saleData, setSaleData] = useState([]);
-  const [countdown, setCountdown] = useState([]);
   const [newArivalsData, setNewArivalsData] = useState([]);
-  const [lang, setLang] = useState(null);
-  const [globallang, setgloballang] = useContext(languageContext);
   const [bulkProduct, setBulkProduct] = useState([]);
-  const { i18n } = useTranslation();
 
   useEffect(() => {
     fetchCategories();
@@ -209,30 +203,8 @@ export default function Home(props) {
     setIscatdata(false);
   };
 
-  function handleClick(idx) {
-    try {
-      setLang(idx);
-      const language = idx || "en";
-      console.log(language);
-      i18n.changeLanguage(language);
-      setgloballang(language);
-      localStorage.setItem("LANGUAGE", language);
-    } catch (err) {
-      console.log(err.message);
-    }
-  }
   return (
     <div className="">
-      <div className="rounded-lg flex md:hidden justify-end m-2">
-        <select
-          className="bg-white w-[50px] font-normal text-sm text-black outline-none cursor-pointer border border-custom-green p-1 rounded-[5px]"
-          value={lang}
-          onChange={(e) => handleClick(e.target.value)}
-        >
-          <option value={"en"}>EN</option>
-          <option value={"vi"}>VI</option>
-        </select>
-      </div>
       <MainHeader loader={props.loader} toaster={props.toaster} />
       <SellProduct loader={props.loader} toaster={props.toaster} />
 
@@ -438,8 +410,7 @@ export default function Home(props) {
       </section>
 
       <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5 pb-5">
-        
-         <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
+        <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
           <p className="text-black md:text-[24px] text-xl font-semibold">
             {t("New Arrivals")}
           </p>

@@ -28,13 +28,12 @@ import { BsCart2 } from "react-icons/bs";
 import { RxCross2 } from "react-icons/rx";
 import AddressInput from "./addressInput";
 import { useTranslation } from "react-i18next";
+import { languageContext } from "@/pages/_app";
 
 const Navbar = (props) => {
-  const { t } = useTranslation();
   const router = useRouter();
   const [serchData, setSearchData] = useState("");
-  const [productsList, setProductsList] = useState([]);
-  const inputRef1 = useRef(null);
+
   const inputRef2 = useRef(null);
   const [showHover, setShowHover] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -43,7 +42,6 @@ const Navbar = (props) => {
   const [openCart, setOpenCart] = useContext(openCartContext);
   const [CartItem, setCartItem] = useState(0);
   const [cartData, setCartData] = useContext(cartContext);
-  const [showcart, setShowcart] = useState(false);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [mainTotal, setMainTotal] = useState(0);
@@ -56,13 +54,15 @@ const Navbar = (props) => {
   const [coupons, setCoupons] = useState([]);
   const [filteredCoupons, setFilteredCoupons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [afterCoupanTotal, setAfterCoupanTotal] = useState(mainTotal);
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
+
+  const [lang, setLang] = useState(null);
+  const [globallang, setgloballang] = useContext(languageContext);
+  const { i18n } = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchCoupons = async () => {
@@ -103,6 +103,18 @@ const Navbar = (props) => {
     }
   }, [searchTerm, coupons]);
 
+  function handleClick(idx) {
+    try {
+      setLang(idx);
+      const language = idx || "en";
+      console.log(language);
+      i18n.changeLanguage(language);
+      setgloballang(language);
+      localStorage.setItem("LANGUAGE", language);
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -848,7 +860,7 @@ const Navbar = (props) => {
                     )} */}
         </div>
 
-        <div className="xl:mr-20 lg:mr-12  mr-2 flex">
+        <div className="xl:mr-20 lg:mr-12  mr-1 flex">
           <div className="hidden md:flex items-center space-x-4 mr-4">
             {user?.token === undefined ? (
               <>
@@ -957,8 +969,8 @@ const Navbar = (props) => {
             )}
           </div>
 
-          {/* Lock and Heart Icons */}
-          <div className="flex items-center justify-end space-x-2">
+         
+          <div className="flex items-center justify-end md:space-x-2">
             <div
               className="relative cursor-pointer md:flex hidden"
               onClick={() => {
@@ -984,6 +996,16 @@ const Navbar = (props) => {
                   {Favorite.length}
                 </div>
               )}
+            </div>
+            <div className="rounded-lg flex md:hidden justify-center ">
+              <select
+                className="bg-white w-[40px] font-normal text-[11px] text-black outline-none cursor-pointer border py-2 rounded-[5px]"
+                value={lang}
+                onChange={(e) => handleClick(e.target.value)}
+              >
+                <option value={"en"}>EN</option>
+                <option value={"vi"}>VI</option>
+              </select>
             </div>
           </div>
         </div>
@@ -1453,9 +1475,7 @@ const Navbar = (props) => {
                                     cartData,
                                     (draft) => {
                                       draft[i].qty -= 1;
-                                      const price = parseFloat(
-                                        draft[i]?.price
-                                      );
+                                      const price = parseFloat(draft[i]?.price);
                                       draft[i].total = price * draft[i].qty;
                                     }
                                   );
@@ -1485,9 +1505,7 @@ const Navbar = (props) => {
                                     return;
                                   }
                                   draft[i].qty += 1;
-                                  const price = parseFloat(
-                                    draft[i]?.price
-                                  );
+                                  const price = parseFloat(draft[i]?.price);
                                   draft[i].total = price * draft[i].qty;
                                 });
                                 setCartData(nextState);
@@ -1567,7 +1585,6 @@ const Navbar = (props) => {
                       </p>
                     ))}
                 </div>
-                
               </div>
             ))}
           </div>
