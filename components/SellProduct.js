@@ -160,7 +160,7 @@ const SellProduct = ({ loader, toaster }) => {
                 >
                   {/* Countdown Badge */}
                   {currentSale?.status !== "expired" && (
-                    <div className="absolute md:top-1 -top-2 -left-2 md:left-6 bg-[#5CB447]  shadow-md rounded-md px-2 py-1.5 z-10 text-xs font-medium text-white">
+                    <div className="absolute md:top-1 -top-2 -left-2 md:left-6 bg-custom-green  shadow-md rounded-md px-2 py-1.5 z-10 text-xs font-medium text-white">
                       <p className="text-[12px] font-semibold">
                         {currentSale?.status === "active"
                           ? "Sale end in"
