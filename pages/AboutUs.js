@@ -110,7 +110,7 @@ const AboutUs = (props) => {
                 <Star className="w-4 h-4" />
                 Why Work With Us
               </div>
-              <h1 className="text-5xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                 Bringing Freshness &
                 <span className="text-[#F38529]"> Convenience</span> Together
               </h1>
@@ -146,7 +146,7 @@ const AboutUs = (props) => {
 
           {/* About Section with Image */}
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div className="flex flex-col lg:flex-row max-h-[550px]">
+            <div className="flex flex-col lg:flex-row max-h-[550px] h-full">
               <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
                 <div className="inline-flex items-center gap-2 bg-[#F38529]/10 text-[#F38529] px-4 py-2 rounded-full text-sm font-medium mb-6 w-fit">
                   <CheckCircle className="w-4 h-4" />
@@ -173,8 +173,8 @@ const AboutUs = (props) => {
                   </div>
                 </div>
               </div>
-              <div className="lg:w-1/2 relative">
-                <div className="aspect-square lg:aspect-auto lg:h-full bg-gradient-to-br from-[#F38529]/20 to-green-100 flex items-center justify-center">
+              <div className="lg:w-1/2 relative md:flex hidden">
+                <div className="aspect-square lg:aspect-auto lg:h-full bg-gradient-to-br from-[#F38529]/20 to-green-100 flex items-center justify-center h-[400px]">
                   <img
                     src="/Rectangle25.png"
                     alt="Fresh sliced melon"
