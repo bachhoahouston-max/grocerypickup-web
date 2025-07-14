@@ -815,11 +815,11 @@ const Navbar = (props) => {
               }
             }}
             placeholder={t("Search for products...")}
-            className="relative md:text-[15px] text-[10px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#F38529] rounded-l-md focus:outline-none pr-10"
+            className="relative md:text-[15px] text-[11px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#F38529] rounded-l-md focus:outline-none pr-10"
           />
 
           <button
-            className="py-[4.5px] xl:py-[9px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer rounded-r-md"
+            className="py-[5px] xl:py-[9px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer rounded-r-md"
             onClick={() => {
               router.push(`/Search/${serchData}`);
             }}

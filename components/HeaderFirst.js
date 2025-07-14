@@ -227,7 +227,7 @@ const HeaderFirst = (props) => {
               832-230-9288
             </a>
           </div>
-          <div className="rounded-lg md:flex hidden">
+          <div className="rounded-lg lg:flex hidden">
             <select
               className="bg-white w-full font-normal text-sm text-black outline-none cursor-pointer"
               value={lang}

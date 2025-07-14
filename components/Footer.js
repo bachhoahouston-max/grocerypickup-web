@@ -73,7 +73,7 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row w-full text-white">
             {/* Useful Links */}
             <div className="w-full md:w-1/3 mb-4 md:mb-0 ">
-              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">
+              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]  transition-transform duration-300 hover:-translate-y-[8px]">
                 {t("Useful Links")}
               </h3>
               <ul>
@@ -125,7 +125,7 @@ const Footer = () => {
 
             {/* Help & Support */}
             <div className="w-full md:w-1/3 mb-4 md:mb-0">
-              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">
+              <h3 className="font-bold mb-4  transition-transform duration-300 hover:-translate-y-[8px]  lg:text-[19px] text-[18px]">
                 {t("Help & Support")}
               </h3>
               <ul>
@@ -159,7 +159,7 @@ const Footer = () => {
 
             {/* Other Links */}
             <div className="w-full md:w-1/3 mb-4 md:mb-0">
-              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">
+              <h3 className="font-bold mb-4   transition-transform duration-300 hover:-translate-y-[8px] lg:text-[19px] text-[18px]">
                 {"Other Links"}
               </h3>
               <ul>

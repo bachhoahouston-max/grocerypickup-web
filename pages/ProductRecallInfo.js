@@ -42,17 +42,8 @@ function ProductRecallInfo(props) {
     }, []);
 
     return (
-        <div className="relative min-h-screen md:mt-4 mt-12">
-            <img
-                src="./image00.png"
-                alt="Return Policy"
-                className="h-20 md:h-full w-full"
-            />
-            <div className="absolute top-[34px] md:top-14 left-1/2 transform -translate-x-1/2 flex justify-center items-center ">
-                <p className="text-black font-bold text-[14px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
-                    {t("⁠Product Recall Information")}
-                </p>
-            </div>
+        <div className="relative min-h-screen md:mt-9 mt-9">
+           
             <section className="bg-white w-full flex flex-col justify-center items-center">
                 <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
 
