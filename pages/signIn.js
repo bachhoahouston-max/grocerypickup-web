@@ -72,7 +72,7 @@ const SignIn = (props) => {
                     </div>
                     <div className="grid lg:grid-cols-2 md:grid-cols-2 gap-4 py-8">
                         <div className="hidden md:flex justify-center items-center">
-                            <img src="/image1.png" alt="Sign In" className="w-[555px] h-[766px]" />
+                            <img src="/image2.jpeg" alt="Sign In" className="w-[555px] h-[766px]" />
                         </div>
                         <form onSubmit={submit} className="border-[2px] mx-4 rounded-xl border-black md:px-12 px-3 flex flex-col justify-center items-center md:mb-8 mb-20">
                             <h3 className="text-black md:text-[40px] text-[28px] font-bold text-center md:mb-8 mb-4 mt-4">{t("Sign in")}</h3>

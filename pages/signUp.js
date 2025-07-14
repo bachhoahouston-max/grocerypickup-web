@@ -103,7 +103,7 @@ const SignUp = (props) => {
           <div>
             <div className="hidden md:flex justify-center items-center">
               <img
-                src="/image1.png"
+                src="/image2.jpeg"
                 alt="Sign Up"
                 className="w-[590px] h-[766px]"
               />
