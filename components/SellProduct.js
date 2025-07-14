@@ -23,10 +23,17 @@ const SellProduct = ({ loader, toaster }) => {
       if (existingItemIndex === -1) {
         draft.push({
           ...item,
+          name:item?.product.name,
+          id:item?.product?._id,
           selectedColor: item?.product.varients?.[0] || {},
           selectedImage: item.product?.varients[0]?.image[0] || "",
           BarCode: item?.product.DateBarCode || "",
           total: price,
+          isCurbSidePickupAvailable:item?.product?.isCurbSidePickupAvailable, 
+          isInStoreAvailable:item?.product?.isInStoreAvailable,
+          isNextDayDeliveryAvailable:item?.product?.isNextDayDeliveryAvailable,
+          isReturnAvailable:item?.product?.isReturnAvailable,
+          isShipmentAvailable:item?.product?.isShipmentAvailable,
           qty: 1,
           price: price ?? 0,
           price_slot: item.product.price_slot?.[0] || {},

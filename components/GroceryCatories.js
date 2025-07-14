@@ -27,6 +27,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
   const hasFetchedFavourite = useRef(false); // track once
+
   const handleAddToCart = () => {
     const itemQuantity = Number(item?.Quantity ?? 0);
 
@@ -50,6 +51,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
     const newItem = {
       ...item,
+      id:item?._id,
       selectedColor: item?.varients?.[0] || {},
       selectedImage: item?.varients?.[0]?.image?.[0] || "",
       BarCode: item?.BarCode || "",

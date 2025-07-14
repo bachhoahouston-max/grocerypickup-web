@@ -179,8 +179,6 @@ const Navbar = (props) => {
   const [date, setDate] = useState(null);
   const [parkingNo, setParkingNo] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [allProduct, setAllProduct] = useState([]);
-  const [clientSecret, setClientSecret] = useState([]);
 
   const handleOptionChange = (event) => {
     setPickupOption(event.target.value);
@@ -264,7 +262,6 @@ const Navbar = (props) => {
     if (cartData?.length > 0) {
       getproductByCategory();
     }
-    fetchProducts();
   }, []);
 
   const getproductByCategory = async () => {
@@ -287,28 +284,7 @@ const Navbar = (props) => {
     );
   };
 
-  const fetchProducts = () => {
-    props.loader(true);
-    Api("get", "getProduct", null, router).then(
-      (res) => {
-        props.loader(false);
-        if (res.data && Array.isArray(res.data)) {
-          setAllProduct(res.data);
-        } else {
-          console.error("Unexpected response format:", res);
-          props.toaster({
-            type: "error",
-            message: "Unexpected response format",
-          });
-        }
-      },
-      (err) => {
-        props.loader(false);
-        console.log(err);
-        props.toaster({ type: "error", message: err?.message });
-      }
-    );
-  };
+
 
   const minDate = (() => {
     const now = new Date();
@@ -611,7 +587,7 @@ const Navbar = (props) => {
 
     d.forEach((element) => {
       data.push({
-        product: element?._id,
+        product: element?.id,
         image: element.selectedColor?.image,
         BarCode: element.BarCode,
         color: element.selectedColor?.color || "",
@@ -625,7 +601,7 @@ const Navbar = (props) => {
         isInStoreAvailable: element.isInStoreAvailable,
       });
     });
-
+    console.log("pxcvfgbhn", data);
     const isLocalDelivery = pickupOption === "localDelivery";
     const isOrderPickup = pickupOption === "orderPickup";
     const isDriveUp = pickupOption === "driveUp";
@@ -969,7 +945,6 @@ const Navbar = (props) => {
             )}
           </div>
 
-         
           <div className="flex items-center justify-end md:space-x-2">
             <div
               className="relative cursor-pointer md:flex hidden"
