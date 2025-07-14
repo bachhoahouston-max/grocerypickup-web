@@ -174,7 +174,7 @@ const AboutUs = (props) => {
                 </div>
               </div>
               <div className="lg:w-1/2 relative md:flex hidden">
-                <div className="aspect-square lg:aspect-auto lg:h-full bg-gradient-to-br from-[#F38529]/20 to-green-100 flex items-center justify-center h-[400px]">
+                <div className="aspect-square lg:aspect-auto lg:h-full bg-gradient-to-br from-[#F38529]/20 to-green-100 flex items-center justify-center h-[500px] w-[800px]">
                   <img
                     src="/Rectangle25.png"
                     alt="Fresh sliced melon"
