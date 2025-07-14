@@ -139,6 +139,7 @@ function ProductDetails(props) {
         total: ourPrice.toFixed(2),
         our_price: ourPrice,
         price: selectedPrice?.our_price,
+        price_slot: selectedPrice,
         percentageDifference: percentageDifference.toFixed(2),
       };
 
@@ -502,67 +503,66 @@ function ProductDetails(props) {
             </div>
           </div>
         </div>
-        <div className="w-full md:my-10 my-5 md:px-16 py-5 px-4">
-          <p className="text-black text-xl md:text-2xl font-bold mb-4">
+        <div className="w-full md:my-6 my-3 md:px-10 px-4 py-4">
+          <p className="text-black text-xl md:text-2xl font-bold mb-3">
             {t("About Product")}
           </p>
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-3 w-full">
-            {/* About Product Section */}
-            <div className="flex flex-col gap-2 col-span-2">
-              <p className="text-black text-base md:text-xl font-medium col-span-2">
-                {t("Short Description")}:{" "}
-                <span
-                  className="text-custom-newGray font-normal
-                "
-                >
+
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
+            {/* Short Description */}
+            <div className="md:col-span-2">
+              <p className="text-black text-base md:text-[18px] font-bold">
+                {t(" Description")}:
+                <span className="text-custom-newGray font-normal ml-1">
                   {productsId?.short_description}
                 </span>
               </p>
             </div>
 
-            <div className="md:col-span-2 col-span-2">
-              <p className="text-black text-base md:text-xl font-semibold">
-                {t("Long Description")}:
-              </p>
-              <p className="text-black text-base md:text-xl font-normal leading-relaxed">
-                {productsId?.long_description}
+            {/* Long Description */}
+            <div className="md:col-span-2">
+              <p className="text-black text-base md:text-[18px] font-semibold mb-1">
+                {t("Long Description")}:{" "}
+                <span className="text-black text-base md:text-[18px] font-normal leading-relaxed">
+                  {productsId?.long_description}
+                </span>
               </p>
             </div>
 
-            {/* Disclaimer */}
+        
             {productsId?.disclaimer && (
-              <div className="md:col-span-2 col-span-2">
-                <p className="text-black text-base md:text-xl font-semibold ">
+              <div className="md:col-span-2">
+                <p className="text-black text-base md:text-[18px] font-semibold mb-1">
                   {t("Disclaimer")}:
                 </p>
                 <div
-                  className="text-black text-base md:text-xl font-normal leading-relaxed"
+                  className="text-black text-base md:text-[18px] font-normal leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
                 />
               </div>
             )}
 
-            {/* Warning */}
+        
             {productsId?.Warning && (
-              <div className="md:col-span-2 col-span-2">
-                <p className="text-black text-base md:text-xl font-semibold">
+              <div className="md:col-span-2">
+                <p className="text-black text-base md:text-[18px] font-semibold mb-1">
                   {t("Warning")}:
                 </p>
                 <div
-                  className="text-black text-base md:text-xl font-normal leading-relaxed"
+                  className="text-black text-base md:text-[18px] font-normal leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
                 />
               </div>
             )}
 
-            {/* Return Policy */}
+           
             {productsId?.ReturnPolicy && (
-              <div className="md:col-span-2 col-span-2">
-                <p className="text-black text-base md:text-xl font-semibold">
+              <div className="md:col-span-2">
+                <p className="text-black text-base md:text-[18px] font-semibold mb-1">
                   {t("Return Policy")}:
                 </p>
                 <div
-                  className="text-black text-base md:text-xl font-normal leading-relaxed"
+                  className="text-black text-base md:text-[18px] font-normal leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
                 />
               </div>
@@ -570,7 +570,7 @@ function ProductDetails(props) {
           </div>
         </div>
 
-        {productReviews && (
+        {productReviews.length > 1 && (
           <div className=" max-w-7xl md:ms-14 mx-4">
             <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
             <div className="w-full">
@@ -649,7 +649,7 @@ function ProductDetails(props) {
           </div>
         )}
 
-        <div className="bg-white max-w-8xl mt-8">
+        <div className="bg-white max-w-8xl mt-6">
           <p className="text-black text-xl font-bold md:mb-5 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             {t("Similar Products")}
           </p>

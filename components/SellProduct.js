@@ -163,7 +163,7 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className="bg-white w-full max-w-[380px] h-full md:h-[400px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 flex items-center flex-col mt-2 relative"
+                  className="bg-white w-full max-w-[390px] h-full md:h-[400px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 flex items-center flex-col mt-2 relative"
                 >
                   {/* Countdown Badge */}
                   {currentSale?.status !== "expired" && (
@@ -213,7 +213,7 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                     {item.product?.price_slot &&
                       item.product.price_slot[0]?.our_price && (
-                        <span className="md:text-sm text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded">
+                        <span className="md:text-[10px] text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded">
                           {Math.round(
                             ((item.product.price_slot[0].our_price -
                               item.price) /

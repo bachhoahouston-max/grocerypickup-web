@@ -284,8 +284,6 @@ const Navbar = (props) => {
     );
   };
 
-
-
   const minDate = (() => {
     const now = new Date();
     const currentHour = now.getHours(); // returns 0–23
@@ -1407,7 +1405,7 @@ const Navbar = (props) => {
                 <div className="flex justify-start md:gap-0 gap-4 items-start  w-full">
                   <div className="rounded-[10px] flex items-center justify-center">
                     <img
-                      className="md:w-32 md:h-32 object-contain"
+                      className="md:w-32 md:h-32 w-20 h-20 object-contain"
                       src={item?.selectedImage || item?.image}
                       alt="item"
                     />
@@ -1432,7 +1430,7 @@ const Navbar = (props) => {
                             {item?.price}
                           </span>{" "}
                           {item?.price_slot?.other_price && (
-                            <span className="line-through">
+                            <span className="line-through pl-3">
                               {constant.currency}
                               {item?.price_slot?.other_price}
                             </span>
@@ -1498,12 +1496,12 @@ const Navbar = (props) => {
                           <p className="text-custom-purple font-semibold text-base">
                             {constant.currency}
                             {item?.total}
-                            {item?.price_slot?.other_price && (
+                            {/* {item?.price_slot?.other_price && (
                               <del className="text-custom-red font-normal text-xs ml-2">
                                 {constant.currency}
                                 {item?.price_slot?.other_price}
                               </del>
-                            )}
+                            )} */}
                           </p>
                           <IoMdClose
                             className="w-[22px] h-[22px] text-custom-newGray ml-1 cursor-pointer"
@@ -1514,6 +1512,7 @@ const Navbar = (props) => {
                         </div>
                       </div>
                     </div>
+
                   </div>
                 </div>
 
