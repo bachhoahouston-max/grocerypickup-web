@@ -16,16 +16,13 @@ import "react-multi-carousel/lib/styles.css";
 import { produce } from "immer";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
-import { FaCheck } from "react-icons/fa6";
 import { SlArrowRight } from "react-icons/sl";
-import Box from "@mui/material/Box";
-import Rating from "@mui/material/Rating";
-import StarIcon from "@mui/icons-material/Star";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import constant from "@/services/constant";
-import { RxCross2 } from "react-icons/rx";
-
+import Zoom from "react-medium-image-zoom";
+import "react-medium-image-zoom/dist/styles.css";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 function ProductDetails(props) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -56,7 +53,6 @@ function ProductDetails(props) {
 
   const responsive = {
     superLargeDesktop: {
-      // the naming can be any, depends on you.
       breakpoint: { max: 4000, min: 3000 },
       items: 1,
     },
@@ -342,7 +338,7 @@ function ProductDetails(props) {
       <section className="bg-white w-full md:pt-10 pt-14 md:pb-5 pb-5 ">
         <div className="max-w-7xl  mx-auto w-full md:px-4 px-5">
           <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
-            <div className=" p-[10px] rounded-[15px]">
+            <div className="p-[10px] rounded-[15px]">
               <Carousel
                 className="h-full w-full"
                 responsive={responsive}
@@ -351,8 +347,86 @@ function ProductDetails(props) {
                 arrows={true}
               >
                 {selectedImageList?.map((item, i) => (
-                  <div key={i} className="bg-white w-full md:h-[446px]">
-                    <img className="h-full w-full object-contain" src={item} />
+                  <div key={i} className="bg-white w-full md:h-full relative flex justify-center">
+                    <TransformWrapper
+                      initialScale={1}
+                      minScale={1}
+                      maxScale={8}
+                      wheel={{ step: 0.1 }}
+                      doubleClick={{ disabled: true }}
+                    >
+                      {({ zoomIn, zoomOut, resetTransform }) => (
+                        <>
+                          <TransformComponent>
+                            <img
+                              className="h-[500px] w-full object-contain cursor-move"
+                              src={item}
+                              alt={`Slide ${i}`}
+                            />
+                          </TransformComponent>
+                          <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+                            <button
+                              onClick={() => zoomIn()}
+                              className="bg-white p-2 rounded-full shadow-lg text-black"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => zoomOut()}
+                              className="bg-white p-2 rounded-full shadow-lg text-black"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => resetTransform()}
+                              className="bg-white p-2 rounded-full shadow-lg text-black"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                <path d="M21 3v5h-5"></path>
+                                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                <path d="M8 16H3v5"></path>
+                              </svg>
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </TransformWrapper>
                   </div>
                 ))}
               </Carousel>
@@ -529,7 +603,6 @@ function ProductDetails(props) {
               </p>
             </div>
 
-        
             {productsId?.disclaimer && (
               <div className="md:col-span-2">
                 <p className="text-black text-base md:text-[18px] font-semibold mb-1">
@@ -542,7 +615,6 @@ function ProductDetails(props) {
               </div>
             )}
 
-        
             {productsId?.Warning && (
               <div className="md:col-span-2">
                 <p className="text-black text-base md:text-[18px] font-semibold mb-1">
@@ -555,7 +627,6 @@ function ProductDetails(props) {
               </div>
             )}
 
-           
             {productsId?.ReturnPolicy && (
               <div className="md:col-span-2">
                 <p className="text-black text-base md:text-[18px] font-semibold mb-1">

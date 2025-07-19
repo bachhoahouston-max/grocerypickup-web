@@ -784,7 +784,7 @@ const Navbar = (props) => {
 
   return (
     <>
-      <header className="flex max-w-8xl justify-between items-center p-4 bg-white shadow-md">
+      <header className="flex max-w-8xl shadow-lg justify-between items-center p-4 bg-white ">
         {/* Logo */}
 
         <div className="md:ms-32 lg:ms-10 xl:ms-28 ms-0 flex items-center">
@@ -834,7 +834,7 @@ const Navbar = (props) => {
                     )} */}
         </div>
 
-        <div className="xl:mr-20 lg:mr-12  mr-1 flex">
+        <div className="2xl:mr-20 xl:mr-8 lg:mr-8  mr-1 flex">
           <div className="hidden md:flex items-center space-x-4 mr-4">
             {user?.token === undefined ? (
               <>

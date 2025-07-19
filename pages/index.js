@@ -215,7 +215,7 @@ export default function Home(props) {
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">
                 {t("Bách Hoá Houston Best Sellers")}
               </h1>
-              <p className="text-center w-full text-[13px] md:text-[16px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
+              <p className="text-center w-full lg:text-[14px] 2xl:[text-18px] text-[13px] md:text-[14px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
                 {t(
                   "Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers"
                 )}
@@ -228,7 +228,7 @@ export default function Home(props) {
                 <ul className="rounded-lg p-4 space-y-2">
                   <li
                     onClick={() => handleCategoryClick1("/categories/all")}
-                    className={`flex text-[14px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between transition-transform duration-300 hover:-translate-y-[5px] p-2 ${
+                    className={`flex lg:text-[14px] 2xl:[text-18px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between transition-transform duration-300 hover:-translate-y-[5px] p-2 ${
                       selectedCategory === "all"
                         ? "text-custom-green"
                         : "text-black"
@@ -241,7 +241,7 @@ export default function Home(props) {
                     <li
                       key={index}
                       onClick={() => handleCategoryClick(cat._id)}
-                      className={`flex text-[14px] hover:text-[#F38529] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold transition-transform duration-300 hover:-translate-y-[5px] items-center justify-between p-2 ${
+                      className={`flex text-[14px] hover:text-[#F38529] lg:text-[14px]  2xl:[text-18px] bg-gray-100 py-3 ps-4 font-bold transition-transform duration-300 hover:-translate-y-[5px] items-center justify-between p-2 ${
                         selectedCategory === cat._id
                           ? "text-custom-green"
                           : "text-black"
@@ -318,7 +318,7 @@ export default function Home(props) {
 
       <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5">
         <div className="md:flex justify-between items-center w-full mb-6">
-          <p className="text-black md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
+          <p className="text-black 2xl:text-[24px] xl:text-[21px] lg:text-[19px] text-[17px] font-semibold w-full px-1 md:px-6">
             {t("Explore by Categories")}
           </p>
         </div>
@@ -411,7 +411,7 @@ export default function Home(props) {
 
       <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5 pb-5">
         <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
-          <p className="text-black md:text-[24px] text-xl font-semibold">
+          <p className="text-black 2xl:text-[24px] xl:text-[21px] lg:text-[19px] text-[17px] font-semibold">
             {t("New Arrivals")}
           </p>
           <p
@@ -515,7 +515,7 @@ export default function Home(props) {
 
       <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5 pb-5">
         <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
-          <p className="text-black md:text-[24px] text-xl font-semibold">
+          <p className="text-black 2xl:text-[24px] xl:text-[21px] lg:text-[19px] text-[17px] font-semibold">
             {t("Bulk Best Sellers")}
           </p>
           <p

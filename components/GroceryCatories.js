@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect ,useRef } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
 import { useRouter } from "next/router";
@@ -51,7 +51,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
     const newItem = {
       ...item,
-      id:item?._id,
+      id: item?._id,
       selectedColor: item?.varients?.[0] || {},
       selectedImage: item?.varients?.[0]?.image?.[0] || "",
       BarCode: item?.BarCode || "",
@@ -166,7 +166,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   return (
     <div
       key={i}
-      className="bg-white w-full max-w-[350px] h-full md:h-[359vh] rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative max-h-[380px]"
+      className="bg-white w-full max-w-[350px] h-full rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative max-h-[380px]"
     >
       <div className="relative">
         <img
@@ -193,21 +193,20 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
         {item.categoryName}
       </h2>
-      <p className=" md:flex hidden text-sm md:text-base text-black font-semibold pt-1">
+      <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1">
         {item.name.length > 36 ? item.name.slice(0, 36) + "..." : item.name}
       </p>
-
-      <p className=" flex md:hidden text-sm md:text-base text-black font-semibold pt-1">
-        {item.name.length > 36 ? item.name.slice(0, 36) + "..." : item.name}
+      <p className="lg:flex xl:hidden  hidden text-sm lg:text-[14px] 2xl:[text-18px]  text-black font-semibold pt-1">
+        {item.name.length > 25 ? item.name.slice(0, 25) + "..." : item.name}
       </p>
 
       <div className="flex justify-between items-center md:pt-1 pt-0">
-        <p className="text-custom-gold text-lg md:text-xl font-semibold">
+        <p className="text-custom-gold text-sm lg:text-[14px] 2xl:[text-18px] font-semibold">
           {constant.currency}
           {item?.price_slot[0]?.our_price}
 
           {item?.price_slot[0]?.other_price && (
-            <del className="font-medium text-sm text-custom-black ml-2">
+            <del className="font-medium text-sm lg:text-[14px] 2xl:[text-18px] text-custom-black ml-2">
               {constant.currency}
               {item?.price_slot[0]?.other_price}
             </del>
@@ -287,7 +286,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
       ) : (
         <button
-          className="font-bold bg-[#5CB447] w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
+          className="font-bold bg-[#5CB447] w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-white cursor-pointer flex justify-center items-center"
           onClick={handleAddToCart}
         >
           <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold " />

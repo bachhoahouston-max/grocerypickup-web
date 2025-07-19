@@ -80,8 +80,8 @@ const HeaderFirst = (props) => {
   return (
     <>
       <nav className="bg-white border-t-1 border-[#F0F1F1] relative">
-        <div className=" mt-2 mx-auto px-4 py-2 md:flex hidden justify-center items-center ">
-          <div className="hidden flex-1 lg:flex justify-center space-x-2">
+        <div className=" mt-2 mx-auto px-4 py-2 md:flex hidden justify-center items-center mr-20">
+          <div className="hidden flex-1 lg:flex justify-center xl:space-x-8 lg:space-x-4">
             <p
               className={`xl:text-[16px] 2xl:text-[18px] lg:text-[14px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
                 selectedTab === "home"

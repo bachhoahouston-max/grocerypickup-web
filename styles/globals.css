@@ -4,9 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --custom-green: #F38529;
+  --custom-green: #f38529;
   --custom-black: #292727;
-  --custom-Gold:  #F38021 /* Example custom green color */
+  --custom-Gold: #f38021; /* Example custom green color */
 }
 
 :root {
@@ -103,24 +103,28 @@ body {
 .bg-custom-green {
   background-color: var(--custom-green);
 }
-.text-custom-black{
+.text-custom-black {
   color: var(--custom-black);
 }
-.text-custom-gold{
+.text-custom-gold {
   color: var(--custom-Gold);
 }
-.bg-custom-gold{
+.bg-custom-gold {
   background-color: var(--custom-Gold);
 }
 
-.css-d771x4.Mui-checked, .css-d771x4.MuiCheckbox-indeterminate 
-{  color: white  !important}
+.css-d771x4.Mui-checked,
+.css-d771x4.MuiCheckbox-indeterminate {
+  color: white !important;
+}
 
 .css-y50yd7 {
   background-color: var(--custom-green) !important;
 }
 
-.pac-container{ z-index: 999999 !important;}
+.pac-container {
+  z-index: 999999 !important;
+}
 
 .dark {
   --background: oklch(0.145 0 0);
@@ -153,11 +157,26 @@ body {
   --sidebar-accent: oklch(0.269 0 0);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);}
+  --sidebar-ring: oklch(0.556 0 0);
+}
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;}
+    @apply border-border outline-ring/50;
+  }
   body {
-    @apply bg-background text-foreground;}}
+    @apply bg-background text-foreground;
+  }
+}
 
+/* .product-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.magnifier-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+} */
