@@ -115,7 +115,7 @@ function MainHeader({ toaster, loader }) {
               <div
                 key={idx}
                 className="w-full h-[130px] flex items-center justify-center overflow-hidden 
-                md:h-[355px] xl:h-[450px] 2xl:h-[490px]"
+                md:h-[355px] lg:h-[360px] xl:h-[450px] 2xl:h-[490px]"
               >
                 <img
                   src={img.image || "/fallback.jpg"}
