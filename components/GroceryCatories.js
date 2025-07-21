@@ -193,10 +193,10 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
         {item.categoryName}
       </h2>
-      <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1">
-        {item.name.length > 36 ? item.name.slice(0, 36) + "..." : item.name}
+      <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
+        {item.name.length > 30 ? item.name.slice(0, 30) + "..." : item.name}
       </p>
-      <p className="lg:flex xl:hidden  hidden text-sm lg:text-[14px] 2xl:[text-18px]  text-black font-semibold pt-1">
+      <p className="lg:flex xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
         {item.name.length > 25 ? item.name.slice(0, 25) + "..." : item.name}
       </p>
 

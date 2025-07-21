@@ -34,7 +34,7 @@ const Category = (props) => {
 
   return (
     <>
-      <div className="max-w-7xl md:mt-12 mt-22 md:px-4 px-4 mx-auto bg-white">
+      <div className="max-w-7xl md:mt-12 mt-12 md:px-4 px-4 mx-auto bg-white">
         <h2 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
           {t("All Categories")}
         </h2>

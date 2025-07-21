@@ -63,6 +63,7 @@ const Navbar = (props) => {
   const [globallang, setgloballang] = useContext(languageContext);
   const { i18n } = useTranslation();
   const { t } = useTranslation();
+  const isLoggedIn = user?._id || user?.token;
 
   useEffect(() => {
     const fetchCoupons = async () => {
@@ -172,6 +173,8 @@ const Navbar = (props) => {
     address: "",
     lastname: "",
     email: "",
+    state: "",
+    city: "",
     lat: null,
     lng: null,
   });
@@ -194,6 +197,8 @@ const Navbar = (props) => {
     SecurityGateCode: "",
     zipcode: "",
     address: "",
+    state: "",
+    city: "",
     isBusinessAddress: "",
     BusinessAddress: "",
     name: "",
@@ -214,6 +219,8 @@ const Navbar = (props) => {
         lastname: profileData.lastname || "",
         email: profileData.email || "",
         phoneNumber: profileData.mobile || "",
+        state: profileData.state || "",
+        city: profileData.city,
         location: {
           type: "Point",
           coordinates: [profileData.lat || null, profileData.lng || null],
@@ -366,6 +373,8 @@ const Navbar = (props) => {
             address: res.data.address || "",
             lastname: res.data.lastname || "",
             email: res.data?.email || "",
+            state: profileData.state || "",
+            city: profileData.city || "",
             lat: res?.data?.location?.coordinates[1],
             lng: res?.data?.location?.coordinates[0],
           });
@@ -437,17 +446,6 @@ const Navbar = (props) => {
       0
     );
 
-    const totalTax = parseFloat(
-      cartData
-        ?.reduce((accumulator, currentValue) => {
-          const itemTotal = Number(currentValue?.total || 0);
-          const taxRate = Number(currentValue?.tax || 0);
-          const taxAmount = (itemTotal * taxRate) / 100;
-          return accumulator + taxAmount;
-        }, 0)
-        .toFixed(2)
-    );
-
     let delivery = 0;
 
     if (pickupOption === "localDelivery") {
@@ -460,17 +458,16 @@ const Navbar = (props) => {
 
     setBaseCartTotal(sumWithInitial); // Save original value
     setCartItem(sumWithInitial1);
-    setTotalTax(totalTax.toFixed(2));
+    // setTotalTax(totalTax.toFixed(2));
     setDeliveryCharge(delivery.toFixed(2));
 
     const cartAfterDiscount = sumWithInitial - discount;
     let finalTotal;
 
     if (pickupOption === "localDelivery") {
-      finalTotal =
-        cartAfterDiscount + totalTax + delivery + Number(deliverytip);
+      finalTotal = cartAfterDiscount + delivery + Number(deliverytip);
     } else {
-      finalTotal = cartAfterDiscount + totalTax + delivery;
+      finalTotal = cartAfterDiscount + delivery;
     }
 
     setCartTotal(cartAfterDiscount.toFixed(2)); // Now correct total
@@ -541,15 +538,6 @@ const Navbar = (props) => {
 
     console.log("Local Address Fields:", localAddress);
 
-    // if (pickupOption === 'localDelivery' || pickupOption === 'ShipmentDelivery') {
-    //     if (!localAddress.address) {
-    //         return props.toaster({
-    //             type: "error",
-    //             message: "Please Enter address"
-    //         });
-    //     }
-    // }
-
     if (
       pickupOption === "localDelivery" ||
       pickupOption === "ShipmentDelivery"
@@ -599,7 +587,7 @@ const Navbar = (props) => {
         isInStoreAvailable: element.isInStoreAvailable,
       });
     });
-    console.log("pxcvfgbhn", data);
+
     const isLocalDelivery = pickupOption === "localDelivery";
     const isOrderPickup = pickupOption === "orderPickup";
     const isDriveUp = pickupOption === "driveUp";
@@ -686,7 +674,6 @@ const Navbar = (props) => {
     let newData = {
       productDetail: data,
       total: mainTotal,
-      totalTax: totalTax,
       Deliverytip: deliverytip,
       deliveryfee: deliveryCharge,
       discount: discount,
@@ -704,6 +691,8 @@ const Navbar = (props) => {
           phoneNumber: localAddress.phoneNumber,
           address: localAddress.address,
           email: localAddress.email,
+          city: localAddress.city,
+          state: localAddress.state,
           ApartmentNo: localAddress.ApartmentNo,
           SecurityGateCode: localAddress.SecurityGateCode,
           lastname: localAddress.lastname,
@@ -724,37 +713,37 @@ const Navbar = (props) => {
     localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
 
-    Api("post", "createProductRquest", newData, router).then(
-      (res) => {
-        props.loader && props.loader(false);
-        if (res.status) {
-          setCartData([]);
-          setLocalAddress([]);
-          setCartTotal(0);
-          setOpenCart(false);
-          setDate("");
-          getProfileData();
-          localStorage.removeItem("addCartDetail");
-          router.push("/Mybooking");
-          props.toaster({
-            type: "success",
-            message:
-              "Thank you for your order! Your item will be processed shortly.",
-          });
-        } else {
-          props.toaster &&
-            props.toaster({ type: "error", message: res?.data?.message });
-        }
-      },
-      (err) => {
-        props.loader && props.loader(false);
-        props.toaster &&
-          props.toaster({ type: "error", message: err?.message });
-      }
-    );
+    // Api("post", "createProductRquest", newData, router).then(
+    //   (res) => {
+    //     props.loader && props.loader(false);
+    //     if (res.status) {
+    //       setCartData([]);
+    //       setLocalAddress([]);
+    //       setCartTotal(0);
+    //       setOpenCart(false);
+    //       setDate("");
+    //       getProfileData();
+    //       localStorage.removeItem("addCartDetail");
+    //       router.push("/Mybooking");
+    //       props.toaster({
+    //         type: "success",
+    //         message:
+    //           "Thank you for your order! Your item will be processed shortly.",
+    //       });
+    //     } else {
+    //       props.toaster &&
+    //         props.toaster({ type: "error", message: res?.data?.message });
+    //     }
+    //   },
+    //   (err) => {
+    //     props.loader && props.loader(false);
+    //     props.toaster &&
+    //       props.toaster({ type: "error", message: err?.message });
+    //   }
+    // );
 
-    // setOpenCart(false)
-    // router.push('/payment?from=cart')
+    setOpenCart(false);
+    router.push("/payment?from=cart");
   };
 
   function formatDate(dateString) {
@@ -1294,12 +1283,13 @@ const Navbar = (props) => {
                     )}
 
                     <AddressInput
-                      setProfileData={setProfileData}
+                      setProfileData={setLocalAddress}
                       profileData={localAddress}
                       value={localAddress.address}
                       className=" m-1 border rounded-lg py-2 pl-2 md:pl-4 md:pr-2 pr-7 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  !z-[999999999] text-xs md:text-sm md:w-[608px] w-[295px]"
                       required
                     />
+
                     <input
                       type="text"
                       name="ApartmentNo"
@@ -1385,7 +1375,7 @@ const Navbar = (props) => {
               </>
             ) : (
               <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
-                <img src="/image77.png" className="w-20 h-20" />
+                <img src="/cart2.jpg" className="w-20 h-20" />
                 <p className="text-black  text-[18px]">
                   {t("Your cart is empty")}
                 </p>
@@ -1512,7 +1502,6 @@ const Navbar = (props) => {
                         </div>
                       </div>
                     </div>
-
                   </div>
                 </div>
 
@@ -1670,14 +1659,6 @@ const Navbar = (props) => {
                 ) : null}
               </div>
 
-              <div className="flex justify-between items-center w-full pt-2">
-                <p className="text-black font-normal text-base">{t("Tax")}</p>
-                <p className="text-custom-black font-normal text-base">
-                  {constant.currency}
-                  {totalTax || 0}
-                </p>
-              </div>
-
               <div className="flex justify-between items-center w-full pt-5">
                 <p className="text-custom-black font-bold text-[18px]">
                   {t("Total Payable")}
@@ -1816,23 +1797,36 @@ const Navbar = (props) => {
           )}
 
           {cartData.length > 0 && (
-            <button
-              className="bg-custom-gold border-white border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-white cursor-pointer text-base text-center mt-5 mb-6"
-              onClick={() => {
-                if (cartData?.length === 0) {
-                  props.toaster &&
-                    props.toaster({
-                      type: "warning",
-                      message: "Your cart is empty",
-                    });
-                  return;
-                } else {
-                  createProductRquest();
-                }
-              }}
-            >
-              {t("Proceed To Checkout")}
-            </button>
+            <>
+              {isLoggedIn ? (
+                <button
+                  className="bg-custom-gold border-white border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-white cursor-pointer text-base text-center mt-5 mb-6"
+                  onClick={() => {
+                    if (cartData?.length === 0) {
+                      toaster &&
+                        toaster({
+                          type: "warning",
+                          message: "Your cart is empty",
+                        });
+                    } else {
+                      createProductRquest();
+                    }
+                  }}
+                >
+                  {t("Proceed To Checkout")}
+                </button>
+              ) : (
+                <button
+                  className="bg-custom-green border-white border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-white cursor-pointer text-base text-center mt-5 mb-6"
+                  onClick={() => {
+                    setOpenCart(false);
+                    router.push("/signIn");
+                  }} // or "/login"
+                >
+                  {t("Login to Checkout")}
+                </button>
+              )}
+            </>
           )}
         </div>
       </Drawer>

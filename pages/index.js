@@ -303,7 +303,7 @@ export default function Home(props) {
                 )}
               </div>
             </div>
-            <div className=" transition-transform duration-300 hover:-translate-y-[5px] flex justify-center text-custom-green items-center  underline ">
+            <div className=" transition-transform duration-300 hover:-translate-y-[5px] flex justify-center text-custom-green items-center  underline mt-5">
               <p
                 className=" text-lg px-3 py-2 rounded-sm cursor-pointer "
                 onClick={() => handleCategoryClick1("/categories/all")}
@@ -317,9 +317,17 @@ export default function Home(props) {
       </div>
 
       <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5">
-        <div className="md:flex justify-between items-center w-full mb-6">
-          <p className="text-black 2xl:text-[24px] xl:text-[21px] lg:text-[19px] text-[17px] font-semibold w-full px-1 md:px-6">
+        <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
+          <p className="text-black 2xl:text-[24px] xl:text-[21px] lg:text-[19px] text-[17px] font-semibold">
             {t("Explore by Categories")}
+          </p>
+          <p
+            className="text-black md:text-[18px] text-[16px] font-semibold hover:text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
+            onClick={() =>
+              router.push("/AllCategory")
+            }
+          >
+            {t("View All")}
           </p>
         </div>
 

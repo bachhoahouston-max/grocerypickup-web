@@ -2,89 +2,126 @@
 import { useRef, useState, useEffect } from "react";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { useTranslation } from "react-i18next";
-import { IoSearch } from "react-icons/io5";
+
 const GOOGLE_API_KEY = "AIzaSyDHd5FoyP2sDBo0vO2i0Zq7TIUZ_7GhBcI";
 const libraries = ["places"];
 
-const AddressInput = ({ profileData, setProfileData, className ,value}) => {
-  const {t} = useTranslation()
+const AddressInput = ({ profileData, setProfileData, className, value }) => {
+  const { t } = useTranslation();
   const autocompleteRef = useRef(null);
   const [inputValue, setInputValue] = useState(value || "");
- 
+
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_API_KEY,
     libraries,
   });
-  
+
   useEffect(() => {
     if (value) {
       setInputValue(value);
     }
-
-    console.log(value)
   }, [value]);
- 
+
   const handlePlaceSelect = () => {
     const place = autocompleteRef.current?.getPlace();
-    
+
     if (place && place.geometry) {
       const formattedAddress = place.formatted_address || "Unknown Address";
-      const country = place.address_components?.find((comp) =>
-        comp.types.includes("country")
-      )?.long_name || "";
+      const addressComponents = place.address_components || [];
 
-      console.log(formattedAddress)
-      
+      const city =
+        addressComponents.find((comp) => comp.types.includes("locality"))
+          ?.long_name || "";
+
+      const state =
+        addressComponents.find((comp) =>
+          comp.types.includes("administrative_area_level_1")
+        )?.long_name || "";
+
+      const country =
+        addressComponents.find((comp) => comp.types.includes("country"))
+          ?.long_name || "";
+
+      const latitude = place.geometry.location.lat();
+      const longitude = place.geometry.location.lng();
+
       setInputValue(formattedAddress);
-      
+
       setProfileData((prev) => ({
         ...prev,
-        address: formattedAddress ,
+        address: formattedAddress,
+        city,
+        state,
+        country,
         location: {
-          type: 'Point',
-          coordinates: [
-            place.geometry.location.lng(),
-            place.geometry.location.lat()
-          ]
+          type: "Point",
+          coordinates: [longitude, latitude],
         },
       }));
     }
   };
- 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    console.log(value)
-    if (value.trim() === "") {
+
+  const handleAddressChange = (e) => {
+    const val = e.target.value;
+    setInputValue(val);
+    if (val.trim() === "") {
       setProfileData((prev) => ({
         ...prev,
         address: "",
+        city: "",
+        state: "",
+        country: "",
+        location: { type: "Point", coordinates: [0, 0] },
       }));
     }
   };
- 
+
+  const handleCityChange = (e) => {
+    const val = e.target.value;
+    setProfileData((prev) => ({ ...prev, city: val }));
+  };
+
+  const handleStateChange = (e) => {
+    const val = e.target.value;
+    setProfileData((prev) => ({ ...prev, state: val }));
+  };
+
   if (loadError) return <p>Error loading Google Maps: {loadError.message}</p>;
   if (!isLoaded) return <p>Loading...</p>;
 
   return (
-    <div className="!z-[99999999]">
+    <div className="!z-[99999999] space-y-3">
+      {/* Address Autocomplete Input */}
       <Autocomplete
         onLoad={(autoC) => (autocompleteRef.current = autoC)}
         onPlaceChanged={handlePlaceSelect}
-        options={{ types: ['address'] }} 
+        options={{ types: ["address"] }}
       >
-        <div>
         <input
           className={className}
           type="text"
           placeholder={t("Shipping Address")}
           value={inputValue}
-          onChange={handleChange}
+          onChange={handleAddressChange}
           required
         />
-        {/* <IoSearch className='absolute md:right-7 right-2 top-[287px] md:top-[198px]'/> */}
-        </div>
       </Autocomplete>
+
+      <input
+        className={className}
+        type="text"
+        placeholder={t("City")}
+        value={profileData.city || ""}
+        onChange={handleCityChange}
+      />
+
+      <input
+        className={className}
+        type="text"
+        placeholder={t("State")}
+        value={profileData.state || ""}
+        onChange={handleStateChange}
+      />
     </div>
   );
 };
