@@ -114,7 +114,7 @@ function MainHeader({ toaster, loader }) {
             {carouselImg.map((img, idx) => (
               <div
                 key={idx}
-                className="w-full h-[130px] flex items-center justify-center overflow-hidden 
+                className="w-full h-[150px] flex items-center justify-center overflow-hidden 
                 md:h-[355px] lg:h-[360px] xl:h-[450px] 2xl:h-[490px]"
               >
                 <img

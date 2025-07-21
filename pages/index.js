@@ -212,14 +212,14 @@ export default function Home(props) {
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
           <div className="container mx-auto px-6 md:px-0  md:max-w-9xl lg:max-w-9xl">
             <div className="flex justify-center flex-col items-center">
-              <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-4 text-black">
+              <h1 className="text-center text-[20px] md:text-2xl font-bold mb-4 mt-4 text-black">
                 {t("Bách Hoá Houston Best Sellers")}
               </h1>
-              <p className="text-center w-full lg:text-[14px] 2xl:[text-18px] text-[13px] md:text-[14px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
+              {/* <p className="text-center w-full lg:text-[14px] 2xl:[text-18px] text-[13px] md:text-[14px] md:w-[60%] text-gray-500 mb-6 mt-2 italic">
                 {t(
                   "Check out our most-loved picks  from best-selling fruits and veggies to everyday essentials your kitchen can’t go without. Freshness and quality, trusted by our customers"
                 )}
-              </p>
+              </p> */}
             </div>
 
             <div className="flex md:flex-row flex-col ">
