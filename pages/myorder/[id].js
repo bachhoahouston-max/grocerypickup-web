@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import moment from 'moment';
-import { MdLocationOn, MdCalendarToday, MdLocalShipping, MdColorLens, MdProductionQuantityLimits } from "react-icons/md";
+import moment from "moment";
+import {
+  MdLocationOn,
+  MdCalendarToday,
+  MdLocalShipping,
+  MdColorLens,
+  MdProductionQuantityLimits,
+} from "react-icons/md";
 import { FaMoneyBillWave } from "react-icons/fa";
-import { useTranslation } from 'react-i18next';
-import { Api } from '@/services/service';
+import { useTranslation } from "react-i18next";
+import { Api } from "@/services/service";
 
 export default function OrderDetails(props) {
   const router = useRouter();
@@ -26,59 +32,64 @@ export default function OrderDetails(props) {
     superLargeDesktop: {
       // the naming can be any, depends on you.
       breakpoint: { max: 4000, min: 3000 },
-      items: 1
+      items: 1,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 1
+      items: 1,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 2
+      items: 2,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1
-    }
+      items: 1,
+    },
   };
-
 
   const getProductById = async (productId) => {
     try {
       props?.loader(true);
-      const res = await Api("get", `/getProductRequest/${productId}`, "", router);
+      const res = await Api(
+        "get",
+        `/getProductRequest/${productId}`,
+        "",
+        router
+      );
       props?.loader(false);
-      console.log(res.data)
-      setOrdersData(res.data)
+      console.log(res.data);
+      setOrdersData(res.data);
 
-      const d = res.data.productDetail.find(f => f._id === router?.query?.product_id)
+      const d = res.data.productDetail.find(
+        (f) => f._id === router?.query?.product_id
+      );
       setProductsId(d);
-      setSelectedImageList(d?.image)
-      const address = res.data.shipping_address
+      setSelectedImageList(d?.image);
+      const address = res.data.shipping_address;
       console.log("addresss=>-----------", address);
 
-      setUserAddress(address)
-
+      setUserAddress(address);
     } catch (err) {
       props?.loader(false);
       props?.toaster({ type: "error", message: err?.message });
     }
   };
 
-
   const imageOnError = (event) => {
-    event.currentTarget.src = '/default-product-image.png';
+    event.currentTarget.src = "/default-product-image.png";
   };
-
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-between items-center mb-8 mt-5">
           <div>
             <h1 className="text-3xl font-bold text-gray-800">Order Details</h1>
-            <p className="text-gray-500">{ordersData.orderId || "Order Id Not Defined"}</p>
+            <p className="text-gray-500">
+              {ordersData.orderId || "Order Id Not Defined"}
+            </p>
           </div>
           <button
             onClick={() => router.back()}
@@ -94,14 +105,19 @@ export default function OrderDetails(props) {
             <div>
               <h2 className="text-lg font-semibold flex items-center text-black">
                 <MdCalendarToday className="mr-2 text-[#F38529]" />
-                Order Date: <span className="font-normal ml-2">
-                  {ordersData.createdAt ? moment(new Date(ordersData.createdAt)).format('DD MMM YYYY') : '-'}
+                Order Date:{" "}
+                <span className="font-normal ml-2">
+                  {ordersData.createdAt
+                    ? moment(new Date(ordersData.createdAt)).format(
+                        "DD MMM YYYY"
+                      )
+                    : "-"}
                 </span>
               </h2>
             </div>
             <div className="mt-4 md:mt-0">
               <span className="bg-[#F38529] text-white px-4 py-2 rounded-full font-medium">
-                {ordersData.status || 'Processing'}
+                {ordersData.status || "Processing"}
               </span>
             </div>
           </div>
@@ -125,12 +141,17 @@ export default function OrderDetails(props) {
                   >
                     {selectedImageList.length > 0 ? (
                       selectedImageList.map((img, index) => (
-                        <div key={index} className="h-60 sm:h-72 md:h-80 lg:h-[22rem] xl:h-[24rem] flex items-center justify-center p-4">
+                        <div
+                          key={index}
+                          className="h-60 sm:h-72 md:h-80 lg:h-[22rem] xl:h-[24rem] flex items-center justify-center p-4"
+                        >
                           <img
                             src={img}
                             alt={`Product image ${index + 1}`}
                             className="max-h-full object-contain"
-                            onError={(e) => (e.target.src = '/default-product-image.png')}
+                            onError={(e) =>
+                              (e.target.src = "/default-product-image.png")
+                            }
                           />
                         </div>
                       ))
@@ -149,8 +170,12 @@ export default function OrderDetails(props) {
 
               {/* Product Info */}
               <div className="p-4 sm:p-6">
-                <h2 className="hidden md:block text-2xl font-bold text-gray-800 mb-4">{productsId?.product?.name}</h2>
-                <h2 className="block md:hidden text-xl font-bold text-gray-800 mb-4 truncate">{productsId?.product?.name}</h2>
+                <h2 className="hidden md:block text-2xl font-bold text-gray-800 mb-4">
+                  {productsId?.product?.name}
+                </h2>
+                <h2 className="block md:hidden text-xl font-bold text-gray-800 mb-4 truncate">
+                  {productsId?.product?.name}
+                </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -158,7 +183,9 @@ export default function OrderDetails(props) {
                       <FaMoneyBillWave className="text-[#F38529] mr-3 text-xl" />
                       <div>
                         <p className="text-gray-500 text-sm">Price</p>
-                        <p className="text-xl font-semibold text-gray-600">${productsId?.price}</p>
+                        <p className="text-xl font-semibold text-gray-600">
+                          ${productsId?.price}
+                        </p>
                       </div>
                     </div>
 
@@ -166,7 +193,9 @@ export default function OrderDetails(props) {
                       <MdProductionQuantityLimits className="text-[#F38529] mr-3 text-xl" />
                       <div>
                         <p className="text-gray-500 text-sm">Quantity</p>
-                        <p className="font-bold text-gray-700">{productsId?.qty}</p>
+                        <p className="font-bold text-gray-700">
+                          {productsId?.qty}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -180,17 +209,24 @@ export default function OrderDetails(props) {
             {/* Shipping Info */}
             <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-6">
               <h3 className="text-lg font-semibold mb-4 pb-2 border-b border-gray-100 flex items-center text-gray-600">
-                <MdLocalShipping className="text-[#F38529] mr-2" /> Shipping Information
+                <MdLocalShipping className="text-[#F38529] mr-2" /> Shipping
+                Information
               </h3>
 
               {ordersData?.Local_address?.address ? (
                 <div className="flex items-start">
                   <MdLocationOn className="text-[#F38529] text-xl mt-1 mr-3" />
                   <div>
-                    <p className="font-medium mb-1 text-gray-600">Delivery Address</p>
-                    <p className="text-gray-600">{ordersData?.Local_address?.address}</p>
+                    <p className="font-medium mb-1 text-gray-600">
+                      Delivery Address
+                    </p>
+                    <p className="text-gray-600">
+                      {ordersData?.Local_address?.address}
+                    </p>
                     {ordersData?.Local_address?.phoneNumber && (
-                      <p className="text-gray-600 mt-2">{ordersData?.Local_address?.phoneNumber}</p>
+                      <p className="text-gray-600 mt-2">
+                        {ordersData?.Local_address?.phoneNumber}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -208,40 +244,55 @@ export default function OrderDetails(props) {
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span className="text-[#F38529]">${productsId?.price || 0}</span>
+                  <span className="text-[#F38529]">
+                    ${ordersData?.subtotal || 0}
+                  </span>
+                </div>
+                 <div className="flex justify-between">
+                  <span className="text-gray-600">Discount</span>
+                  <span className="text-[#F38529]">
+                    ${ordersData?.discount || 0}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Tax</span>
+                  <span className="text-[#F38529]">
+                    ${ordersData?.totalTax || 0}
+                  </span>
                 </div>
 
                 <div className="border-t border-gray-100 pt-3 mt-3">
                   <div className="text-gray-600 flex justify-between font-semibold text-lg">
                     <span>Total</span>
-                    <span className="text-[#F38529]">${productsId?.price || 0}</span>
+                    <span className="text-[#F38529]">
+                      ${ordersData?.total || 0}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
 
       {/* Custom CSS for carousel buttons */}
       <style jsx global>{`
         .product-carousel .react-multiple-carousel__arrow {
-          background-color: #F38529;
+          background-color: #f38529;
           min-width: 36px;
           min-height: 36px;
         }
-        
+
         .product-carousel .react-multiple-carousel__arrow:hover {
           background-color: #e67a20;
         }
-        
+
         .product-carousel .react-multi-carousel-dot button {
-          border-color: #F38529;
+          border-color: #f38529;
         }
-        
+
         .product-carousel .react-multi-carousel-dot--active button {
-          background-color: #F38529;
+          background-color: #f38529;
         }
       `}</style>
     </div>

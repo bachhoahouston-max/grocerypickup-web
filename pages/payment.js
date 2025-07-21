@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { cartContext, userContext } from "./_app";
 import { Api } from "@/services/service";
 import { useTranslation } from "react-i18next";
+import { faSliders } from "@fortawesome/free-solid-svg-icons";
 
 function Payment(props) {
   const router = useRouter();
@@ -47,7 +48,7 @@ function Payment(props) {
         BarCode: element.BarCode,
         color: element.selectedColor?.color || "",
         total: element.total,
-        price: element.total,
+        price: element.price,
         qty: element.qty,
         seller_id: element.userid,
       });
@@ -69,17 +70,22 @@ function Payment(props) {
       user: user?._id,
       Email: user?.email,
       productDetail: data,
-      total: localCheckoutData.total,
-      Deliverytip: localCheckoutData.Deliverytip,
-      isDriveUp: localCheckoutData.isDriveUp,
-      isLocalDelivery: localCheckoutData.isLocalDelivery,
-      isOrderPickup: localCheckoutData.isOrderPickup,
-      isShipmentDelivery: localCheckoutData.isShipmentDelivery,
-      discount: localCheckoutData.discount || 0,
+      total: (stripeRes.amount_total / 100).toFixed(2),
+      subtotal: (stripeRes.amount_subtotal / 100).toFixed(2),
+      total_details: stripeRes.total_details,
+      currency: stripeRes.currency,
+      Deliverytip: localCheckoutData.delivery_tip,
+      discount:
+        (stripeRes.total_details?.amount_discount / 100).toFixed(2) || 0,
+      totalTax: (stripeRes.total_details?.amount_tax / 100).toFixed(2) || 0,
       dateOfDelivery: localCheckoutData.dateOfDelivery,
       deliveryfee: localCheckoutData.deliveryfee,
       Local_address: localCheckoutData.Local_address || {},
       stripeSessionId: session_id,
+      isDriveUp: localCheckoutData.isDriveUp,
+      isLocalDelivery: localCheckoutData.isLocalDelivery,
+      isOrderPickup: localCheckoutData.isOrderPickup,
+      isShipmentDelivery: localCheckoutData.isShipmentDelivery,
       paymentStatus: stripeRes.payment_status,
       customerDetails: stripeRes.customer_details || {},
       from: router.query.from,
@@ -93,6 +99,7 @@ function Payment(props) {
     );
 
     if (createRes.status) {
+      props.loader(false);
       localStorage.removeItem("addCartDetail");
       localStorage.removeItem("checkoutData");
       setCartData([]);
@@ -111,7 +118,7 @@ function Payment(props) {
     const cartDetails = JSON.parse(localStorage.getItem("addCartDetail"));
 
     const lineItems = cartDetails.map((item) => ({
-      quantity: item.quantity || 1,
+      quantity: item.qty || 1,
       price_data: {
         currency: "usd",
         unit_amount: Math.round(item.price * 100),
@@ -123,10 +130,27 @@ function Payment(props) {
     }));
 
     const deliveryTip = parseFloat(checkoutData.deliveryTip || 0);
+    const deliveryCharge = parseFloat(checkoutData.deliveryfee || 0);
+
+    if (deliveryTip > 0) {
+      lineItems.push({
+        quantity: 1,
+        price_data: {
+          currency: "usd",
+          unit_amount: Math.round(deliveryTip * 100),
+          product_data: {
+            name: "Delivery Tip",
+            tax_code: "txcd_90020001",
+          },
+          tax_behavior: "exclusive",
+        },
+      });
+    }
 
     const metadata = {
       userId: user?._id,
       deliveryTip: deliveryTip.toString(),
+      deliveryCharge: deliveryCharge.toString(), // still passing to backend
       hasDiscount: "true",
       discountAmount: checkoutData?.discount?.toString() || "0",
       discountCode: checkoutData?.discountCode || "",
@@ -152,12 +176,24 @@ function Payment(props) {
       shipping_address_collection: {
         allowed_countries: ["US"],
       },
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            display_name: "Standard Delivery",
+            type: "fixed_amount",
+            fixed_amount: {
+              amount: Math.round(deliveryCharge * 100), // deliveryCharge used here
+              currency: "usd",
+            },
+          },
+        },
+      ],
       success_url: `${window.location.origin}/payment?session_id={CHECKOUT_SESSION_ID}&from=${router.query.from}`,
       cancel_url: `${window.location.origin}/cancel`,
     };
 
     console.log(body);
-
+    props.loader(true);
     try {
       props.loader(true);
       const res = await Api("post", "create-checkout-session", body, router);
@@ -166,6 +202,7 @@ function Payment(props) {
       if (res && res.url) {
         localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
         localStorage.setItem("sessionId", res.session_id);
+        props.loader(false);
         window.location.href = res.url;
       } else {
         props.toaster({
@@ -186,8 +223,6 @@ function Payment(props) {
 
   useEffect(() => {
     if (!router.isReady || sessionInitiated) return;
-
-    // Avoid looping when already on success page
     if (!router.query.session_id && mainTotal > 0 && router.query.from) {
       setSessionInitiated(true);
       createCheckoutSession();

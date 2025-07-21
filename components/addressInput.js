@@ -60,6 +60,12 @@ const AddressInput = ({ profileData, setProfileData, className, value }) => {
       }));
     }
   };
+  useEffect(() => {
+    // Optional: If profileData comes late
+    if (profileData?.address) {
+      setInputValue(profileData.address);
+    }
+  }, [profileData]);
 
   const handleAddressChange = (e) => {
     const val = e.target.value;
@@ -106,6 +112,9 @@ const AddressInput = ({ profileData, setProfileData, className, value }) => {
           required
         />
       </Autocomplete>
+      <p className="text-[12px] ms-3 -mt-3 mb-1">
+        Select the address to auto-fill City and State.
+      </p>
 
       <input
         className={className}
