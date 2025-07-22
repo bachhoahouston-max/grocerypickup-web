@@ -5,9 +5,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { RxCrossCircled } from "react-icons/rx";
 import { RxCross2 } from "react-icons/rx";
-import Box from "@mui/material/Box";
-import Rating from "@mui/material/Rating";
-import StarIcon from "@mui/icons-material/Star";
 import { useTranslation } from "react-i18next";
 import Compressor from "compressorjs";
 
@@ -23,9 +20,13 @@ function Myhistory(props) {
   const [productId, setProductId] = useState("");
   const [images, setImages] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
-    getHistoryByUser();
+    if (token) {
+      getHistoryByUser();
+    }else{
+      router.push("/signIn")
+    }
   }, []);
 
   const getHistoryByUser = async () => {
@@ -342,7 +343,6 @@ function Myhistory(props) {
                     {selectedProduct?.product?.name || "Product Name"}
                   </p>
 
-                
                   {/* <div className="w-full mb-6">
                     <label className="text-black font-medium text-base mb-3 block text-center">
                       {t("Rate this product")}
@@ -368,7 +368,6 @@ function Myhistory(props) {
                     </div>
                   </div> */}
 
-               
                   {/* <div className="w-full mb-4">
                     <label className="text-black font-medium text-base mb-2 block">
                       {t("Add a title")}
@@ -387,7 +386,6 @@ function Myhistory(props) {
                     />
                   </div> */}
 
-                 
                   <div className="w-full mb-4">
                     <label className="text-black font-medium text-base mb-2 block">
                       {t("Add a review")}{" "}
@@ -412,7 +410,6 @@ function Myhistory(props) {
                     />
                   </div>
 
-                 
                   <div className="w-full mb-6">
                     <label className="text-black font-medium text-base mb-2 block">
                       {t("Add photos")} ({t("optional")})
@@ -469,14 +466,11 @@ function Myhistory(props) {
                     )}
                   </div>
 
-                
                   <div className="flex justify-center">
                     <button
                       className="bg-custom-gold w-full md:h-[50px] h-[45px] rounded-lg text-white font-semibold text-base hover:shadow-lg transition-all duration-200 disabled:opacity-50"
                       type="submit"
-                      disabled={
-                        reviewsData.description.length < 20
-                      }
+                      disabled={reviewsData.description.length < 20}
                     >
                       {t("Submit Review")}
                     </button>

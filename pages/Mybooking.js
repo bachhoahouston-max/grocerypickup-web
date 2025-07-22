@@ -26,7 +26,7 @@ function Mybooking(props) {
   const [Id, setId] = useState("");
   const [otp, setOtp] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-
+  const token = localStorage.getItem("token");
   const toggleModal = (id) => {
     setId(id);
     setIsOpen(!isOpen);
@@ -193,7 +193,11 @@ function Mybooking(props) {
   };
 
   useEffect(() => {
-    getBookingsByUser();
+    if (token) {
+      getBookingsByUser();
+    } else {
+      router.push("/signIn");
+    }
   }, []);
 
   const getBookingsByUser = async () => {
@@ -720,10 +724,15 @@ function Mybooking(props) {
                   <div className="mt-4 flex justify-between">
                     <div className="flex justify-start">
                       {" "}
-                      <Barcode value={booking?.orderId} className="-mt-2 md:w-[300px] w-[200px] h-[110px]"/>
+                      <Barcode
+                        value={booking?.orderId}
+                        className="-mt-2 md:w-[300px] w-[200px] h-[110px]"
+                      />
                     </div>
                     <div className="bg-gray-50 px-6 py-3 rounded-lg border border-gray-200 h-20">
-                      <p className=" mt-2 text-sm text-gray-500">{t("Total")}</p>
+                      <p className=" mt-2 text-sm text-gray-500">
+                        {t("Total")}
+                      </p>
                       <p className="text-xl font-semibold text-gray-800">
                         $ {booking.total || "0.00"}
                       </p>

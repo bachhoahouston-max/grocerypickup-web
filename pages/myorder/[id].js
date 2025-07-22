@@ -236,7 +236,7 @@ export default function OrderDetails(props) {
             </div>
 
             {/* Order Summary */}
-            <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+            {/* <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
               <h3 className="text-lg font-semibold mb-4 pb-2 border-b border-gray-100 text-gray-600">
                 Order Summary
               </h3>
@@ -270,7 +270,7 @@ export default function OrderDetails(props) {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -33,18 +33,23 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4 mt-4">
               <a
-                className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px] "
+                className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px]"
                 href="https://www.instagram.com/bachhoahouston/"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <FaInstagram />
               </a>
               <a
                 className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px]"
                 href="https://www.facebook.com/groups/1861501697993458"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <FaFacebookF />
               </a>
             </div>
+
             <div className="mt-6 text-white">
               {" "}
               <ul>
@@ -201,8 +206,10 @@ const Footer = () => {
 
                 <li className="md:pb-2 pb-1 cursor-pointer transition-transform duration-300 hover:-translate-y-[8px] hover:underline">
                   <a
+                    href="/ProductRecallInfo"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-[16px] md:text-[17px]"
-                    onClick={() => router.push("/ProductRecallInfo")}
                   >
                     {t("⁠Product Recall Information")}
                   </a>

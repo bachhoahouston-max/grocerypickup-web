@@ -278,7 +278,7 @@ export default function Home(props) {
                         />
                       ))
                   ) : (
-                    <div className="absolute top-48 left-64 col-span-4 flex justify-center text-[24px] items-center text-gray-500 ">
+                    <div className="col-span-6 flex justify-center xl:text-[20px] lg:text-[18px] text-[16px] items-center text-gray-500 min-h-[500px]">
                       {" "}
                       {t("No products available in this category")}.
                     </div>
@@ -297,7 +297,7 @@ export default function Home(props) {
                       />
                     ))
                 ) : (
-                  <div className="absolute top-48 left-64 col-span-4 flex justify-center text-[24px] items-center text-gray-500 ">
+                  <div className="col-span-6 flex justify-center xl:text-[20px] lg:text-[18px] text-[16px] items-center text-gray-500 min-h-[500px]">
                     {t("No products available")}.
                   </div>
                 )}

@@ -793,11 +793,16 @@ const Navbar = (props) => {
             type="text"
             ref={inputRef2}
             value={serchData}
-            onChange={(text) => {
-              setSearchData(text.target.value);
-            }}
+            onChange={(e) => setSearchData(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
+                if (serchData.trim() === "") {
+                  props.toaster({
+                    type: "error",
+                    message: "Please enter search value",
+                  });
+                  return;
+                }
                 router.push(`/Search/${serchData}`);
               }
             }}
@@ -808,19 +813,18 @@ const Navbar = (props) => {
           <button
             className="py-[5px] xl:py-[9px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer rounded-r-md"
             onClick={() => {
+              if (serchData.trim() === "") {
+                props.toaster({
+                  type: "error",
+                  message: "Please enter search value",
+                });
+                return;
+              }
               router.push(`/Search/${serchData}`);
             }}
           >
             <FontAwesomeIcon icon={faSearch} className="text-white relative" />
           </button>
-          {/* {serchData && (
-                        <div
-                            onClick={() => setSearchData('')}
-                            className="absolute right-[55px] md:right-[65px] cursor-pointer flex items-center"
-                        >
-                            <RxCross2 className="h-4 w-4 text-gray-500 hover:text-black" />
-                        </div>
-                    )} */}
         </div>
 
         <div className="2xl:mr-20 xl:mr-8 lg:mr-8  mr-1 flex">
