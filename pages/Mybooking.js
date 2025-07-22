@@ -475,7 +475,7 @@ function Mybooking(props) {
                                 {formatDate2(
                                   new Date(
                                     new Date(booking.createdAt).setDate(
-                                      new Date(booking.createdAt).getDate() + 3
+                                      new Date(booking.createdAt).getDate() + 7
                                     )
                                   )
                                 )}{" "}

@@ -20,12 +20,19 @@ function Myhistory(props) {
   const [productId, setProductId] = useState("");
   const [images, setImages] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState("");
+
   useEffect(() => {
-    if (token) {
+    const t = localStorage.getItem("token");
+    setToken(t);
+  });
+
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    if (t) {
       getHistoryByUser();
-    }else{
-      router.push("/signIn")
+    } else {
+      router.push("signIn");
     }
   }, []);
 
@@ -342,49 +349,6 @@ function Myhistory(props) {
                   <p className="text-gray-600 text-sm mb-6 text-center">
                     {selectedProduct?.product?.name || "Product Name"}
                   </p>
-
-                  {/* <div className="w-full mb-6">
-                    <label className="text-black font-medium text-base mb-3 block text-center">
-                      {t("Rate this product")}
-                    </label>
-                    <div className="flex justify-center">
-                      <Rating
-                        name="product-rating"
-                        value={reviewsData.reviews}
-                        onChange={(event, newValue) => {
-                          setReviewsData({
-                            ...reviewsData,
-                            reviews: newValue,
-                          });
-                        }}
-                        size="large"
-                        emptyIcon={
-                          <StarIcon
-                            style={{ opacity: 0.55 }}
-                            fontSize="inherit"
-                          />
-                        }
-                      />
-                    </div>
-                  </div> */}
-
-                  {/* <div className="w-full mb-4">
-                    <label className="text-black font-medium text-base mb-2 block">
-                      {t("Add a title")}
-                    </label>
-                    <input
-                      className="bg-white w-full px-4 py-3 border border-gray-300 rounded-lg font-normal text-base text-black outline-none focus:border-custom-gold focus:ring-1 focus:ring-custom-gold transition-all duration-200"
-                      type="text"
-                      placeholder={t("What's most important to know?")}
-                      value={reviewsData.title || ""}
-                      onChange={(e) => {
-                        setReviewsData({
-                          ...reviewsData,
-                          title: e.target.value,
-                        });
-                      }}
-                    />
-                  </div> */}
 
                   <div className="w-full mb-4">
                     <label className="text-black font-medium text-base mb-2 block">

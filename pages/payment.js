@@ -129,7 +129,7 @@ function Payment(props) {
       },
     }));
 
-    const deliveryTip = parseFloat(checkoutData.deliveryTip || 0);
+    const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
     const deliveryCharge = parseFloat(checkoutData.deliveryfee || 0);
 
     if (deliveryTip > 0) {

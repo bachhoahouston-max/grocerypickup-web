@@ -21,11 +21,20 @@ const EditProfile = ({ loader, toaster }) => {
         confirmPassword: '',
     });
 
-
+    const [errors, setErrors] = useState({
+        username: '',
+        lastname: '',
+        email: '',
+        gender: '',
+        country: '',
+        number: '',
+        address: '',
+        password: '',
+        confirmPassword: ''
+    });
 
     const [user, setUser] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-
 
     useEffect(() => {
         const userDetails = localStorage.getItem('userDetail');
@@ -35,10 +44,73 @@ const EditProfile = ({ loader, toaster }) => {
         }
     }, []);
 
+    const validateField = (name, value) => {
+        switch (name) {
+            case 'username':
+                if (!value.trim()) return t('First name is required');
+                if (!/^[A-Za-z\s]+$/.test(value)) return t('Only letters allowed');
+                if (value.length < 2) return t('Minimum 2 characters required');
+                return '';
+            case 'lastname':
+                if (!value.trim()) return t('Last name is required');
+                if (!/^[A-Za-z\s]+$/.test(value)) return t('Only letters allowed');
+                if (value.length < 2) return t('Minimum 2 characters required');
+                return '';
+            case 'email':
+                if (!value.trim()) return t('Email is required');
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('Invalid email format');
+                return '';
+            case 'gender':
+                if (!value) return t('Gender is required');
+                return '';
+            case 'country':
+                if (!value) return t('Country is required');
+                return '';
+            case 'number':
+                if (!value) return t('Phone number is required');
+                if (!/^\d{10}$/.test(value)) return t('Must be 10 digits');
+                return '';
+            case 'address':
+                if (!value.trim()) return t('Address is required');
+                if (value.length < 10) return t('Address too short');
+                return '';
+            case 'password':
+                if (!value && isEditing) return '';
+                if (!value) return t('Password is required');
+                if (value.length < 8) return t('Minimum 8 characters');
+                if (!/[A-Z]/.test(value)) return t('At least one uppercase letter');
+                if (!/[a-z]/.test(value)) return t('At least one lowercase letter');
+                if (!/[0-9]/.test(value)) return t('At least one number');
+                if (!/[^A-Za-z0-9]/.test(value)) return t('At least one special character');
+                return '';
+            case 'confirmPassword':
+                if (profilePassword.password !== value) return t('Passwords do not match');
+                return '';
+            default:
+                return '';
+        }
+    };
+
     const handleInputChange = (name, value) => {
+        // Prevent numbers in name fields
+        if ((name === 'username' || name === 'lastname') && /[0-9]/.test(value)) {
+            return;
+        }
+        
+        // Prevent non-numeric characters in phone number
+        if (name === 'number' && value && !/^\d*$/.test(value)) {
+            return;
+        }
+
         setProfileData(prev => ({
             ...prev,
             [name]: value
+        }));
+
+        // Clear error when typing
+        setErrors(prev => ({
+            ...prev,
+            [name]: ''
         }));
     };
 
@@ -47,15 +119,28 @@ const EditProfile = ({ loader, toaster }) => {
             ...prev,
             [name]: value
         }));
+
+        // Clear error when typing
+        setErrors(prev => ({
+            ...prev,
+            [name]: ''
+        }));
     };
 
+    const handleBlur = (name, value) => {
+        const error = validateField(name, value);
+        setErrors(prev => ({
+            ...prev,
+            [name]: error
+        }));
+    };
 
     const getProfileData = () => {
         loader(true);
         const token = localStorage.getItem('token');
 
         if (!token) {
-            toaster({ type: "error", message: "Authentication required" });
+            toaster({ type: "error", message: t("Authentication required") });
             loader(false);
             return;
         }
@@ -75,26 +160,61 @@ const EditProfile = ({ loader, toaster }) => {
                         address: res.data.address || ''
                     }));
                 } else {
-                    toaster({ type: "error", message: res?.data?.message || "Failed to load profile" });
+                    toaster({ type: "error", message: res?.data?.message || t("Failed to load profile") });
                 }
             })
             .catch(err => {
                 loader(false);
-                toaster({ type: "error", message: err?.data?.message || "Failed to load profile" });
+                toaster({ type: "error", message: err?.data?.message || t("Failed to load profile") });
             });
     };
 
+    const validateForm = () => {
+        let isValid = true;
+        const newErrors = {};
 
-    const toggleEditMode = () => setIsEditing(!isEditing);
+        // Validate profile data
+        Object.keys(profileData).forEach(key => {
+            const error = validateField(key, profileData[key]);
+            if (error) {
+                isValid = false;
+                newErrors[key] = error;
+            }
+        });
 
+        // Validate password if not empty
+        if (profilePassword.password || profilePassword.confirmPassword) {
+            const passwordError = validateField('password', profilePassword.password);
+            if (passwordError) {
+                isValid = false;
+                newErrors.password = passwordError;
+            }
+
+            const confirmError = validateField('confirmPassword', profilePassword.confirmPassword);
+            if (confirmError) {
+                isValid = false;
+                newErrors.confirmPassword = confirmError;
+            }
+        }
+
+        setErrors(newErrors);
+        return isValid;
+    };
+
+    const toggleEditMode = () => {
+        if (isEditing) {
+            if (!validateForm()) {
+                toaster({ type: "error", message: t("Please fix the errors in the form") });
+                return;
+            }
+            updateProfile();
+        } else {
+            setIsEditing(true);
+        }
+    };
 
     const updateProfile = () => {
         loader(true);
-        if (profileData.number.length !== 10) {
-            loader(false);
-            toaster({ type: "error", message: "Phone number must be exactly 10 digits." });
-            return;
-        }
         const payload = {
             ...profileData,
         };
@@ -103,7 +223,7 @@ const EditProfile = ({ loader, toaster }) => {
             .then(res => {
                 loader(false);
                 if (res?.status) {
-                    toaster({ type: "success", message: "Profile updated successfully" });
+                    toaster({ type: "success", message: t("Profile updated successfully") });
                     if (res.data) {
                         const userDetail = JSON.parse(localStorage.getItem('userDetail') || '{}');
                         const updatedUser = { ...userDetail, ...res.data };
@@ -112,25 +232,33 @@ const EditProfile = ({ loader, toaster }) => {
                     }
                     setIsEditing(false);
                 } else {
-                    toaster({ type: "error", message: res?.data?.message || "Failed to update profile" });
+                    toaster({ type: "error", message: res?.data?.message || t("Failed to update profile") });
                 }
             })
             .catch(err => {
                 loader(false);
-                toaster({ type: "error", message: err?.data?.message || "Failed to update profile" });
+                toaster({ type: "error", message: err?.data?.message || t("Failed to update profile") });
             });
     };
 
-
     const changePassword = () => {
-
-        if (profilePassword.password !== profilePassword.confirmPassword) {
-            toaster({ type: "error", message: "Passwords don't match" });
+        if (!profilePassword.password) {
+            toaster({ type: "error", message: t("Password cannot be empty") });
             return;
         }
 
-        if (!profilePassword.password) {
-            toaster({ type: "error", message: "Password cannot be empty" });
+        if (profilePassword.password !== profilePassword.confirmPassword) {
+            toaster({ type: "error", message: t("Passwords don't match") });
+            return;
+        }
+
+        const passwordError = validateField('password', profilePassword.password);
+        if (passwordError) {
+            setErrors(prev => ({
+                ...prev,
+                password: passwordError,
+                confirmPassword: ''
+            }));
             return;
         }
 
@@ -144,18 +272,23 @@ const EditProfile = ({ loader, toaster }) => {
             .then(res => {
                 loader(false);
                 if (res?.status) {
-                    toaster({ type: "success", message: "Password changed successfully" });
+                    toaster({ type: "success", message: t("Password changed successfully") });
                     setProfilePassword({
                         password: '',
                         confirmPassword: '',
                     });
+                    setErrors(prev => ({
+                        ...prev,
+                        password: '',
+                        confirmPassword: ''
+                    }));
                 } else {
-                    toaster({ type: "error", message: res?.data?.message || "Failed to change password" });
+                    toaster({ type: "error", message: res?.data?.message || t("Failed to change password") });
                 }
             })
             .catch(err => {
                 loader(false);
-                toaster({ type: "error", message: err?.data?.message || "Failed to change password" });
+                toaster({ type: "error", message: err?.data?.message || t("Failed to change password") });
             });
     };
 
@@ -188,7 +321,7 @@ const EditProfile = ({ loader, toaster }) => {
                     </div>
                     <button
                         className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-custom-green text-white hover:bg-gray-800 cursor-pointer transition"
-                        onClick={isEditing ? updateProfile : toggleEditMode}
+                        onClick={toggleEditMode}
                     >
                         {isEditing ? t('Save') : t('Edit')}
                     </button>
@@ -197,18 +330,21 @@ const EditProfile = ({ loader, toaster }) => {
                 {/* Profile Form */}
                 <div className="p-4 md:p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-
                         <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">{t("Full Name")}</label>
+                            <label className="block text-gray-700 mb-1">{t("First Name")}</label>
                             {isEditing ? (
-                                <input
-                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                    value={profileData.username}
-                                    type='text'
-                                    name="username"
-                                    placeholder="Your Name"
-                                    onChange={(e) => handleInputChange("username", e.target.value)}
-                                />
+                                <>
+                                    <input
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.username ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                        value={profileData.username}
+                                        type='text'
+                                        name="username"
+                                        placeholder={t("Your Name")}
+                                        onChange={(e) => handleInputChange("username", e.target.value)}
+                                        onBlur={(e) => handleBlur("username", e.target.value)}
+                                    />
+                                    {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
+                                </>
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
                                     {profileData.username || t('Not provided')}
@@ -219,14 +355,18 @@ const EditProfile = ({ loader, toaster }) => {
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">{t("Last Name")}</label>
                             {isEditing ? (
-                                <input
-                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                    value={profileData.lastname}
-                                    type='text'
-                                    name="lastname"
-                                    placeholder="Your Name"
-                                    onChange={(e) => handleInputChange("lastname", e.target.value)}
-                                />
+                                <>
+                                    <input
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.lastname ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                        value={profileData.lastname}
+                                        type='text'
+                                        name="lastname"
+                                        placeholder={t("Your Last Name")}
+                                        onChange={(e) => handleInputChange("lastname", e.target.value)}
+                                        onBlur={(e) => handleBlur("lastname", e.target.value)}
+                                    />
+                                    {errors.lastname && <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>}
+                                </>
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
                                     {profileData.lastname || t('Not provided')}
@@ -237,54 +377,64 @@ const EditProfile = ({ loader, toaster }) => {
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">{t("Email")}</label>
                             {isEditing ? (
-                                <input
-                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                    value={profileData.email}
-                                    type='email'
-                                    name="email"
-                                    placeholder="Your Email"
-                                    onChange={(e) => handleInputChange("email", e.target.value)}
-                                />
+                                <>
+                                    <input
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.email ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                        value={profileData.email}
+                                        type='email'
+                                        name="email"
+                                        placeholder={t("Your Email")}
+                                        onChange={(e) => handleInputChange("email", e.target.value)}
+                                        onBlur={(e) => handleBlur("email", e.target.value)}
+                                    />
+                                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                                </>
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.email ||  t('Not provided')}
+                                    {profileData.email || t('Not provided')}
                                 </div>
                             )}
                         </div>
 
-                        {/* Gender Select with improved handler */}
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">{t("Gender")}</label>
                             {isEditing ? (
-                                <select
-                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                    name="gender"
-                                    value={profileData.gender}
-                                    onChange={(e) => handleInputChange('gender', e.target.value)}
-                                >
-                                    <option value="">{t("Select Gender")}</option>
-                                    <option value="Male">{t("Male")}</option>
-                                    <option value="Female">{t("Female")}</option>
-                                </select>
+                                <>
+                                    <select
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.gender ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                        name="gender"
+                                        value={profileData.gender}
+                                        onChange={(e) => handleInputChange('gender', e.target.value)}
+                                        onBlur={(e) => handleBlur('gender', e.target.value)}
+                                    >
+                                        <option value="">{t("Select Gender")}</option>
+                                        <option value="Male">{t("Male")}</option>
+                                        <option value="Female">{t("Female")}</option>
+                                    </select>
+                                    {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
+                                </>
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.gender ||  t('Not provided')}
+                                    {profileData.gender || t('Not provided')}
                                 </div>
                             )}
                         </div>
 
-                        {/* Country Select with improved handler */}
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">{t("Country")}</label>
                             {isEditing ? (
-                                <CountryDropdown
-                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                    value={profileData.country}
-                                    onChange={(val) => handleInputChange('country', val)}
-                                />
+                                <>
+                                    <CountryDropdown
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.country ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                        value={profileData.country}
+                                        onChange={(val) => handleInputChange('country', val)}
+                                        onBlur={() => handleBlur('country', profileData.country)}
+                                    />
+                                    {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
+                                </>
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.country ||  t('Not provided')}
+                                    {profileData.country || t('Not provided')}
                                 </div>
                             )}
                         </div>
@@ -292,15 +442,19 @@ const EditProfile = ({ loader, toaster }) => {
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">{t("Shipping Address")}</label>
                             {isEditing ? (
-                                <AddressInput
-                                    setProfileData={setProfileData}
-                                    profileData={profileData}
-                                    value={profileData?.address}
-                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                />
+                                <>
+                                    <AddressInput
+                                        setProfileData={setProfileData}
+                                        profileData={profileData}
+                                        value={profileData?.address}
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.address ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                        onBlur={() => handleBlur('address', profileData.address)}
+                                    />
+                                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                                </>
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.address ||  t('Not provided')}
+                                    {profileData.address || t('Not provided')}
                                 </div>
                             )}
                         </div>
@@ -308,14 +462,19 @@ const EditProfile = ({ loader, toaster }) => {
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">{t("Mobile")}</label>
                             {isEditing ? (
-                                <input
-                                    className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
-                                    value={profileData.number}
-                                    type='text'
-                                    name="number"
-                                    placeholder="Your Mobile Number"
-                                    onChange={(e) => handleInputChange("number", e.target.value)}
-                                />
+                                <>
+                                    <input
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.number ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                        value={profileData.number}
+                                        type='tel'
+                                        name="number"
+                                        placeholder={t("Your Mobile Number")}
+                                        onChange={(e) => handleInputChange("number", e.target.value)}
+                                        onBlur={(e) => handleBlur("number", e.target.value)}
+                                        maxLength={10}
+                                    />
+                                    {errors.number && <p className="text-red-500 text-sm mt-1">{errors.number}</p>}
+                                </>
                             ) : (
                                 <div className="text-black w-full p-2 border rounded bg-gray-50">
                                     {profileData.number || t('Not provided')}
@@ -331,24 +490,28 @@ const EditProfile = ({ loader, toaster }) => {
                                 <div className="mb-4">
                                     <label className="block text-gray-700 mb-1">{t("New Password")}</label>
                                     <input
-                                        className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.password ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
                                         placeholder={t("Enter New Password")}
                                         type="password"
                                         name="password"
                                         value={profilePassword.password}
                                         onChange={(e) => handlePasswordChange('password', e.target.value)}
+                                        onBlur={(e) => handleBlur('password', e.target.value)}
                                     />
+                                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-gray-700 mb-1">{t("Confirm Password")}</label>
                                     <input
-                                        className="w-full p-2 border rounded text-black focus:outline-none focus:ring-1 focus:ring-black"
+                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
                                         placeholder={t("Confirm New Password")}
                                         type="password"
                                         name="confirmPassword"
                                         value={profilePassword.confirmPassword}
                                         onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
+                                        onBlur={(e) => handleBlur('confirmPassword', e.target.value)}
                                     />
+                                    {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
                                 </div>
                             </div>
                             <div className="flex justify-end">

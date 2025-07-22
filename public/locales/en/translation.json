@@ -264,8 +264,29 @@
       "100% of tip goes directly to your driver":"100% of tip goes directly to your driver",
       "Select a tip":"Select a tip",
       "Delivery Charges":"Delivery Charges",
-      "Proceed To Checkout":"Proceed To Checkout"
+      "Proceed To Checkout":"Proceed To Checkout",
 
+      "Store Location":"Store Location",
+      "Franchise Opportunity":"Franchise Opportunity",
+      "Explore by Categories":"Explore by Categories",
+      "New Arrivals":"New Arrivals",
+      "Bulk Best Sellers":"Bulk Best Sellers",
 
-  
+      "Select a Pickup Date":"Select a Pickup Date",
+      "Product is available for CurbSide Pickup":"Product is available for CurbSide Pickup",
+      "Product is Not available for CurbSide Pickup":"Product is Not available for CurbSide Pickup",
+      "Product is available for In Store Pickup":"Product is available for In Store Pickup",
+      "Product is Not available for In Store Pickup":"Product is Not available for In Store Pickup",
+      "Product is available for Next Day Delivery":"Product is available for Next Day Delivery",
+      "Product is Not available for Next Day Delivery":"Product is Not available for Next Day Delivery",
+      
+      "Review this item":"Review this item",
+      "Add a review":"Add a review",
+      "At least 20 characters":"At least 20 characters",
+      "What did you like or dislike about it?":"What did you like or dislike about it?",
+      "Add photos":"Add photos",
+      "optional":"optional",
+      "Upload up to 6 photos":"Upload up to 6 photos",
+      "Tap to add photos":"Tap to add photos",
+      "Submit Review":"Submit Review"
 }

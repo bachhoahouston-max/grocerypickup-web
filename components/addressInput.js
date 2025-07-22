@@ -112,7 +112,7 @@ const AddressInput = ({ profileData, setProfileData, className, value }) => {
           required
         />
       </Autocomplete>
-      <p className="text-[12px] ms-3 -mt-3 mb-1">
+      <p className="text-[12px] ms-3 -mt-3 mb-1 text-black">
         Select the address to auto-fill City and State.
       </p>
 

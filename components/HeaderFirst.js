@@ -169,7 +169,7 @@ const HeaderFirst = (props) => {
                 handleNavigation("/FranchiseOpportunity", "FranchiseOpportunity");
               }}
             >
-              {t(" Franchise Opportunity")}
+              {t("Franchise Opportunity")}
             </p>
 
             <p
