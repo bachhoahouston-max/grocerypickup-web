@@ -112,11 +112,11 @@ const AddressInput = ({ profileData, setProfileData, className, value }) => {
           required
         />
       </Autocomplete>
-      <p className="text-[12px] ms-3 -mt-3 mb-1 text-black">
+      {/* <p className="text-[12px] ms-3 -mt-3 mb-1 text-black">
         Select the address to auto-fill City and State.
-      </p>
+      </p> */}
 
-      <input
+      {/* <input
         className={className}
         type="text"
         placeholder={t("City")}
@@ -130,7 +130,8 @@ const AddressInput = ({ profileData, setProfileData, className, value }) => {
         placeholder={t("State")}
         value={profileData.state || ""}
         onChange={handleStateChange}
-      />
+      /> */}
+
     </div>
   );
 };

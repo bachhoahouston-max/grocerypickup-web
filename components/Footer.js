@@ -191,7 +191,7 @@ const Footer = () => {
                     className="text-[16px] md:text-[17px]"
                     onClick={() => router.push("/JoinOurDelievryTeam")}
                   >
-                    {t(" Join our delivery team")}
+                    {t("Join our delivery team")}
                   </a>
                 </li>
 

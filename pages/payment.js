@@ -132,21 +132,6 @@ function Payment(props) {
     const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
     const deliveryCharge = parseFloat(checkoutData.deliveryfee || 0);
 
-    if (deliveryTip > 0) {
-      lineItems.push({
-        quantity: 1,
-        price_data: {
-          currency: "usd",
-          unit_amount: Math.round(deliveryTip * 100),
-          product_data: {
-            name: "Delivery Tip",
-            tax_code: "txcd_90020001",
-          },
-          tax_behavior: "exclusive",
-        },
-      });
-    }
-
     const metadata = {
       userId: user?._id,
       deliveryTip: deliveryTip.toString(),

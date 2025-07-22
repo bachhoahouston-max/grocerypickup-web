@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { Api } from "@/services/service";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { IoEyeOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { userContext } from "./_app";
 
 const SignUp = (props) => {
   const { t } = useTranslation();
@@ -15,8 +16,15 @@ const SignUp = (props) => {
     number: "",
     password: "",
   });
+  const [user, setUser] = useContext(userContext);
   const [eyeIcon, setEyeIcon] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (user?._id) {
+      router.push("/");
+    }
+  }, [user, router]);
 
   const validateField = (name, value) => {
     switch (name) {
@@ -32,7 +40,8 @@ const SignUp = (props) => {
         return "";
       case "email":
         if (!value) return "Email is required";
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Invalid email format";
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+          return "Invalid email format";
         return "";
       case "number":
         if (!value) return "Mobile number is required";
@@ -44,7 +53,8 @@ const SignUp = (props) => {
         if (!/[A-Z]/.test(value)) return "At least one uppercase letter";
         if (!/[a-z]/.test(value)) return "At least one lowercase letter";
         if (!/[0-9]/.test(value)) return "At least one number";
-        if (!/[^A-Za-z0-9]/.test(value)) return "At least one special character";
+        if (!/[^A-Za-z0-9]/.test(value))
+          return "At least one special character";
         return "";
       default:
         return "";
@@ -53,22 +63,22 @@ const SignUp = (props) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Prevent numbers in name fields
     if ((name === "name" || name === "lastname") && /[0-9]/.test(value)) {
       return;
     }
-    
+
     // Prevent non-numeric characters in phone number
     if (name === "number" && value && !/^\d*$/.test(value)) {
       return;
     }
-    
+
     setUserDetail({
       ...userDetail,
       [name]: value,
     });
-    
+
     // Clear error when user starts typing
     setErrors({
       ...errors,
@@ -91,7 +101,7 @@ const SignUp = (props) => {
     // Validate all fields
     let formValid = true;
     const newErrors = {};
-    
+
     Object.keys(userDetail).forEach((key) => {
       const error = validateField(key, userDetail[key]);
       if (error) {
@@ -99,9 +109,9 @@ const SignUp = (props) => {
         newErrors[key] = error;
       }
     });
-    
+
     setErrors(newErrors);
-    
+
     if (!formValid) {
       props?.toaster?.({
         type: "error",
