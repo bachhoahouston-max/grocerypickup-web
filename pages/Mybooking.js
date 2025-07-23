@@ -24,9 +24,7 @@ function Mybooking(props) {
   const [carColor, setCarColor] = useState("");
   const [carBrand, setCarBrand] = useState("");
   const [Id, setId] = useState("");
-  const [otp, setOtp] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const token = localStorage.getItem("token");
+ 
   const toggleModal = (id) => {
     setId(id);
     setIsOpen(!isOpen);
@@ -193,6 +191,7 @@ function Mybooking(props) {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       getBookingsByUser();
     } else {
@@ -232,7 +231,21 @@ function Mybooking(props) {
     return date.toLocaleDateString("en-GB", options);
   }
 
-  const isDriveUp = bookingsData?.some((order) => order?.isDriveUp === true);
+  const GeneratePDF = (orderId) => {
+    const data = {
+      orderId: orderId,
+    };
+    Api("post", "createinvoice", data, router, { responseType: "blob" }).then(
+      (res) => {
+        props.loader(false);
+        const blob = new Blob([res], { type: "application/pdf" });
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `invoice-${orderId}.pdf`;
+        link.click();
+      }
+    );
+  };
 
   return (
     <>
@@ -269,7 +282,11 @@ function Mybooking(props) {
                           </div>
                         </div>
                         <div className="flex">
-                          <Invoice order={booking} />
+                          {/* <Invoice order={booking} /> */}
+                          <MdFileDownload
+                            className="text-xl text-black"
+                            onClick={() => GeneratePDF(booking._id)}
+                          />
                           <button
                             onClick={() => toggleBooking(booking._id)}
                             className="p-1 rounded-full hover:bg-gray-200"
@@ -405,7 +422,11 @@ function Mybooking(props) {
                               return null;
                           }
                         })()}
-                        <Invoice order={booking} />
+                        {/* <Invoice order={booking} /> */}
+                        <MdFileDownload
+                          className="text-xl text-black"
+                          onClick={() => GeneratePDF(booking._id)}
+                        />
                         <button
                           onClick={() => toggleBooking(booking._id)}
                           className="p-1 rounded-full hover:bg-gray-200"

@@ -341,17 +341,20 @@ const Navbar = (props) => {
   useEffect(() => {
     getAllPincodes();
   }, []);
+  const hasFetchedFavourite = useRef(false); // track once
 
   useEffect(() => {
     const userDetails = localStorage.getItem("userDetail");
+
     if (userDetails) {
       setUser(JSON.parse(userDetails));
       getProfileData();
     }
-    if (user?.token) {
-      getProductById();
-    }
-  }, [user?.token]);
+    const token = localStorage.getItem("token");
+    if (!token || hasFetchedFavourite) return;
+    hasFetchedFavourite.current = true;
+    getProductById();
+  }, []);
 
   const getProfileData = () => {
     props.loader(true);

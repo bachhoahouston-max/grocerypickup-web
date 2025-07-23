@@ -11,7 +11,10 @@ function Favourite(props) {
   const [favouriteList, setFavouriteList] = useState([]);
 
   useEffect(() => {
-    getFavourite();
+    const token = localStorage.getItem("token");
+    if (token) {
+      getFavourite();
+    }
   }, []);
 
   const getFavourite = async () => {

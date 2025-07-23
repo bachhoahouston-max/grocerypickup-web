@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { MdFileDownload } from "react-icons/md";
+import Barcode from "react-barcode";
 
 const Invoice = ({ order }) => {
   const invoiceRef = useRef(null);
@@ -26,20 +27,20 @@ const Invoice = ({ order }) => {
 
   const orderDateTime = `${formattedDate} ${formattedTime}`;
 
-  const website = window.location.origin || "https://www.bachhoahouston.com";
+  const website = "www.bachhoahouston.com";
 
   const orderData = {
     id: invoiceId,
     date: orderDateTime,
     customer: {
-      name: order?.Local_address?.name || "Unknown",
-      address: order?.Local_address?.address || "Unknown",
-      phone: order?.Local_address?.phoneNumber || "+1 1111111111",
+      name: order?.Local_address?.name,
+      address: order?.Local_address?.address,
+      phone: order?.Local_address?.phoneNumber,
     },
     total: order.total,
     items:
       order?.productDetail?.map((item) => ({
-        name: item?.product?.name || "Unknown",
+        name: item?.product?.name,
         qty: item?.qty || 1,
         price: item?.price || 0,
         tax: item?.tax || 0,
@@ -47,6 +48,7 @@ const Invoice = ({ order }) => {
   };
 
   const total = orderData.items.reduce((sum, i) => sum + i.price, 0);
+  const totalQty = order?.productDetail?.reduce((sum, i) => sum + i.qty, 0);
 
   const downloadInvoice = async () => {
     const input = invoiceRef.current;
@@ -70,22 +72,19 @@ const Invoice = ({ order }) => {
   };
 
   return (
-    <div className="bg-gray-50">
+    <div className="">
       <div className="relative inline-block">
         <button
           onClick={downloadInvoice}
-          className="h-fit w-fit text-gray-700 py-1 px-2 rounded cursor-pointer"
-          onMouseEnter={() => setShowTooltip(true)}
-          onMouseLeave={() => setShowTooltip(false)}
+          className="inline-flex items-center gap-2 text-gray-700 py-1 px-3 rounded-md cursor-pointer 
+                   hover:bg-gray-100 transition-colors duration-200 ease-in-out focus:outline-none 
+                   focus:ring-2 focus:ring-gray-300"
+          type="button"
+          aria-label="Download Invoice"
         >
+          <span>Invoice</span>
           <MdFileDownload className="text-xl" />
         </button>
-
-        {showTooltip && (
-          <div className="absolute bottom-full mb-1 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2.5 py-2 rounded shadow-lg z-10 w-[115px]">
-            Download Invoice
-          </div>
-        )}
       </div>
 
       {/* Hidden off-screen invoice */}
@@ -108,8 +107,8 @@ const Invoice = ({ order }) => {
             alignItems: "center",
             display: "flex",
             borderBottom: "1px solid #e5e7eb",
-            paddingBottom: "16px",
-            marginBottom: "16px",
+            paddingBottom: "5px",
+            marginBottom: "5px",
           }}
         >
           <div>
@@ -128,6 +127,19 @@ const Invoice = ({ order }) => {
           </div>
         </div>
 
+        <div
+          style={{
+            width: "400px", // fixed width
+            height: "150px", // fixed height
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            // optional: spacing inside
+          }}
+        >
+          <Barcode value={order.orderId} />
+
+        </div>
         <div style={{ marginBottom: "1.5rem", display: "grid" }}>
           <h2
             style={{
@@ -139,10 +151,7 @@ const Invoice = ({ order }) => {
             Billed To:
           </h2>
           <span>{orderData.customer.name}</span>
-
-          {orderData.customer.address && (
-            <span>{orderData.customer.address}</span>
-          )}
+          <span>{orderData.customer.address}</span>
           <span>{orderData.customer.phone}</span>
         </div>
 
@@ -231,9 +240,19 @@ const Invoice = ({ order }) => {
                   border: "1px solid #e5e7eb",
                   textAlign: "left",
                 }}
-                colSpan="2"
+                colSpan="1"
               >
                 Total
+              </td>
+              <td
+                style={{
+                  padding: "0.5rem",
+                  border: "1px solid #e5e7eb",
+                  textAlign: "right",
+                }}
+                colSpan="1"
+              >
+                {totalQty}
               </td>
               <td
                 style={{
@@ -253,12 +272,15 @@ const Invoice = ({ order }) => {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: "flex-start",
             borderTop: "1px solid #e5e7eb",
             paddingTop: "16px",
+            paddingLeft: "50%",
+            gap: "32px", // spacing between left and right columns
           }}
         >
-          <div style={{ width: "50%", marginLeft: "50%" }}>
+          {/* Right Side - Totals */}
+          <div style={{ flex: 1 }}>
             {[
               { label: "Subtotal", value: `$${total}` },
               {
