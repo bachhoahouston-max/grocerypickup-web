@@ -8,7 +8,7 @@ function Api(method, url, data, router, params) {
     if (typeof window !== "undefined") {
       token = localStorage?.getItem("token") || "";
     }
-    // console.log(token);
+
     axios({
       method,
       url: ConstantsUrl + url,
@@ -20,14 +20,28 @@ function Api(method, url, data, router, params) {
         resolve(res.data);
       },
       (err) => {
-        console.log(err);
+        console.log("API Error:", err);
+
+        // Handle error response with status
         if (err.response) {
-          if (err?.response?.status === 401) {
-            if (typeof window !== "undefined") {
+          const status = err.response.status;
+          const message = err.response?.data?.message || "";
+
+          // ✅ Handle JWT expiration or unauthorized access
+          if (
+            (status === 401 || status === 403) &&
+            typeof window !== "undefined"
+          ) {
+            if (
+              message.toLowerCase().includes("jwt expired") ||
+              message.toLowerCase().includes("unauthorized")
+            ) {
+              localStorage.removeItem("token");
               localStorage.removeItem("userDetail");
               router?.push("/signIn");
             }
           }
+
           reject(err.response.data);
         } else {
           reject(err);
@@ -140,8 +154,7 @@ const pdfDownload = async (fileName, data) => {
       Roboto: {
         normal:
           "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf",
-        bold:
-          "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf",
+        bold: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf",
         italics:
           "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf",
         bolditalics:
@@ -158,8 +171,11 @@ const pdfDownload = async (fileName, data) => {
   });
 };
 
-const replaceUrl =(url)=>{
- return url?.replace('https://surfacegallery.s3.eu-north-1.amazonaws.com','https://d1wm56uk2e4fvb.cloudfront.net')
-}
+const replaceUrl = (url) => {
+  return url?.replace(
+    "https://surfacegallery.s3.eu-north-1.amazonaws.com",
+    "https://d1wm56uk2e4fvb.cloudfront.net"
+  );
+};
 
-export { Api, pdfDownload, ApiFormData,replaceUrl };
+export { Api, pdfDownload, ApiFormData, replaceUrl };
