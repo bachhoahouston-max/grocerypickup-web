@@ -160,12 +160,12 @@ const EditProfile = ({ loader, toaster }) => {
                         address: res.data.address || ''
                     }));
                 } else {
-                    toaster({ type: "error", message: res?.data?.message || t("Failed to load profile") });
+                    toaster({ type: "error", message: res?.data?.message  });
                 }
             })
             .catch(err => {
                 loader(false);
-                toaster({ type: "error", message: err?.data?.message || t("Failed to load profile") });
+                toaster({ type: "error", message: err?.data?.message });
             });
     };
 

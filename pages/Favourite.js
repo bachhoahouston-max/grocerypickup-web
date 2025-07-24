@@ -1,15 +1,17 @@
 import { Api } from "@/services/service";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import GroceryCategories from "@/components/GroceryCatories";
 import ShopFasterTropicana from "@/components/ShopFasterMarketplace";
 import { useTranslation } from "react-i18next";
+import { userContext } from "./_app";
 
 function Favourite(props) {
   const router = useRouter();
   const { t } = useTranslation();
   const [favouriteList, setFavouriteList] = useState([]);
-
+ const [user, setUser] = useContext(userContext);
+ 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -19,7 +21,7 @@ function Favourite(props) {
 
   const getFavourite = async () => {
     props.loader(true);
-    Api("get", "getFavourite", "", router).then(
+      Api("get", "getFavourite", null, router, { id: user._id }).then(
       (res) => {
         props.loader(false);
         console.log("res================>", res);

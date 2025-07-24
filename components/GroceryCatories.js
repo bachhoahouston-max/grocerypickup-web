@@ -27,8 +27,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
 
-  const hasFetchedFavourite = useRef(false); // track once
-
   const handleAddToCart = () => {
     const itemQuantity = Number(item?.Quantity ?? 0);
 
@@ -72,13 +70,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token || hasFetchedFavourite.current) return;
-    hasFetchedFavourite.current = true; // Set immediately before fetch
-    getFavourite();
-  }, []);
-
-  useEffect(() => {
     if (Array.isArray(productsId)) {
       const isProductFavorite = productsId.some(
         (product) => product?.product?._id === item?._id
@@ -89,18 +80,31 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     }
   }, [productsId, item?._id]);
 
-  const getFavourite = async () => {
-    loader(true);
-    Api("get", "getFavourite", "", router)
-      .then((res) => {
-        setProductsId(Array.isArray(res.data) ? res.data : []);
-      })
-      .catch((err) => {
+  const isFetching = useRef(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token || isFetching.current) return;
+
+    isFetching.current = true;
+
+    const getFavourite = async () => {
+      loader(true);
+      try {
+        const res = await Api("get", "getFavourite", null, router, {
+          id: user._id,
+        });
+        setFavorite(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
         console.log(err);
-        setProductsId([]);
-      })
-      .finally(() => loader(false)); // ✅ Loader off in all cases
-  };
+        setFavorite([]);
+      } finally {
+        loader(false);
+      }
+    };
+
+    getFavourite();
+  }, []);
 
   const addremovefavourite = () => {
     loader(true);

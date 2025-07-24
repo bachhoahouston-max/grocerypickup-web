@@ -33,7 +33,6 @@ import { languageContext } from "@/pages/_app";
 const Navbar = (props) => {
   const router = useRouter();
   const [serchData, setSearchData] = useState("");
-
   const inputRef2 = useRef(null);
   const [showHover, setShowHover] = useState(true);
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -763,7 +762,7 @@ const Navbar = (props) => {
   }
 
   const getProductById = async () => {
-    Api("get", "getFavourite", "", router).then(
+      Api("get", "getFavourite", null, router, { id: user._id }).then(
       (res) => {
         setProductsId(res.data);
         console.log("fgh", res.data);
