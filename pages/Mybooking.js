@@ -24,7 +24,7 @@ function Mybooking(props) {
   const [carColor, setCarColor] = useState("");
   const [carBrand, setCarBrand] = useState("");
   const [Id, setId] = useState("");
- 
+
   const toggleModal = (id) => {
     setId(id);
     setIsOpen(!isOpen);
@@ -245,6 +245,14 @@ function Mybooking(props) {
         link.click();
       }
     );
+  };
+
+  const isWithin24Hours = (updatedAt) => {
+    if (!updatedAt) return false;
+    const updatedTime = new Date(updatedAt).getTime();
+    const now = new Date().getTime();
+    const twentyFourHours = 24 * 60 * 60 * 1000;
+    return now - updatedTime <= twentyFourHours;
   };
 
   return (
@@ -570,8 +578,8 @@ function Mybooking(props) {
                   </div>
 
                   {booking?.status === "Completed" &&
-                    (booking?.isShipmentDelivery ||
-                      booking?.isLocalDelivery) && (
+                    (booking?.isShipmentDelivery || booking?.isLocalDelivery) &&
+                    isWithin24Hours(booking?.updatedAt) && (
                       <div className="px-4 py-4 bg-white border-t border-gray-200 mt-4 flex justify-end">
                         <button
                           onClick={() => ReturnOrder(booking._id)}
@@ -582,7 +590,7 @@ function Mybooking(props) {
                       </div>
                     )}
                 </div>
-                {/* Action Buttons */}
+               
                 {booking?.status === "Pending" &&
                   (booking?.isDriveUp || booking?.isOrderPickup) &&
                   booking?.createdAt &&
