@@ -89,6 +89,8 @@ function Payment(props) {
       paymentStatus: stripeRes.payment_status,
       customerDetails: stripeRes.customer_details || {},
       from: router.query.from,
+      isOnce:localCheckoutData.isOnce,
+      discountCode:localCheckoutData.discountCode
     };
 
     const createRes = await Api(
@@ -139,6 +141,7 @@ function Payment(props) {
       hasDiscount: "true",
       discountAmount: checkoutData?.discount?.toString() || "0",
       discountCode: checkoutData?.discountCode || "",
+      isOnce:checkoutData?.isOnce, 
       isPickupOrder: checkoutData?.isOrderPickup?.toString() || "false",
     };
 

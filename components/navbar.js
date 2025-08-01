@@ -57,7 +57,8 @@ const Navbar = (props) => {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
-
+  const [discountCode, setDiscountCode] = useState(0);
+  const [isOnce, setIsOnce] = useState(false)
   const [lang, setLang] = useState(null);
   const [globallang, setgloballang] = useContext(languageContext);
   const { i18n } = useTranslation();
@@ -77,6 +78,7 @@ const Navbar = (props) => {
             const expiryDate = new Date(coupon.expiryDate);
             return expiryDate > currentDate && coupon.isActive;
           });
+
           console.log("coupan", validCoupons);
           setCoupons(validCoupons);
           setFilteredCoupons(validCoupons);
@@ -138,21 +140,31 @@ const Navbar = (props) => {
       return;
     }
 
-    setAppliedCoupon(selectedCoupon);
-
     const value = selectedCoupon.discountValue;
     const type = selectedCoupon.discountType;
+    const isOnce = selectedCoupon.ussageType === "once";
+    setIsOnce(isOnce);
+
+    if (isOnce && selectedCoupon.userId?.includes(user._id)) {
+      props.toaster({ type: "error", message: "You have already used this coupon." });
+      return;
+    }
 
     let discountValue = 0;
-
     if (type === "fixed") {
       discountValue = value;
     } else if (type === "percentage") {
       discountValue = (baseCartTotal * value) / 100;
     }
 
-    setDiscount(discountValue); // Just set discount, useEffect will recalculate totals
+    if (discountValue > baseCartTotal) {
+      props.toaster({ type: "error", message: "This coupon is not valid for this amount. Please add more items." });
+      return;
+    }
 
+    setAppliedCoupon(selectedCoupon);
+    setDiscountCode(selectedCoupon?.code)
+    setDiscount(discountValue);
     props.toaster({ type: "success", message: "Coupon applied successfully" });
     setSearchTerm("");
     setOpenModel(false);
@@ -160,11 +172,19 @@ const Navbar = (props) => {
     return selectedCoupon.code;
   };
 
-  const formatDate1 = (dateString) => {
-    if (!dateString) return "No expiry date";
-    const date = new Date(dateString);
-    return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
-  };
+
+  useEffect(() => {
+    if (discount > baseCartTotal) {
+      props.toaster({ type: "error", message: "This coupon is not valid for this amount. Please add more items." });
+      setSelectedCoupon(null)
+      setAppliedCoupon(null);
+      setSelectedCoupon(null);
+      setSearchTerm("");
+      setDiscountCode("")
+      setDiscount(0);
+
+    }
+  }, [baseCartTotal])
 
   const [profileData, setProfileData] = useState({
     username: "",
@@ -460,7 +480,6 @@ const Navbar = (props) => {
 
     setBaseCartTotal(sumWithInitial); // Save original value
     setCartItem(sumWithInitial1);
-    // setTotalTax(totalTax.toFixed(2));
     setDeliveryCharge(delivery.toFixed(2));
 
     const cartAfterDiscount = sumWithInitial - discount;
@@ -679,9 +698,11 @@ const Navbar = (props) => {
       Deliverytip: deliverytip,
       deliveryfee: deliveryCharge,
       discount: discount,
+      discountCode:discountCode,
       user: user._id,
       Email: user.email,
       isOrderPickup,
+      isOnce,
       isDriveUp,
       isLocalDelivery,
       isShipmentDelivery,
@@ -762,7 +783,7 @@ const Navbar = (props) => {
   }
 
   const getProductById = async () => {
-      Api("get", "getFavourite", null, router, { id: user._id }).then(
+    Api("get", "getFavourite", null, router, { id: user._id }).then(
       (res) => {
         setProductsId(res.data);
         console.log("fgh", res.data);
@@ -982,9 +1003,8 @@ const Navbar = (props) => {
       {/* Cart Drawer */}
       <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
         <div
-          className={`md:w-[750px] w-[360px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${
-            !cartData.length ? "h-full " : ""
-          } 
+          className={`md:w-[750px] w-[360px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
+            } 
                     ${cartData.length > 1 ? "pb-8" : "pb-40"} `}
         >
           <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
@@ -1362,22 +1382,22 @@ const Navbar = (props) => {
                   <div>
                     <p className="text-black font-semibold text-[18px]">
                       {pickupOption === "orderPickup" ||
-                      pickupOption === "driveUp"
+                        pickupOption === "driveUp"
                         ? t("Pick up in 2 Hours")
                         : pickupOption === "localDelivery"
-                        ? t("Delivery is next day")
-                        : t("Delivery in 3 to 5 business days")}
+                          ? t("Delivery is next day")
+                          : t("Delivery in 3 to 5 business days")}
                     </p>
                   </div>
                 </div>
                 {(pickupOption === "orderPickup" ||
                   pickupOption === "driveUp") && (
-                  <p className="text-red-500 text-sm py-1 mb-2 px-2">
-                    {t(
-                      "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day."
-                    )}
-                  </p>
-                )}
+                    <p className="text-red-500 text-sm py-1 mb-2 px-2">
+                      {t(
+                        "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day."
+                      )}
+                    </p>
+                  )}
               </>
             ) : (
               <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
@@ -1600,7 +1620,7 @@ const Navbar = (props) => {
                         setAppliedCoupon(null);
                         setSelectedCoupon(null);
                         setSearchTerm("");
-                        setDiscount(0); // Set 0 instead of null for math operations to work properly
+                        setDiscount(0);
                         props.toaster({
                           type: "success",
                           message: "Coupon removed successfully",
@@ -1613,7 +1633,17 @@ const Navbar = (props) => {
                   </div>
                 )}
               </div>
-
+              {appliedCoupon && (
+                <div className=" pt-2 flex justify-between items-center w-full">
+                  <p className="text-custom-black font-normal text-base">
+                    {t("Discount amount")}
+                  </p>
+                  <p className="text-custom-black font-normal text-base">
+                    - {constant.currency}
+                    {discount}
+                  </p>
+                </div>
+              )}
               {pickupOption === "localDelivery" && (
                 <div className="flex justify-between items-center w-full pt-3 ">
                   <p className="text-black font-normal text-base">
@@ -1644,7 +1674,7 @@ const Navbar = (props) => {
                 </p>
 
                 {pickupOption === "orderPickup" ||
-                pickupOption === "driveUp" ? (
+                  pickupOption === "driveUp" ? (
                   <p className="font-normal text-base">{t("$0.00")}</p>
                 ) : pickupOption === "localDelivery" ? (
                   CartTotal < 35 ? (
@@ -1726,7 +1756,9 @@ const Navbar = (props) => {
                             setAppliedCoupon(null);
                             setSelectedCoupon(null);
                             setSearchTerm("");
-                            setDiscount(0); // Set 0 instead of null for math operations to work properly
+                            setIsOnce(false)
+                            setDiscountCode("")
+                            setDiscount(0); 
                             props.toaster({
                               type: "success",
                               message: "Coupon removed successfully",
@@ -1755,11 +1787,10 @@ const Navbar = (props) => {
                           filteredCoupons.map((coupon) => (
                             <div
                               key={coupon._id}
-                              className={`p-4 border-b cursor-pointer hover:bg-gray-50 flex justify-between ${
-                                selectedCoupon?._id === coupon._id
-                                  ? "bg-blue-50"
-                                  : ""
-                              }`}
+                              className={`p-4 border-b cursor-pointer hover:bg-gray-50 flex justify-between ${selectedCoupon?._id === coupon._id
+                                ? "bg-blue-50"
+                                : ""
+                                }`}
                               onClick={() => handleCouponSelect(coupon)}
                             >
                               <div>
@@ -1827,7 +1858,7 @@ const Navbar = (props) => {
                   onClick={() => {
                     setOpenCart(false);
                     router.push("/signIn");
-                  }} // or "/login"
+                  }} 
                 >
                   {t("Login to Checkout")}
                 </button>
