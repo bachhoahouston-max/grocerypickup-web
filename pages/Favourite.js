@@ -50,7 +50,7 @@ function Favourite(props) {
             {t("Quickly access your favorite items for easy reordering")}.
           </p>
         </div>
-        <div className="grid md:grid-cols-5 grid-cols-2 md:px-0 px-4 w-full md:gap-4 gap-2">
+        <div className="grid xl:grid-cols-7 lg:grid-cols-6 grid-cols-2 md:px-0 px-4 w-full md:gap-4 gap-2">
           {favouriteList.length > 0 ? (
             favouriteList.map((item, i) => (
               <div key={i} className="w-full">

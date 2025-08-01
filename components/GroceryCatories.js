@@ -88,24 +88,23 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
     isFetching.current = true;
 
-    const getFavourite = async () => {
-      loader(true);
-      try {
-        const res = await Api("get", "getFavourite", null, router, {
-          id: user._id,
-        });
-        setFavorite(Array.isArray(res.data) ? res.data : []);
-      } catch (err) {
-        console.log(err);
-        setFavorite([]);
-      } finally {
-        loader(false);
-      }
-    };
-
     getFavourite();
   }, []);
 
+  const getFavourite = async () => {
+    loader(true);
+    try {
+      const res = await Api("get", "getFavourite", null, router, {
+        id: user._id,
+      });
+      setFavorite(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.log(err);
+      setFavorite([]);
+    } finally {
+      loader(false);
+    }
+  };
   const addremovefavourite = () => {
     loader(true);
     if (!user?.token) {

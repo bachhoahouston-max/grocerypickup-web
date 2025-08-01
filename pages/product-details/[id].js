@@ -641,7 +641,7 @@ function ProductDetails(props) {
           </div>
         </div>
 
-        {productReviews.length > 1 && (
+        {productReviews.length > 0 && (
           <div className=" max-w-7xl md:ms-14 mx-4">
             <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
             <div className="w-full">
@@ -662,12 +662,7 @@ function ProductDetails(props) {
                           <p className="text-black font-normal text-[16px]">
                             {item?.posted_by?.username}
                           </p>
-                          {/* Add verified buyer badge if needed */}
-                          {item?.verified_buyer && (
-                            <span className="ml-2 text-green-600 text-xs">
-                              ✓ Verified Buyer
-                            </span>
-                          )}
+                         
                         </div>
                         <p className="text-black font-normal text-xs">
                           {moment(item?.createdAt).format("MMM DD, YYYY")}
@@ -679,7 +674,6 @@ function ProductDetails(props) {
                       {item?.description}
                     </p>
 
-                    {/* Image display section */}
                     {item?.images && item?.images?.length > 0 && (
                       <div className="pt-3">
                         {item?.images?.length === 1 ? (
