@@ -161,9 +161,6 @@ const Navbar = (props) => {
     }
 
 
-
-
-
     let discountValue = 0;
     if (type === "fixed") {
       discountValue = value;
