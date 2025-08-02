@@ -143,12 +143,26 @@ const Navbar = (props) => {
     const value = selectedCoupon.discountValue;
     const type = selectedCoupon.discountType;
     const isOnce = selectedCoupon.ussageType === "once";
+    console.log("cvfgbhj", isOnce)
     setIsOnce(isOnce);
+    console.log("vbnm", selectedCoupon.userId)
+    console.log("userId", user._id)
 
-    if (isOnce && selectedCoupon.userId?.includes(user._id)) {
+    if (!user?._id) {
+      props.toaster({ type: "error", message: "Please log in to apply the coupon." });
+      return;
+    }
+
+    const usedUserIds = selectedCoupon.userId?.map(user => user._id);
+
+    if (isOnce && usedUserIds?.includes(user._id)) {
       props.toaster({ type: "error", message: "You have already used this coupon." });
       return;
     }
+
+
+
+
 
     let discountValue = 0;
     if (type === "fixed") {
@@ -698,7 +712,7 @@ const Navbar = (props) => {
       Deliverytip: deliverytip,
       deliveryfee: deliveryCharge,
       discount: discount,
-      discountCode:discountCode,
+      discountCode: discountCode,
       user: user._id,
       Email: user.email,
       isOrderPickup,
@@ -1758,7 +1772,7 @@ const Navbar = (props) => {
                             setSearchTerm("");
                             setIsOnce(false)
                             setDiscountCode("")
-                            setDiscount(0); 
+                            setDiscount(0);
                             props.toaster({
                               type: "success",
                               message: "Coupon removed successfully",
@@ -1858,7 +1872,7 @@ const Navbar = (props) => {
                   onClick={() => {
                     setOpenCart(false);
                     router.push("/signIn");
-                  }} 
+                  }}
                 >
                   {t("Login to Checkout")}
                 </button>
