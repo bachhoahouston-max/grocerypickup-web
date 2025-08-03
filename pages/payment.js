@@ -43,7 +43,7 @@ function Payment(props) {
 
     cartDetails.forEach((element) => {
       data.push({
-        product: element?.id,
+        product: element?._id,
         image: element.selectedColor?.image,
         BarCode: element.BarCode,
         color: element.selectedColor?.color || "",
