@@ -74,7 +74,7 @@ function ProductDetails(props) {
       const cartItem = cartData.find(
         (f) =>
           f._id === productsId?._id &&
-          f.price_slot?.value === selectedPrice?.value
+          f.price_slot?.our_price === selectedPrice?.our_price
       );
 
       if (cartItem) {
@@ -91,7 +91,7 @@ function ProductDetails(props) {
   }, [cartData, productsId, selectedPrice]);
 
   const handleAddToCart = () => {
-    if (!productsId || !productsId._id || !selectedPrice?.value) {
+    if (!productsId || !productsId._id || !selectedPrice?.our_price) {
       console.error(
         "Invalid product data or price selection:",
         productsId,
@@ -111,7 +111,7 @@ function ProductDetails(props) {
 
     const existingItem = cartData.find(
       (f) =>
-        f._id === productsId._id && f.price_slot?.value === selectedPrice.value
+        f._id === productsId._id && f.price_slot?.our_price === selectedPrice.our_price
     );
 
     const price = parseFloat(selectedPrice?.our_price);
