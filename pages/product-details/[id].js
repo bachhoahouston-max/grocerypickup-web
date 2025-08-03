@@ -47,7 +47,6 @@ function ProductDetails(props) {
   useEffect(() => {
     if (router?.query?.id) {
       getProductById();
-      // getReview()
     }
   }, [router?.query?.id]);
 

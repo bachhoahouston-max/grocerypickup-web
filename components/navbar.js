@@ -605,7 +605,7 @@ const Navbar = (props) => {
 
     d.forEach((element) => {
       data.push({
-        product: element?.id,
+        product: element?._id,
         image: element.selectedColor?.image,
         BarCode: element.BarCode,
         color: element.selectedColor?.color || "",
@@ -745,7 +745,7 @@ const Navbar = (props) => {
 
     console.log(newData);
     localStorage.setItem("checkoutData", JSON.stringify(newData));
-    props.loader && props.loader(true);
+    // props.loader && props.loader(true);
 
     // Api("post", "createProductRquest", newData, router).then(
     //   (res) => {
@@ -776,8 +776,8 @@ const Navbar = (props) => {
     //   }
     // );
 
-    setOpenCart(false);
-    router.push("/payment?from=cart");
+    // setOpenCart(false);
+    // router.push("/payment?from=cart");
   };
 
   function formatDate(dateString) {
