@@ -15,8 +15,6 @@ import { FaArrowRight } from "react-icons/fa6";
 import GroceryCatories from "@/components/GroceryCatories";
 import SellProduct from "@/components/SellProduct";
 import { useTranslation } from "react-i18next";
-import { languageContext } from "@/pages/_app";
-import { useContext } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductCategory from "@/components/ProductCategory";
@@ -228,11 +226,10 @@ export default function Home(props) {
                 <ul className="rounded-lg p-4 space-y-2">
                   <li
                     onClick={() => handleCategoryClick1("/categories/all")}
-                    className={`flex lg:text-[14px] 2xl:[text-18px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between transition-transform duration-300 hover:-translate-y-[5px] p-2 ${
-                      selectedCategory === "all"
+                    className={`flex lg:text-[14px] 2xl:[text-18px] md:text-[17px] bg-gray-100 py-3 ps-4 font-bold items-center justify-between transition-transform duration-300 hover:-translate-y-[5px] p-2 ${selectedCategory === "all"
                         ? "text-custom-green"
                         : "text-black"
-                    } cursor-pointer`}
+                      } cursor-pointer`}
                   >
                     <span> {t("View All")}</span>
                     <FaArrowRight />
@@ -241,11 +238,10 @@ export default function Home(props) {
                     <li
                       key={index}
                       onClick={() => handleCategoryClick(cat._id)}
-                      className={`flex text-[14px] hover:text-[#F38529] lg:text-[14px]  2xl:[text-18px] bg-gray-100 py-3 ps-4 font-bold transition-transform duration-300 hover:-translate-y-[5px] items-center justify-between p-2 ${
-                        selectedCategory === cat._id
+                      className={`flex text-[14px] hover:text-[#F38529] lg:text-[14px]  2xl:[text-18px] bg-gray-100 py-3 ps-4 font-bold transition-transform duration-300 hover:-translate-y-[5px] items-center justify-between p-2 ${selectedCategory === cat._id
                           ? "text-custom-green"
                           : "text-black"
-                      } cursor-pointer`}
+                        } cursor-pointer`}
                     >
                       <span className="">{cat.name}</span>
                       <FaArrowRight className="" />

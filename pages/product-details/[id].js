@@ -23,6 +23,7 @@ import constant from "@/services/constant";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import ProductReviews from "@/components/reviews";
 function ProductDetails(props) {
   const { t } = useTranslation();
   const router = useRouter();
@@ -479,11 +480,10 @@ function ProductDetails(props) {
                               setPriceIndex(i);
                             }}
                             className={`bg-custom-lightPurple cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
-                                        ${
-                                          priceIndex == i
-                                            ? "bg-[#FFF5CB]"
-                                            : "bg-white"
-                                        }
+                                        ${priceIndex == i
+                                ? "bg-[#FFF5CB]"
+                                : "bg-white"
+                              }
                             `}
                           >
                             {data?.other_price && (
@@ -640,7 +640,7 @@ function ProductDetails(props) {
           </div>
         </div>
 
-        {productReviews.length > 0 && (
+        {/* {productReviews.length > 0 && (
           <div className=" max-w-7xl md:ms-14 mx-4">
             <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
             <div className="w-full">
@@ -711,8 +711,8 @@ function ProductDetails(props) {
               </div>
             </div>
           </div>
-        )}
-
+        )} */}
+        <ProductReviews productReviews={productReviews}/>
         <div className="bg-white max-w-8xl mt-6">
           <p className="text-black text-xl font-bold md:mb-5 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             {t("Similar Products")}
