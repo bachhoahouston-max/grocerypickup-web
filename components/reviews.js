@@ -7,15 +7,21 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Navigation, Pagination } from "swiper/modules";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
-const ProductReviews = ({ productReviews}) => {
+const ProductReviews = ({ productReviews,slug}) => {
         const { t } = useTranslation()
+        const router = useRouter()
   return (
     <>
       {productReviews.length > 0 && (
-        <div className="max-w-7xl md:ms-14 mx-4">
+        <div className="max-w-8xl md:mx-14 mx-6 ">
+          <div className="flex justify-between"> 
           <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
-
+          <p className="text-black text-lg font-bold mb-5 cursor-pointer"
+          onClick={()=>router.push(`/Reviews/${slug}`)}
+          > View All</p>
+          </div>
           <Swiper
             spaceBetween={20}
             slidesPerView={1}

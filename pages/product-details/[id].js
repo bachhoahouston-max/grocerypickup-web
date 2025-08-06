@@ -36,7 +36,6 @@ function ProductDetails(props) {
   const [productReviews, setProductReviews] = useState([]);
   const [productList, SetProductList] = useState([]);
   const [cartData, setCartData] = useContext(cartContext);
-  const [openCart, setOpenCart] = useContext(openCartContext);
   const [priceSlot, setPriceSlote] = useState([]);
   const [priceIndex, setPriceIndex] = useState(0);
   const [selectedPrice, setSelectedPrice] = useState({});
@@ -322,7 +321,7 @@ function ProductDetails(props) {
     );
   };
 
-  // On component mount, retrieve favorites from local storage
+
   useEffect(() => {
     const storedFavorites = localStorage.getItem("favorites");
     if (storedFavorites) {
@@ -639,80 +638,7 @@ function ProductDetails(props) {
             )}
           </div>
         </div>
-
-        {/* {productReviews.length > 0 && (
-          <div className=" max-w-7xl md:ms-14 mx-4">
-            <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
-            <div className="w-full">
-              <div className="grid sm:grid-cols-2 grid-cols-1 md:grid-cols-3 gap-4 w-[100%]">
-                {productReviews?.map((item, i) => (
-                  <div
-                    key={i}
-                    className="border-2 black-border p-3 rounded-lg shadow-lg"
-                  >
-                    <div className="pt-2 flex justify-start items-center">
-                      <div className="w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center">
-                        <p className="text-white text-[18px] font-bold">
-                          {item?.posted_by?.username?.charAt(0).toUpperCase()}
-                        </p>
-                      </div>
-                      <div className="ml-5">
-                        <div className="flex">
-                          <p className="text-black font-normal text-[16px]">
-                            {item?.posted_by?.username}
-                          </p>
-                         
-                        </div>
-                        <p className="text-black font-normal text-xs">
-                          {moment(item?.createdAt).format("MMM DD, YYYY")}
-                        </p>
-                      </div>
-                    </div>
-
-                    <p className="text-black font-normal text-base pt-5">
-                      {item?.description}
-                    </p>
-
-                    {item?.images && item?.images?.length > 0 && (
-                      <div className="pt-3">
-                        {item?.images?.length === 1 ? (
-                          <div className="w-full">
-                            <img
-                              src={item?.images[0]}
-                              alt="Review image"
-                              className="h-[120px] object-fit rounded-lg"
-                            />
-                          </div>
-                        ) : (
-                          <div className="grid grid-cols-2 gap-2">
-                            {item?.images?.slice(0, 4).map((image, index) => (
-                              <div key={index} className="relative">
-                                <img
-                                  src={image}
-                                  alt={`Review image ${index + 1}`}
-                                  className="w-full h-full object-fit rounded-lg"
-                                />
-
-                                {index === 3 && item?.images?.length > 4 && (
-                                  <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
-                                    <span className="text-white text-sm font-semibold">
-                                      +{item?.images?.length - 4}
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )} */}
-        <ProductReviews productReviews={productReviews}/>
+        <ProductReviews productReviews={productReviews} slug={productsId.slug}/>
         <div className="bg-white max-w-8xl mt-6">
           <p className="text-black text-xl font-bold md:mb-5 mb-5 md:mt-0 mt-4 md:ms-12 ms-4">
             {t("Similar Products")}
