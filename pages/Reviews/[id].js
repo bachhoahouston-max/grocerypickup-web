@@ -82,17 +82,17 @@ const ProductReviews = (props) => {
                                             </div>
                                         ) : (
                                             <div className="grid grid-cols-2 gap-2">
-                                                {item.images.slice(0, 4).map((image, index) => (
+                                                {item.images.slice(0, 2).map((image, index) => (
                                                     <div key={index} className="relative">
                                                         <img
                                                             src={image}
                                                             alt={`Review image ${index + 1}`}
-                                                            className="w-full h-[80px] object-cover rounded-md"
+                                                            className="w-full h-[180px] object-cover rounded-md"
                                                         />
-                                                        {index === 3 && item.images.length > 4 && (
-                                                            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-md">
+                                                        {index === 1 && item.images.length > 2 && (
+                                                            <div className="absolute inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center rounded-md">
                                                                 <span className="text-white text-sm font-semibold">
-                                                                    +{item.images.length - 4}
+                                                                    +{item.images.length - 2}
                                                                 </span>
                                                             </div>
                                                         )}

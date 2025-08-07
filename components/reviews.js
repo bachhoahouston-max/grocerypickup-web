@@ -72,23 +72,23 @@ const ProductReviews = ({ productReviews,slug}) => {
                           <img
                             src={item?.images[0]}
                             alt="Review image"
-                            className="h-[250px] w-full object-contain rounded-lg"
+                            className="w-64 h-78 object-cover  rounded-lg"
                           />
                         </div>
                       ) : (
                         <div className="grid grid-cols-2 gap-2">
-                          {item?.images?.slice(0, 4).map((image, index) => (
+                          {item?.images?.slice(0, 2).map((image, index) => (
                             <div key={index} className="relative">
                               <img
                                 src={image}
                                 alt={`Review image ${index + 1}`}
-                                className="w-full h-full object-cover rounded-lg"
+                                className="w-64 h-78 object-contain rounded-lg"
                               />
 
-                              {index === 3 && item?.images?.length > 4 && (
-                                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
+                              {index === 1 && item?.images?.length > 2 && (
+                                <div className="absolute inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center rounded-lg">
                                   <span className="text-white text-sm font-semibold">
-                                    +{item?.images?.length - 4}
+                                    +{item?.images?.length - 2}
                                   </span>
                                 </div>
                               )}
