@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from 'react';
 import { Api } from '@/services/service';
 import { useRouter } from "next/router";
-
+import Head from "next/head";
 function FranchiseOpportunity(props) {
     const { t } = useTranslation()
     const [FranchiseOpportunity, setFranchiseOpportunity] = useState("");
@@ -19,7 +19,7 @@ function FranchiseOpportunity(props) {
                 console.log("API Response =>", res.data);
 
                 if (res?.status) {
-                    setFranchiseOpportunity(res?.data[0]?.FranchiseOpportunity );
+                    setFranchiseOpportunity(res?.data[0]?.FranchiseOpportunity);
                     setLoading(false);  // Successfully fetched data, update loading state
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message });
@@ -41,18 +41,24 @@ function FranchiseOpportunity(props) {
     }, []);
 
     return (
-        <div className="relative min-h-screen md:mt-4 mt-8">
-            <section className="bg-white w-full flex flex-col justify-center items-center">
-                <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
+        <>
+            <Head>
+                <title>Start a Bachhoahouston Franchise – Profitable & Trusted</title>
+                <meta name="description" content="Join the Bachhoahouston family! Own a proven retail franchise with food, grocery & delivery services. Start your franchise journey" />
+            </Head>
+            <div className="relative min-h-screen md:mt-4 mt-8">
+                <section className="bg-white w-full flex flex-col justify-center items-center">
+                    <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
+                        {loading ? (
+                            <p className="text-base text-black font-normal md:pb-5">Loading...</p>
+                        ) : (
+                            <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: FranchiseOpportunity }} />
+                        )}
+                    </div>
+                </section>
+            </div>
+        </>
 
-                    {loading ? (
-                        <p className="text-base text-black font-normal md:pb-5">Loading...</p>
-                    ) : (
-                        <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: FranchiseOpportunity }} />
-                    )}
-                </div>
-            </section>
-        </div>
     );
 }
 

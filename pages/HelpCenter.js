@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from 'react';
 import { Api } from '@/services/service';
 import { useRouter } from "next/router";
-
+import Head from "next/head";
 function HelpCenter(props) {
     const { t } = useTranslation()
     const [JoinOurTeam, setJoinOurTeam] = useState({
@@ -20,7 +20,7 @@ function HelpCenter(props) {
                 console.log("API Response =>", res.data);
 
                 if (res?.status) {
-                    setJoinOurTeam({ JoinTeam: res?.data[0]?.HelpCenter , id: res?.data[0]?._id });
+                    setJoinOurTeam({ JoinTeam: res?.data[0]?.HelpCenter, id: res?.data[0]?._id });
                     setLoading(false);  // Successfully fetched data, update loading state
                 } else {
                     props.toaster({ type: "error", message: res?.data?.message });
@@ -42,19 +42,26 @@ function HelpCenter(props) {
     }, []);
 
     return (
-        <div className="relative min-h-screen md:mt-10 mt-9">
-            
-            <section className="bg-white w-full flex flex-col justify-center items-center">
-                <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
+        <>
+            <Head>
+                <title>
+                    Customer Support Center – Help at Bachhoahouston</title>
+                <meta name="description" content="Visit our customer support center for quick answers on orders, delivery, pickup, and more. We're here to help at Bachhoahouston every day!" />
+            </Head>
+            <div className="relative min-h-screen md:mt-10 mt-9">
+                <section className="bg-white w-full flex flex-col justify-center items-center">
+                    <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
 
-                    {loading ? (
-                        <p className="text-base text-black font-normal md:pb-5">Loading...</p>
-                    ) : (
-                        <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: JoinOurTeam?.JoinTeam }} />
-                    )}
-                </div>
-            </section>
-        </div>
+                        {loading ? (
+                            <p className="text-base text-black font-normal md:pb-5">Loading...</p>
+                        ) : (
+                            <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: JoinOurTeam?.JoinTeam }} />
+                        )}
+                    </div>
+                </section>
+            </div>
+        </>
+
     );
 }
 

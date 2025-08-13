@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect } from 'react';
 import { Api } from '@/services/service';
 import { useRouter } from "next/router";
-
+import Head from "next/head";
 function JoinOurDelievryTeam(props) {
     const { t } = useTranslation()
     const [JoinOurTeam, setJoinOurTeam] = useState({
@@ -42,18 +42,26 @@ function JoinOurDelievryTeam(props) {
     }, []);
 
     return (
-        <div className="relative min-h-screen md:mt-4 mt-9">
-            <section className="bg-white w-full flex flex-col justify-center items-center">
-                <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
+        <>
+            <Head>
+                <title>
+                   Delivery Driver Opportunity – Join Bachhoahouston Team</title>
+                <meta name="description" content="Explore a rewarding delivery driver opportunity with Bachhoahouston. Earn well while helping deliver quality groceries and essentials fast!" />
+            </Head>
+            <div className="relative min-h-screen md:mt-4 mt-9">
+                <section className="bg-white w-full flex flex-col justify-center items-center">
+                    <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
 
-                    {loading ? (
-                        <p className="text-base text-black font-normal md:pb-5">Loading...</p>
-                    ) : (
-                        <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: JoinOurTeam?.JoinTeam }} />
-                    )}
-                </div>
-            </section>
-        </div>
+                        {loading ? (
+                            <p className="text-base text-black font-normal md:pb-5">Loading...</p>
+                        ) : (
+                            <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: JoinOurTeam?.JoinTeam }} />
+                        )}
+                    </div>
+                </section>
+            </div>
+        </>
+
     );
 }
 

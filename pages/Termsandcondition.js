@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+import Head from "next/head";
 function Termsandcondition(props) {
   const { t } = useTranslation();
   const [termsAndConditions, setTermsAndConditions] = useState("");
@@ -42,8 +42,11 @@ function Termsandcondition(props) {
     getTermsAndConditions();
   }, []);
 
-  return (
-    <div className="relative md:mt-12 mt-9">
+  return (<>
+    <Head>
+      <title>Retail Store Terms and Conditions – Bachhoahouston</title>
+      <meta name="description" content="Review our retail store terms and conditions to understand your rights on orders, delivery, returns & more. Shop with confidence at Bachhoahouston." />
+    </Head>  <div className="relative md:mt-12 mt-9">
       <p className="text-black font-bold text-center text-[20px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
         {t("Terms and Conditions")}
       </p>
@@ -63,6 +66,8 @@ function Termsandcondition(props) {
         </div>
       </section>
     </div>
+  </>
+
   );
 }
 

@@ -185,7 +185,7 @@ const SellProduct = ({ loader, toaster }) => {
                   <div className="relative">
                     <img
                       src={item.product?.varients[0]?.image[0]}
-                      alt={`Product image of ${item.product?.name}`}
+                      alt="vietnamese specialty food"
                       className="md:w-full w-56 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
                     />
                   </div>

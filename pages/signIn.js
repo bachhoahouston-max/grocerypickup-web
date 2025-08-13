@@ -1,10 +1,10 @@
-import React, { useContext, useState ,useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { Api } from "@/services/service";
 import { userContext } from "./_app";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
-
+import Head from "next/head";
 const SignIn = (props) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -76,6 +76,11 @@ const SignIn = (props) => {
 
   return (
     <>
+      <Head>
+        <title>Secure Customer Login – Bachhoahouston Online Store</title>
+        <meta name="description" 
+        content="Access your secure customer login to manage orders, pickup, delivery & more. Enjoy a smooth shopping experience at Bachhoahouston today!" />
+      </Head>
       <div className="font-sans bg-white flex flex-col items-center justify-center">
         <div className="max-w-7xl mx-auto w-full mt-12 md:mt-2">
           <div className="mx-auto ms-6 md:ms-20 md:mt-8 mt-8">

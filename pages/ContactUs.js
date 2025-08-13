@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { Api } from "@/services/service";
 import { useTranslation } from "react-i18next";
-
+import Head from "next/head";
 const FeedbackForm = (props) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -68,10 +68,10 @@ const FeedbackForm = (props) => {
 
   const submitFeedback = (e) => {
     e.preventDefault();
-    
+
     let formValid = true;
     const newErrors = {};
-    
+
     Object.keys(formData).forEach((key) => {
       const error = validateField(key, formData[key]);
       if (error) {
@@ -79,9 +79,9 @@ const FeedbackForm = (props) => {
         newErrors[key] = error;
       }
     });
-    
+
     setErrors(newErrors);
-    
+
     if (!formValid) {
       props.toaster({
         type: "error",
@@ -89,7 +89,7 @@ const FeedbackForm = (props) => {
       });
       return;
     }
-    
+
     props.loader(true);
 
     Api("post", "createFeedback", formData).then(
@@ -127,111 +127,114 @@ const FeedbackForm = (props) => {
   };
 
   return (
-    <div className="min-h-[600px] md:mt-14 mt-14">
+    <>
+      <Head>
+        <title>Contact Us – Bachhoahouston Vietnamese Specialty Food</title>
+        <meta name="description" content="Join the Bachhoahouston family! Own a proven retail franchise with food, grocery & delivery services. Start your franchise journey" />
+      </Head>
+       <div className="min-h-[600px] md:mt-14 mt-14">
 
-      <div className="flex justify-center items-center ">
-        <p className="text-black font-bold text-[20px] md:text-[28px] p-2 bg-opacity-75 rounded lg:mt-3 ">
-          {t("Contact Us")}
-        </p>
-      </div>
-      <div className="container mx-auto py-2 md:py-10">
-        <form
-          className="bg-white p-8 max-w-7xl mx-auto"
-          onSubmit={submitFeedback}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-              <label className=" text-gray-700">{t("Full Name")}</label>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] outline-none rounded-md ${
-                  errors.fullName ? "border-red-500" : ""
-                }`}
-                placeholder={t("Full Name")}
-                required
-              />
-              {errors.fullName && (
-                <p className="text-red-500 text-sm">{errors.fullName}</p>
-              )}
-            </div>
-            <div>
-              <label className=" text-[16px] text-gray-700">
-                {t("Email")}
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] rounded-md outline-none ${
-                  errors.email ? "border-red-500" : ""
-                }`}
-                placeholder={t("Email")}
-                required
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm">{errors.email}</p>
-              )}
-            </div>
-            <div>
-              <label className=" text-gray-700 text-[16px]">
-                {t("Phone number")}
-              </label>
-              <input
-                type="tel"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                maxLength={10}
-                className={`w-full mt-2 p-2 text-gray-700 border bg-[#F9F9F9] rounded-md outline-none ${
-                  errors.phoneNumber ? "border-red-500" : ""
-                }`}
-                placeholder={t("Phone number")}
-                required
-              />
-              {errors.phoneNumber && (
-                <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
-              )}
-            </div>
+        <div className="flex justify-center items-center ">
+          <h1 className="text-black font-bold text-[20px] md:text-[28px] p-2 bg-opacity-75 rounded lg:mt-3 ">
+            {t("Contact Us")}
+          </h1>
+        </div>
+        <div className="container mx-auto py-2 md:py-10">
+          <form
+            className="bg-white p-8 max-w-7xl mx-auto"
+            onSubmit={submitFeedback}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <label className=" text-gray-700">{t("Full Name")}</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] outline-none rounded-md ${errors.fullName ? "border-red-500" : ""
+                    }`}
+                  placeholder={t("Full Name")}
+                  required
+                />
+                {errors.fullName && (
+                  <p className="text-red-500 text-sm">{errors.fullName}</p>
+                )}
+              </div>
+              <div>
+                <label className=" text-[16px] text-gray-700">
+                  {t("Email")}
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`w-full mt-2 text-gray-700 p-2 border bg-[#F9F9F9] rounded-md outline-none ${errors.email ? "border-red-500" : ""
+                    }`}
+                  placeholder={t("Email")}
+                  required
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email}</p>
+                )}
+              </div>
+              <div>
+                <label className=" text-gray-700 text-[16px]">
+                  {t("Phone number")}
+                </label>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  maxLength={10}
+                  className={`w-full mt-2 p-2 text-gray-700 border bg-[#F9F9F9] rounded-md outline-none ${errors.phoneNumber ? "border-red-500" : ""
+                    }`}
+                  placeholder={t("Phone number")}
+                  required
+                />
+                {errors.phoneNumber && (
+                  <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
+                )}
+              </div>
 
-            <div>
-              <label className=" text-gray-700 text-[16px]">
-                {t("Message")} *
-              </label>
-              <textarea
-                name="query"
-                rows="3"
-                value={formData.query}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`text-gray-700 w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md ${
-                  errors.message ? "border-red-500" : ""
-                }`}
-                placeholder={t("Message")}
-                required
-              ></textarea>
-              {errors.query && (
-                <p className="text-red-500 text-sm">{errors.query}</p>
-              )}
+              <div>
+                <label className=" text-gray-700 text-[16px]">
+                  {t("Message")} *
+                </label>
+                <textarea
+                  name="query"
+                  rows="3"
+                  value={formData.query}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`text-gray-700 w-full mt-2 p-2 border bg-[#F9F9F9] rounded-md ${errors.message ? "border-red-500" : ""
+                    }`}
+                  placeholder={t("Message")}
+                  required
+                ></textarea>
+                {errors.query && (
+                  <p className="text-red-500 text-sm">{errors.query}</p>
+                )}
+              </div>
             </div>
-          </div>
-          <div className="text-center mt-6">
-            <button
-              type="submit"
-              className="bg-[#F38529] text-white py-2 px-6 rounded-md"
-            >
-              {t("Send Message")}
-            </button>
-          </div>
-        </form>
+            <div className="text-center mt-6">
+              <button
+                type="submit"
+                className="bg-[#F38529] text-white py-2 px-6 rounded-md"
+              >
+                {t("Send Message")}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
+
   );
 };
 

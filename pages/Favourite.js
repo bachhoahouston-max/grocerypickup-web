@@ -5,13 +5,13 @@ import GroceryCategories from "@/components/GroceryCatories";
 import ShopFasterTropicana from "@/components/ShopFasterMarketplace";
 import { useTranslation } from "react-i18next";
 import { userContext } from "./_app";
-
+import Head from "next/head";
 function Favourite(props) {
   const router = useRouter();
   const { t } = useTranslation();
   const [favouriteList, setFavouriteList] = useState([]);
- const [user, setUser] = useContext(userContext);
- 
+  const [user, setUser] = useContext(userContext);
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -21,7 +21,7 @@ function Favourite(props) {
 
   const getFavourite = async () => {
     props.loader(true);
-      Api("get", "getFavourite", null, router, { id: user._id }).then(
+    Api("get", "getFavourite", null, router, { id: user._id }).then(
       (res) => {
         props.loader(false);
         console.log("res================>", res);
@@ -37,6 +37,10 @@ function Favourite(props) {
 
   return (
     <>
+      <Head>
+        <title>Your Personalized Shopping List – Bachhoahouston</title>
+        <meta name="description" content="Easily access your personalized shopping list of favorite groceries, beauty, and more at Bachhoahouston. Shop faster and smarter today!" />
+      </Head>
       <div className="mx-auto max-w-7xl py-12">
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-center text-[35px] md:text-[45px] font-semibold mb-2 text-black">

@@ -6,6 +6,7 @@ import { LuBoomBox } from "react-icons/lu";
 import { useTranslation } from "react-i18next";
 import { Api } from "@/services/service";
 import { Shield, Users, Truck, Star, CheckCircle, Clock } from 'lucide-react';
+import Head from "next/head";
 
 const AboutUs = (props) => {
   const { t } = useTranslation();
@@ -45,7 +46,7 @@ const AboutUs = (props) => {
       }
     );
   };
- const features = [
+  const features = [
     {
       icon: Shield,
       title: "Quality You Can Trust",
@@ -54,7 +55,7 @@ const AboutUs = (props) => {
     },
     {
       icon: Users,
-      title: "Customer-Centric Approach", 
+      title: "Customer-Centric Approach",
       description: "Our focus is on you. With easy ordering, quick delivery, and a commitment to customer satisfaction, we make grocery shopping simple and stress-free.",
       color: "bg-green-50 text-green-600"
     },
@@ -67,6 +68,11 @@ const AboutUs = (props) => {
   ];
   return (
     <>
+      <Head>
+        <title>About Bachhoahouston – Vietnamese Specialty Food Store</title>
+        <meta name="description" content="Discover Bachhoahouston, your trusted Vietnamese specialty food store offering groceries, home delivery & more. Rooted in culture, built on care" />
+      </Head>
+
       <div className="w-full bg-[#f59b51] mx-auto flex flex-col md:flex-row justify-center items-center">
         <div className="md:py-18 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
           <nav className="mb-4 mt-18 md:mt-12 text-[16px] md:text-start text-center">
@@ -93,7 +99,7 @@ const AboutUs = (props) => {
         </div>
         <div className="md:flex hidden w-full md:w-auto">
           <img
-            alt="A bowl of assorted fresh fruits including strawberries, kiwi, blueberries, and watermelon"
+            alt="bach hoa houston"
             className="w-[800px] h-auto"
             src="/Store.png"
           />
@@ -110,10 +116,10 @@ const AboutUs = (props) => {
                 <Star className="w-4 h-4" />
                 Why Work With Us
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+              <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
                 Bringing Freshness &
                 <span className="text-[#F38529]"> Convenience</span> Together
-              </h1>
+              </p>
               <p className="text-xl text-gray-600 mb-4 leading-relaxed">
                 We combine quality products with hassle-free shopping to make
                 your daily grocery experience smoother and smarter
@@ -177,7 +183,7 @@ const AboutUs = (props) => {
                 <div className="aspect-square lg:aspect-auto lg:h-full bg-gradient-to-br from-[#F38529]/20 to-green-100 flex items-center justify-center h-[500px] w-[800px]">
                   <img
                     src="/Rectangle25.png"
-                    alt="Fresh sliced melon"
+                    alt="bach hoa houston"
                     className="w-full h-full object-cover rounded-2xl shadow-xl"
                   />
                 </div>
@@ -222,7 +228,7 @@ const AboutUs = (props) => {
                 >
                   <div className="w-[320px] h-[400px]  md:w-[300px] md:h-[350px] rounded-xl overflow-hidden mb-4 ">
                     <img
-                      alt={`${member.membername}`}
+                      alt="vegan food near me"
                       className="w-full h-full object-cover"
                       src={member.memberimage}
                     />
