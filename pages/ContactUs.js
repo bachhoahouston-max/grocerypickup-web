@@ -127,25 +127,21 @@ const FeedbackForm = (props) => {
   };
 
   return (
-    <div className="relative md:mt-0 mt-14">
-      <img
-        src="./image00.png"
-        alt="Return Policy"
-        className="h-24 md:h-full w-full"
-      />
-      <div className="absolute top-[44px] md:top-14 left-1/2 transform -translate-x-1/2 flex justify-center items-center ">
-        <p className="text-black font-bold text-[15px] md:text-[28px] p-2 bg-opacity-75 rounded lg:mt-3 ">
+    <div className="min-h-[600px] md:mt-14 mt-14">
+
+      <div className="flex justify-center items-center ">
+        <p className="text-black font-bold text-[20px] md:text-[28px] p-2 bg-opacity-75 rounded lg:mt-3 ">
           {t("Contact Us")}
         </p>
       </div>
-      <div className="container mx-auto py-4 md:py-16 ">
+      <div className="container mx-auto py-2 md:py-10">
         <form
           className="bg-white p-8 max-w-7xl mx-auto"
           onSubmit={submitFeedback}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <label className="block text-gray-700">{t("Full Name")}</label>
+              <label className=" text-gray-700">{t("Full Name")}</label>
               <input
                 type="text"
                 name="fullName"
@@ -163,7 +159,7 @@ const FeedbackForm = (props) => {
               )}
             </div>
             <div>
-              <label className="block text-[16px] text-gray-700">
+              <label className=" text-[16px] text-gray-700">
                 {t("Email")}
               </label>
               <input
@@ -183,7 +179,7 @@ const FeedbackForm = (props) => {
               )}
             </div>
             <div>
-              <label className="block text-gray-700 text-[16px]">
+              <label className=" text-gray-700 text-[16px]">
                 {t("Phone number")}
               </label>
               <input
@@ -205,7 +201,7 @@ const FeedbackForm = (props) => {
             </div>
 
             <div>
-              <label className="block text-gray-700 text-[16px]">
+              <label className=" text-gray-700 text-[16px]">
                 {t("Message")} *
               </label>
               <textarea

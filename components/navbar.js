@@ -54,7 +54,7 @@ const Navbar = (props) => {
   const [filteredCoupons, setFilteredCoupons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCoupon, setSelectedCoupon] = useState(null);
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
@@ -117,83 +117,54 @@ const Navbar = (props) => {
       console.log(err.message);
     }
   }
+
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleCouponSelect = (coupon) => {
-    setSelectedCoupon(coupon);
-  };
-
   const handleApplyCoupon = () => {
-    if (!selectedCoupon) return;
-
-    if (!selectedCoupon.isActive) {
-      props.toaster({ type: "error", message: "This coupon is not active" });
-      return;
-    }
-
-    const today = new Date();
-    const expiryDate = new Date(selectedCoupon.expiryDate);
-    if (today > expiryDate) {
-      props.toaster({ type: "error", message: "This coupon has expired" });
-      return;
-    }
-
-    const value = selectedCoupon.discountValue;
-    const type = selectedCoupon.discountType;
-    const isOnce = selectedCoupon.ussageType === "once";
-    console.log("cvfgbhj", isOnce)
-    setIsOnce(isOnce);
-    console.log("vbnm", selectedCoupon.userId)
-    console.log("userId", user._id)
-
     if (!user?._id) {
       props.toaster({ type: "error", message: "Please log in to apply the coupon." });
       return;
     }
+    const newData = {
+      code: searchTerm,
+      cartValue: CartTotal,
+      userId: user._id
+    };
+    console.log("newData", newData)
+    props.loader(true);
 
-    const usedUserIds = selectedCoupon.userId?.map(user => user._id);
-
-    if (isOnce && usedUserIds?.includes(user._id)) {
-      props.toaster({ type: "error", message: "You have already used this coupon." });
-      return;
-    }
-
-
-    let discountValue = 0;
-    if (type === "fixed") {
-      discountValue = value;
-    } else if (type === "percentage") {
-      discountValue = (baseCartTotal * value) / 100;
-    }
-
-    if (discountValue > baseCartTotal) {
-      props.toaster({ type: "error", message: "This coupon is not valid for this amount. Please add more items." });
-      return;
-    }
-
-    setAppliedCoupon(selectedCoupon);
-    setDiscountCode(selectedCoupon?.code)
-    setDiscount(discountValue);
-    props.toaster({ type: "success", message: "Coupon applied successfully" });
-    setSearchTerm("");
-    setOpenModel(false);
-
-    return selectedCoupon.code;
+    Api("post", "ValidateCouponforUser", newData, router)
+      .then((res) => {
+        if (res.status) {
+          setDiscount(res.data?.discount);
+          setDiscountCode(searchTerm);
+          setAppliedCoupon(true)
+          props.toaster({ type: "success", message: res?.data?.message || "Coupon applied successfully" });
+          setSearchTerm("");
+          setOpenModel(false);
+        } else {
+          props.toaster?.({ type: "error", message: res?.data?.message });
+        }
+      })
+      .catch((err) => {
+        props.toaster?.({ type: "error", message: err?.message });
+      })
+      .finally(() => {
+        props.loader(false);
+      });
   };
 
+console.log(discount)
 
   useEffect(() => {
     if (discount > baseCartTotal) {
-      props.toaster({ type: "error", message: "This coupon is not valid for this amount. Please add more items." });
-      setSelectedCoupon(null)
-      setAppliedCoupon(null);
-      setSelectedCoupon(null);
+      props.toaster({ type: "error", message: "Coupon removed — order amount too low. Please add more items to use this coupon." });
       setSearchTerm("");
+      setAppliedCoupon(false)
       setDiscountCode("")
       setDiscount(0);
-
     }
   }, [baseCartTotal])
 
@@ -502,7 +473,7 @@ const Navbar = (props) => {
       finalTotal = cartAfterDiscount + delivery;
     }
 
-    setCartTotal(cartAfterDiscount.toFixed(2)); // Now correct total
+    setCartTotal(sumWithInitial.toFixed(2)); // Now correct total
     setMainTotal(finalTotal.toFixed(2));
   }, [cartData, openCart, pickupOption, deliverytip, discount]);
 
@@ -513,8 +484,6 @@ const Navbar = (props) => {
     setParkingNo("");
     setPickupOption("orderPickup");
     localStorage.removeItem("addCartDetail");
-    setAppliedCoupon(null);
-    setSelectedCoupon(null);
     setSearchTerm("");
     getProfileData();
   };
@@ -529,9 +498,9 @@ const Navbar = (props) => {
     setCartData(nextState);
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
 
-    // ✅ Only run this when the cart becomes empty after removal
+  
     if (nextState.length === 0) {
-      setAppliedCoupon(null);
+
       setSelectedCoupon(null);
       setSearchTerm("");
       getProfileData();
@@ -805,10 +774,11 @@ const Navbar = (props) => {
     );
   };
 
+
+
   return (
     <>
       <header className="flex max-w-8xl shadow-lg justify-between items-center p-4 bg-white ">
-        {/* Logo */}
 
         <div className="md:ms-32 lg:ms-10 xl:ms-28 ms-0 flex items-center">
           <img
@@ -1612,7 +1582,7 @@ const Navbar = (props) => {
 
                 {!appliedCoupon && (
                   <p
-                    className="text-custom-green font-semibold hover:underline  text-base cursor-pointer"
+                    className="text-custom-green font-semibold hover:underline text-base cursor-pointer"
                     onClick={() => setOpenModel(true)}
                   >
                     {t("Apply Coupon")}
@@ -1622,15 +1592,15 @@ const Navbar = (props) => {
                 {appliedCoupon && (
                   <div className=" text-green-800 rounded-md flex items-center justify-end w-full md:w-[400px]">
                     <span className="text-base">
-                      {t("Coupon")} <strong>{appliedCoupon.code}</strong>{" "}
+                      {t("Coupon")} {" "}
                       {t("applied!")}
                     </span>
 
                     <button
                       onClick={() => {
-                        setAppliedCoupon(null);
-                        setSelectedCoupon(null);
+                        setAppliedCoupon(false)
                         setSearchTerm("");
+                        setDiscountCode("")
                         setDiscount(0);
                         props.toaster({
                           type: "success",
@@ -1752,88 +1722,11 @@ const Navbar = (props) => {
                         <X size={28} />
                       </p>
                     </div>
-
-                    {appliedCoupon && (
-                      <div className="mt-3 p-2 bg-green-100 text-green-800 rounded-md flex items-center justify-between">
-                        <div className="flex items-center">
-                          <Check size={16} className="mr-2" />
-                          <span>
-                            Coupon <strong>{appliedCoupon.code}</strong>{" "}
-                            applied!
-                          </span>
-                        </div>
-                        <button
-                          onClick={() => {
-                            setAppliedCoupon(null);
-                            setSelectedCoupon(null);
-                            setSearchTerm("");
-                            setIsOnce(false)
-                            setDiscountCode("")
-                            setDiscount(0);
-                            props.toaster({
-                              type: "success",
-                              message: "Coupon removed successfully",
-                            });
-                          }}
-                          className="text-red-600 hover:text-red-800 text-sm ml-4"
-                        >
-                          <X size={18} />
-                        </button>
-                      </div>
-                    )}
                   </div>
 
-                  {/* Show available coupon list only if not applied and search is active */}
-                  {!appliedCoupon && searchTerm && (
-                    <div className="border rounded-md overflow-hidden">
-                      <div className="bg-gray-100 px-4 py-2 font-medium text-black">
-                        Available Coupons
-                      </div>
-                      <div className="max-h-64 overflow-y-auto">
-                        {filteredCoupons.length === 0 ? (
-                          <div className="p-4 text-center text-gray-500">
-                            No coupons found matching "{searchTerm}"
-                          </div>
-                        ) : (
-                          filteredCoupons.map((coupon) => (
-                            <div
-                              key={coupon._id}
-                              className={`p-4 border-b cursor-pointer hover:bg-gray-50 flex justify-between ${selectedCoupon?._id === coupon._id
-                                ? "bg-blue-50"
-                                : ""
-                                }`}
-                              onClick={() => handleCouponSelect(coupon)}
-                            >
-                              <div>
-                                <div className="font-medium text-black">
-                                  {coupon.code}
-                                </div>
-                                <div className="text-sm text-gray-600">
-                                  {coupon.discountType === "percentage"
-                                    ? `${coupon.discountValue}% off`
-                                    : `${coupon.discountValue} off`}
-                                </div>
-                                <div className="text-xs text-gray-500">
-                                  Expires: {formatDate(coupon.expiryDate)}
-                                </div>
-                              </div>
-                              {selectedCoupon?._id === coupon._id && (
-                                <div className="flex items-center">
-                                  <Check size={20} className="text-blue-500" />
-                                </div>
-                              )}
-                            </div>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Apply button */}
                   {!appliedCoupon && (
                     <button
                       className="mt-4 w-full py-2 bg-custom-green text-white rounded-md  focus:outline-none  disabled:bg-gray-400 disabled:cursor-not-allowed"
-                      disabled={!selectedCoupon}
                       onClick={handleApplyCoupon}
                     >
                       {t("Apply Coupon")}
