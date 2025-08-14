@@ -205,9 +205,15 @@ export default function Home(props) {
   return (
     <>
       <Head>
-        <title>
-          Shop Everyday Essentials at Bachhoahouston Today</title>
-        <meta name="description" content="Bachhoahouston offers top-quality groceries, beauty & more with fast home delivery, curbside pickup & shipping. Shop daily essentials now!" />
+        <title>Shop Everyday Essentials at Bachhoahouston Today</title>
+        <meta
+          name="description"
+          content="Bachhoahouston offers top-quality groceries, beauty & more with fast home delivery, curbside pickup & shipping. Shop daily essentials now!"
+        />
+        <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/"
+        />
       </Head>
       <div className="">
         <MainHeader loader={props.loader} toaster={props.toaster} />

@@ -131,8 +131,12 @@ const FeedbackForm = (props) => {
       <Head>
         <title>Contact Us – Bachhoahouston Vietnamese Specialty Food</title>
         <meta name="description" content="Join the Bachhoahouston family! Own a proven retail franchise with food, grocery & delivery services. Start your franchise journey" />
+        <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/ContactUs"
+        />
       </Head>
-       <div className="min-h-[600px] md:mt-14 mt-14">
+      <div className="min-h-[600px] md:mt-14 mt-14">
 
         <div className="flex justify-center items-center ">
           <h1 className="text-black font-bold text-[20px] md:text-[28px] p-2 bg-opacity-75 rounded lg:mt-3 ">

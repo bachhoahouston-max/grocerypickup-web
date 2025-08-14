@@ -50,6 +50,10 @@ function PrivacyPolicy(props) {
       <Head>
         <title> Customer Privacy Policy – Bachhoahouston Retail Store</title>
         <meta name="description" content="Read our customer privacy policy to learn how we protect your information while shopping for groceries, beauty products, and more at Bachhoahouston." />
+         <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/PrivacyPolicy"
+        />
       </Head>
         <div className="relative min-h-screen md:mt-12 mt-9">
         <h1 className="text-black text-center font-bold text-[20px] md:text-[24px] p-2 bg-opacity-75 rounded ">

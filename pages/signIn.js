@@ -78,8 +78,12 @@ const SignIn = (props) => {
     <>
       <Head>
         <title>Secure Customer Login – Bachhoahouston Online Store</title>
-        <meta name="description" 
-        content="Access your secure customer login to manage orders, pickup, delivery & more. Enjoy a smooth shopping experience at Bachhoahouston today!" />
+        <meta name="description"
+          content="Access your secure customer login to manage orders, pickup, delivery & more. Enjoy a smooth shopping experience at Bachhoahouston today!" />
+        <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/signIn"
+        />
       </Head>
       <div className="font-sans bg-white flex flex-col items-center justify-center">
         <div className="max-w-7xl mx-auto w-full mt-12 md:mt-2">

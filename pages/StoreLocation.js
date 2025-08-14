@@ -46,8 +46,15 @@ function StoreLocation(props) {
         <title>
           Find a Bachhoahouston Vietnamese Grocery Store Near You</title>
         <meta name="description" content="Visit your nearest Bachhoahouston Vietnamese grocery store for fresh foods, beauty, books & more. Curbside pickup & delivery available!" />
+         <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/StoreLocation"
+        />
       </Head>
-      <div className="relative min-h-screen md:mt-5 mt-10">
+      <div className="relative min-h-screen md:mt-10 mt-10">
+        <h1 className="text-black font-bold text-center text-[20px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
+          {t("Store Location")}
+        </h1>
         <section className="bg-white w-full flex flex-col justify-center items-center">
           <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 md:pb-10 pb-5 md:min-h-screen">
             {loading ? (

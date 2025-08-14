@@ -151,7 +151,7 @@ function Categories(props) {
   };
 
 
- 
+
   const categoryData = categoryList.find(
     (cat) => cat.slug === selectedCategories
   );
@@ -160,8 +160,12 @@ function Categories(props) {
   return (
     <>
       <Head>
-        <title>{categoryData?.metatitle}</title>
-        <meta name="description" content={categoryData?.metadescription} />
+        <title>{categoryData?.metatitle || "Shop All Categories – Bachhoahouston Retail Store"}</title>
+        <meta name="description" content={categoryData?.metadescription || "Explore and shop all categories from groceries to beauty, books, and home goods at Bachhoahouston. Delivery and pickup options available"} />
+        <link
+          rel="canonical"
+          href={`https://www.bachhoahouston.com/categories/${categoryData?.slug}`}
+        />
       </Head>
       <div className="bg-white w-full min-h-screen">
         <section className="bg-white w-full  relative flex flex-col justify-center items-center">
@@ -392,7 +396,7 @@ function Categories(props) {
                       </div>
                     ))
                   ) : (
-                    <div className="flex justify-center items-center h-[500px] md:h-[400px] col-span-4 ">
+                    <div className="flex justify-center items-center h-[500px] md:h-[600px] col-span-6 ">
                       <p className="text-black text-center font-semibold text-xl">
                         {t("No products available in this category")}.
                       </p>

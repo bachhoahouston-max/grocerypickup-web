@@ -45,10 +45,17 @@ function JoinOurDelievryTeam(props) {
         <>
             <Head>
                 <title>
-                   Delivery Driver Opportunity – Join Bachhoahouston Team</title>
+                    Delivery Driver Opportunity – Join Bachhoahouston Team</title>
                 <meta name="description" content="Explore a rewarding delivery driver opportunity with Bachhoahouston. Earn well while helping deliver quality groceries and essentials fast!" />
+                <link
+                    rel="canonical"
+                    href="https://www.bachhoahouston.com/JoinOurDelievryTeam"
+                />
             </Head>
             <div className="relative min-h-screen md:mt-4 mt-9">
+                <h1 className="text-black font-bold text-center text-[20px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
+                    {t("Join our delivery team")}
+                </h1>
                 <section className="bg-white w-full flex flex-col justify-center items-center">
                     <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
 

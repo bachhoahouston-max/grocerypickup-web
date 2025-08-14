@@ -174,7 +174,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <div className="relative">
         <img
           src={item.varients[0].image[0]}
-          alt="vietnamese specialty food"
+          alt={item?.imageAltName}
           className="md:w-full w-56 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
           onClick={() => {
             router.push(url);

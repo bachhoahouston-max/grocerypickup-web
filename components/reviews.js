@@ -15,7 +15,7 @@ const ProductReviews = ({ productReviews,slug}) => {
   return (
     <>
       {productReviews.length > 0 && (
-        <div className="max-w-8xl md:mx-14 mx-6 ">
+        <div className="max-w-7xl md:mx-14 mx-6 ">
           <div className="flex justify-between"> 
           <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
           <p className="text-black text-lg font-bold mb-5 cursor-pointer"

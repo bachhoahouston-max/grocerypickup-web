@@ -45,8 +45,15 @@ function FranchiseOpportunity(props) {
             <Head>
                 <title>Start a Bachhoahouston Franchise – Profitable & Trusted</title>
                 <meta name="description" content="Join the Bachhoahouston family! Own a proven retail franchise with food, grocery & delivery services. Start your franchise journey" />
+                <link
+                    rel="canonical"
+                    href="https://www.bachhoahouston.com/FranchiseOpportunity"
+                />
             </Head>
-            <div className="relative min-h-screen md:mt-4 mt-8">
+            <div className="relative min-h-screen md:mt-10 mt-8">
+                <h1 className="text-black font-bold text-center text-[20px] md:text-[24px] p-2 bg-opacity-75 rounded lg:mt-3 ">
+                    {t("Franchise Opportunity")}
+                </h1>
                 <section className="bg-white w-full flex flex-col justify-center items-center">
                     <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-10 pt-5 md:pb-10 pb-5 md:min-h-screen">
                         {loading ? (

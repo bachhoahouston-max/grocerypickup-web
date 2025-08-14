@@ -40,6 +40,10 @@ function Favourite(props) {
       <Head>
         <title>Your Personalized Shopping List – Bachhoahouston</title>
         <meta name="description" content="Easily access your personalized shopping list of favorite groceries, beauty, and more at Bachhoahouston. Shop faster and smarter today!" />
+        <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/Favourite"
+        />
       </Head>
       <div className="mx-auto max-w-7xl py-12">
         <div className="flex flex-col justify-center items-center">

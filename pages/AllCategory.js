@@ -3,6 +3,7 @@ import ShopFasterTropicana from "@/components/ShopFasterMarketplace";
 import { Api } from "@/services/service";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const Category = (props) => {
   const { t } = useTranslation();
@@ -34,10 +35,18 @@ const Category = (props) => {
 
   return (
     <>
+      <Head>
+        <title>Shop All Categories – Bachhoahouston Retail Store</title>
+        <meta name="description" content="Explore and shop all categories from groceries to beauty, books, and home goods at Bachhoahouston. Delivery and pickup options available" />
+        <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/AllCategory"
+        />
+      </Head>
       <div className="max-w-7xl md:mt-12 mt-12 md:px-4 px-4 mx-auto bg-white">
-        <h2 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
+        <h1 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
           {t("All Categories")}
-        </h2>
+        </h1>
 
         <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-6 mb-4">
           {category.map((cat, index) => (

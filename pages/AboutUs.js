@@ -71,6 +71,10 @@ const AboutUs = (props) => {
       <Head>
         <title>About Bachhoahouston – Vietnamese Specialty Food Store</title>
         <meta name="description" content="Discover Bachhoahouston, your trusted Vietnamese specialty food store offering groceries, home delivery & more. Rooted in culture, built on care" />
+        <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/AboutUs"
+        />
       </Head>
 
       <div className="w-full bg-[#f59b51] mx-auto flex flex-col md:flex-row justify-center items-center">
