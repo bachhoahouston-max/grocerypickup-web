@@ -23,17 +23,17 @@ const SellProduct = ({ loader, toaster }) => {
       if (existingItemIndex === -1) {
         draft.push({
           ...item,
-          name:item?.product.name,
-          id:item?.product?._id,
+          name: item?.product.name,
+          id: item?.product?._id,
           selectedColor: item?.product.varients?.[0] || {},
           selectedImage: item.product?.varients[0]?.image[0] || "",
           BarCode: item?.product.DateBarCode || "",
           total: price,
-          isCurbSidePickupAvailable:item?.product?.isCurbSidePickupAvailable, 
-          isInStoreAvailable:item?.product?.isInStoreAvailable,
-          isNextDayDeliveryAvailable:item?.product?.isNextDayDeliveryAvailable,
-          isReturnAvailable:item?.product?.isReturnAvailable,
-          isShipmentAvailable:item?.product?.isShipmentAvailable,
+          isCurbSidePickupAvailable: item?.product?.isCurbSidePickupAvailable,
+          isInStoreAvailable: item?.product?.isInStoreAvailable,
+          isNextDayDeliveryAvailable: item?.product?.isNextDayDeliveryAvailable,
+          isReturnAvailable: item?.product?.isReturnAvailable,
+          isShipmentAvailable: item?.product?.isShipmentAvailable,
           qty: 1,
           price: price ?? 0,
           price_slot: item.product.price_slot?.[0] || {},
@@ -147,8 +147,8 @@ const SellProduct = ({ loader, toaster }) => {
     <div className="container mb-2 md:mt-10 lg:mt-14 mt-4 mx-auto bg-white max-w-9xl md:px-6 px-6">
       {saleData.length > 0 && (
         <>
-          <p className="text-black md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
-            Offer of the Week
+          <p className="text-black text-center md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
+            {t("Offer of the Week")}
           </p>
           <div className="md:mt-2 mt-2 relative w-full md:w-5/5 grid md:grid-cols-5 lg:grid-cols-7 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
             {saleData.map((item, i) => {
@@ -193,20 +193,21 @@ const SellProduct = ({ loader, toaster }) => {
                   <h2 className="text-xs text-gray-400 font-normal mt-4">
                     {item.product?.categoryName}
                   </h2>
-                  <p className="text-sm md:text-base text-black font-semibold pt-1">
-                    {item.product?.name.length > 29
-                      ? item.product?.name.slice(0, 29) + "..."
-                      : item.product?.name}
+                  <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
+                    {item.product.name.length > 30 ? item.product.name.slice(0, 30) + "..." : item.name}
+                  </p>
+                  <p className="lg:flex xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
+                    {item.product.name.length > 25 ? item.product.name.slice(0, 25) + "..." : item.name}
                   </p>
 
-                  <div className="md:flex-row flex-col flex justify-center mb-1 md:gap-2 items-center md:pt-1 pt-0">
+                  <div className="h-12 md:flex-row flex-col flex justify-center mb-1 md:gap-2 items-center md:pt-2 pt-0">
                     <div className="gap-2 flex items-center">
-                      <span className="text-custom-gold text-lg md:text-xl font-semibold">
+                      <span className="text-custom-gold text-sm lg:text-[14px] 2xl:[text-18px]font-semibold">
                         ${item.price}
                       </span>
                       {item.product?.price_slot &&
                         item.product.price_slot[0]?.our_price && (
-                          <span className="text-sm text-gray-500 line-through">
+                          <span className="text-sm text-gray-500 line-through font-semibold">
                             ${item.product.price_slot[0].our_price}
                           </span>
                         )}
@@ -218,7 +219,7 @@ const SellProduct = ({ loader, toaster }) => {
                             ((item.product.price_slot[0].our_price -
                               item.price) /
                               item.product.price_slot[0].our_price) *
-                              100
+                            100
                           )}
                           % OFF
                         </span>
@@ -252,7 +253,7 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                   ) : isActive ? (
                     <button
-                      className="font-bold bg-[#5CB447]  w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[16px] text-white cursor-pointer flex justify-center items-center"
+                      className="font-bold bg-[#5CB447]  w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-white cursor-pointer flex justify-center items-center"
                       onClick={() => handleAddToCart(item)}
                     >
                       <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />

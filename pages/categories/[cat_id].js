@@ -93,7 +93,7 @@ function Categories(props) {
     }
   }, [selectedCategories, selectedSortBy]); // Include both
 
-  const getproductByCategory = async (cat, page = 1, limit = 18) => {
+  const getproductByCategory = async (cat, page = 1, limit = 24) => {
     props.loader(true);
     let url = `getProductBycategoryId?page=${page}&limit=${limit}`;
 

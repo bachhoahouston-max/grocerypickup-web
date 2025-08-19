@@ -81,9 +81,9 @@ const HeaderFirst = (props) => {
     <>
       <nav className="bg-white border-t-1 border-[#F0F1F1] relative">
         <div className=" mt-2 mx-auto px-4 py-2 md:flex hidden justify-center items-center mr-20">
-          <div className="hidden flex-1 lg:flex justify-center xl:space-x-8 lg:space-x-4">
+          <div className="hidden flex-1 lg:flex justify-center xl:space-x-6 lg:space-x-3">
             <p
-              className={`xl:text-[16px] 2xl:text-[18px] lg:text-[14px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
                 selectedTab === "home"
                   ? "text-custom-green"
                   : "text-custom-black hover:!text-[#F38529]"
@@ -97,7 +97,7 @@ const HeaderFirst = (props) => {
             </p>
             <div className="relative flex transition-transform duration-300 hover:-translate-y-[5px]" ref={dropdownRef}>
               <button
-                className={`xl:text-[16px] 2xl:text-[18px] lg:text-[14px]  font-bold cursor-pointer inline-flex items-center ${
+                className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  font-bold cursor-pointer inline-flex items-center ${
                   selectedTab === "AllCategory"
                     ? "text-custom-green"
                     : "text-custom-black hover:!text-[#F38529]"
@@ -157,7 +157,7 @@ const HeaderFirst = (props) => {
             </div>
            
             <p
-              className={`xl:text-[16px] 2xl:text-[18px] lg:text-[14px] font-bold transition-transform duration-300 hover:-translate-y-[5px] cursor-pointer ml-2 
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] font-bold transition-transform duration-300 hover:-translate-y-[5px] cursor-pointer ml-2 
     ${
       selectedTab === "FranchiseOpportunity"
         ? "text-custom-green"
@@ -173,7 +173,7 @@ const HeaderFirst = (props) => {
             </p>
 
             <p
-              className={`xl:text-[16px] 2xl:text-[18px] lg:text-[14px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 
     ${
       selectedTab === "AboutUs"
         ? "text-custom-green"
@@ -188,7 +188,7 @@ const HeaderFirst = (props) => {
               {t("About Us")}
             </p>
             <p
-              className={`xl:text-[16px] 2xl:text-[18px] lg:text-[14px]  font-bold cursor-pointer transition-transform duration-300 hover:-translate-y-[5px] ml-2 ${
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  font-bold cursor-pointer transition-transform duration-300 hover:-translate-y-[5px] ml-2 ${
                 selectedTab === "Contact"
                   ? "text-custom-green"
                   : "text-custom-black hover:!text-[#F38529]"
@@ -202,7 +202,7 @@ const HeaderFirst = (props) => {
             </p>
 
             <p
-              className={`xl:text-[16px] 2xl:text-[18px] lg:text-[14px]  transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
                 selectedTab === "StoreLocation"
                   ? "text-custom-green"
                   : "text-custom-black hover:!text-[#F38529]"

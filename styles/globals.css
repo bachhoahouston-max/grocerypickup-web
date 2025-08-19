@@ -9,6 +9,10 @@
   --custom-Gold: #f38021; /* Example custom green color */
 }
 
+@theme {
+  --breakpoint-3xl: 1922px;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);

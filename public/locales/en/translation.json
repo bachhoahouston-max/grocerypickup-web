@@ -86,7 +86,7 @@
   "Safe and secure payment options": "Safe and secure payment options",
   "off": "off",
   "Great deal on Organic food": "Great deal on Organic food",
-  "Enjoy 35% off on fresh, organic groceries – clean, healthy, and chemical-free, straight from trusted farms": "Enjoy 35% off on fresh, organic groceries – clean, healthy, and chemical-free, straight from trusted farms",
+  "Enjoy off on fresh, organic groceries – clean, healthy, and chemical-free, straight from trusted farms": "Enjoy off on fresh, organic groceries – clean, healthy, and chemical-free, straight from trusted farms",
   "Your digital partner for growth, with a commitment to quality": "Your digital partner for growth, with a commitment to quality",
   "Useful Links": "Useful Links",
   "Help & Support": "Help & Support",
@@ -288,5 +288,6 @@
       "optional":"optional",
       "Upload up to 6 photos":"Upload up to 6 photos",
       "Tap to add photos":"Tap to add photos",
-      "Submit Review":"Submit Review"
+      "Submit Review":"Submit Review",
+      "Offer of the Week":"Offer of the Week"
 }

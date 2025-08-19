@@ -44,10 +44,18 @@ const Category = (props) => {
         />
       </Head>
       <div className="max-w-7xl md:mt-12 mt-12 md:px-4 px-4 mx-auto bg-white">
+        <div className="flex justify-between"> 
         <h1 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
           {t("All Categories")}
         </h1>
-
+        <p className="md:text-2xl cursor-pointer text-lg font-semibold text-gray-800 md:mb-8 mb-4"
+        onClick={() =>
+                router.push("/categories/all?category=all&sort_by=new")
+              }
+        >
+          {t("View All")}
+        </p>
+</div>
         <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-6 mb-4">
           {category.map((cat, index) => (
             <div

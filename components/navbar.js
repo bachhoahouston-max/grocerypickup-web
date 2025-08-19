@@ -156,7 +156,6 @@ const Navbar = (props) => {
       });
   };
 
-console.log(discount)
 
   useEffect(() => {
     if (discount > baseCartTotal) {
@@ -479,7 +478,7 @@ console.log(discount)
 
   const emptyCart = async () => {
     setCartData([]);
-    setDate([]);
+    setDate(null);
     setLocalAddress([]);
     setParkingNo("");
     setPickupOption("orderPickup");

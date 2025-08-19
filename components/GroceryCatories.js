@@ -21,7 +21,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const router = useRouter();
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
-  const [openCart, setOpenCart] = useContext(openCartContext);
   const [productsId, setProductsId] = useState([]);
   const [user] = useContext(userContext);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -30,7 +29,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const handleAddToCart = () => {
     const itemQuantity = Number(item?.Quantity ?? 0);
 
-    // Outside check — good for immediate feedback
     if (itemQuantity <= 0) {
       toaster({
         type: "error",
@@ -42,7 +40,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
     const existingItem = cartData.find((f) => f._id === item?._id);
 
-    // Prevent adding again if already in cart (optional)
+
     if (existingItem) {
       toaster({ type: "info", message: "Item already in cart." });
       return;
@@ -66,7 +64,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     setCartData(updatedCart);
     localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
 
-    toaster({ type: "success", message: "Product added to cart" });
+    // toaster({ type: "success", message: "Product added to cart" });
   };
 
   useEffect(() => {
@@ -196,13 +194,18 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
         {item.categoryName}
       </h2>
-      <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
-        {item.name.length > 30 ? item.name.slice(0, 30) + "..." : item.name}
-      </p>
-      <p className="lg:flex xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
-        {item.name.length > 25 ? item.name.slice(0, 25) + "..." : item.name}
-      </p>
-
+      <div className="flex flex-col items-center justify-center h-12">
+        <p className="xl:flex lg:hidden text-sm 2xl:hidden lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
+          {item.name.length > 30 ? item.name.slice(0, 30) + "..." : item.name}
+        </p>
+        <p className="lg:flex xl:hidden 2xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
+          {item.name.length > 25 ? item.name.slice(0, 25) + "..." : item.name}
+        </p>
+        <p className="lg:hidden xl:hidden 2xl:flex  hidden text-sm 2xl:[text-18px]  text-black font-semibold pt-1 ">
+          {item.name.length > 40 ? item.name.slice(0, 40) + "..." : item.name}
+        </p>
+      </div>
+      
       <div className="flex justify-between items-center md:pt-1 pt-0">
         <p className="text-custom-gold text-sm lg:text-[14px] 2xl:[text-18px] font-semibold">
           {constant.currency}
@@ -297,16 +300,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </button>
       )}
 
-      {/* <div className="flex items-center text-black mt-2">
-                <div className="flex items-center mr-2">
-                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
-                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
-                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
-                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
-                    <FaStar className="text-[#F38529] md:text-xl text-sm" />
-                </div>
-                <span className="text-sm">(4.5)</span>
-            </div> */}
+  
     </div>
   );
 };
