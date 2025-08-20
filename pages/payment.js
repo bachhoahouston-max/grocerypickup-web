@@ -30,9 +30,12 @@ function Payment(props) {
   }, []);
 
   useEffect(() => {
+    props.loader(true);
     if (router.query.session_id) {
       handlePaymentSuccess();
+
     }
+    props.loader(false);
   }, [router.query.session_id]);
 
   const handlePaymentSuccess = async () => {
@@ -43,7 +46,7 @@ function Payment(props) {
 
     cartDetails.forEach((element) => {
       data.push({
-        product: element?._id,
+        product: element?.id,
         image: element.selectedColor?.image,
         BarCode: element.BarCode,
         color: element.selectedColor?.color || "",
@@ -89,8 +92,8 @@ function Payment(props) {
       paymentStatus: stripeRes.payment_status,
       customerDetails: stripeRes.customer_details || {},
       from: router.query.from,
-      isOnce:localCheckoutData.isOnce,
-      discountCode:localCheckoutData.discountCode
+      isOnce: localCheckoutData.isOnce,
+      discountCode: localCheckoutData.discountCode
     };
 
     const createRes = await Api(
@@ -141,8 +144,9 @@ function Payment(props) {
       hasDiscount: "true",
       discountAmount: checkoutData?.discount?.toString() || "0",
       discountCode: checkoutData?.discountCode || "",
-      isOnce:checkoutData?.isOnce, 
+      isOnce: checkoutData?.isOnce,
       isPickupOrder: checkoutData?.isOrderPickup?.toString() || "false",
+      isCurbside: checkoutData?.isDriveUp?.toString() || "false",
     };
 
     const body = {

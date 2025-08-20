@@ -207,12 +207,12 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       </div>
       
       <div className="flex justify-between items-center md:pt-2 pt-0">
-        <p className="text-custom-gold text-[22px] lg:text-[14px] 2xl:[text-18px] font-semibold">
+        <p className="text-custom-gold text-[20px] lg:text-[17px] 2xl:[text-20px] font-semibold">
           {constant.currency}
           {item?.price_slot[0]?.our_price}
 
           {item?.price_slot[0]?.other_price && (
-            <del className="font-medium text-[22px] lg:text-[14px] 2xl:[text-18px] text-custom-black ml-2">
+            <del className="font-medium text-[20px] lg:text-[14px] 2xl:[text-18px] text-custom-black ml-2">
               {constant.currency}
               {item?.price_slot[0]?.other_price}
             </del>

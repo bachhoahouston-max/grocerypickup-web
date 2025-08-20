@@ -983,7 +983,7 @@ const Navbar = (props) => {
       {/* Cart Drawer */}
       <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
         <div
-          className={`md:w-[750px] w-[360px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
+          className={`md:w-[750px] w-full  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
             } 
                     ${cartData.length > 1 ? "pb-8" : "pb-40"} `}
         >
@@ -1398,16 +1398,16 @@ const Navbar = (props) => {
             )}
             {cartData?.map((item, i) => (
               <div key={i} className="grid w-full md:gap-3 gap-2 mt-3">
-                <div className="flex justify-start md:gap-0 gap-4 items-start  w-full">
-                  <div className="rounded-[10px] flex items-center justify-center">
+                <div className="flex justify-start md:gap-4 gap-4 items-start  w-full">
+                  <div className="md:w-[120px] w-[80px] rounded-[10px] flex items-center justify-center">
                     <img
-                      className="md:w-32 md:h-32 w-20 h-20 object-contain"
+                      className="md:w-32 md:h-32 w-20  object-cover md:object-cover"
                       src={item?.selectedImage || item?.image}
                       alt="item"
                     />
                   </div>
 
-                  <div className="flex flex-col justify-start items-start md:gap-0 gap-2">
+                  <div className="md:w-full  w-[250px] flex flex-col justify-start items-start md:gap-0 gap-2">
                     <p className="md:pl-3 w-full  text-custom-purple  md:text-base text-[14px]">
                       {item.name}
                     </p>

@@ -15,9 +15,9 @@ const Footer = () => {
   return (
     <footer className="p-10 bg-custom-green text-black font-sans">
       <div className="container mx-auto xl:max-w-7xl border-b w-[90%] border-b-white pb-8">
-        <div className="flex flex-col md:flex-row justify-between lg:gap-14 xl:gap-10">
-          {/* Logo and Description */}
-          <div className="w-full mb-6 md:mb-0">
+        <div className="w-full flex flex-col md:flex-row justify-between ">
+       
+          <div className="md:w-1/3 w-full mb-6 md:mb-0">
             <img
               alt="Tropicano logo"
               className="mb-4 cursor-pointer"
@@ -28,7 +28,7 @@ const Footer = () => {
             />
             <p className="text-[16px] md:text-[19px] text-white">
               {t(
-                "Your digital partner for growth, with a commitment to quality"
+                "Commitment to Quality"
               )}{" "}
             </p>
             <div className="flex space-x-4 mt-4">
@@ -75,7 +75,7 @@ const Footer = () => {
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row w-full text-white">
+          <div className="md:w-2/3 w-full flex flex-col md:flex-row  text-white">
             {/* Useful Links */}
             <div className="w-full md:w-1/3 mb-4 md:mb-0 ">
               <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]  transition-transform duration-300 hover:-translate-y-[8px]">
@@ -231,21 +231,3 @@ const Footer = () => {
 
 export default Footer;
 
-{
-  /* Contact Us */
-}
-{
-  /* <div className="w-full md:w-1/2 mb-4 md:mb-0">
-              <h3 className="font-bold mb-4  lg:text-[19px] text-[18px]">{t("Contact Us")}</h3>
-              <ul>
-                <li className="flex items-center mb-2">
-                  <IoCall className="text-2xl mr-2" />
-                  <a href="tel:6393274589" className="text-[16px] md:text-[19px]text-white cursor-pointer">+(402) 54646</a>
-                </li>
-                <li className="flex items-center">
-                  <MdEmail className="text-2xl mr-2" />
-                  <a className="text-[16px] md:text-[19px]" href="mailto:contact@bachhoahouston.com">contact@bachhoahouston.com</a>
-                </li>
-              </ul>
-            </div> */
-}

@@ -1,11 +1,11 @@
-import { Api } from "@/services/service";
+import { Api,ApiGetPdf } from "@/services/service";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import { IoIosArrowDown, IoIosArrowUp, IoIosClose } from "react-icons/io"; // Import IoIosClose
 import { userContext } from "./_app";
-import { GoDownload } from "react-icons/go";
-import generatePDF, { usePDF, Margin } from "react-to-pdf";
+// import { GoDownload } from "react-icons/go";
+// import generatePDF, { usePDF, Margin } from "react-to-pdf";
 import { useTranslation } from "react-i18next";
 import Invoice from "../components/Invoice";
 import Swal from "sweetalert2";
@@ -231,20 +231,13 @@ function Mybooking(props) {
     return date.toLocaleDateString("en-GB", options);
   }
 
-  const GeneratePDF = (orderId) => {
+const GeneratePDF = (orderId) => {
     const data = {
       orderId: orderId,
     };
-    Api("post", "createinvoice", data, router, { responseType: "blob" }).then(
-      (res) => {
-        props.loader(false);
-        const blob = new Blob([res], { type: "application/pdf" });
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        link.download = `invoice-${orderId}.pdf`;
-        link.click();
-      }
-    );
+    ApiGetPdf("createinvoice", data, router)
+      .then(() => console.log("PDF downloaded/opened successfully"))
+      .catch((err) => console.error("Failed to fetch PDF", err));
   };
 
   const isWithin24Hours = (updatedAt) => {

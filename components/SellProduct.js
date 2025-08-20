@@ -202,7 +202,7 @@ const SellProduct = ({ loader, toaster }) => {
 
                   <div className="h-12 md:flex-row flex-col flex justify-center mb-1 md:gap-2 items-center md:pt-2 pt-0">
                     <div className="gap-2 flex items-center pt-1">
-                      <span className="text-custom-gold text-[22px] lg:text-[14px] 2xl:[text-18px] font-semibold">
+                      <span className="text-custom-gold text-[20px] lg:text-[17px] 2xl:[text-20px] font-semibold">
                         ${item.price}
                       </span>
                       {item.product?.price_slot &&

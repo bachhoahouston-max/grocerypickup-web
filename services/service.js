@@ -1,14 +1,14 @@
 import axios from "axios";
 // const ConstantsUrl = "http://localhost:3004/v1/api/";
 const ConstantsUrl = "https://api.bachhoahouston.com/v1/api/";
-
+ 
 function Api(method, url, data, router, params) {
   return new Promise(function (resolve, reject) {
     let token = "";
     if (typeof window !== "undefined") {
       token = localStorage?.getItem("token") || "";
     }
-
+ 
     axios({
       method,
       url: ConstantsUrl + url,
@@ -21,12 +21,12 @@ function Api(method, url, data, router, params) {
       },
       (err) => {
         console.log("API Error:", err);
-
+ 
         // Handle error response with status
         if (err.response) {
           const status = err.response.status;
           const message = err.response?.data?.message || "";
-
+ 
           // ✅ Handle JWT expiration or unauthorized access
           if (
             (status === 401 || status === 403) &&
@@ -41,7 +41,7 @@ function Api(method, url, data, router, params) {
               router?.push("/signIn");
             }
           }
-
+ 
           reject(err.response.data);
         } else {
           reject(err);
@@ -50,7 +50,7 @@ function Api(method, url, data, router, params) {
     );
   });
 }
-
+ 
 function ApiFormData(method, url, data, router) {
   return new Promise(function (resolve, reject) {
     let token = "";
@@ -87,13 +87,69 @@ function ApiFormData(method, url, data, router) {
     );
   });
 }
-
+ 
+function ApiGetPdf(url, data, router, params) {
+  return new Promise(function (resolve, reject) {
+    let token = "";
+    if (typeof window !== "undefined") {
+      token = localStorage?.getItem("token") || "";
+    }
+ 
+    axios({
+      method: "POST",
+      url: ConstantsUrl + url,
+      data,
+      headers: { Authorization: `jwt ${token}` },
+      params,
+      responseType: "blob",
+    }).then(
+      (res) => {
+        const file = new Blob([res.data], { type: "application/pdf" });
+        const fileURL = window.URL.createObjectURL(file);
+        // window.open(fileURL); // open file in browser do not touch if not to open pdf immediatly
+ 
+        const link = document.createElement("a");
+        link.href = fileURL;
+        link.setAttribute("download", "file.pdf");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        resolve(res.data);
+      },
+      (err) => {
+        console.log("Error:", err);
+        if (err.response) {
+          const status = err.response.status;
+          const message = err.response?.data?.message || "";
+ 
+          if (
+            (status === 401 || status === 403) &&
+            typeof window !== "undefined"
+          ) {
+            if (
+              message.toLowerCase().includes("jwt expired") ||
+              message.toLowerCase().includes("unauthorized")
+            ) {
+              localStorage.removeItem("token");
+              localStorage.removeItem("userDetail");
+              router?.push("/signIn");
+            }
+          }
+          reject(err.response.data);
+        } else {
+          reject(err);
+        }
+      }
+    );
+  });
+}
+ 
 // const timeSince = (date) => {
 //   date = new Date(date);
 //   const diff = new Date().valueOf() - date.valueOf();
 //   const seconds = Math.floor(diff / 1000);
 //   var interval = seconds / 31536000;
-
+ 
 //   if (interval > 1) {
 //     return Math.floor(interval) + " Years";
 //   }
@@ -113,7 +169,7 @@ function ApiFormData(method, url, data, router) {
 //       " ago"
 //     );
 //   }
-
+ 
 //   interval = seconds / 86400;
 //   if (interval > 1) {
 //     return (
@@ -140,7 +196,7 @@ function ApiFormData(method, url, data, router) {
 //   }
 //   return "Just now";
 // };
-
+ 
 const pdfDownload = async (fileName, data) => {
   return new Promise(function (resolve, reject) {
     pdfMake.vfs = {};
@@ -161,21 +217,21 @@ const pdfDownload = async (fileName, data) => {
           "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf",
       },
     };
-
+ 
     pdfmake.createPdf(data).download(fileName);
     pdfmake.createPdf(data).getDataUrl((blob) => {
       console.log("pdf======>", blob);
-
+ 
       resolve(blob);
     });
   });
 };
-
+ 
 const replaceUrl = (url) => {
   return url?.replace(
     "https://surfacegallery.s3.eu-north-1.amazonaws.com",
     "https://d1wm56uk2e4fvb.cloudfront.net"
   );
 };
-
-export { Api, pdfDownload, ApiFormData, replaceUrl };
+ 
+export { Api, pdfDownload, ApiFormData, replaceUrl, ApiGetPdf };
