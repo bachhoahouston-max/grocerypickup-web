@@ -299,8 +299,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
           {t("Add")}
         </button>
       )}
-
-  
     </div>
   );
 };

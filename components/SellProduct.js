@@ -165,7 +165,7 @@ const SellProduct = ({ loader, toaster }) => {
                   key={i}
                   className="bg-white w-full max-w-[390px] h-full md:h-[400px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 flex items-center flex-col mt-2 relative"
                 >
-                  {/* Countdown Badge */}
+               
                   {currentSale?.status !== "expired" && (
                     <div className="absolute md:top-1 -top-2 -left-2 md:left-6 bg-custom-green  shadow-md rounded-md px-2 py-1.5 z-10 text-xs font-medium text-white">
                       <p className="text-[12px] font-semibold">
@@ -211,19 +211,20 @@ const SellProduct = ({ loader, toaster }) => {
                             ${item.product.price_slot[0].our_price}
                           </span>
                         )}
+                      {item.product?.price_slot &&
+                        item.product.price_slot[0]?.our_price && (
+                          <span className="md:text-[10px] text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded">
+                            {Math.round(
+                              ((item.product.price_slot[0].our_price -
+                                item.price) /
+                                item.product.price_slot[0].our_price) *
+                              100
+                            )}
+                            % OFF
+                          </span>
+                        )}
                     </div>
-                    {item.product?.price_slot &&
-                      item.product.price_slot[0]?.our_price && (
-                        <span className="md:text-[10px] text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded">
-                          {Math.round(
-                            ((item.product.price_slot[0].our_price -
-                              item.price) /
-                              item.product.price_slot[0].our_price) *
-                            100
-                          )}
-                          % OFF
-                        </span>
-                      )}
+
                   </div>
 
                   {/* Add/Remove or Buttons */}
