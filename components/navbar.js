@@ -158,14 +158,24 @@ const Navbar = (props) => {
 
 
   useEffect(() => {
-    if (discount > baseCartTotal) {
-      props.toaster({ type: "error", message: "Coupon removed — order amount too low. Please add more items to use this coupon." });
+    if (appliedCoupon && discount > baseCartTotal) {
+      props.toaster({
+        type: "error",
+        message:
+          "Coupon removed ",
+      });
       setSearchTerm("");
-      setAppliedCoupon(false)
-      setDiscountCode("")
+      setAppliedCoupon(false);
+      setDiscountCode("");
       setDiscount(0);
     }
-  }, [baseCartTotal])
+  }, [baseCartTotal]);
+
+
+  useEffect(() => {
+    console.log("baseCartTotal updated:", baseCartTotal);
+  }, [baseCartTotal]);
+
 
   const [profileData, setProfileData] = useState({
     username: "",
@@ -497,7 +507,7 @@ const Navbar = (props) => {
     setCartData(nextState);
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
 
-  
+
     if (nextState.length === 0) {
 
       setSelectedCoupon(null);
@@ -983,9 +993,9 @@ const Navbar = (props) => {
       {/* Cart Drawer */}
       <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
         <div
-          className={`md:w-[750px] w-full  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
+          className={`md:w-[750px] w-full min-w-[390px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
             } 
-                    ${cartData.length > 1 ? "pb-8" : "pb-40"} `}
+          ${cartData.length > 1 ? "pb-8" : "pb-40"} `}
         >
           <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 flex justify-between items-center">
             <div
@@ -996,7 +1006,7 @@ const Navbar = (props) => {
             >
               <IoIosArrowBack className="md:w-[38px] w-[28px] md:h-[31px] h-[21px] text-black" />
               <p className="text-black md:text-[18px] text-[15px] font-bold">
-                {t("Your Cart")}
+                {t("Back")}
               </p>
             </div>
             {cartData.length > 0 && (

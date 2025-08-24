@@ -34,6 +34,7 @@ function Mybooking(props) {
   const onClose = () => {
     setIsOpen(false);
   };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {

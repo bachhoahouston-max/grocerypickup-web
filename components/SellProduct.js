@@ -17,9 +17,17 @@ const SellProduct = ({ loader, toaster }) => {
 
   const handleAddToCart = (item) => {
     const updatedCart = produce(cartData, (draft) => {
-      const existingItemIndex = draft.findIndex((f) => f._id === item._id);
+      const existingItemIndex = draft.findIndex((f) => f.id === item?.product?._id);
       const price = parseFloat(item.price);
 
+      let price_slot = {
+        value: item?.price_slot?.value,
+        unit: item?.price_slot?.unit,
+        other_price: item?.price_slot?.our_price, 
+        our_price: item?.price,
+      };
+
+      console.log("Price Slot:", price_slot);
       if (existingItemIndex === -1) {
         draft.push({
           ...item,
@@ -36,7 +44,7 @@ const SellProduct = ({ loader, toaster }) => {
           isShipmentAvailable: item?.product?.isShipmentAvailable,
           qty: 1,
           price: price ?? 0,
-          price_slot: item.product.price_slot?.[0] || {},
+          price_slot: price_slot || {},
           tax_code: item?.product.tax_code,
         });
       } else {
@@ -153,7 +161,7 @@ const SellProduct = ({ loader, toaster }) => {
           <div className="md:mt-2 mt-2 relative w-full md:w-5/5 grid md:grid-cols-5 lg:grid-cols-7 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
-                (cartItem) => cartItem._id === item._id
+                (cartItem) =>  cartItem.id === item?.product?._id
               );
               const itemQuantity = cartItem ? cartItem.qty : 0;
               const currentSale = countdown[item._id];
@@ -164,8 +172,9 @@ const SellProduct = ({ loader, toaster }) => {
                 <div
                   key={i}
                   className="bg-white w-full max-w-[390px] h-full md:h-[400px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 flex items-center flex-col mt-2 relative"
+
                 >
-               
+
                   {currentSale?.status !== "expired" && (
                     <div className="absolute md:top-1 -top-2 -left-2 md:left-6 bg-custom-green  shadow-md rounded-md px-2 py-1.5 z-10 text-xs font-medium text-white">
                       <p className="text-[12px] font-semibold">
@@ -186,6 +195,9 @@ const SellProduct = ({ loader, toaster }) => {
                     <img
                       src={item.product?.varients[0]?.image[0]}
                       alt="vietnamese specialty food"
+                      onClick={() => {
+                        router.push(`/SaleDetails/${item?.product?.slug}`);
+                      }}
                       className="md:w-full w-56 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
                     />
                   </div>
@@ -205,19 +217,19 @@ const SellProduct = ({ loader, toaster }) => {
                       <span className="text-custom-gold text-[20px] lg:text-[17px] 2xl:[text-20px] font-semibold">
                         ${item.price}
                       </span>
-                      {item.product?.price_slot &&
-                        item.product.price_slot[0]?.our_price && (
+                      {item?.price_slot &&
+                        item.price_slot?.our_price && (
                           <span className="text-sm text-gray-500 line-through font-semibold">
-                            ${item.product.price_slot[0].our_price}
+                            ${item.price_slot?.our_price}
                           </span>
                         )}
                       {item.product?.price_slot &&
                         item.product.price_slot[0]?.our_price && (
                           <span className="md:text-[10px] text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded">
                             {Math.round(
-                              ((item.product.price_slot[0].our_price -
+                              ((item.price_slot?.our_price -
                                 item.price) /
-                                item.product.price_slot[0].our_price) *
+                                item.price_slot?.our_price) *
                               100
                             )}
                             % OFF
