@@ -1,12 +1,23 @@
-import Alert from "@mui/material/Alert";
+"use client";
+import { Toaster as SonnerToaster, toast } from "sonner";
 
 export default function Toaster(props) {
+  // agar props aaye (type + message), toh ek toast fire kar do
+  if (props?.message) {
+    if (props.type === "error") {
+      toast.error(props.message);
+    } else if (props.type === "success") {
+      toast.success(props.message);
+    } else {
+      toast(props.message);
+    }
+  }
+
   return (
-    <div className="fixed bottom-4 right-4 z-50">
-      <Alert className="bg-[#FFD67E]" severity={props.type}>
-        <p className="text-black font-semibold">{props.message}</p>
-      </Alert>
-    </div>
+    <SonnerToaster
+      position="top-center"
+      richColors
+      closeButton
+    />
   );
 }
-

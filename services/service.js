@@ -1,6 +1,6 @@
 import axios from "axios";
-// const ConstantsUrl = "http://localhost:3004/v1/api/";
-const ConstantsUrl = "https://api.bachhoahouston.com/v1/api/";
+const ConstantsUrl = "http://localhost:3004/v1/api/";
+// const ConstantsUrl = "https://api.bachhoahouston.com/v1/api/";
  
 function Api(method, url, data, router, params) {
   return new Promise(function (resolve, reject) {
@@ -106,11 +106,9 @@ function ApiGetPdf(url, data, router, params) {
       (res) => {
         const file = new Blob([res.data], { type: "application/pdf" });
         const fileURL = window.URL.createObjectURL(file);
-        // window.open(fileURL); // open file in browser do not touch if not to open pdf immediatly
- 
         const link = document.createElement("a");
         link.href = fileURL;
-        link.setAttribute("download", "file.pdf");
+        link.setAttribute("download", `bachhoahouston-invoice-${data.id}`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

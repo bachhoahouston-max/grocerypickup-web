@@ -44,7 +44,7 @@ const Layout = ({ children, loader, toaster }) => {
     <>
       <div className="flex-1 flex-col bg-white relative">
         <div className="fixed w-full top-0 z-50 bg-white transition-all duration-300">
-          {/* Animated AnnouncementBar */}
+        
           <div
             className={`transition-all duration-500 ease-in-out transform ${
               showAnnouncement ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"

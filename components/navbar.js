@@ -158,11 +158,11 @@ const Navbar = (props) => {
 
 
   useEffect(() => {
-    if (appliedCoupon && discount > baseCartTotal) {
+    if ((appliedCoupon && discount > baseCartTotal) || baseCartTotal > mainTotal) {
       props.toaster({
         type: "error",
         message:
-          "Coupon removed ",
+          "Coupon removed Due to Main Total change, Please apply again",
       });
       setSearchTerm("");
       setAppliedCoupon(false);
@@ -171,10 +171,6 @@ const Navbar = (props) => {
     }
   }, [baseCartTotal]);
 
-
-  useEffect(() => {
-    console.log("baseCartTotal updated:", baseCartTotal);
-  }, [baseCartTotal]);
 
 
   const [profileData, setProfileData] = useState({

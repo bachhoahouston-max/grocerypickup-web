@@ -57,6 +57,7 @@ const SellProduct = ({ loader, toaster }) => {
 
     setCartData(updatedCart);
     localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+     toaster({ type: "success", message: "Product added to cart" });
   };
 
   const handleRemoveFromCart = (item) => {

@@ -1,4 +1,4 @@
-import { Api,ApiGetPdf } from "@/services/service";
+import { Api, ApiGetPdf } from "@/services/service";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { useRef } from "react";
@@ -34,7 +34,7 @@ function Mybooking(props) {
   const onClose = () => {
     setIsOpen(false);
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
@@ -232,14 +232,25 @@ function Mybooking(props) {
     return date.toLocaleDateString("en-GB", options);
   }
 
-const GeneratePDF = (orderId) => {
+  const GeneratePDF = (orderId, id) => {
+    props.loader(true);
+
     const data = {
       orderId: orderId,
+      id: id
     };
+
     ApiGetPdf("createinvoice", data, router)
-      .then(() => console.log("PDF downloaded/opened successfully"))
-      .catch((err) => console.error("Failed to fetch PDF", err));
+      .then(() => {
+        props.loader(false);
+        console.log("PDF downloaded/opened successfully");
+      })
+      .catch((err) => {
+        props.loader(false); // error case me bhi loader off hoga
+        console.error("Failed to fetch PDF", err);
+      });
   };
+
 
   const isWithin24Hours = (updatedAt) => {
     if (!updatedAt) return false;
@@ -287,7 +298,7 @@ const GeneratePDF = (orderId) => {
                           {/* <Invoice order={booking} /> */}
                           <MdFileDownload
                             className="text-xl text-black"
-                            onClick={() => GeneratePDF(booking._id)}
+                            onClick={() => GeneratePDF(booking._id, booking.orderId)}
                           />
                           <button
                             onClick={() => toggleBooking(booking._id)}
@@ -427,7 +438,7 @@ const GeneratePDF = (orderId) => {
                         {/* <Invoice order={booking} /> */}
                         <MdFileDownload
                           className="text-xl text-black"
-                          onClick={() => GeneratePDF(booking._id)}
+                          onClick={() => GeneratePDF(booking._id, booking.orderId)}
                         />
                         <button
                           onClick={() => toggleBooking(booking._id)}
@@ -447,108 +458,108 @@ const GeneratePDF = (orderId) => {
                 {(booking?.SecretCode ||
                   booking?.isShipmentDelivery ||
                   booking?.trackingNo) && (
-                  <div className="p-4 border-gray-200 bg-gray-50">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {booking?.SecretCode && booking?.status === "Pending" && (
-                        <div className="flex items-center">
-                          <div className="p-2 bg-yellow-100 rounded-lg mr-3">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 text-yellow-600"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <p className="text-sm text-gray-500">
-                              {t("Secret Code")}
-                            </p>
-                            <p className="text-base font-medium text-gray-800">
-                              {booking.SecretCode}
-                            </p>
-                          </div>
-                        </div>
-                      )}
-                      {booking?.isShipmentDelivery &&
-                        (booking?.status === "Pending" ||
-                          booking?.status === "Shipped") && (
+                    <div className="p-4 border-gray-200 bg-gray-50">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {booking?.SecretCode && booking?.status === "Pending" && (
                           <div className="flex items-center">
-                            <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                            <div className="p-2 bg-yellow-100 rounded-lg mr-3">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5 text-blue-600"
+                                className="h-5 w-5 text-yellow-600"
                                 viewBox="0 0 20 20"
                                 fill="currentColor"
                               >
-                                <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                                <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h2a1 1 0 001-1v-4a1 1 0 00-.293-.707l-2-2A1 1 0 0012 6h-1V5a1 1 0 00-1-1H3z" />
+                                <path
+                                  fillRule="evenodd"
+                                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                                  clipRule="evenodd"
+                                />
                               </svg>
                             </div>
                             <div>
                               <p className="text-sm text-gray-500">
-                                {t("Delivery Expected")}
+                                {t("Secret Code")}
                               </p>
                               <p className="text-base font-medium text-gray-800">
-                                {formatDate2(
-                                  new Date(
-                                    new Date(booking.createdAt).setDate(
-                                      new Date(booking.createdAt).getDate() + 7
-                                    )
-                                  )
-                                )}{" "}
-                                11 PM
+                                {booking.SecretCode}
                               </p>
                             </div>
                           </div>
                         )}
+                        {booking?.isShipmentDelivery &&
+                          (booking?.status === "Pending" ||
+                            booking?.status === "Shipped") && (
+                            <div className="flex items-center">
+                              <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5 text-blue-600"
+                                  viewBox="0 0 20 20"
+                                  fill="currentColor"
+                                >
+                                  <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                  <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h2a1 1 0 001-1v-4a1 1 0 00-.293-.707l-2-2A1 1 0 0012 6h-1V5a1 1 0 00-1-1H3z" />
+                                </svg>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-500">
+                                  {t("Delivery Expected")}
+                                </p>
+                                <p className="text-base font-medium text-gray-800">
+                                  {formatDate2(
+                                    new Date(
+                                      new Date(booking.createdAt).setDate(
+                                        new Date(booking.createdAt).getDate() + 7
+                                      )
+                                    )
+                                  )}{" "}
+                                  11 PM
+                                </p>
+                              </div>
+                            </div>
+                          )}
 
-                      {booking?.trackingNo && booking?.trackingLink && (
-                        <div className="flex items-center md:col-span-2">
-                          <div className="p-2 bg-indigo-100 rounded-lg mr-3">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 text-indigo-600"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </div>
-                          <div className="flex-grow">
-                            <p className="text-sm text-gray-500">
-                              {t("Tracking Number")}
-                            </p>
-                            <div className="flex items-center space-x-3">
-                              <p className="text-[13px] font-medium text-gray-800">
-                                {booking.trackingNo}
+                        {booking?.trackingNo && booking?.trackingLink && (
+                          <div className="flex items-center md:col-span-2">
+                            <div className="p-2 bg-indigo-100 rounded-lg mr-3">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5 text-indigo-600"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                            <div className="flex-grow">
+                              <p className="text-sm text-gray-500">
+                                {t("Tracking Number")}
                               </p>
+                              <div className="flex items-center space-x-3">
+                                <p className="text-[13px] font-medium text-gray-800">
+                                  {booking.trackingNo}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex-grow">
+                              <p className="text-sm text-gray-500">
+                                {t("Company Name")}
+                              </p>
+                              <div className="flex items-center space-x-3">
+                                <p className="text-[13px] font-medium text-gray-800">
+                                  {booking.trackingLink}
+                                </p>
+                              </div>
                             </div>
                           </div>
-                          <div className="flex-grow">
-                            <p className="text-sm text-gray-500">
-                              {t("Company Name")}
-                            </p>
-                            <div className="flex items-center space-x-3">
-                              <p className="text-[13px] font-medium text-gray-800">
-                                {booking.trackingLink}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
                 <div className="px-4 py-3 bg-white border-b border-gray-200">
                   <div className="flex flex-wrap gap-2 justify-end">
                     {(() => {
@@ -560,15 +571,15 @@ const GeneratePDF = (orderId) => {
                         booking?.status === "Pending" && diffInMinutes <= 15
                       );
                     })() && (
-                      <div className="px-4 py-4 bg-white border-t border-gray-200 mt-4 flex justify-end">
-                        <button
-                          onClick={() => cancelOrder(booking._id)}
-                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
-                        >
-                          {t("Cancel Order")}
-                        </button>
-                      </div>
-                    )}
+                        <div className="px-4 py-4 bg-white border-t border-gray-200 mt-4 flex justify-end">
+                          <button
+                            onClick={() => cancelOrder(booking._id)}
+                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+                          >
+                            {t("Cancel Order")}
+                          </button>
+                        </div>
+                      )}
                   </div>
 
                   {booking?.status === "Completed" &&
@@ -584,12 +595,12 @@ const GeneratePDF = (orderId) => {
                       </div>
                     )}
                 </div>
-               
+
                 {booking?.status === "Pending" &&
                   (booking?.isDriveUp || booking?.isOrderPickup) &&
                   booking?.createdAt &&
                   new Date() - new Date(booking.createdAt) >=
-                    30 * 60 * 1000 && (
+                  30 * 60 * 1000 && (
                     <div className="px-4 py-3 bg-white border-b border-gray-200">
                       <div className="flex flex-wrap gap-2 justify-end">
                         {booking?.isDriveUp && (
@@ -706,11 +717,10 @@ const GeneratePDF = (orderId) => {
                     {booking.productDetail.map((product, index) => (
                       <div
                         key={index}
-                        className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer ${
-                          index !== booking.productDetail.length - 1
-                            ? "border-b border-gray-200"
-                            : ""
-                        }`}
+                        className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer ${index !== booking.productDetail.length - 1
+                          ? "border-b border-gray-200"
+                          : ""
+                          }`}
                         onClick={() => {
                           router.push(
                             `/myorder/${booking._id}?product_id=${product._id}`
