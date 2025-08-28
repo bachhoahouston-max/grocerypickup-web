@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { appWithI18Next } from "ni18n";
 import { ni18nConfig } from "../ni18n.config";
 import { Toaster as SonnerToaster, toast } from "sonner";
+import Script from "next/script"; // <-- GA ke liye
 
 export const userContext = createContext();
 export const openCartContext = createContext();
@@ -22,8 +23,8 @@ function App({ Component, pageProps }) {
   const [openCart, setOpenCart] = useState(false);
   const [cartData, setCartData] = useState([]);
   const [Favorite, setFavorite] = useState([]);
-
   const [globallang, setgloballang] = useState("es");
+
   const { i18n } = useTranslation();
   const { t } = useTranslation();
 
@@ -60,8 +61,26 @@ function App({ Component, pageProps }) {
 
   return (
     <div>
-      <SonnerToaster position="top-center" richColors closeButton
+      <Script
+        strategy="afterInteractive"
+        src="https://www.googletagmanager.com/gtag/js?id=G-XJ0V7P7ZRG"
       />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-XJ0V7P7ZRG');
+          `,
+        }}
+      />
+
+      {/* Sonner Toaster */}
+      <SonnerToaster position="top-center" richColors closeButton />
+
       <languageContext.Provider value={[globallang, setgloballang]}>
         <userContext.Provider value={[user, setUser]}>
           <openCartContext.Provider value={[openCart, setOpenCart]}>

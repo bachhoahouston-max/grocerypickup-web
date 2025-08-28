@@ -1,0 +1,17 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /Mybooking
+Disallow: /Myhistory
+Disallow: /editProfile
+Disallow: /Favourite
+Disallow: /payment
+Disallow: /account
+Disallow: /cache/
+Disallow: /cgi-bin/
+
+# Host
+Host: https://www.bachhoahouston.com/
+
+# Sitemaps
+Sitemap: https://www.bachhoahouston.com/sitemap.xml

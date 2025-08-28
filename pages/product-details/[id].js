@@ -132,6 +132,7 @@ function ProductDetails(props) {
           productsId.varients?.[0]?.image?.[0] ||
           "",
         qty: 1,
+        id: productsId._id,
         BarCode: productsId?.BarCode || "",
         total: ourPrice.toFixed(2),
         our_price: ourPrice,
