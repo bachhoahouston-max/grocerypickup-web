@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -51,10 +51,6 @@ const sortByData = [
     name: "Date, old to new",
     value: "old",
   },
-  // {
-  //     name: 'Date, new to old',
-  //     value: 'new'
-  // },
 ];
 
 function Categories(props) {
@@ -68,6 +64,7 @@ function Categories(props) {
   const [openData, setOpenData] = useState(true);
   const [openCategory, setOpenCategory] = useState(true);
   const [open, setOpen] = useState(false);
+  const topRef = useRef(null);
 
   const [paginationData, setPaginationData] = useState({
     totalItems: 0,
@@ -128,6 +125,9 @@ function Categories(props) {
       newPage,
       paginationData.itemsPerPage
     );
+    if (topRef.current) {
+      topRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const getCategory = async (cat) => {
@@ -150,8 +150,6 @@ function Categories(props) {
     );
   };
 
-
-
   const categoryData = categoryList.find(
     (cat) => cat.slug === selectedCategories
   );
@@ -167,9 +165,13 @@ function Categories(props) {
           href={`https://www.bachhoahouston.com/categories/${categoryData?.slug}`}
         />
       </Head>
-      <div className="bg-white w-full min-h-screen">
+      <div className="bg-white w-full min-h-screen"
+      ref={topRef}
+      >
         <section className="bg-white w-full  relative flex flex-col justify-center items-center">
-          <div className="lg:max-w-9xl md:max-w-9xl mx-auto w-full md:px-8 px-5 md:pt-5 pt-8 md:pb-10 pb-0">
+          <div className="lg:max-w-9xl md:max-w-9xl mx-auto w-full md:px-8 px-5 md:pt-5 pt-8 md:pb-10 pb-0"
+            
+          >
             <div className="flex justify-center flex-col items-center md:mt-10 mt-0">
               {" "}
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">

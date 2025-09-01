@@ -403,18 +403,14 @@ const Navbar = (props) => {
             },
           });
         } else {
-          props.toaster({
-            type: "error",
-            message: res?.data?.message || "Failed to load profile",
-          });
+          console.log("Failed to load profile")
+
         }
       })
       .catch((err) => {
         props.loader(false);
-        props.toaster({
-          type: "error",
-          message: err?.data?.message || "Failed to load profile",
-        });
+        console.log("Failed to load profile")
+
       });
   };
 
