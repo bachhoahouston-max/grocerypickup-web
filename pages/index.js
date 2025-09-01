@@ -649,10 +649,10 @@ export default function Home(props) {
                 className="text-xl text-[#F38529] mb-4"
               />
               <h3 className="text-[16px] md:text-[18px] font-semibold text-black">
-                {t("Dedicated Support")}
+                {t("7 Days A Week Support")}
               </h3>
               <p className="text-gray-500 text-[13px] md:text-[16px]">
-                {t("Available during business hours, Mon–Sat")}
+                {t("Available during business hours")}
               </p>
             </div>
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
