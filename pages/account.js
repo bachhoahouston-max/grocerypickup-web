@@ -4,29 +4,12 @@ import { userContext } from "./_app";
 import { PiSignOutFill } from "react-icons/pi";
 import Swal from "sweetalert2";
 import EditProfile from "./editProfile";
-import { useTranslation } from "react-i18next";
-import { languageContext } from "@/pages/_app";
 import { UserRound } from "lucide-react";
+
 function Account(props) {
   const router = useRouter();
   const [user, setUser] = useContext(userContext);
-  const [lang, setLang] = useState(null);
-  const [globallang, setgloballang] = useContext(languageContext);
-  const { i18n } = useTranslation();
-  const { t } = useTranslation();
-
-  function handleClick(idx) {
-    try {
-      setLang(idx);
-      const language = idx || "vi";
-      console.log(language);
-      i18n.changeLanguage(language);
-      setgloballang(language);
-      localStorage.setItem("LANGUAGE", language);
-    } catch (err) {
-      console.log(err.message);
-    }
-  }
+ 
 
   return (
     <div className={`w-full px-2 md:mt-8 mt-20 pb-4 `}>
