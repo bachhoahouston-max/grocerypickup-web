@@ -22,7 +22,7 @@ function Mybooking(props) {
   const [carBrand, setCarBrand] = useState("");
   const [Id, setId] = useState("");
   const { lang } = useContext(languageContext);
-  
+
   const toggleModal = (id) => {
     setId(id);
     setIsOpen(!isOpen);
@@ -235,7 +235,8 @@ function Mybooking(props) {
 
     const data = {
       orderId: orderId,
-      id: id
+      id: id,
+      lang:lang
     };
 
     ApiGetPdf("createinvoice", data, router)

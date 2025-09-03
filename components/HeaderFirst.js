@@ -76,7 +76,6 @@ const HeaderFirst = (props) => {
     i18n.changeLanguage(lang);
   }, [lang]);
 
-  console.log("lan", lang)
 
   const handleNavigation = (path, tab) => {
     console.log(`Navigating to ${path}, setting tab to ${tab}`);
