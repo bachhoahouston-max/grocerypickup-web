@@ -8,6 +8,7 @@ import {
   cartContext,
   userContext,
   favoriteProductContext,
+  languageContext
 } from "../_app";
 import { Api } from "@/services/service";
 import Carousel from "react-multi-carousel";
@@ -26,6 +27,7 @@ import Head from "next/head";
 function ProductDetails(props) {
   const { t } = useTranslation();
   const router = useRouter();
+  const { lang } = useContext(languageContext)
   const [saleData, setSaleData] = useState([]);
   const [user, setUser] = useContext(userContext);
   const [productsId, setProductsId] = useState({});
@@ -341,7 +343,7 @@ function ProductDetails(props) {
             const now = new Date();
             const saleStart = new Date(item.startDateTime);
             const saleEnd = new Date(item.endDateTime);
-    
+
             if (now >= saleStart && now <= saleEnd) {
               setSalePrice(item.price);
               setPrizeSlot({
@@ -521,7 +523,7 @@ function ProductDetails(props) {
                 <div className="flex flex-col justify-start items-start w-full">
                   <div className="flex justify-between items-center w-full">
                     <h1 className="text-black md:text-[32px] text-2xl font-semibold">
-                      {productsId?.name}
+                      {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
                     </h1>
 
                     <div
@@ -547,7 +549,7 @@ function ProductDetails(props) {
                     <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
                     <p className="md:text-[18px] text-[14px] w-full">
                       {" "}
-                      {productsId?.name}{" "}
+                      {lang === "en" ? productsId?.name : productsId?.vietnamiesName}{" "}
                     </p>
                   </div>
                   <div className="pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">

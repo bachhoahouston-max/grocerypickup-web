@@ -14,9 +14,7 @@ const HeaderFirst = (props) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [category, setCategory] = useState([]);
   const dropdownRef = useRef(null);
-
-  const [lang, setLang] = useState(null);
-  const [globallang, setgloballang] = useContext(languageContext);
+  const { lang, changeLang } = useContext(languageContext);
   const { i18n } = useTranslation();
   const { t } = useTranslation();
 
@@ -53,23 +51,32 @@ const HeaderFirst = (props) => {
     );
   };
 
-  const handleCategoryClick = (path) => {
-    router.push(path);
-    setDropdownOpen(false);
-  };
-
-  function handleClick(idx) {
+  // function handleClick(idx) {
+  //   try {
+  //     setLang(idx);
+  //     const language = idx || "en";
+  //     console.log(language);
+  //     i18n.changeLanguage(language);
+  //     setgloballang(language);
+  //     localStorage.setItem("LANGUAGE", language);
+  //   } catch (err) {
+  //     console.log(err.message);
+  //   }
+  // }
+  const handleClick = (language) => {
     try {
-      setLang(idx);
-      const language = idx || "en";
-      console.log(language);
+      changeLang(language);
       i18n.changeLanguage(language);
-      setgloballang(language);
-      localStorage.setItem("LANGUAGE", language);
     } catch (err) {
       console.log(err.message);
     }
-  }
+  };
+
+  useEffect(() => {
+    i18n.changeLanguage(lang);
+  }, [lang]);
+
+  console.log("lan", lang)
 
   const handleNavigation = (path, tab) => {
     console.log(`Navigating to ${path}, setting tab to ${tab}`);
@@ -83,11 +90,10 @@ const HeaderFirst = (props) => {
         <div className=" mt-2 mx-auto px-4 py-2 md:flex hidden justify-center items-center mr-20">
           <div className="hidden flex-1 lg:flex justify-center xl:space-x-6 lg:space-x-3">
             <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
-                selectedTab === "home"
-                  ? "text-custom-green"
-                  : "text-custom-black hover:!text-[#F38529]"
-              }`}
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${selectedTab === "home"
+                ? "text-custom-green"
+                : "text-custom-black hover:!text-[#F38529]"
+                }`}
               onClick={(e) => {
                 e.preventDefault();
                 handleNavigation("/", "home");
@@ -97,11 +103,10 @@ const HeaderFirst = (props) => {
             </p>
             <div className="relative flex transition-transform duration-300 hover:-translate-y-[5px]" ref={dropdownRef}>
               <button
-                className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  font-bold cursor-pointer inline-flex items-center ${
-                  selectedTab === "AllCategory"
-                    ? "text-custom-green"
-                    : "text-custom-black hover:!text-[#F38529]"
-                }`}
+                className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  font-bold cursor-pointer inline-flex items-center ${selectedTab === "AllCategory"
+                  ? "text-custom-green"
+                  : "text-custom-black hover:!text-[#F38529]"
+                  }`}
                 onClick={(e) => {
                   e.preventDefault();
                   handleNavigation("/AllCategory", "AllCategory");
@@ -155,14 +160,13 @@ const HeaderFirst = (props) => {
                 </div>
               )}
             </div>
-           
+
             <p
               className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] font-bold transition-transform duration-300 hover:-translate-y-[5px] cursor-pointer ml-2 
-    ${
-      selectedTab === "FranchiseOpportunity"
-        ? "text-custom-green"
-        : "text-custom-black hover:!text-[#F38529]"
-    }
+    ${selectedTab === "FranchiseOpportunity"
+                  ? "text-custom-green"
+                  : "text-custom-black hover:!text-[#F38529]"
+                }
   `}
               onClick={(e) => {
                 e.preventDefault();
@@ -174,11 +178,10 @@ const HeaderFirst = (props) => {
 
             <p
               className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 
-    ${
-      selectedTab === "AboutUs"
-        ? "text-custom-green"
-        : "text-custom-black hover:!text-[#F38529]"
-    }
+    ${selectedTab === "AboutUs"
+                  ? "text-custom-green"
+                  : "text-custom-black hover:!text-[#F38529]"
+                }
   `}
               onClick={(e) => {
                 e.preventDefault();
@@ -188,11 +191,10 @@ const HeaderFirst = (props) => {
               {t("About Us")}
             </p>
             <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  font-bold cursor-pointer transition-transform duration-300 hover:-translate-y-[5px] ml-2 ${
-                selectedTab === "Contact"
-                  ? "text-custom-green"
-                  : "text-custom-black hover:!text-[#F38529]"
-              }`}
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  font-bold cursor-pointer transition-transform duration-300 hover:-translate-y-[5px] ml-2 ${selectedTab === "Contact"
+                ? "text-custom-green"
+                : "text-custom-black hover:!text-[#F38529]"
+                }`}
               onClick={(e) => {
                 e.preventDefault();
                 handleNavigation("/ContactUs", "Contact");
@@ -202,11 +204,10 @@ const HeaderFirst = (props) => {
             </p>
 
             <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${
-                selectedTab === "StoreLocation"
-                  ? "text-custom-green"
-                  : "text-custom-black hover:!text-[#F38529]"
-              }`}
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${selectedTab === "StoreLocation"
+                ? "text-custom-green"
+                : "text-custom-black hover:!text-[#F38529]"
+                }`}
               onClick={(e) => {
                 e.preventDefault();
                 handleNavigation("/StoreLocation", "StoreLocation");
@@ -240,7 +241,7 @@ const HeaderFirst = (props) => {
         </div>
       </nav>
 
-     
+
     </>
   );
 };

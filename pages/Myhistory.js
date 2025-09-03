@@ -1,9 +1,9 @@
 import { Api, ApiFormData } from "@/services/service";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
-import { RxCrossCircled } from "react-icons/rx";
+import { languageContext } from "./_app";
 import { RxCross2 } from "react-icons/rx";
 import { useTranslation } from "react-i18next";
 import Compressor from "compressorjs";
@@ -21,7 +21,7 @@ function Myhistory(props) {
   const [images, setImages] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [token, setToken] = useState("");
-
+  const { lang } = useContext(languageContext);
   useEffect(() => {
     const t = localStorage.getItem("token");
     setToken(t);
@@ -269,9 +269,12 @@ function Myhistory(props) {
                         />
                         <div className="flex-grow">
                           <p className="text-black md:text-base text-[13px] font-bold">
-                            {product?.product?.name?.length > 22
-                              ? product?.product?.name.slice(0, 22) + "..."
-                              : product?.product?.name}
+
+                            {(() => {
+                              const text = lang === "en" ? product?.product?.name : product?.product?.vietnamiesName;
+                              return text?.length > 22 ? text.slice(0, 22) + "..." : text;
+                            })()}
+
                           </p>
                           <p className="text-gray-600 text-xs font-medium pt-[6px]">
                             {t("Quantity")}: {product.qty || 1}
@@ -347,7 +350,7 @@ function Myhistory(props) {
                     {t("Review this item")}
                   </h2>
                   <p className="text-gray-600 text-sm mb-6 text-center">
-                    {selectedProduct?.product?.name || "Product Name"}
+                    {lang === "en" ? selectedProduct?.product?.name : selectedProduct?.product?.vietnamiesName}
                   </p>
 
                   <div className="w-full mb-4">

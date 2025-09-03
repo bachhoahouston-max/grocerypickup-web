@@ -7,6 +7,7 @@ import {
   cartContext,
   openCartContext,
   favoriteProductContext,
+  languageContext
 } from "@/pages/_app";
 import { produce } from "immer";
 import { FaRegHeart } from "react-icons/fa";
@@ -21,6 +22,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const router = useRouter();
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
+  const { lang } = useContext(languageContext);
   const [productsId, setProductsId] = useState([]);
   const [user] = useContext(userContext);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -194,18 +196,35 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
         {item.categoryName}
       </h2>
+
       <div className="flex flex-col items-center justify-center h-12">
         <p className="xl:flex lg:hidden text-sm 2xl:hidden lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
-          {item.name.length > 30 ? item.name.slice(0, 30) + "..." : item.name}
+          {lang === "en"
+            ? (item.name.length > 30 ? item.name.slice(0, 30) + "..." : item.name)
+            : (item.vietnamiesName?.length > 30
+              ? item.vietnamiesName.slice(0, 30) + "..."
+              : item.vietnamiesName)}
+
         </p>
         <p className="lg:flex xl:hidden 2xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
           {item.name.length > 25 ? item.name.slice(0, 25) + "..." : item.name}
+          {lang === "en"
+            ? (item.name.length > 25 ? item.name.slice(0, 25) + "..." : item.name)
+            : (item.vietnamiesName?.length > 25
+              ? item.vietnamiesName.slice(0, 25) + "..."
+              : item.vietnamiesName)}
+
         </p>
         <p className="lg:hidden xl:hidden 2xl:flex  hidden text-sm 2xl:[text-18px]  text-black font-semibold pt-1 ">
-          {item.name.length > 40 ? item.name.slice(0, 40) + "..." : item.name}
+          {lang === "en"
+            ? (item.name.length > 40 ? item.name.slice(0, 40) + "..." : item.name)
+            : (item.vietnamiesName?.length > 40
+              ? item.vietnamiesName.slice(0, 40) + "..."
+              : item.vietnamiesName)}
+
         </p>
       </div>
-      
+
       <div className="flex justify-between items-center md:pt-2 pt-0">
         <p className="text-custom-gold text-[20px] lg:text-[17px] 2xl:[text-20px] font-semibold">
           {constant.currency}

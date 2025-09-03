@@ -86,7 +86,7 @@ export default function Home(props) {
 
   const getBulkProduct = async () => {
     props.loader(true);
-    Api("get", "getBulkProduct", router).then(
+    Api("get", "getBulkBuyProduct", router).then(
       (res) => {
         props.loader(false);
         if (res.status) {
@@ -534,7 +534,7 @@ export default function Home(props) {
             <p
               className="text-black md:text-[18px] text-[16px] font-semibold hover:text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
               onClick={() =>
-                router.push("/categories/all?category=all&sort_by=bulk")
+                router.push("/categories/bulk-buy")
               }
             >
               {t("View All")}
@@ -629,6 +629,7 @@ export default function Home(props) {
           }
         `}</style>
         </section>
+
         <div className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">

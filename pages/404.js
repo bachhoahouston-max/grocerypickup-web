@@ -21,7 +21,7 @@ const NotFoundPage = () => {
           </p>
           <button
             onClick={() => router.push("/")}
-            className="bg-custom-green hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300"
+            className="bg-custom-green hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300 cursor-pointer"
           >
             Return to Home
           </button>

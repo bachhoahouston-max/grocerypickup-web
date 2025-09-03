@@ -8,6 +8,7 @@ import {
   cartContext,
   userContext,
   favoriteProductContext,
+  languageContext
 } from "../_app";
 import { Api } from "@/services/service";
 import Carousel from "react-multi-carousel";
@@ -16,10 +17,8 @@ import { produce } from "immer";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { SlArrowRight } from "react-icons/sl";
-import moment from "moment";
 import { useTranslation } from "react-i18next";
 import constant from "@/services/constant";
-import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ProductReviews from "@/components/reviews";
@@ -29,7 +28,7 @@ import Head from "next/head";
 function ProductDetails(props) {
   const { t } = useTranslation();
   const router = useRouter();
-
+  const { lang } = useContext(languageContext)
   const [user, setUser] = useContext(userContext);
   const [productsId, setProductsId] = useState({});
   const [selectedColor, setSelectedColor] = useState("");
@@ -446,7 +445,7 @@ function ProductDetails(props) {
                 <div className="flex flex-col justify-start items-start w-full">
                   <div className="flex justify-between items-center w-full">
                     <h1 className="text-black md:text-[32px] text-2xl font-semibold">
-                      {productsId?.name}
+                      {lang=== "en" ? productsId?.name : productsId?.vietnamiesName}
                     </h1>
 
                     <div
@@ -471,7 +470,7 @@ function ProductDetails(props) {
                     <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
                     <p className="md:text-[18px] text-[14px] w-full">
                       {" "}
-                      {productsId?.name}{" "}
+                      {lang=== "en" ? productsId?.name : productsId?.vietnamiesName}{" "}
                     </p>
                   </div>
                   <div className="pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
@@ -530,22 +529,7 @@ function ProductDetails(props) {
                       })}
                   </div>
 
-                  {/* <div className="pt-3 mt-2 px-4  border-custom-darkPurple">
-                  <p className="text-custom-gold font-semibold text-lg">
-                    {constant.currency}{(selectedPrice?.our_price)}{" "}
-                    {selectedPrice?.other_price && (
-                      <span className="text-custom-black text-sm font-normal line-through">
-                        {constant.currency}{(selectedPrice?.other_price)}{" "}
-                      </span>
-                    )}
-                    {selectedPrice?.other_price && (
-                      <span className="text-sm text-custom-black">
-                        {(((selectedPrice?.other_price - selectedPrice?.our_price) / selectedPrice?.other_price) * 100).toFixed(2)}%
-                      </span>
-                    )}
-                  </p>
-                </div> */}
-
+          
                   {isInCart ? (
                     <>
                       <div className="flex mt-5">

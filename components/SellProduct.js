@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
 import { useRouter } from "next/router";
-import { userContext, cartContext, openCartContext } from "@/pages/_app";
+import { cartContext, languageContext } from "@/pages/_app";
+
 import { produce } from "immer";
 import { Api } from "@/services/service";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
@@ -14,6 +14,7 @@ const SellProduct = ({ loader, toaster }) => {
   const [cartData, setCartData] = useContext(cartContext);
   const [saleData, setSaleData] = useState([]);
   const [countdown, setCountdown] = useState({});
+  const { lang } = useContext(languageContext)
 
   const handleAddToCart = (item) => {
     const updatedCart = produce(cartData, (draft) => {
@@ -23,7 +24,7 @@ const SellProduct = ({ loader, toaster }) => {
       let price_slot = {
         value: item?.price_slot?.value,
         unit: item?.price_slot?.unit,
-        other_price: item?.price_slot?.our_price, 
+        other_price: item?.price_slot?.our_price,
         our_price: item?.price,
       };
 
@@ -57,7 +58,7 @@ const SellProduct = ({ loader, toaster }) => {
 
     setCartData(updatedCart);
     localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-     toaster({ type: "success", message: "Product added to cart" });
+    toaster({ type: "success", message: "Product added to cart" });
   };
 
   const handleRemoveFromCart = (item) => {
@@ -162,7 +163,7 @@ const SellProduct = ({ loader, toaster }) => {
           <div className="md:mt-2 mt-2 relative w-full md:w-5/5 grid md:grid-cols-5 lg:grid-cols-7 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
-                (cartItem) =>  cartItem.id === item?.product?._id
+                (cartItem) => cartItem.id === item?.product?._id
               );
               const itemQuantity = cartItem ? cartItem.qty : 0;
               const currentSale = countdown[item._id];
@@ -207,10 +208,20 @@ const SellProduct = ({ loader, toaster }) => {
                     {item.product?.categoryName}
                   </h2>
                   <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
-                    {item.product.name.length > 30 ? item.product.name.slice(0, 30) + "..." : item.name}
+                    {lang === "en"
+                      ? (item.product?.name.length > 30 ? item.product.name.slice(0, 30) + "..." : item.product.name)
+                      : (item.product.vietnamiesName?.length > 30
+                        ? item.product.vietnamiesName.slice(0, 30) + "..."
+                        : item.product.vietnamiesName)}
                   </p>
                   <p className="lg:flex xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
-                    {item.product.name.length > 25 ? item.product.name.slice(0, 25) + "..." : item.name}
+
+                    {lang === "en"
+                      ? (item.product?.name.length > 25 ? item.product.name.slice(0, 25) + "..." : item.product.name)
+                      : (item.product.vietnamiesName?.length > 25
+                        ? item.product.vietnamiesName.slice(0, 25) + "..."
+                        : item.product.vietnamiesName)}
+
                   </p>
 
                   <div className="h-12 md:flex-row flex-col flex justify-center mb-1 md:gap-2 items-center md:pt-2 pt-0">
@@ -240,7 +251,6 @@ const SellProduct = ({ loader, toaster }) => {
 
                   </div>
 
-                  {/* Add/Remove or Buttons */}
                   {itemQuantity > 0 ? (
                     <div className="w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex justify-center items-center">
                       <div
@@ -282,6 +292,7 @@ const SellProduct = ({ loader, toaster }) => {
                       {t("Ended")}
                     </div>
                   )}
+                  
                 </div>
               );
             })}

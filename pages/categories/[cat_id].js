@@ -28,10 +28,6 @@ const sortByData = [
     value: "new",
   },
   {
-    name: "Best Bulk Selling",
-    value: "bulk",
-  },
-  {
     name: "Alphabetically, A-Z",
     value: "a_z",
   },

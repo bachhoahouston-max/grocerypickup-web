@@ -52,12 +52,19 @@ function App({ Component, pageProps }) {
     }
   };
 
+  const [lang, setLang] = useState("en");
+
   useEffect(() => {
-    const defaultLanguage = "en";
-    localStorage.setItem("LANGUAGE", defaultLanguage);
-    i18n.changeLanguage(defaultLanguage);
-    setgloballang(defaultLanguage);
+    const storedLang = localStorage.getItem("LANGUAGE");
+    if (storedLang) {
+      setLang(storedLang);
+    }
   }, []);
+
+  const changeLang = (language) => {
+    setLang(language);
+    localStorage.setItem("LANGUAGE", language);
+  };
 
   return (
     <div>
@@ -81,7 +88,7 @@ function App({ Component, pageProps }) {
       {/* Sonner Toaster */}
       <SonnerToaster position="top-center" richColors closeButton />
 
-      <languageContext.Provider value={[globallang, setgloballang]}>
+      <languageContext.Provider value={{ lang, changeLang }}>
         <userContext.Provider value={[user, setUser]}>
           <openCartContext.Provider value={[openCart, setOpenCart]}>
             <cartContext.Provider value={[cartData, setCartData]}>

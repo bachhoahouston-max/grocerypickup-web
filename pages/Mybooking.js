@@ -3,11 +3,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import { IoIosArrowDown, IoIosArrowUp, IoIosClose } from "react-icons/io"; // Import IoIosClose
-import { userContext } from "./_app";
-// import { GoDownload } from "react-icons/go";
-// import generatePDF, { usePDF, Margin } from "react-to-pdf";
+import { userContext, languageContext } from "./_app";
+
 import { useTranslation } from "react-i18next";
-import Invoice from "../components/Invoice";
 import Swal from "sweetalert2";
 import { MdFileDownload } from "react-icons/md";
 import Barcode from "react-barcode";
@@ -16,7 +14,6 @@ function Mybooking(props) {
   const ref = useRef();
   const { t } = useTranslation();
   const router = useRouter();
-  const [user, setUser] = useContext(userContext);
   const [bookingsData, setBookingsData] = useState([]);
   const [expandedBookingId, setExpandedBookingId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +21,8 @@ function Mybooking(props) {
   const [carColor, setCarColor] = useState("");
   const [carBrand, setCarBrand] = useState("");
   const [Id, setId] = useState("");
-
+  const { lang } = useContext(languageContext);
+  
   const toggleModal = (id) => {
     setId(id);
     setIsOpen(!isOpen);
@@ -753,9 +751,10 @@ function Mybooking(props) {
                         </div>
                         <div className="ml-4 flex-grow">
                           <p className="text-gray-800 font-medium">
-                            {product.product?.name.length > 95
-                              ? product.product?.name.slice(0, 95) + "..."
-                              : product.product?.name}
+                            {(() => {
+                              const text = lang === "en" ? product.product?.name : product.product?.vietnamiesName;
+                              return text?.length > 95 ? text.slice(0, 95) + "..." : text;
+                            })()}
                           </p>
                           <div className="flex flex-col items-start mt-1 text-[14px] text-gray-600">
                             <span className="mr-4">

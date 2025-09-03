@@ -47,7 +47,6 @@ const Navbar = (props) => {
   const [productList, SetProductList] = useState([]);
   const [productsId, setProductsId] = useState([]);
   const [pickupOption, setPickupOption] = useState("orderPickup");
-  const [totalTax, setTotalTax] = useState(0);
   const [openModel, setOpenModel] = useState(false);
   const [baseCartTotal, setBaseCartTotal] = useState(0);
   const [coupons, setCoupons] = useState([]);
@@ -59,8 +58,8 @@ const Navbar = (props) => {
   const [discount, setDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
   const [isOnce, setIsOnce] = useState(false)
-  const [lang, setLang] = useState(null);
-  const [globallang, setgloballang] = useContext(languageContext);
+  // const [lang, setLang] = useState(null);
+  const { lang, changeLang } = useContext(languageContext);
   const { i18n } = useTranslation();
   const { t } = useTranslation();
   const isLoggedIn = user?._id || user?.token;
@@ -105,18 +104,19 @@ const Navbar = (props) => {
     }
   }, [searchTerm, coupons]);
 
-  function handleClick(idx) {
+
+  const handleClick = (language) => {
     try {
-      setLang(idx);
-      const language = idx || "en";
-      console.log(language);
+      changeLang(language);
       i18n.changeLanguage(language);
-      setgloballang(language);
-      localStorage.setItem("LANGUAGE", language);
     } catch (err) {
       console.log(err.message);
     }
-  }
+  };
+
+  useEffect(() => {
+    i18n.changeLanguage(lang);
+  }, [lang]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
@@ -1379,7 +1379,7 @@ const Navbar = (props) => {
 
                   <div className="md:w-full  w-[250px] flex flex-col justify-start items-start md:gap-0 gap-2">
                     <p className="md:pl-3 w-full  text-custom-purple  md:text-base text-[14px]">
-                      {item.name}
+                     {lang=== "en" ? item?.name : item?.vietnamiesName}
                     </p>
 
                     <div className="flex flex-col md:flex-row justify-center md:gap-20 gap-1 mt-1">

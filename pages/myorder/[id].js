@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -13,6 +13,7 @@ import {
 import { FaMoneyBillWave } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { Api } from "@/services/service";
+import { languageContext } from "../_app";
 
 export default function OrderDetails(props) {
   const router = useRouter();
@@ -21,7 +22,7 @@ export default function OrderDetails(props) {
   const [selectedImageList, setSelectedImageList] = useState([]);
   const { id, productDetailId } = router.query;
   const [userAddress, setUserAddress] = useState([]);
-
+  const { lang } = useContext(languageContext)
   useEffect(() => {
     if (router.isReady && id) {
       getProductById(id);
@@ -109,8 +110,8 @@ export default function OrderDetails(props) {
                 <span className="font-normal ml-2">
                   {ordersData.createdAt
                     ? moment(new Date(ordersData.createdAt)).format(
-                        "DD MMM YYYY"
-                      )
+                      "DD MMM YYYY"
+                    )
                     : "-"}
                 </span>
               </h2>
@@ -171,7 +172,7 @@ export default function OrderDetails(props) {
               {/* Product Info */}
               <div className="p-4 sm:p-6">
                 <h2 className="hidden md:block text-2xl font-bold text-gray-800 mb-4">
-                  {productsId?.product?.name}
+                  {lang === "en" ? productsId?.product?.name : productsId?.product?.vietnamiesName}
                 </h2>
                 <h2 className="block md:hidden text-xl font-bold text-gray-800 mb-4 truncate">
                   {productsId?.product?.name}
