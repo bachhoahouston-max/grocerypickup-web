@@ -61,7 +61,6 @@ const AddressInput = ({ profileData, setProfileData, className, value }) => {
     }
   };
   useEffect(() => {
-    // Optional: If profileData comes late
     if (profileData?.address) {
       setInputValue(profileData.address);
     }
@@ -82,15 +81,6 @@ const AddressInput = ({ profileData, setProfileData, className, value }) => {
     }
   };
 
-  const handleCityChange = (e) => {
-    const val = e.target.value;
-    setProfileData((prev) => ({ ...prev, city: val }));
-  };
-
-  const handleStateChange = (e) => {
-    const val = e.target.value;
-    setProfileData((prev) => ({ ...prev, state: val }));
-  };
 
   if (loadError) return <p>Error loading Google Maps: {loadError.message}</p>;
   if (!isLoaded) return <p>Loading...</p>;
@@ -112,25 +102,7 @@ const AddressInput = ({ profileData, setProfileData, className, value }) => {
           required
         />
       </Autocomplete>
-      {/* <p className="text-[12px] ms-3 -mt-3 mb-1 text-black">
-        Select the address to auto-fill City and State.
-      </p> */}
-
-      {/* <input
-        className={className}
-        type="text"
-        placeholder={t("City")}
-        value={profileData.city || ""}
-        onChange={handleCityChange}
-      />
-
-      <input
-        className={className}
-        type="text"
-        placeholder={t("State")}
-        value={profileData.state || ""}
-        onChange={handleStateChange}
-      /> */}
+   
 
     </div>
   );

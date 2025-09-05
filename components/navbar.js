@@ -213,7 +213,7 @@ const Navbar = (props) => {
     phoneNumber: "",
     location: {
       type: "Point",
-      coordinates: [profileData.lat || null, profileData.lng || null],
+      coordinates: [profileData.lng || null, profileData.lat || null],
     }, // Initialize with null values
   });
 
@@ -229,7 +229,7 @@ const Navbar = (props) => {
         city: profileData.city,
         location: {
           type: "Point",
-          coordinates: [profileData.lat || null, profileData.lng || null],
+          coordinates: [profileData.lng || null, profileData.lat || null],
         },
       });
     }
