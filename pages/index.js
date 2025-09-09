@@ -21,11 +21,12 @@ import "react-multi-carousel/lib/styles.css";
 import ProductCategory from "@/components/ProductCategory";
 import Head from "next/head";
 import { useContext } from "react";
-import { favoriteProductContext } from "./_app";
+import { favoriteProductContext, userContext } from "./_app";
 
 export default function Home(props) {
   const { t } = useTranslation();
   const router = useRouter();
+  const [user] = useContext(userContext)
   const [category, setCategory] = useState([]);
   const [productsData, setProductsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -34,7 +35,6 @@ export default function Home(props) {
   const [newArivalsData, setNewArivalsData] = useState([]);
   const [bulkProduct, setBulkProduct] = useState([]);
   const [setFavorite] = useContext(favoriteProductContext);
-
 
   useEffect(() => {
     fetchCategories();
