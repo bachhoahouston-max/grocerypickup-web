@@ -627,12 +627,20 @@ function ProductDetails(props) {
                       </div>
                     </>
                   ) : (
-                    <button
-                      className="bg-[#5CB447] w-[136px] h-[42px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1"
-                      onClick={handleAddToCart}
-                    >
-                      {t("ADD")}
-                    </button>
+                    productsId.Quantity <= 0 ? (
+                      <button
+                        className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed "
+                      >
+                        {t("Out of Stock")}
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-[#5CB447] w-[136px] h-[42px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1 cursor-pointer"
+                        onClick={handleAddToCart}
+                      >
+                        {t("ADD")}
+                      </button>
+                    )
                   )}
                   {productsId.isShipmentAvailable ? (
                     <p className="text-black font-normal text-[17px] mt-2">

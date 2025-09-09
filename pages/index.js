@@ -11,6 +11,7 @@ import {
   faTruck,
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
+
 import { FaArrowRight } from "react-icons/fa6";
 import GroceryCatories from "@/components/GroceryCatories";
 import SellProduct from "@/components/SellProduct";
@@ -19,6 +20,8 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import ProductCategory from "@/components/ProductCategory";
 import Head from "next/head";
+import { useContext } from "react";
+import { favoriteProductContext } from "./_app";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -30,12 +33,15 @@ export default function Home(props) {
   const [iscatdata, setIscatdata] = useState(false);
   const [newArivalsData, setNewArivalsData] = useState([]);
   const [bulkProduct, setBulkProduct] = useState([]);
+  const [setFavorite] = useContext(favoriteProductContext);
+
 
   useEffect(() => {
     fetchCategories();
     fetchProducts();
     getNewArrivals();
     getBulkProduct();
+    fetchFavorite();
   }, []);
 
   const responsive = {
@@ -59,6 +65,28 @@ export default function Home(props) {
       items: 2,
       slidesToSlide: 1,
     },
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    fetchFavorite();
+  }, []);
+
+  const fetchFavorite = async () => {
+    props.loader(true);
+    try {
+      const res = await Api("get", "getFavourite", null, router, {
+        id: user._id,
+      });
+      const favs = Array.isArray(res?.data) ? res.data : [];
+      setFavorite(favs);
+      localStorage.setItem("Favorite", JSON.stringify(favs));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      props.loader(false);
+    }
   };
 
   const responsive1 = {
@@ -310,7 +338,7 @@ export default function Home(props) {
               </div>
               <div className=" transition-transform duration-300 hover:-translate-y-[5px] flex justify-center text-custom-green items-center  underline mt-5">
                 <p
-                  className=" text-lg px-3 py-2 rounded-sm cursor-pointer "
+                  className=" text-lg px-3 py-2 rounded-sm cursor-pointer font-bold"
                   onClick={() => handleCategoryClick1("/categories/all")}
                 >
                   {t("View More")}{" "}

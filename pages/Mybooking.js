@@ -236,7 +236,7 @@ function Mybooking(props) {
     const data = {
       orderId: orderId,
       id: id,
-      lang:lang
+      lang: lang
     };
 
     ApiGetPdf("createinvoice", data, router)
@@ -430,6 +430,18 @@ function Mybooking(props) {
                                     {t("Order Shipped")}
                                   </span>
                                 );
+                              case "Preparing":
+                                return (
+                                  <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                    {t("Order Preparing")}
+                                  </span>
+                                );
+                              case "Driverassigned":
+                                return (
+                                  <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                    {t("Driver assigned")}
+                                  </span>
+                                );
                               default:
                                 return null;
                             }
@@ -610,11 +622,10 @@ function Mybooking(props) {
                     )}
                 </div>
 
-                {booking?.status === "Pending" &&
+                {((booking?.status === "Pending" || booking?.status === "Preparing") &&
                   (booking?.isDriveUp || booking?.isOrderPickup) &&
                   booking?.createdAt &&
-                  new Date() - new Date(booking.createdAt) >=
-                  30 * 60 * 1000 && (
+                  new Date() - new Date(booking.createdAt) >= 15 * 60 * 1000) && (
                     <div className="px-4 py-3 bg-white border-b border-gray-200">
                       <div className="flex flex-wrap gap-2 justify-end">
                         {booking?.isDriveUp && (
@@ -639,6 +650,7 @@ function Mybooking(props) {
                       </div>
                     </div>
                   )}
+
 
                 {isOpen && (
                   <div className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-50 px-4">
@@ -731,7 +743,7 @@ function Mybooking(props) {
                     {booking.productDetail.map((product, index) => (
                       <div
                         key={index}
-                        className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer ${index !== booking.productDetail.length - 1
+                        className={`flex items-center p-2 hover:bg-gray-50 cursor-pointer ${index !== booking.productDetail.length - 1
                           ? "border-b border-gray-200"
                           : ""
                           }`}
@@ -743,7 +755,7 @@ function Mybooking(props) {
                       >
                         <div className="flex-shrink-0">
                           <img
-                            className="w-16 h-16 rounded-md object-contain border border-gray-200 bg-white p-1"
+                            className="w-20 h-20 rounded-md object-contain border border-gray-200 bg-white"
                             src={
                               product.image?.[0] || "/api/placeholder/100/100"
                             }

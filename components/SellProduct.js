@@ -167,8 +167,6 @@ const SellProduct = ({ loader, toaster }) => {
               );
               const itemQuantity = cartItem ? cartItem.qty : 0;
               const currentSale = countdown[item._id];
-              const isActive = currentSale?.status === "active";
-              const isUpcoming = currentSale?.status === "upcoming";
 
               return (
                 <div
@@ -207,22 +205,24 @@ const SellProduct = ({ loader, toaster }) => {
                   <h2 className="text-xs text-gray-400 font-normal mt-4">
                     {item.product?.categoryName}
                   </h2>
-                  <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
-                    {lang === "en"
-                      ? (item.product?.name.length > 30 ? item.product.name.slice(0, 30) + "..." : item.product.name)
-                      : (item.product.vietnamiesName?.length > 30
-                        ? item.product.vietnamiesName.slice(0, 30) + "..."
-                        : item.product.vietnamiesName)}
-                  </p>
-                  <p className="lg:flex xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
+                  <div className="flex justify-center items-center h-10 mt-1">
+                    <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
+                      {lang === "en"
+                        ? (item.product?.name.length > 30 ? item.product.name.slice(0, 30) + "..." : item.product.name)
+                        : (item.product.vietnamiesName?.length > 30
+                          ? item.product.vietnamiesName.slice(0, 30) + "..."
+                          : item.product.vietnamiesName)}
+                    </p>
+                    <p className="lg:flex xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
 
-                    {lang === "en"
-                      ? (item.product?.name.length > 25 ? item.product.name.slice(0, 25) + "..." : item.product.name)
-                      : (item.product.vietnamiesName?.length > 25
-                        ? item.product.vietnamiesName.slice(0, 25) + "..."
-                        : item.product.vietnamiesName)}
+                      {lang === "en"
+                        ? (item.product?.name.length > 25 ? item.product.name.slice(0, 25) + "..." : item.product.name)
+                        : (item.product.vietnamiesName?.length > 25
+                          ? item.product.vietnamiesName.slice(0, 25) + "..."
+                          : item.product.vietnamiesName)}
 
-                  </p>
+                    </p>
+                  </div>
 
                   <div className="h-12 md:flex-row flex-col flex justify-center mb-1 md:gap-2 items-center md:pt-2 pt-0">
                     <div className="gap-2 flex items-center pt-1">
@@ -251,48 +251,48 @@ const SellProduct = ({ loader, toaster }) => {
 
                   </div>
 
-                  {itemQuantity > 0 ? (
-                    <div className="w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex justify-center items-center">
-                      <div
-                        className="bg-[#5CB447]  cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
-                        onClick={() => {
-                          if (itemQuantity > 1) {
-                            handleRemoveFromCart(item);
-                          }
-                        }}
-                      >
-                        <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
-                      </div>
-                      <p className="text-black md:text-xl text-lg font-medium text-center px-3 md:py-0.5 py-0 border-y-2 border-y-gray-200">
-                        {itemQuantity}
-                      </p>
-                      <div
-                        className="md:px-2 px-1 py-1.5 bg-[#5CB447]  cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
-                        onClick={() => {
-                          handleAddToCart(item);
-                        }}
-                      >
-                        <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
-                      </div>
-                    </div>
-                  ) : isActive ? (
+                  {item?.product?.Quantity <= 0 ? (
                     <button
-                      className="font-bold bg-[#5CB447]  w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-white cursor-pointer flex justify-center items-center"
-                      onClick={() => handleAddToCart(item)}
+                      className="font-bold bg-[#5CB447]/80 w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-gray-200  flex justify-center items-center cursor-not-allowed"
                     >
-                      <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
-                      <p>{t("Add")}</p>
+
+                      {t("Out of Stock")}
                     </button>
-                  ) : isUpcoming ? (
-                    <div className="w-[120px] bg-[#5CB447]  md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center  rounded-[6px]">
-                      {t("Start Soon")}
-                    </div>
                   ) : (
-                    <div className="w-[120px] bg-[#5CB447]  md:mt-2 mt-1 py-1.5 text-[13px] md:text-[16px] text-white flex justify-center items-center  rounded-[6px] text-center">
-                      {t("Ended")}
-                    </div>
-                  )}
-                  
+                    itemQuantity > 0 ? (
+                      <div className="w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex justify-center items-center">
+                        <div
+                          className="bg-[#5CB447]  cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
+                          onClick={() => {
+                            if (itemQuantity > 1) {
+                              handleRemoveFromCart(item);
+                            }
+                          }}
+                        >
+                          <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
+                        </div>
+                        <p className="text-black md:text-xl text-lg font-medium text-center px-3 md:py-0.5 py-0 border-y-2 border-y-gray-200">
+                          {itemQuantity}
+                        </p>
+                        <div
+                          className="md:px-2 px-1 py-1.5 bg-[#5CB447]  cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                          onClick={() => {
+                            handleAddToCart(item);
+                          }}
+                        >
+                          <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        className="font-bold bg-[#5CB447]  w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-white cursor-pointer flex justify-center items-center"
+                        onClick={() => handleAddToCart(item)}
+                      >
+                        <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
+                        <p>{t("Add")}</p>
+                      </button>
+                    ))}
+
                 </div>
               );
             })}

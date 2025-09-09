@@ -23,25 +23,22 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
   const { lang } = useContext(languageContext);
-  const [productsId, setProductsId] = useState([]);
   const [user] = useContext(userContext);
-  const [isFavorite, setIsFavorite] = useState(false);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
 
+  // -------------------- Add to Cart --------------------
   const handleAddToCart = () => {
     const itemQuantity = Number(item?.Quantity ?? 0);
 
     if (itemQuantity <= 0) {
       toaster({
         type: "error",
-        message:
-          "This item is currently out of stock. Please choose a different item.",
+        message: "This item is currently out of stock. Please choose a different item.",
       });
       return;
     }
 
     const existingItem = cartData.find((f) => f._id === item?._id);
-
 
     if (existingItem) {
       toaster({ type: "info", message: "Item already in cart." });
@@ -62,106 +59,68 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     };
 
     const updatedCart = [...cartData, newItem];
-
     setCartData(updatedCart);
     localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
 
     toaster({ type: "success", message: "Product added to cart" });
   };
 
-  useEffect(() => {
-    if (Array.isArray(productsId)) {
-      const isProductFavorite = productsId.some(
-        (product) => product?.product?._id === item?._id
-      );
-      setIsFavorite(isProductFavorite);
-    } else {
-      setIsFavorite(false);
+  // -------------------- Favorite --------------------
+
+  // ✅ Derived state
+  const isFavorite = Favorite.some(
+    (fav) => fav._id === item?._id || fav?.product?._id === item?._id
+  );
+
+
+
+  // ✅ Toggle favorite
+  const toggleFavorite = async () => {
+    if (!user?.token) {
+      return toaster({ type: "error", message: "Login required" });
     }
-  }, [productsId, item?._id]);
 
-  const isFetching = useRef(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token || isFetching.current) return;
-
-    isFetching.current = true;
-
-    getFavourite();
-  }, []);
-
-  const getFavourite = async () => {
     loader(true);
     try {
-      const res = await Api("get", "getFavourite", null, router, {
-        id: user._id,
-      });
-      setFavorite(Array.isArray(res.data) ? res.data : []);
+      const data = { product: item?._id };
+      const res = await Api("post", "addremovefavourite", data, router);
+
+      if (res.status) {
+        if (isFavorite) {
+          // Remove
+          const updated = Favorite.filter(
+            (fav) => fav._id !== item._id && fav?.product?._id !== item._id
+          );
+          setFavorite(updated);
+          localStorage.setItem("Favorite", JSON.stringify(updated));
+          toaster({ type: "error", message: "Item Removed From Favorite" });
+        } else {
+          // Add
+          const updated = [...Favorite, item];
+          setFavorite(updated);
+          localStorage.setItem("Favorite", JSON.stringify(updated));
+          toaster({ type: "success", message: "Item Added to Favorite" });
+        }
+      }
     } catch (err) {
       console.log(err);
-      setFavorite([]);
     } finally {
       loader(false);
     }
   };
-  const addremovefavourite = () => {
-    loader(true);
-    if (!user?.token) {
-      loader(false);
-      return toaster({ type: "error", message: "Login required" });
-    }
 
-    let data = {
-      product: item?._id,
-    };
-
-    Api("post", "addremovefavourite", data, router).then(
-      (res) => {
-        if (res.status) {
-          loader(false);
-          if (isFavorite) {
-            // Remove from favorites
-            setFavorite((prevFavorites) => {
-              const updatedFavorites = prevFavorites.filter(
-                (fav) => fav._id !== item._id
-              );
-              localStorage.setItem(
-                "favorites",
-                JSON.stringify(updatedFavorites)
-              );
-              return updatedFavorites; // Return the updated favorites
-            });
-            toaster({ type: "error", message: "Item Removed From Favorite" });
-          } else {
-            // Add to favorites
-            setFavorite((prevFavorites) => {
-              const updatedFavorites = [...prevFavorites, item];
-              localStorage.setItem(
-                "favorites",
-                JSON.stringify(updatedFavorites)
-              );
-              return updatedFavorites; // Return the updated favorites
-            });
-            toaster({ type: "success", message: "Item Added to Favorite" });
-          }
-
-          getFavourite(); // Refresh the favorite products
-        }
-      },
-      (err) => {
-        console.log(err);
-        loader(false); // Ensure loader is turned off in case of error
-      }
-    );
-  };
-
+  // ✅ Load from localStorage if available (first time)
   useEffect(() => {
-    const storedFavorites = localStorage.getItem("favorites");
-    if (storedFavorites) {
-      setFavorite(JSON.parse(storedFavorites));
+    const stored = localStorage.getItem("Favorite");
+    if (stored) {
+      try {
+        setFavorite(JSON.parse(stored));
+      } catch {
+        localStorage.removeItem("Favorite");
+      }
     }
-  }, []);
+  }, [setFavorite]);
+
 
   const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
   const itemQuantity = cartItem ? cartItem.qty : 0;
@@ -183,7 +142,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
         <div
           className="absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[36px] md:h-[45px] h-[36px] flex justify-center items-center md:mb-1 mb-2"
-          onClick={addremovefavourite}
+          onClick={toggleFavorite}
         >
           {isFavorite ? (
             <FaHeart className="text-red-700 md:w-[23px] w-[18px] md:h-[23px] h-[20px]" />
@@ -239,85 +198,94 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </p>
       </div>
 
-      {itemQuantity > 0 ? (
-        <div className="bg-gray-100 w-[120px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
-          <div
-            className="bg-[#5CB447] cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-2 py-1.5 items-center"
-            onClick={() => {
-              const updatedCart = cartData.map((cartItem) => {
-                if (cartItem._id === item._id) {
-                  if (cartItem.qty > 1) {
-                    const newQty = cartItem.qty - 1;
+      {item?.Quantity <= 0 ? (
+        <button
+          className="font-bold bg-[#5CB447]/80 w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-gray-200  flex justify-center items-center cursor-not-allowed"
+        >
+
+          {t("Out of Stock")}
+        </button>
+      ) : (
+        itemQuantity > 0 ? (
+          <div className="bg-gray-100 w-[120px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
+            <div
+              className="bg-[#5CB447] cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-2 py-1.5 items-center"
+              onClick={() => {
+                const updatedCart = cartData.map((cartItem) => {
+                  if (cartItem._id === item._id) {
+                    if (cartItem.qty > 1) {
+                      const newQty = cartItem.qty - 1;
+                      return {
+                        ...cartItem,
+                        qty: newQty,
+                        total: (newQty * (cartItem.price || 0)).toFixed(2),
+                      };
+                    } else {
+                      return cartItem; // Don't change anything if qty is 1
+                    }
+                  }
+                  return cartItem;
+                });
+
+                setCartData(updatedCart);
+                localStorage.setItem(
+                  "addCartDetail",
+                  JSON.stringify(updatedCart)
+                );
+              }}
+            >
+              <IoRemoveSharp className="md:h-[23px] h-[20px] w-[30px] md:w-[25px] text-white" />
+            </div>
+
+            <p className="text-black md:text-xl text-lg font-medium text-center mx-3 ">
+              {itemQuantity}
+            </p>
+            <div
+              className="md:px-2 px-2 py-1.5 bg-[#5CB447] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+              onClick={() => {
+                const updatedCart = cartData.map((cartItem) => {
+                  if (cartItem._id === item._id) {
+                    if (cartItem.qty + 1 > item.Quantity) {
+                      toaster({
+                        type: "error",
+                        message:
+                          "Item is not available in this quantity in stock. Please choose a different item.",
+                      });
+                      return cartItem;
+                    }
                     return {
                       ...cartItem,
-                      qty: newQty,
-                      total: (newQty * (cartItem.price || 0)).toFixed(2),
+                      qty: cartItem.qty + 1,
+                      total: ((cartItem.price || 0) * (cartItem.qty + 1)).toFixed(
+                        2
+                      ),
                     };
-                  } else {
-                    return cartItem; // Don't change anything if qty is 1
                   }
-                }
-                return cartItem;
-              });
 
-              setCartData(updatedCart);
-              localStorage.setItem(
-                "addCartDetail",
-                JSON.stringify(updatedCart)
-              );
-            }}
-          >
-            <IoRemoveSharp className="md:h-[23px] h-[20px] w-[30px] md:w-[25px] text-white" />
+                  // Return all other items unchanged
+                  return cartItem;
+                });
+
+                setCartData(updatedCart);
+                localStorage.setItem(
+                  "addCartDetail",
+                  JSON.stringify(updatedCart)
+                );
+              }}
+            >
+              <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
+            </div>
           </div>
-
-          <p className="text-black md:text-xl text-lg font-medium text-center mx-3 ">
-            {itemQuantity}
-          </p>
-          <div
-            className="md:px-2 px-2 py-1.5 bg-[#5CB447] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
-            onClick={() => {
-              const updatedCart = cartData.map((cartItem) => {
-                if (cartItem._id === item._id) {
-                  if (cartItem.qty + 1 > item.Quantity) {
-                    toaster({
-                      type: "error",
-                      message:
-                        "Item is not available in this quantity in stock. Please choose a different item.",
-                    });
-                    return cartItem;
-                  }
-                  return {
-                    ...cartItem,
-                    qty: cartItem.qty + 1,
-                    total: ((cartItem.price || 0) * (cartItem.qty + 1)).toFixed(
-                      2
-                    ),
-                  };
-                }
-
-                // Return all other items unchanged
-                return cartItem;
-              });
-
-              setCartData(updatedCart);
-              localStorage.setItem(
-                "addCartDetail",
-                JSON.stringify(updatedCart)
-              );
-            }}
+        ) : (
+          <button
+            className="font-bold bg-[#5CB447] w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-white cursor-pointer flex justify-center items-center"
+            onClick={handleAddToCart}
           >
-            <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
-          </div>
-        </div>
-      ) : (
-        <button
-          className="font-bold bg-[#5CB447] w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-white cursor-pointer flex justify-center items-center"
-          onClick={handleAddToCart}
-        >
-          <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold " />
-          {t("Add")}
-        </button>
-      )}
+            <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold " />
+            {t("Add")}
+          </button>
+        ))
+      }
     </div>
   );
 };

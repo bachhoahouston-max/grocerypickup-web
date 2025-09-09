@@ -297,26 +297,39 @@ const Navbar = (props) => {
     );
   };
 
-  const minDate = (() => {
+  const minDate1 = (() => {
     const now = new Date();
-    const currentHour = now.getHours(); // returns 0–23
+    const currentHour = now.getHours(); // 0–23
 
-    if (currentHour >= 14) {
-      // If time is 2 PM or later, return tomorrow
-      const tomorrow = new Date();
-      tomorrow.setDate(now.getDate() + 1);
+    const tomorrow = new Date();
+    tomorrow.setDate(now.getDate() + 1);
+
+    const dayAfterTomorrow = new Date();
+    dayAfterTomorrow.setDate(now.getDate() + 2);
+
+    if (currentHour >= 20) {
+      return dayAfterTomorrow;
+    } else {
+    
       return tomorrow;
     }
-
-    // Else, return today
-    return now;
   })();
 
-  const minDate1 = (() => {
-    const date = new Date();
-    date.setDate(date.getDate() + 1);
-    return date;
+
+  const minDate = (() => {
+    const now = new Date();                
+    const currentHour = now.getHours();    
+
+    if (currentHour >= 14) {               
+    
+      const tomorrow = new Date();
+      tomorrow.setDate(now.getDate() + 1); 
+      return tomorrow;                    
+    }
+
+    return now;                           
   })();
+
 
   const closeDrawers = async () => {
     setOpenCart(false);
@@ -1379,7 +1392,7 @@ const Navbar = (props) => {
 
                   <div className="md:w-full  w-[250px] flex flex-col justify-start items-start md:gap-0 gap-2">
                     <p className="md:pl-3 w-full  text-custom-purple  md:text-base text-[14px]">
-                     {lang=== "en" ? item?.name : item?.vietnamiesName}
+                      {lang === "en" ? item?.name : item?.vietnamiesName}
                     </p>
 
                     <div className="flex flex-col md:flex-row justify-center md:gap-20 gap-1 mt-1">
@@ -1461,7 +1474,7 @@ const Navbar = (props) => {
                         <div className="flex md:justify-center justify-start md:items-center items-start  md:mt-0 mt-5 gap-5">
                           <p className="text-custom-purple font-semibold text-base">
                             {constant.currency}
-                            {item?.total}
+                            {item?.total?.toFixed(2)}
                             {/* {item?.price_slot?.other_price && (
                               <del className="text-custom-red font-normal text-xs ml-2">
                                 {constant.currency}

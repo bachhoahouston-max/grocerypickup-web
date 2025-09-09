@@ -445,7 +445,7 @@ function ProductDetails(props) {
                 <div className="flex flex-col justify-start items-start w-full">
                   <div className="flex justify-between items-center w-full">
                     <h1 className="text-black md:text-[32px] text-2xl font-semibold">
-                      {lang=== "en" ? productsId?.name : productsId?.vietnamiesName}
+                      {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
                     </h1>
 
                     <div
@@ -470,7 +470,7 @@ function ProductDetails(props) {
                     <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
                     <p className="md:text-[18px] text-[14px] w-full">
                       {" "}
-                      {lang=== "en" ? productsId?.name : productsId?.vietnamiesName}{" "}
+                      {lang === "en" ? productsId?.name : productsId?.vietnamiesName}{" "}
                     </p>
                   </div>
                   <div className="pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
@@ -529,7 +529,7 @@ function ProductDetails(props) {
                       })}
                   </div>
 
-          
+
                   {isInCart ? (
                     <>
                       <div className="flex mt-5">
@@ -551,12 +551,21 @@ function ProductDetails(props) {
                       </div>
                     </>
                   ) : (
-                    <button
-                      className="bg-[#5CB447] w-[136px] h-[42px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1"
-                      onClick={handleAddToCart}
-                    >
-                      {t("ADD")}
-                    </button>
+                    productsId.Quantity <= 0 ? (
+                      <button
+                        className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed "
+                      >
+                        {t("Out of Stock")}
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-[#5CB447] w-[136px] h-[42px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1 cursor-pointer"
+                        onClick={handleAddToCart}
+                      >
+                        {t("ADD")}
+                      </button>
+                    )
+
                   )}
                   {productsId.isShipmentAvailable ? (
                     <p className="text-black font-normal text-[17px] mt-2">

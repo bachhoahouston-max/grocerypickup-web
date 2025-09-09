@@ -45,41 +45,34 @@ function announcementBar({
     <>
       <style>
         {`
-          @keyframes marquee {
-            0%   { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-          }
-
-          .animate-marquee {
-            display: inline-block;
-            white-space: nowrap;
-            animation: marquee 15s linear infinite;
-          }
-        `}
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .marquee-animate {
+      animation: marquee 15s linear infinite;
+    }
+  `}
       </style>
 
       <div
-        className={`transition-all duration-500 ease-in-out ${
-          announcementBar
-            ? "opacity-100 max-h-12"
-            : "opacity-0 max-h-0 overflow-hidden"
-        } bg-custom-green text-white`}
+        className={`transition-all duration-500 ease-in-out ${announcementBar
+          ? "opacity-100 max-h-12"
+          : "opacity-0 max-h-0 overflow-hidden"
+          }`}
       >
-        <div className="relative h-12 w-full flex items-center justify-center px-4 overflow-hidden">
-          <div className="w-full overflow-hidden">
-            <p className="animate-marquee text-sm sm:text-base">
-               {shipmentCostMessage}
-            </p>
+        <div className="relative w-full h-12 overflow-hidden flex  justify-center items-center bg-[#f38529] text-white">
+          <div className="flex whitespace-nowrap 
+                    sm:animate-none    /* desktop: no animation */
+                    animate-[marquee_15s_linear_infinite] /* mobile: run */">
+            <span className="pr-8">{shipmentCostMessage}</span>
+            {/* <span className="pr-8">{shipmentCostMessage}</span> */}
           </div>
-
-          {/* <button
-            onClick={() => setAnnouncementBar(false)}
-            className="absolute right-4 text-white hover:text-red-200 transition duration-300"
-          >
-            <RxCross2 className="w-5 h-5" />
-          </button> */}
         </div>
       </div>
+
+
+
     </>
   );
 }
