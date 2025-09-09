@@ -365,6 +365,18 @@ function Mybooking(props) {
                                   {t("Order Shipped")}
                                 </span>
                               );
+                            case "Preparing":
+                              return (
+                                <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
+                                  {t("Order Preparing")}
+                                </span>
+                              );
+                            case "Driverassigned":
+                              return (
+                                <span className="px-3 py-1.5 bg-green-100 text-green-200 rounded-full text-sm font-medium whitespace-nowrap">
+                                  {t("Driver assigned")}
+                                </span>
+                              );
                             default:
                               return null;
                           }
@@ -432,13 +444,13 @@ function Mybooking(props) {
                                 );
                               case "Preparing":
                                 return (
-                                  <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                  <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
                                     {t("Order Preparing")}
                                   </span>
                                 );
                               case "Driverassigned":
                                 return (
-                                  <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium whitespace-nowrap">
+                                  <span className="px-3 py-1.5 bg-green-100 text-green-200 rounded-full text-sm font-medium whitespace-nowrap">
                                     {t("Driver assigned")}
                                   </span>
                                 );
