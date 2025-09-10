@@ -1474,7 +1474,7 @@ const Navbar = (props) => {
                         <div className="flex md:justify-center justify-start md:items-center items-start  md:mt-0 mt-5 gap-5">
                           <p className="text-custom-purple font-semibold text-base">
                             {constant.currency}
-                            {item?.total ? item.total.toFixed(2) : "0.00"}
+                            {item?.total}
                             {/* {item?.price_slot?.other_price && (
                               <del className="text-custom-red font-normal text-xs ml-2">
                                 {constant.currency}
