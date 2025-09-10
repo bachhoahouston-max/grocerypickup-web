@@ -165,7 +165,7 @@ const SignUp = (props) => {
           content="Get authentic Vietnamese groceries delivered fresh to your doorstep. Enjoy vegetables, snacks, seafood, and more with fast, reliable service" />
         <link
           rel="canonical"
-          href="https://www.bachhoahouston.com/signUn"
+          href="https://www.bachhoahouston.com/signUp"
         />
       </Head>
       <div className="font-sans bg-white flex flex-col items-center justify-center">
