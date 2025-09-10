@@ -310,24 +310,24 @@ const Navbar = (props) => {
     if (currentHour >= 20) {
       return dayAfterTomorrow;
     } else {
-    
+
       return tomorrow;
     }
   })();
 
 
   const minDate = (() => {
-    const now = new Date();                
-    const currentHour = now.getHours();    
+    const now = new Date();
+    const currentHour = now.getHours();
 
-    if (currentHour >= 14) {               
-    
+    if (currentHour >= 14) {
+
       const tomorrow = new Date();
-      tomorrow.setDate(now.getDate() + 1); 
-      return tomorrow;                    
+      tomorrow.setDate(now.getDate() + 1);
+      return tomorrow;
     }
 
-    return now;                           
+    return now;
   })();
 
 
@@ -1474,7 +1474,7 @@ const Navbar = (props) => {
                         <div className="flex md:justify-center justify-start md:items-center items-start  md:mt-0 mt-5 gap-5">
                           <p className="text-custom-purple font-semibold text-base">
                             {constant.currency}
-                            {item?.total?.toFixed(2)}
+                            {item?.total ? item.total.toFixed(2) : "0.00"}
                             {/* {item?.price_slot?.other_price && (
                               <del className="text-custom-red font-normal text-xs ml-2">
                                 {constant.currency}
