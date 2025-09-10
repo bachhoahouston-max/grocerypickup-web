@@ -373,7 +373,7 @@ function Mybooking(props) {
                               );
                             case "Driverassigned":
                               return (
-                                <span className="px-3 py-1.5 bg-green-100 text-green-200 rounded-full text-sm font-medium whitespace-nowrap">
+                                <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
                                   {t("Driver assigned")}
                                 </span>
                               );
@@ -450,7 +450,7 @@ function Mybooking(props) {
                                 );
                               case "Driverassigned":
                                 return (
-                                  <span className="px-3 py-1.5 bg-green-100 text-green-200 rounded-full text-sm font-medium whitespace-nowrap">
+                                  <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
                                     {t("Driver assigned")}
                                   </span>
                                 );
