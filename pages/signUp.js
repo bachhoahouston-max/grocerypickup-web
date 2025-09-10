@@ -5,6 +5,7 @@ import { IoEyeOffOutline } from "react-icons/io5";
 import { IoEyeOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { userContext } from "./_app";
+import Head from "next/head";
 
 const SignUp = (props) => {
   const { t } = useTranslation();
@@ -158,6 +159,15 @@ const SignUp = (props) => {
 
   return (
     <>
+      <Head>
+        <title>Vietnamese Groceries Delivered Fresh to Your Door</title>
+        <meta name="description"
+          content="Get authentic Vietnamese groceries delivered fresh to your doorstep. Enjoy vegetables, snacks, seafood, and more with fast, reliable service" />
+        <link
+          rel="canonical"
+          href="https://www.bachhoahouston.com/signUn"
+        />
+      </Head>
       <div className="font-sans bg-white flex flex-col items-center justify-center">
         <div className="mx-auto mt-12 ms-5 md:ms-44 md:mt-10 ">
           <h1 className="text-[34px] md:text-[64px] text-black">
