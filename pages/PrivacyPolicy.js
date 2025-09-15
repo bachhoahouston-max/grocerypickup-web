@@ -18,8 +18,6 @@ function PrivacyPolicy(props) {
       (res) => {
         props.loader(false); // Hide the loader after fetching
 
-        console.log("API Response =>", res.data);
-
         if (res?.status) {
           setPrivacyPolicy({
             privacy: res?.data[0]?.privacy,
@@ -33,7 +31,7 @@ function PrivacyPolicy(props) {
       },
       (err) => {
         props.loader(false); // Hide loader if there's an error
-        console.log("API Error =>", err);
+
         props.toaster({ type: "error", message: err?.data?.message });
         props.toaster({ type: "error", message: err?.message });
         setLoading(false); // Stop loading in case of error

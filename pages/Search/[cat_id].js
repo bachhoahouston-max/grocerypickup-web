@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 function Search(props) {
     const router = useRouter()
     const {t} = useTranslation()
-    console.log(router)
     const [productList, SetProductList] = useState([])
     const [category, setCategory] = useState({})
     const [categoryList, SetCategoryList] = useState([])
@@ -48,12 +47,10 @@ function Search(props) {
         Api("get", url, "", router, parmas).then(
             (res) => {
                 props.loader(false);
-                console.log("res================>", res);
                 SetProductList(res.data)
             },
             (err) => {
                 props.loader(false);
-                console.log(err);
                 props.toaster({ type: "error", message: err?.message });
             }
         );
@@ -64,7 +61,6 @@ function Search(props) {
         Api("get", "getCategory", "", router).then(
             (res) => {
                 props.loader(false);
-                console.log("res================>", res);
                 res.data.push({
                     name: 'All',
                     slug: 'all'
@@ -74,7 +70,6 @@ function Search(props) {
             },
             (err) => {
                 props.loader(false);
-                console.log(err);
                 props.toaster({ type: "error", message: err?.message });
             }
         );

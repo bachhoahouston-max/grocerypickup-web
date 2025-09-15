@@ -103,10 +103,8 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         }
       }
     } catch (err) {
-      console.log(err);
-    } finally {
       loader(false);
-    }
+    } 
   };
 
   // ✅ Load from localStorage if available (first time)

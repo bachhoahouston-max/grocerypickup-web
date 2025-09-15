@@ -41,12 +41,11 @@ function Myhistory(props) {
     Api("get", "getStatusCompletedProducts", "", router).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
+  
         setBookingsData(res.data);
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -73,13 +72,11 @@ function Myhistory(props) {
       images: images,
     };
 
-    console.log(data);
     props.loader(true);
 
     Api("post", "giverate", data, router).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
         if (res.status) {
           setShowReviews(false);
           setReviewsData({
@@ -99,7 +96,6 @@ function Myhistory(props) {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -151,7 +147,7 @@ function Myhistory(props) {
       new Compressor(file, {
         quality: 0.6,
         success: (compressedResult) => {
-          console.log(compressedResult);
+
           const data = new FormData();
           data.append("file", compressedResult);
           props.loader(true);
@@ -159,7 +155,6 @@ function Myhistory(props) {
           ApiFormData("post", "user/fileupload", data, router).then(
             (res) => {
               props.loader(false);
-              console.log("res================>", res);
               if (res.status) {
                 setImages((prev) => [...prev, res.data.file]);
                 props.toaster({
@@ -170,7 +165,6 @@ function Myhistory(props) {
             },
             (err) => {
               props.loader(false);
-              console.log(err);
               props.toaster({ type: "error", message: err?.message });
             }
           );
@@ -290,7 +284,6 @@ function Myhistory(props) {
                               e.stopPropagation();
                               setProductId(product?.product?._id);
                               setSelectedProduct(product);
-                              console.log("Product selected:", product);
                               setShowReviews(true);
                             }}
                           >

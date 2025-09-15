@@ -20,7 +20,6 @@ const Category = (props) => {
     Api("get", "getCategory", null).then(
       (res) => {
         props.loader(false);
-        console.log("=>----", res.data);
         setCategory(res.data);
       },
       (err) => {

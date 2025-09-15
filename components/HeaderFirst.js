@@ -38,7 +38,6 @@ const HeaderFirst = (props) => {
     Api("get", "getCategory", null).then(
       (res) => {
         props.loader(false);
-        console.log("=>----", res.data);
         setCategory(res.data);
       },
       (err) => {
@@ -51,18 +50,6 @@ const HeaderFirst = (props) => {
     );
   };
 
-  // function handleClick(idx) {
-  //   try {
-  //     setLang(idx);
-  //     const language = idx || "en";
-  //     console.log(language);
-  //     i18n.changeLanguage(language);
-  //     setgloballang(language);
-  //     localStorage.setItem("LANGUAGE", language);
-  //   } catch (err) {
-  //     console.log(err.message);
-  //   }
-  // }
   const handleClick = (language) => {
     try {
       changeLang(language);
@@ -78,7 +65,6 @@ const HeaderFirst = (props) => {
 
 
   const handleNavigation = (path, tab) => {
-    console.log(`Navigating to ${path}, setting tab to ${tab}`);
     setSelectedTab(tab);
     router.push(path);
   };

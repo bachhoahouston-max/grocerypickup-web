@@ -28,13 +28,10 @@ const ProductReviews = (props) => {
         Api("get", url, "", router).then(
             (res) => {
                 props.loader(false);
-                console.log(res.data);
-                console.log(res.data?.reviews);
                 setProductReviews(res.data?.reviews)
             },
             (err) => {
                 props.loader(false);
-                console.log(err);
                 props.toaster({ type: "error", message: err?.message });
             }
         );

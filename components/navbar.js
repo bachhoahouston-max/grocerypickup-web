@@ -70,21 +70,16 @@ const Navbar = (props) => {
       Api("get", "GetAllCoupons", "", router).then(
         (res) => {
           props.loader(false);
-          console.log("res================> form data :: ", res);
-
           const currentDate = new Date();
           const validCoupons = (res.data || []).filter((coupon) => {
             const expiryDate = new Date(coupon.expiryDate);
             return expiryDate > currentDate && coupon.isActive;
           });
-
-          console.log("coupan", validCoupons);
           setCoupons(validCoupons);
           setFilteredCoupons(validCoupons);
         },
         (err) => {
           props.loader(false);
-          console.log(err);
           props.toaster({ type: "error", message: err?.message });
         }
       );
@@ -132,7 +127,6 @@ const Navbar = (props) => {
       cartValue: CartTotal,
       userId: user._id
     };
-    console.log("newData", newData)
     props.loader(true);
 
     Api("post", "ValidateCouponforUser", newData, router)
@@ -415,15 +409,10 @@ const Navbar = (props) => {
               ],
             },
           });
-        } else {
-          console.log("Failed to load profile")
-
         }
       })
       .catch((err) => {
         props.loader(false);
-        console.log("Failed to load profile")
-
       });
   };
 
@@ -551,7 +540,6 @@ const Navbar = (props) => {
       }
     }
 
-    console.log("Local Address Fields:", localAddress);
 
     if (
       pickupOption === "localDelivery" ||
@@ -614,8 +602,6 @@ const Navbar = (props) => {
     );
 
     const isShipmentAvailable = unavailableProducts.length === 0;
-
-    console.log(isShipmentAvailable);
 
     if (isShipmentDelivery) {
       if (!isShipmentAvailable) {
@@ -726,7 +712,7 @@ const Navbar = (props) => {
       }),
     };
 
-    console.log(newData);
+
     localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
     setOpenCart(false);
@@ -750,7 +736,6 @@ const Navbar = (props) => {
     Api("get", "getFavourite", null, router, { id: user._id }).then(
       (res) => {
         setProductsId(res.data);
-        console.log("fgh", res.data);
       },
       (err) => {
         console.log(err);

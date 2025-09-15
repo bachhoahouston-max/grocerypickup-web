@@ -59,7 +59,6 @@ export default function OrderDetails(props) {
         router
       );
       props?.loader(false);
-      console.log(res.data);
       setOrdersData(res.data);
 
       const d = res.data.productDetail.find(
@@ -68,7 +67,6 @@ export default function OrderDetails(props) {
       setProductsId(d);
       setSelectedImageList(d?.image);
       const address = res.data.shipping_address;
-      console.log("addresss=>-----------", address);
 
       setUserAddress(address);
     } catch (err) {

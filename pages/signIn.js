@@ -27,7 +27,6 @@ const SignIn = (props) => {
     Api("post", "login", data, router).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
 
         if (res?.status) {
           const userData = res.data;
@@ -59,7 +58,6 @@ const SignIn = (props) => {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({
           type: "error",
           message: err?.data?.message || err?.message,

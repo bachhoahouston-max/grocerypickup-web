@@ -101,14 +101,11 @@ function Categories(props) {
     Api("get", url, "", router).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
         SetProductList(res.data);
         setPaginationData(res.pagination);
       },
       (err) => {
         props.loader(false);
-
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -131,7 +128,6 @@ function Categories(props) {
     Api("get", "getCategory", "", router).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
         res.data.push({
           name: "All",
           slug: "all",
@@ -140,7 +136,6 @@ function Categories(props) {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );

@@ -124,32 +124,23 @@ function ProductDetails(props) {
     if (!existingItem) {
       const newProduct = {
         ...productsId,
-        selectedColor:
-          productsId.selectedColor || productsId.varients?.[0] || {},
-        selectedImage:
-          productsId.selectedImage ||
-          productsId.varients?.[0]?.image?.[0] ||
-          "",
+        selectedColor: productsId.selectedColor || productsId.varients?.[0] || {},
+        selectedImage: productsId.selectedImage || productsId.varients?.[0]?.image?.[0] || "",
         qty: 1,
         id: productsId._id,
         BarCode: productsId?.BarCode || "",
-        total: ourPrice.toFixed(2),
-        our_price: ourPrice,
-        price: selectedPrice?.our_price,
-        price_slot: selectedPrice,
-        percentageDifference: percentageDifference.toFixed(2),
+        total: Number(ourPrice || 0).toFixed(2),
+        our_price: Number(ourPrice || 0),
+        price: selectedPrice?.our_price || 0,
+        price_slot: selectedPrice || {},
+        percentageDifference: Number(percentageDifference || 0).toFixed(2),
       };
+
 
       const updatedCart = [...cartData, newProduct];
       setCartData(updatedCart);
       localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-    } else {
-      console.log(
-        "Product already in cart with this price slot:",
-        existingItem
-      );
-    }
-
+    } 
     props.toaster({
       type: "success",
       message: "Item added to cart",
@@ -233,7 +224,6 @@ function ProductDetails(props) {
         setSelectedImage(res.data?.varients[0].image[0]);
         getproductByCategory(res.data.category?.slug, res.data._id);
         setProductReviews(res.data?.reviews);
-        console.log(res.data?.reviews);
         if (router.query.clientSecret) {
           setShowPayment(false);
           createProductRquest();
@@ -244,7 +234,6 @@ function ProductDetails(props) {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -262,12 +251,10 @@ function ProductDetails(props) {
         props.loader(false);
 
         const sameItem = res?.data?.filter((f) => f._id !== router?.query?.id);
-        console.log(sameItem);
         SetProductList(sameItem);
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -317,7 +304,6 @@ function ProductDetails(props) {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );

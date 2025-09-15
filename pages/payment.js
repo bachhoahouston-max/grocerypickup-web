@@ -184,7 +184,6 @@ function Payment(props) {
       cancel_url: `${window.location.origin}/cancel`,
     };
 
-    console.log(body);
     props.loader(true);
     try {
       props.loader(true);

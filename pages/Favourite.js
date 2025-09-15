@@ -24,12 +24,11 @@ function Favourite(props) {
     Api("get", "getFavourite", null, router, { id: user._id }).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
+    
         setFavouriteList(res.data);
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );

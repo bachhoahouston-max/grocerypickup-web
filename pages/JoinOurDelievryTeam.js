@@ -3,6 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Api } from '@/services/service';
 import { useRouter } from "next/router";
 import Head from "next/head";
+
+
+
 function JoinOurDelievryTeam(props) {
     const { t } = useTranslation()
     const [JoinOurTeam, setJoinOurTeam] = useState({
@@ -17,8 +20,7 @@ function JoinOurDelievryTeam(props) {
             (res) => {
                 props.loader(false);  // Hide the loader after fetching
 
-                console.log("API Response =>", res.data);
-
+           
                 if (res?.status) {
                     setJoinOurTeam({ JoinTeam: res?.data[0]?.JoinOurDeliveryTeam, id: res?.data[0]?._id });
                     setLoading(false);  // Successfully fetched data, update loading state
@@ -29,7 +31,7 @@ function JoinOurDelievryTeam(props) {
             },
             (err) => {
                 props.loader(false);  // Hide loader if there's an error
-                console.log("API Error =>", err);
+         
                 props.toaster({ type: "error", message: err?.data?.message });
                 props.toaster({ type: "error", message: err?.message });
                 setLoading(false);  // Stop loading in case of error

@@ -28,7 +28,6 @@ const SellProduct = ({ loader, toaster }) => {
         our_price: item?.price,
       };
 
-      console.log("Price Slot:", price_slot);
       if (existingItemIndex === -1) {
         draft.push({
           ...item,

@@ -29,19 +29,16 @@ const AboutUs = (props) => {
     props.loader(true);
     Api("get", "getTeamMembers", "", router).then(
       (res) => {
-        props.loader(false);
-        console.log("res================>", res);
+        props.loader(false);   
         if (res?.success) {
           setTeamMembers(res?.team || []);
         } else {
           props.loader(false);
-          console.log(res?.data?.message);
           props.toaster({ type: "error", message: res?.data?.message });
         }
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );

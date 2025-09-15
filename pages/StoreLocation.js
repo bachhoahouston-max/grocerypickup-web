@@ -16,8 +16,6 @@ function StoreLocation(props) {
       (res) => {
         props.loader(false); // Hide the loader after fetching
 
-        console.log("API Response =>", res.data);
-
         if (res?.status) {
           setStoreLocation(res?.data[0]?.StoreLocation);
           setLoading(false); // Successfully fetched data, update loading state
@@ -28,7 +26,6 @@ function StoreLocation(props) {
       },
       (err) => {
         props.loader(false); // Hide loader if there's an error
-        console.log("API Error =>", err);
         props.toaster({ type: "error", message: err?.data?.message });
         props.toaster({ type: "error", message: err?.message });
         setLoading(false); // Stop loading in case of error

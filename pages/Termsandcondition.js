@@ -15,8 +15,6 @@ function Termsandcondition(props) {
     Api("get", "/content", router).then(
       (res) => {
         props.loader(false);
-        console.log("API Response =>", res.data);
-
         if (res?.data?.length > 0 && res?.data[0]?.termsAndConditions) {
           setTermsAndConditions(res?.data[0]?.termsAndConditions);
           setLoading(false);
@@ -30,7 +28,6 @@ function Termsandcondition(props) {
       },
       (err) => {
         props.loader(false);
-        console.log("API Error =>", err);
         props.toaster({ type: "error", message: err?.data?.message });
         props.toaster({ type: "error", message: err?.message });
         setLoading(false);

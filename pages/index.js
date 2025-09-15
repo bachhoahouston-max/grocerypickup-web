@@ -83,9 +83,8 @@ export default function Home(props) {
       setFavorite(favs);
       localStorage.setItem("Favorite", JSON.stringify(favs));
     } catch (err) {
-      console.log(err);
-    } finally {
       props.loader(false);
+
     }
   };
 
@@ -123,7 +122,6 @@ export default function Home(props) {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -140,7 +138,6 @@ export default function Home(props) {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -186,7 +183,6 @@ export default function Home(props) {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -218,7 +214,6 @@ export default function Home(props) {
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );

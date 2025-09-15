@@ -64,7 +64,7 @@ const CheckoutForm = (props) => {
         return_url: `${process.env.NEXT_PUBLIC_STRIPE_API_PORT}/${props.url}?clientSecret=${props.clientSecret}&from=${router.query.from}`,
       },
     });
-    console.log(response);
+ 
 
     alert(message);
     if (error.type === "card_error" || error.type === "validation_error") {
@@ -75,7 +75,6 @@ const CheckoutForm = (props) => {
     setIsLoading(false);
   };
 
-  console.log(message);
   return (
     <div className={classes.body}>
       <form id="payment-form" className={classes.form}>

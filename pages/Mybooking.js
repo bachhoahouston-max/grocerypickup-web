@@ -43,7 +43,6 @@ function Mybooking(props) {
       SecretCode: secretCode,
     };
 
-    console.log(data);
     props.loader(true);
 
     Api("post", "updateProductRequest", data, router)
@@ -69,7 +68,7 @@ function Mybooking(props) {
       })
       .catch((err) => {
         props.loader(false);
-        console.log(err);
+      
         props.toaster({ type: "error", message: err?.message });
       });
   };
@@ -104,7 +103,6 @@ function Mybooking(props) {
           })
           .catch((err) => {
             props.loader(false);
-            console.log(err);
             props.toaster({
               type: "error",
               message: err?.message || "Something went wrong",
@@ -142,7 +140,7 @@ function Mybooking(props) {
           })
           .catch((err) => {
             props.loader(false);
-            console.log(err);
+        
             props.toaster({
               type: "error",
               message: err?.message || "Something went wrong",
@@ -160,7 +158,7 @@ function Mybooking(props) {
       SecretCode: secretCode1,
     };
 
-    console.log(data);
+
     props.loader(true);
 
     Api("post", "getSecrectCode", data, router)
@@ -184,7 +182,7 @@ function Mybooking(props) {
       })
       .catch((err) => {
         props.loader(false);
-        console.log(err);
+      
         props.toaster({ type: "error", message: err?.message });
       });
   };
@@ -203,12 +201,10 @@ function Mybooking(props) {
     Api("get", "getProductRequestbyUser ", "", router).then(
       (res) => {
         props.loader(false);
-        console.log("res================>", res);
         setBookingsData(res.data);
       },
       (err) => {
         props.loader(false);
-        console.log(err);
         props.toaster({ type: "error", message: err?.message });
       }
     );
@@ -242,7 +238,6 @@ function Mybooking(props) {
     ApiGetPdf("createinvoice", data, router)
       .then(() => {
         props.loader(false);
-        console.log("PDF downloaded/opened successfully");
       })
       .catch((err) => {
         props.loader(false); // error case me bhi loader off hoga
