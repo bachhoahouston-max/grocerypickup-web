@@ -188,7 +188,7 @@ const SignUp = (props) => {
             </div>
           </div>
           <form
-            className="md:h-[756px] h-[690px] border-[2px] rounded-xl border-black px-2.5 md:px-12 flex flex-col justify-center items-center md:m-0 m-4 py-4 md:py-0 gap-5"
+            className="md:h-[786px] h-[690px] border-[2px] rounded-xl border-black px-2.5 md:px-12 flex flex-col justify-center items-center md:m-0 m-4 py-4 md:py-0 gap-5"
             onSubmit={submitSignUp}
           >
             <h3 className="text-black text-[28px] md:text-[40px] font-bold text-center md:mb-4 mb-0">
@@ -311,12 +311,12 @@ const SignUp = (props) => {
             </div>
 
             <div className="mt-2 w-full">
-              <p className="text-[#A7A9AA] text-center w-[50%] py-1.5 mx-auto text-[14px]">By Clicking Sign up you agree with our <span className="cursor-pointer font-bold text-gray-800"
+              <p className="text-[#A7A9AA] text-center w-[52%] py-1.5 mx-auto text-[14px]">{t("By Clicking Sign up you agree with our")} <span className="cursor-pointer font-bold text-gray-800"
                 onClick={() => router.push("/Termsandcondition")}
-              >Term and Condition</span> and <span
+              >{t("Terms and Conditions")}</span> {t("and")} <span
                 className="cursor-pointer font-bold text-gray-800"
                 onClick={() => router.push("/PrivacyPolicy")}
-              > Privacy Policy</span></p>
+              > {t("Privacy Policy")}</span></p>
               <button
                 type="submit"
                 className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[16px] md:text-[20px] bg-custom-green focus:outline-none"
