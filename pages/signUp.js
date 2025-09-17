@@ -311,6 +311,12 @@ const SignUp = (props) => {
             </div>
 
             <div className="mt-2 w-full">
+              <p className="text-[#A7A9AA] text-center w-[50%] py-1.5 mx-auto text-[14px]">By Clicking Sign up you agree with our <span className="cursor-pointer font-bold text-gray-800"
+                onClick={() => router.push("/Termsandcondition")}
+              >Term and Condition</span> and <span
+                className="cursor-pointer font-bold text-gray-800"
+                onClick={() => router.push("/PrivacyPolicy")}
+              > Privacy Policy</span></p>
               <button
                 type="submit"
                 className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[16px] md:text-[20px] bg-custom-green focus:outline-none"
@@ -319,7 +325,7 @@ const SignUp = (props) => {
               </button>
             </div>
 
-            <p className="text-[14px] text-[#A7A9AA] mt-4 text-center mb-6">
+            <p className="text-[14px] text-[#A7A9AA]  text-center mb-6">
               {t("Already have an account?")}
               <span
                 className="text-custom-green text-[14px] font-semibold hover:underline ml-1 whitespace-nowrap cursor-pointer"

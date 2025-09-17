@@ -3,14 +3,13 @@ import { CountryDropdown } from 'react-country-region-selector';
 import { Api } from '@/services/service';
 import AddressInput from '@/components/addressInput';
 import { useTranslation } from 'react-i18next';
-
+import { FaUserAlt } from "react-icons/fa";
 const EditProfile = ({ loader, toaster }) => {
    const { t } = useTranslation()
     const [profileData, setProfileData] = useState({
         username: '',
         lastname: "",
         email: '',
-        gender: '',
         country: '',
         number: '',
         address: '',
@@ -25,7 +24,6 @@ const EditProfile = ({ loader, toaster }) => {
         username: '',
         lastname: '',
         email: '',
-        gender: '',
         country: '',
         number: '',
         address: '',
@@ -59,9 +57,6 @@ const EditProfile = ({ loader, toaster }) => {
             case 'email':
                 if (!value.trim()) return t('Email is required');
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('Invalid email format');
-                return '';
-            case 'gender':
-                if (!value) return t('Gender is required');
                 return '';
             case 'country':
                 if (!value) return t('Country is required');
@@ -154,7 +149,6 @@ const EditProfile = ({ loader, toaster }) => {
                         username: res.data.username || '',
                         email: res.data.email || '',
                         lastname: res.data.lastname || '',
-                        gender: res.data.gender || '',
                         country: res.data.country || '',
                         number: res.data.number || '',
                         address: res.data.address || ''
@@ -308,12 +302,8 @@ const EditProfile = ({ loader, toaster }) => {
             <div className="bg-white rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden">
                 {/* Profile Header */}
                 <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
-                    <div className="w-16 h-16 relative rounded-full overflow-hidden mb-3 sm:mb-0 sm:mr-4">
-                        <img
-                            alt="Profile picture"
-                            src={user?.profileImage || "/avtar.jpg"}
-                            className="w-full h-full object-cover"
-                        />
+                    <div className="md:mr-8 md:mx-2 mx-auto mb-3 sm:mb-0 sm:mr-4">
+                        <FaUserAlt className='text-black' size={55}/>
                     </div>
                     <div className="text-center sm:text-left">
                         <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User Name"}</h2>
@@ -396,30 +386,7 @@ const EditProfile = ({ loader, toaster }) => {
                             )}
                         </div>
 
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">{t("Gender")}</label>
-                            {isEditing ? (
-                                <>
-                                    <select
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.gender ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        name="gender"
-                                        value={profileData.gender}
-                                        onChange={(e) => handleInputChange('gender', e.target.value)}
-                                        onBlur={(e) => handleBlur('gender', e.target.value)}
-                                    >
-                                        <option value="">{t("Select Gender")}</option>
-                                        <option value="Male">{t("Male")}</option>
-                                        <option value="Female">{t("Female")}</option>
-                                    </select>
-                                    {errors.gender && <p className="text-red-500 text-sm mt-1">{errors.gender}</p>}
-                                </>
-                            ) : (
-                                <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.gender || t('Not provided')}
-                                </div>
-                            )}
-                        </div>
-
+                       
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">{t("Country")}</label>
                             {isEditing ? (

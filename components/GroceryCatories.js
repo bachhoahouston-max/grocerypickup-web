@@ -1,5 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import { FaStar } from "react-icons/fa6";
+import React, { useContext, useEffect} from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { useRouter } from "next/router";
 import {
@@ -9,7 +8,6 @@ import {
   favoriteProductContext,
   languageContext
 } from "@/pages/_app";
-import { produce } from "immer";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
 import { Api } from "@/services/service";
@@ -17,6 +15,7 @@ import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import constant from "@/services/constant";
+import Image from "next/image";
 
 const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const router = useRouter();

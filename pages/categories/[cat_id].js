@@ -62,12 +62,24 @@ function Categories(props) {
   const [open, setOpen] = useState(false);
   const topRef = useRef(null);
 
-  const [paginationData, setPaginationData] = useState({
-    totalItems: 0,
-    totalPages: 0,
-    currentPage: 1,
-    itemsPerPage: 12,
-  });
+  // Infinite scroll states
+  const [isFetching, setIsFetching] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [totalPages, setTotalPages] = useState(0);
+  const limit = 24;
+
+  // Scroll handler for infinite scroll
+  function handleScroll() {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 300
+    ) {
+      if (!isFetching && hasMore) {
+        setIsFetching(true);
+      }
+    }
+  }
 
   useEffect(() => {
     const { cat_id, sort_by } = router?.query || {};
@@ -80,15 +92,48 @@ function Categories(props) {
   }, []);
 
   useEffect(() => {
-    // Run only if both are present (optional sort check)
-    if (selectedCategories /* && selectedSortBy */) {
-      getproductByCategory(selectedCategories);
+    // Reset when category or sort changes
+    if (selectedCategories) {
+      resetAndFetchProducts();
     }
-  }, [selectedCategories, selectedSortBy]); // Include both
+  }, [selectedCategories, selectedSortBy]);
 
-  const getproductByCategory = async (cat, page = 1, limit = 24) => {
-    props.loader(true);
-    let url = `getProductBycategoryId?page=${page}&limit=${limit}`;
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isFetching, hasMore]);
+
+ 
+  useEffect(() => {
+    if (!isFetching || !hasMore) return;
+    loadMoreProducts();
+  }, [isFetching]);
+
+  const resetAndFetchProducts = () => {
+    SetProductList([]);
+    setCurrentPage(1);
+    setHasMore(true);
+    setTotalPages(0);
+    getproductByCategory(selectedCategories, 1, limit, true);
+  };
+
+  const loadMoreProducts = () => {
+    setTimeout(() => {
+      const nextPage = currentPage + 1;
+      if (nextPage <= totalPages) {
+        getproductByCategory(selectedCategories, nextPage, limit, false);
+        setCurrentPage(nextPage);
+      } else {
+        setHasMore(false);
+        setIsFetching(false);
+      }
+    }, 800);
+  };
+
+  const getproductByCategory = async (cat, page = 1, pageLimit = 24, reset = false) => {
+    if (page === 1) props.loader(true);
+    
+    let url = `getProductBycategoryId?page=${page}&limit=${pageLimit}`;
 
     if (cat) {
       url += `&category=${cat}`;
@@ -100,27 +145,28 @@ function Categories(props) {
 
     Api("get", url, "", router).then(
       (res) => {
-        props.loader(false);
-        SetProductList(res.data);
-        setPaginationData(res.pagination);
+        if (page === 1) props.loader(false);
+        
+        if (reset || page === 1) {
+          SetProductList(res.data);
+        } else {
+          SetProductList(prevProducts => [...prevProducts, ...res.data]);
+        }
+        
+        setTotalPages(res.pagination?.totalPages || 0);
+
+        if (page >= (res.pagination?.totalPages || 0) || res.data.length === 0) {
+          setHasMore(false);
+        }
+        
+        setIsFetching(false);
       },
       (err) => {
-        props.loader(false);
+        if (page === 1) props.loader(false);
+        setIsFetching(false);
         props.toaster({ type: "error", message: err?.message });
       }
     );
-  };
-
-  const handlePageChange = (newPage) => {
-    if (newPage < 1 || newPage > paginationData.totalPages) return;
-    getproductByCategory(
-      selectedCategories,
-      newPage,
-      paginationData.itemsPerPage
-    );
-    if (topRef.current) {
-      topRef.current.scrollIntoView({ behavior: "smooth" });
-    }
   };
 
   const getCategory = async (cat) => {
@@ -145,7 +191,6 @@ function Categories(props) {
     (cat) => cat.slug === selectedCategories
   );
 
-
   return (
     <>
       <Head>
@@ -156,15 +201,10 @@ function Categories(props) {
           href={`https://www.bachhoahouston.com/categories/${categoryData?.slug}`}
         />
       </Head>
-      <div className="bg-white w-full min-h-screen"
-      ref={topRef}
-      >
-        <section className="bg-white w-full  relative flex flex-col justify-center items-center">
-          <div className="lg:max-w-9xl md:max-w-9xl mx-auto w-full md:px-8 px-5 md:pt-5 pt-8 md:pb-10 pb-0"
-            
-          >
+      <div className="bg-white w-full min-h-screen" ref={topRef}>
+        <section className="bg-white w-full relative flex flex-col justify-center items-center">
+          <div className="lg:max-w-9xl md:max-w-9xl mx-auto w-full md:px-8 px-5 md:pt-5 pt-8 md:pb-10 pb-0">
             <div className="flex justify-center flex-col items-center md:mt-10 mt-0">
-              {" "}
               <h1 className="text-center text-[20px] md:text-2xl font-bold mb-2 mt-2 text-black">
                 {t("Popular Products")}
               </h1>
@@ -177,9 +217,10 @@ function Categories(props) {
             </div>
 
             <div className="grid md:grid-cols-6 mx-auto grid-cols-1 w-full md:gap-3">
-              <div className="bg-custom-green col-span-1.5 md:flex hidden flex-col w-full px-5 py-5">
-                <div className="border-b border-custom-gray">
-                  <div className="flex justify-between items-center w-full  pb-5">
+              <div className=" col-span-1.5 md:flex hidden flex-col w-full ">
+                <div className="bg-custom-green px-5 py-5 rounded">
+                <div className=" border-b border-custom-gray">
+                  <div className="flex justify-between items-center w-full pb-5">
                     <p className="text-white font-semibold text-lg">
                       {t("Sort By")}
                     </p>
@@ -226,7 +267,7 @@ function Categories(props) {
                 </div>
 
                 <div className="pt-5">
-                  <div className="flex justify-between items-center w-full  pb-5">
+                  <div className="flex justify-between items-center w-full pb-5">
                     <p className="text-white font-semibold text-lg">
                       {t("Categories")}
                     </p>
@@ -267,6 +308,7 @@ function Categories(props) {
                     </FormGroup>
                   )}
                 </div>
+                </div>
               </div>
 
               <div className="md:hidden col-span-1 flex -pt-8">
@@ -278,10 +320,11 @@ function Categories(props) {
                   />
                 </button>
               </div>
+
               <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
                 <div className="bg-custom-green w-[250px] h-full px-5 py-5 md:hidden block md:col-span-1">
                   <div className="border-b border-custom-gray">
-                    <div className="flex justify-between items-center w-full  pb-5">
+                    <div className="flex justify-between items-center w-full pb-5">
                       <p className="text-black font-semibold text-lg">
                         {t("Sort By")}
                       </p>
@@ -330,7 +373,7 @@ function Categories(props) {
                   </div>
 
                   <div className="pt-5">
-                    <div className="flex justify-between items-center w-full  pb-5">
+                    <div className="flex justify-between items-center w-full pb-5">
                       <p className="text-white font-semibold text-lg">
                         {t("Categories")}
                       </p>
@@ -344,7 +387,7 @@ function Categories(props) {
                       )}
                       {openCategory && (
                         <FaCircleChevronUp
-                          className="text-lg text-white  cursor-pointer"
+                          className="text-lg text-white cursor-pointer"
                           onClick={() => setOpenCategory(false)}
                         />
                       )}
@@ -374,11 +417,12 @@ function Categories(props) {
                   </div>
                 </div>
               </Drawer>
-              <div className="col-span-5  md:mt-0 mt-8 ">
-                <div className="grid lg:grid-cols-5 xl:grid-cols-6 md:grid-cols-4 grid-cols-2  mb-6 space-x-2  justify-between">
+
+              <div className="col-span-5 md:mt-0 mt-8">
+                <div className="grid lg:grid-cols-5 xl:grid-cols-6 md:grid-cols-4 grid-cols-2 mb-6 space-x-2 justify-between">
                   {productList.length > 0 ? (
                     productList.map((item, i) => (
-                      <div key={i} className="p-1 w-full md:mb-5 mb-2">
+                      <div key={`${item?.id || item?.slug}-${i}`} className="p-1 w-full md:mb-5 mb-2">
                         <GroceryCatories
                           loader={props.loader}
                           toaster={props.toaster}
@@ -389,92 +433,42 @@ function Categories(props) {
                       </div>
                     ))
                   ) : (
-                    <div className="flex justify-center items-center h-[500px] md:h-[600px] col-span-6 ">
+                    <div className="flex justify-center items-center h-[500px] md:h-[600px] col-span-6">
                       <p className="text-black text-center font-semibold text-xl">
                         {t("No products available in this category")}.
                       </p>
                     </div>
                   )}
                 </div>
-              </div>
 
-              <div className="col-span-6 w-full flex justify-center mt-8 mb-8">
-                {productList?.length > 0 && paginationData?.totalPages > 1 && (
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() =>
-                        handlePageChange(paginationData.currentPage - 1)
-                      }
-                      disabled={paginationData.currentPage === 1}
-                      className={`px-3.5 py-3 rounded-md ${paginationData.currentPage === 1
-                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                        : "bg-custom-gold text-white"
-                        }`}
-                    >
-                      <FaChevronLeft />
-                    </button>
+                {/* Infinite Scroll Loading Indicator */}
+                {productList.length > 0 && (
+                  <div className="flex justify-center items-center mt-8 pb-10">
+                    {isFetching && hasMore && (
+                      <div className="flex items-center gap-3">
+                        <span
+                          className="w-3 h-3 rounded-full bg-green-500 animate-pulse"
+                          style={{ animationDuration: "1s", animationDelay: "0s" }}
+                        />
+                        <span
+                          className="w-3 h-3 rounded-full bg-green-500 animate-pulse"
+                          style={{ animationDuration: "1s", animationDelay: "150ms" }}
+                        />
+                        <span
+                          className="w-3 h-3 rounded-full bg-green-500 animate-pulse"
+                          style={{ animationDuration: "1s", animationDelay: "300ms" }}
+                        />
+                        <span className="ml-3 text-sm text-gray-500">
+                          {t("Loading More Products...")}
+                        </span>
+                      </div>
+                    )}
 
-                    {/* Page numbers */}
-                    {Array.from(
-                      { length: paginationData.totalPages },
-                      (_, i) => i + 1
-                    )
-                      .filter((page) => {
-                        return (
-                          page <= 2 || // first two pages
-                          page > paginationData.totalPages - 2 || // last two pages
-                          Math.abs(page - paginationData.currentPage) <= 1 // current +/- 1
-                        );
-                      })
-                      .reduce((acc, page, index, arr) => {
-                        // Insert ellipsis if gap between pages
-                        if (index > 0 && page - arr[index - 1] > 1) {
-                          acc.push("ellipsis");
-                        }
-                        acc.push(page);
-                        return acc;
-                      }, [])
-                      .map((item, index) => {
-                        if (item === "ellipsis") {
-                          return (
-                            <span
-                              key={`ellipsis-${index}`}
-                              className="px-2 text-gray-500"
-                            >
-                              ...
-                            </span>
-                          );
-                        }
-
-                        return (
-                          <button
-                            key={item}
-                            onClick={() => handlePageChange(item)}
-                            className={`w-10 h-10 flex items-center justify-center rounded-md ${item === paginationData.currentPage
-                              ? "bg-custom-gold text-white"
-                              : "text-black bg-gray-200"
-                              }`}
-                          >
-                            {item}
-                          </button>
-                        );
-                      })}
-
-                    {/* Next button */}
-                    <button
-                      onClick={() =>
-                        handlePageChange(paginationData.currentPage + 1)
-                      }
-                      disabled={
-                        paginationData.currentPage === paginationData.totalPages
-                      }
-                      className={`px-3.5 py-3 rounded-md ${paginationData.currentPage === paginationData.totalPages
-                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                        : "bg-custom-gold text-white"
-                        }`}
-                    >
-                      <FaChevronRight />
-                    </button>
+                    {!hasMore && productList.length > 0 && (
+                      <div className="text-sm text-gray-500 py-2 text-center">
+                        {t("No more products")}.
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -483,7 +477,6 @@ function Categories(props) {
         </section>
       </div>
     </>
-
   );
 }
 

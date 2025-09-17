@@ -6,7 +6,6 @@ import { CiHeart } from "react-icons/ci";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
 import { Search, X, Check } from "lucide-react";
-
 import { Drawer } from "@mui/material";
 import { IoMdClose, IoIosArrowBack } from "react-icons/io";
 import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
@@ -29,6 +28,7 @@ import { RxCross2 } from "react-icons/rx";
 import AddressInput from "./addressInput";
 import { useTranslation } from "react-i18next";
 import { languageContext } from "@/pages/_app";
+import Image from "next/image";
 
 const Navbar = (props) => {
   const router = useRouter();
@@ -748,7 +748,7 @@ const Navbar = (props) => {
       <header className="flex max-w-8xl shadow-lg justify-between items-center p-4 bg-white ">
 
         <div className="md:ms-32 lg:ms-10 xl:ms-28 ms-0 flex items-center">
-          <img
+          <Image
             src="/Logo2.png"
             alt="Grocery logo with palm tree and text 'Tropicana' in green and 'Freshness' in blue"
             className="object-contain cursor-pointer"
@@ -1349,7 +1349,7 @@ const Navbar = (props) => {
               </>
             ) : (
               <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
-                <img src="/cart2.jpg" className="w-20 h-20" />
+                <Image src="/cart2.jpg" width={100} height={100}  />
                 <p className="text-black  text-[18px]">
                   {t("Your cart is empty")}
                 </p>

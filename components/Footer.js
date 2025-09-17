@@ -1,13 +1,11 @@
 import React from "react";
-import { FaXTwitter } from "react-icons/fa6";
 import { FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
-import { FaLinkedinIn } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa";
 import { IoCall } from "react-icons/io5";
 import { useRouter } from "next/router";
 import { MdEmail } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import Image from "next/image";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -18,12 +16,12 @@ const Footer = () => {
         <div className="w-full flex flex-col md:flex-row justify-between ">
        
           <div className="md:w-1/3 w-full mb-6 md:mb-0">
-            <img
+            <Image
               alt="Tropicano logo"
               className="mb-4 cursor-pointer"
               height="50"
               src="/Logo2.png"
-              width="150"
+              width="180"
               onClick={() => router.push("/")}
             />
             <p className="text-[16px] md:text-[19px] text-white">
