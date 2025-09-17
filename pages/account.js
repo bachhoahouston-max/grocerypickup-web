@@ -9,13 +9,41 @@ import { UserRound } from "lucide-react";
 function Account(props) {
   const router = useRouter();
   const [user, setUser] = useContext(userContext);
- 
+
+  const logout = () => {
+    Swal.fire({
+      text: "Are you sure you want to logout?",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+      confirmButtonColor: "#F38529",
+      cancelButtonColor: "#F38529",
+      customClass: {
+        confirmButton: "px-12 rounded-xl",
+        cancelButton:
+          "px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none",
+        text: "text-[20px] text-black",
+        actions: "swal2-actions-no-hover",
+        popup: "rounded-[15px] shadow-custom-green",
+      },
+      buttonsStyling: true,
+      width: "320px",
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        localStorage.removeItem("userDetail");
+        localStorage.removeItem("token");
+        setUser(null);   // ✅ Reset context state also
+        router.push("/");
+      }
+    });
+  };
+
 
   return (
     <div className={`w-full px-2 md:mt-8 mt-20 pb-4 `}>
       <div className="flex justify-center mx-auto  max-w-7xl  items-center gap-3">
         <div>
-          {!user?.username ? (
+          {!user?.token ? (
             <div className="flex flex-col justify-center items-center w-full min-h-[550px] gap-6">
               {/* Icon with Message */}
               <div className="flex flex-col items-center gap-6 text-gray-700 text-[18px] font-medium">
@@ -39,31 +67,7 @@ function Account(props) {
               <div className="w-[40px] h-[40px] bg-custom-green rounded-full flex justify-center items-center">
                 <div
                   onClick={() => {
-                    Swal.fire({
-                      text: "Are you sure you want to logout?",
-                      showCancelButton: true,
-                      confirmButtonText: "Yes",
-                      cancelButtonText: "No",
-                      confirmButtonColor: "#F38529",
-                      cancelButtonColor: "#F38529",
-                      customClass: {
-                        confirmButton: "px-12 rounded-xl",
-                        cancelButton:
-                          "px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none",
-                        text: "text-[20px] text-black",
-                        actions: "swal2-actions-no-hover",
-                        popup: "rounded-[15px] shadow-custom-green",
-                      },
-                      buttonsStyling: true,
-
-                      width: "320px",
-                    }).then(function (result) {
-                      if (result.isConfirmed) {
-                        localStorage.removeItem("userDetail");
-                        localStorage.removeItem("token");
-                        router.push("/signIn");
-                      }
-                    });
+                    logout()
                   }}
                   className="w-[40px] h-[40px] bg-custom-green rounded-full flex justify-center items-center text-white font-semibold"
                 >
@@ -73,7 +77,7 @@ function Account(props) {
             </div>
           )}
         </div>
-        {user?.username && (
+        {user?.token && (
           <div className="bg-custom-green h-[40px] w-[40px] rounded-full flex justify-center items-center group relative">
             <p className="font-bold text-white text-base text-center capitalize">
               {user?.username?.charAt(0).toUpperCase()}
@@ -81,7 +85,7 @@ function Account(props) {
           </div>
         )}
       </div>
-      {user?.username && (
+      {user?.token && (
         <div>
           <EditProfile loader={props?.loader} toaster={props?.toaster} />
         </div>

@@ -149,7 +149,7 @@ const SignIn = (props) => {
                 <div className="absolute right-4 cursor-pointer">
                   {!eyeIcon && (
                     <IoEyeOffOutline
-                      className="w-[20px] h-[20px] text-custom-gray"
+                      className="w-[20px] h-[20px] text-gray-400"
                       onClick={() => {
                         setEyeIcon(true);
                       }}
@@ -157,7 +157,7 @@ const SignIn = (props) => {
                   )}
                   {eyeIcon && (
                     <IoEyeOutline
-                      className="w-[20px] h-[20px] text-custom-gray"
+                      className="w-[20px] h-[20px] text-gray-400"
                       onClick={() => {
                         setEyeIcon(false);
                       }}

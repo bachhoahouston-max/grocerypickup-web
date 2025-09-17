@@ -69,17 +69,20 @@ function Categories(props) {
   const [totalPages, setTotalPages] = useState(0);
   const limit = 24;
 
-  // Scroll handler for infinite scroll
   function handleScroll() {
-    if (
-      window.innerHeight + window.scrollY >=
-      document.documentElement.scrollHeight - 300
-    ) {
-      if (!isFetching && hasMore) {
-        setIsFetching(true);
-      }
+  let threshold = window.innerWidth < 768 ? 1000 : 300; 
+ 
+
+  if (
+    window.innerHeight + window.scrollY >=
+    document.documentElement.scrollHeight - threshold
+  ) {
+    if (!isFetching && hasMore) {
+      setIsFetching(true);
     }
   }
+}
+
 
   useEffect(() => {
     const { cat_id, sort_by } = router?.query || {};

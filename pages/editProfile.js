@@ -5,7 +5,7 @@ import AddressInput from '@/components/addressInput';
 import { useTranslation } from 'react-i18next';
 import { FaUserAlt } from "react-icons/fa";
 const EditProfile = ({ loader, toaster }) => {
-   const { t } = useTranslation()
+    const { t } = useTranslation()
     const [profileData, setProfileData] = useState({
         username: '',
         lastname: "",
@@ -36,10 +36,13 @@ const EditProfile = ({ loader, toaster }) => {
 
     useEffect(() => {
         const userDetails = localStorage.getItem('userDetail');
-        if (userDetails) {
+        const token = localStorage.getItem('token');
+
+        if (userDetails && token) {
             setUser(JSON.parse(userDetails));
             getProfileData();
         }
+        
     }, []);
 
     const validateField = (name, value) => {
@@ -91,7 +94,7 @@ const EditProfile = ({ loader, toaster }) => {
         if ((name === 'username' || name === 'lastname') && /[0-9]/.test(value)) {
             return;
         }
-        
+
         // Prevent non-numeric characters in phone number
         if (name === 'number' && value && !/^\d*$/.test(value)) {
             return;
@@ -132,13 +135,12 @@ const EditProfile = ({ loader, toaster }) => {
 
     const getProfileData = () => {
         loader(true);
-        const token = localStorage.getItem('token');
 
-        if (!token) {
-            toaster({ type: "error", message: t("Authentication required") });
-            loader(false);
-            return;
-        }
+        // if (!token) {
+        //     toaster({ type: "error", message: ("Authentication required") });
+        //     loader(false);
+        //     return;
+        // }
 
         Api("get", "getProfile", null)
             .then(res => {
@@ -154,7 +156,7 @@ const EditProfile = ({ loader, toaster }) => {
                         address: res.data.address || ''
                     }));
                 } else {
-                    toaster({ type: "error", message: res?.data?.message  });
+                    toaster({ type: "error", message: res?.data?.message });
                 }
             })
             .catch(err => {
@@ -291,7 +293,7 @@ const EditProfile = ({ loader, toaster }) => {
             {/* Header */}
             <div className="flex flex-col justify-center items-center mb-8">
                 <h1 className="md:mt-0 mt-4 text-center text-3xl md:text-4xl font-semibold text-black">
-                   {t("My")}  <span className="text-custom-green">{t("Profile")}</span>
+                    {t("My")}  <span className="text-custom-green">{t("Profile")}</span>
                 </h1>
                 <p className="text-center text-base mt-2 max-w-xl text-black">
                     {t("Manage your account details, addresses all in one place")}.
@@ -303,7 +305,7 @@ const EditProfile = ({ loader, toaster }) => {
                 {/* Profile Header */}
                 <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
                     <div className="md:mr-8 md:mx-2 mx-auto mb-3 sm:mb-0 sm:mr-4">
-                        <FaUserAlt className='text-black' size={55}/>
+                        <FaUserAlt className='text-black' size={55} />
                     </div>
                     <div className="text-center sm:text-left">
                         <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User Name"}</h2>
@@ -386,7 +388,7 @@ const EditProfile = ({ loader, toaster }) => {
                             )}
                         </div>
 
-                       
+
                         <div className="mb-4">
                             <label className="block text-gray-700 mb-1">{t("Country")}</label>
                             {isEditing ? (
