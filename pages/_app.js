@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { appWithI18Next } from "ni18n";
 import { ni18nConfig } from "../ni18n.config";
 import { Toaster as SonnerToaster, toast } from "sonner";
-import Script from "next/script"; // <-- GA ke liye
+import Script from "next/script";
 
 export const userContext = createContext();
 export const openCartContext = createContext();
@@ -23,51 +23,42 @@ function App({ Component, pageProps }) {
   const [openCart, setOpenCart] = useState(false);
   const [cartData, setCartData] = useState([]);
   const [Favorite, setFavorite] = useState([]);
-  const [globallang, setgloballang] = useState("es");
-
-  const { i18n } = useTranslation();
-  const { t } = useTranslation();
-
-  useEffect(() => {
-    if (router.route === "/") {
-      router.replace("/");
-    }
-    getUserdetail();
-  }, []);
-
-  const getUserdetail = () => {
-    const user = localStorage.getItem("userDetail");
-    if (user) {
-      setUser(JSON.parse(user));
-    }
-
-    const cart = localStorage.getItem("addCartDetail");
-    if (cart) {
-      setCartData(JSON.parse(cart));
-    }
-
-    const favorites = localStorage.getItem("favoriteProducts");
-    if (favorites) {
-      setFavorite(JSON.parse(favorites));
-    }
-  };
-
   const [lang, setLang] = useState("en");
 
-  useEffect(() => {
+  // ✅ useTranslation ek hi baar call karo
+  const { t, i18n } = useTranslation();
+
+  // ✅ getUserdetail with window guard
+  const getUserdetail = () => {
+    if (typeof window === "undefined") return;
+
+    const user = localStorage.getItem("userDetail");
+    if (user) setUser(JSON.parse(user));
+
+    const cart = localStorage.getItem("addCartDetail");
+    if (cart) setCartData(JSON.parse(cart));
+
+    const favorites = localStorage.getItem("favoriteProducts");
+    if (favorites) setFavorite(JSON.parse(favorites));
+
     const storedLang = localStorage.getItem("LANGUAGE");
-    if (storedLang) {
-      setLang(storedLang);
-    }
+    if (storedLang) setLang(storedLang);
+  };
+
+  useEffect(() => {
+    getUserdetail();
   }, []);
 
   const changeLang = (language) => {
     setLang(language);
-    localStorage.setItem("LANGUAGE", language);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("LANGUAGE", language);
+    }
   };
 
   return (
     <div>
+      {/* Google Analytics */}
       <Script
         strategy="afterInteractive"
         src="https://www.googletagmanager.com/gtag/js?id=G-XJ0V7P7ZRG"

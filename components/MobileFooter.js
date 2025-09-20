@@ -14,35 +14,35 @@ function MobileFooter() {
     const [openCart, setOpenCart] = useContext(openCartContext);
     const [cartData, setCartData] = useContext(cartContext)
     return (
-        <div className='bg-white w-full h-14 grid grid-cols-4'>
+        <div className='bg-custom-green w-full h-14 grid grid-cols-4'>
             <div className='flex flex-col justify-center items-center'>
-                <IoHomeOutline className='w-[20px] h-[20px] text-black' onClick={() => { router.push('/') }} />
-                <p className='text-black font-normal text-xs'>{t("Home")}</p>
+                <IoHomeOutline className='w-[20px] h-[20px] text-white' onClick={() => { router.push('/') }} />
+                <p className='text-white font-normal text-xs'>{t("Home")}</p>
             </div>
             <div className='flex flex-col justify-center items-center'>
-                <TbCategory className='w-[20px] h-[20px] text-black' onClick={() => { router.push('/AllCategory') }} />
-                <p className='text-black font-normal text-xs'>{t("Categories")}</p>
+                <TbCategory className='w-[20px] h-[20px] text-white' onClick={() => { router.push('/AllCategory') }} />
+                <p className='text-white font-normal text-xs'>{t("Categories")}</p>
                 {/* onClick={() => { router.push('/categoriesMobileView') }} */}
             </div>
             <div className='flex flex-col justify-center items-center relative'>
                 <FiShoppingCart
-                    className='w-[20px] h-[20px] text-black'
+                    className='w-[20px] h-[20px] text-white'
                     onClick={() => { setOpenCart(true); }}
                 />
 
                 {cartData.length > 0 && (
-                    <div className="absolute bg-custom-green text-white rounded-full w-5 h-5 flex items-center justify-center text-[9px] -top-1 right-12">
+                    <div className="absolute bg-white text-custom-green rounded-full w-5 h-5 flex items-center justify-center text-[9px] -top-1 right-8">
                         {cartData.length}
                     </div>
                 )}
 
-                <p className='text-black font-normal text-xs'>{t("Cart")}</p>
+                <p className='text-white font-normal text-xs'>{t("Cart")}</p>
             </div>
 
 
             <div className='flex flex-col justify-center items-center'>
-                <CgProfile className='w-[20px] h-[20px] text-black' onClick={() => { router.push('/account') }} />
-                <p className='text-black font-normal text-xs'>{t("Account")}</p>
+                <CgProfile className='w-[20px] h-[20px] text-white' onClick={() => { router.push('/account') }} />
+                <p className='text-white font-normal text-xs'>{t("Account")}</p>
             </div>
         </div>
     )

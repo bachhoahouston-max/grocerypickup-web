@@ -24,8 +24,6 @@ function Api(method, url, data, router, params) {
         if (err.response) {
           const status = err.response.status;
           const message = err.response?.data?.message || "";
-
-          // ✅ Handle JWT expiration or unauthorized access
           if (
             (status === 401 || status === 403) &&
             typeof window !== "undefined"
