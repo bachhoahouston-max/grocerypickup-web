@@ -96,14 +96,15 @@ const SignIn = (props) => {
             </p>
           </div>
           <div className="grid lg:grid-cols-2 md:grid-cols-2 gap-4 py-8">
-            <div className="hidden w-[555px] h-[766px] md:flex justify-center items-center">
+            <div className="hidden md:flex w-[555px] h-[766px] justify-center items-center relative">
               <Image
-                fill
                 src="/image2.jpeg"
                 alt="Sign In"
-                className="w-full h-full"
+                fill
+                className="object-cover" // ensures image covers the parent
               />
             </div>
+
             <form
               onSubmit={submit}
               className="border-[2px] mx-4 rounded-xl border-black md:px-12 px-3 flex flex-col justify-center items-center md:mb-8 mb-20"

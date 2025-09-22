@@ -180,15 +180,16 @@ const SignUp = (props) => {
         </div>
         <div className="max-w-7xl w-full mt-0 md:mt-6 grid lg:grid-cols-2 md:grid-cols-2 gap-4 md:py-8">
           <div>
-            <div className="hidden w-[590px] h-[766px] md:flex justify-center items-center">
+            <div className="hidden md:flex w-[590px] h-[766px] justify-center items-center relative">
               <Image
                 src="/image2.jpeg"
                 alt="Sign Up"
                 fill
-                className="w-full h-full"
+                className="object-cover"
               />
             </div>
           </div>
+
           <form
             className="md:h-[786px] h-[690px] border-[2px] rounded-xl border-black px-2.5 md:px-12 flex flex-col justify-center items-center md:m-0 m-4 py-4 md:py-0 gap-5"
             onSubmit={submitSignUp}
