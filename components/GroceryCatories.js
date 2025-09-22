@@ -121,14 +121,14 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       className="bg-white w-full max-w-[350px] h-full rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative max-h-[380px]"
     >
 
-      <div className="relative md:w-full w-56 md:h-44 h-40">
+      <div className="relative md:w-full w-40 md:h-44 h-40">
         <Image
           src={item.varients[0].image[0]}
           alt={item?.imageAltName || "Product Image"}
           className="object-contain rounded-xl cursor-pointer"
           onClick={() => router.push(url)}
           fill
-          sizes="200px"
+          // sizes="100px"
           priority
         />
         <div

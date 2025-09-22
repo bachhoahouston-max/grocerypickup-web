@@ -441,7 +441,7 @@ function ProductDetails(props) {
                                 height={400}
                                 className="h-[500px] w-full object-contain cursor-move"
                                 src={item}
-                                alt={productsId?.imageAltName}
+                                alt={productsId?.imageAltName || "bachahoustan image"}
                               />
                             </TransformComponent>
                             <div className="absolute bottom-4 right-4 flex gap-2 z-10">

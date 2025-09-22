@@ -28,6 +28,7 @@ export default function Home(props) {
   const router = useRouter();
   const [user] = useContext(userContext)
   const [category, setCategory] = useState([]);
+  const [carouselImg, setCarouselImg] = useState([]);
   const [productsData, setProductsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [productList, setProductList] = useState([]);
@@ -127,6 +128,31 @@ export default function Home(props) {
     );
   };
 
+  useEffect(() => {
+    getsetting();
+  }, []);
+
+  const getsetting = async () => {
+    props.loader(true);
+
+    try {
+      const res = await Api("get", "getsetting", "", router);
+      props.loader(false);
+
+      if (res?.success && res?.setting?.length > 0) {
+        setCarouselImg(res?.setting[0]?.carousel || []);
+      } else {
+        props.toaster({
+          type: "error",
+          message: res?.data?.message || "Error fetching settings.",
+        });
+      }
+    } catch (err) {
+      props.loader(false);
+      console.error(err);
+      props.toaster({ type: "error", message: err?.message });
+    }
+  };
   const getNewArrivals = async () => {
     props.loader(true);
     Api("get", "getNewArrival", router).then(
@@ -239,7 +265,7 @@ export default function Home(props) {
         />
       </Head>
       <div className="">
-        <MainHeader loader={props.loader} toaster={props.toaster} />
+        <MainHeader loader={props.loader} toaster={props.toaster} carouselImg={carouselImg} />
         <SellProduct loader={props.loader} toaster={props.toaster} />
 
         <div className="bg-white w-full min-h-screen">
@@ -280,7 +306,7 @@ export default function Home(props) {
                       </li>
                     ))}
                   </ul>
-                 
+
                 </div>
 
                 {/* Product Grid */}
