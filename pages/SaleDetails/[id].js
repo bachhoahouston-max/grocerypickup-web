@@ -563,6 +563,7 @@ function ProductDetails(props) {
                                 height={100}
                                 className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px]"
                                 src="/star.png"
+                                alt="star"
                               />
                               <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
                                 {(

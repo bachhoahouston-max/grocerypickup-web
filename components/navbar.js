@@ -1351,7 +1351,7 @@ const Navbar = (props) => {
               </>
             ) : (
               <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
-                <Image src="/cart2.jpg" width={100} height={100} />
+                <Image src="/cart2.jpg" alt="cart" width={100} height={100} style={{ width: "auto", height: "auto" }} />
                 <p className="text-black  text-[18px]">
                   {t("Your cart is empty")}
                 </p>

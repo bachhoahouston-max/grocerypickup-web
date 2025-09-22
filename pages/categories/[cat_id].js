@@ -69,19 +69,19 @@ function Categories(props) {
   const [totalPages, setTotalPages] = useState(0);
   const limit = 24;
 
-  function handleScroll() {
-  let threshold = window.innerWidth < 768 ? 1000 : 300; 
- 
+  const handleScroll = () => {
+    const threshold = window.innerWidth < 768 ? 1000 : 500;
 
-  if (
-    window.innerHeight + window.scrollY >=
-    document.documentElement.scrollHeight - threshold
-  ) {
-    if (!isFetching && hasMore) {
-      setIsFetching(true);
+    if (
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - threshold
+    ) {
+      if (!isFetching && hasMore) {
+        setIsFetching(true);
+      }
     }
-  }
-}
+  };
+
 
 
   useEffect(() => {
@@ -106,7 +106,7 @@ function Categories(props) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isFetching, hasMore]);
 
- 
+
   useEffect(() => {
     if (!isFetching || !hasMore) return;
     loadMoreProducts();
@@ -116,52 +116,53 @@ function Categories(props) {
     SetProductList([]);
     setCurrentPage(1);
     setHasMore(true);
-    setTotalPages(0);
+    setTotalPages(1);
     getproductByCategory(selectedCategories, 1, limit, true);
   };
 
+
   const loadMoreProducts = () => {
-    setTimeout(() => {
-      const nextPage = currentPage + 1;
-      if (nextPage <= totalPages) {
-        getproductByCategory(selectedCategories, nextPage, limit, false);
-        setCurrentPage(nextPage);
-      } else {
-        setHasMore(false);
-        setIsFetching(false);
-      }
-    }, 800);
+    const nextPage = currentPage + 1;
+
+    // Only fetch if nextPage <= totalPages
+    if (nextPage <= totalPages) {
+      getproductByCategory(selectedCategories, nextPage, limit, false);
+      setCurrentPage(nextPage);
+    } else {
+      setHasMore(false);
+      setIsFetching(false);
+    }
   };
+
 
   const getproductByCategory = async (cat, page = 1, pageLimit = 24, reset = false) => {
     if (page === 1) props.loader(true);
-    
+
     let url = `getProductBycategoryId?page=${page}&limit=${pageLimit}`;
-
-    if (cat) {
-      url += `&category=${cat}`;
-    }
-
-    if (selectedSortBy) {
-      url += `&sort_by=${selectedSortBy}`;
-    }
+    if (cat) url += `&category=${cat}`;
+    if (selectedSortBy) url += `&sort_by=${selectedSortBy}`;
 
     Api("get", url, "", router).then(
       (res) => {
         if (page === 1) props.loader(false);
-        
-        if (reset || page === 1) {
-          SetProductList(res.data);
-        } else {
-          SetProductList(prevProducts => [...prevProducts, ...res.data]);
-        }
-        
-        setTotalPages(res.pagination?.totalPages || 0);
 
-        if (page >= (res.pagination?.totalPages || 0) || res.data.length === 0) {
-          setHasMore(false);
+        const newProducts = res.data || [];
+
+        if (reset || page === 1) {
+          SetProductList(newProducts);
+        } else {
+          SetProductList(prev => [...prev, ...newProducts]);
         }
-        
+
+        setTotalPages(res.pagination?.totalPages || 1);
+
+        // Only set hasMore to false if the page actually exceeds totalPages or no new data
+        if (page >= (res.pagination?.totalPages || 1) || newProducts.length === 0) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+
         setIsFetching(false);
       },
       (err) => {
@@ -171,6 +172,7 @@ function Categories(props) {
       }
     );
   };
+
 
   const getCategory = async (cat) => {
     props.loader(true);
@@ -222,95 +224,95 @@ function Categories(props) {
             <div className="grid md:grid-cols-6 mx-auto grid-cols-1 w-full md:gap-3">
               <div className=" col-span-1.5 md:flex hidden flex-col w-full ">
                 <div className="bg-custom-green px-5 py-5 rounded">
-                <div className=" border-b border-custom-gray">
-                  <div className="flex justify-between items-center w-full pb-5">
-                    <p className="text-white font-semibold text-lg">
-                      {t("Sort By")}
-                    </p>
-                    {!openData && (
-                      <FaCircleChevronDown
-                        className="text-xl text-white"
-                        onClick={() => {
-                          setOpenData(true);
-                        }}
-                      />
-                    )}
+                  <div className=" border-b border-custom-gray">
+                    <div className="flex justify-between items-center w-full pb-5">
+                      <p className="text-white font-semibold text-lg">
+                        {t("Sort By")}
+                      </p>
+                      {!openData && (
+                        <FaCircleChevronDown
+                          className="text-xl text-white"
+                          onClick={() => {
+                            setOpenData(true);
+                          }}
+                        />
+                      )}
+                      {openData && (
+                        <FaCircleChevronUp
+                          className="text-xl text-white"
+                          onClick={() => setOpenData(false)}
+                        />
+                      )}
+                    </div>
                     {openData && (
-                      <FaCircleChevronUp
-                        className="text-xl text-white"
-                        onClick={() => setOpenData(false)}
-                      />
+                      <FormControl className="">
+                        <FormGroup className="flex flex-col">
+                          {sortByData.map((item, i) => (
+                            <FormControlLabel
+                              className="text-white"
+                              key={i}
+                              control={
+                                <Checkbox
+                                  onChange={() => {
+                                    if (selectedSortBy === item?.value) {
+                                      setSelectedSortBy("");
+                                    } else {
+                                      setSelectedSortBy(item?.value);
+                                    }
+                                  }}
+                                  checked={item?.value === selectedSortBy}
+                                />
+                              }
+                              label={t(`${item?.name}`)}
+                            />
+                          ))}
+                        </FormGroup>
+                      </FormControl>
                     )}
                   </div>
-                  {openData && (
-                    <FormControl className="">
-                      <FormGroup className="flex flex-col">
-                        {sortByData.map((item, i) => (
+
+                  <div className="pt-5">
+                    <div className="flex justify-between items-center w-full pb-5">
+                      <p className="text-white font-semibold text-lg">
+                        {t("Categories")}
+                      </p>
+                      {!openCategory && (
+                        <FaCircleChevronDown
+                          className="text-xl text-white cursor-pointer"
+                          onClick={() => {
+                            setOpenCategory(true);
+                          }}
+                        />
+                      )}
+                      {openCategory && (
+                        <FaCircleChevronUp
+                          className="text-xl text-white cursor-pointer"
+                          onClick={() => setOpenCategory(false)}
+                        />
+                      )}
+                    </div>
+
+                    {openCategory && (
+                      <FormGroup>
+                        {categoryList.map((item, i) => (
                           <FormControlLabel
                             className="text-white"
                             key={i}
                             control={
                               <Checkbox
                                 onChange={() => {
-                                  if (selectedSortBy === item?.value) {
-                                    setSelectedSortBy("");
-                                  } else {
-                                    setSelectedSortBy(item?.value);
-                                  }
+                                  router.replace(`/categories/${item.slug}`);
+                                  setSelectedCategories(item?.slug);
                                 }}
-                                checked={item?.value === selectedSortBy}
+                                checked={item.slug === selectedCategories}
                               />
                             }
-                            label={t(`${item?.name}`)}
+                            label={item?.name}
                           />
                         ))}
                       </FormGroup>
-                    </FormControl>
-                  )}
-                </div>
-
-                <div className="pt-5">
-                  <div className="flex justify-between items-center w-full pb-5">
-                    <p className="text-white font-semibold text-lg">
-                      {t("Categories")}
-                    </p>
-                    {!openCategory && (
-                      <FaCircleChevronDown
-                        className="text-xl text-white cursor-pointer"
-                        onClick={() => {
-                          setOpenCategory(true);
-                        }}
-                      />
-                    )}
-                    {openCategory && (
-                      <FaCircleChevronUp
-                        className="text-xl text-white cursor-pointer"
-                        onClick={() => setOpenCategory(false)}
-                      />
                     )}
                   </div>
-
-                  {openCategory && (
-                    <FormGroup>
-                      {categoryList.map((item, i) => (
-                        <FormControlLabel
-                          className="text-white"
-                          key={i}
-                          control={
-                            <Checkbox
-                              onChange={() => {
-                                router.replace(`/categories/${item.slug}`);
-                                setSelectedCategories(item?.slug);
-                              }}
-                              checked={item.slug === selectedCategories}
-                            />
-                          }
-                          label={item?.name}
-                        />
-                      ))}
-                    </FormGroup>
-                  )}
-                </div>
                 </div>
               </div>
 

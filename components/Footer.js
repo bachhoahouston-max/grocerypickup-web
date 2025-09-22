@@ -17,7 +17,7 @@ const Footer = () => {
 
           <div className="md:w-1/3 w-full mb-6 md:mb-0">
             <Image
-              alt="Tropicano logo"
+              alt="Grocery pickup logo"
               className="mb-4 cursor-pointer"
               height="50"
               src="/Logo2.png"

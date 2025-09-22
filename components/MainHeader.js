@@ -104,12 +104,12 @@ function MainHeader({ toaster, loader }) {
             {carouselImg.map((img, idx) => (
               <div
                 key={idx}
-                className="rel w-full h-[150px] flex items-center justify-center overflow-hidden 
+                className="relative w-full h-[150px] flex items-center justify-center overflow-hidden 
                 md:h-[305px] lg:h-[320px] xl:h-[450px] 2xl:h-[570px] "
               >
                 <Image
                   src={img.image || "/fallback.jpg"}
-                  alt={`Carousel ${idx}`}
+                  alt={`Bachahoustan banner ${idx}`}
                   fill
                   priority={idx === 0}
                   className="w-full h-full md:object-contain object-contain"
