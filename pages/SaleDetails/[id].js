@@ -23,6 +23,7 @@ import "react-medium-image-zoom/dist/styles.css";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ProductReviews from "@/components/reviews";
 import Head from "next/head";
+import Image from "next/image";
 
 function ProductDetails(props) {
   const { t } = useTranslation();
@@ -173,7 +174,7 @@ function ProductDetails(props) {
       const updatedCart = [...cartData, newProduct];
       setCartData(updatedCart);
       localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-    } 
+    }
     props.toaster({
       type: "success",
       message: "Item added to cart",
@@ -435,7 +436,9 @@ function ProductDetails(props) {
                         {({ zoomIn, zoomOut, resetTransform }) => (
                           <>
                             <TransformComponent>
-                              <img
+                              <Image
+                                width={500}
+                                height={400}
                                 className="h-[500px] w-full object-contain cursor-move"
                                 src={item}
                                 alt={productsId?.imageAltName}
@@ -555,7 +558,9 @@ function ProductDetails(props) {
                         >
                           {prizeSlot?.other_price && (
                             <>
-                              <img
+                              <Image
+                                width={100}
+                                height={100}
                                 className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px]"
                                 src="/star.png"
                               />

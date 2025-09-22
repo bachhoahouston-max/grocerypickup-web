@@ -8,7 +8,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import Image from "next/image";
 function MainHeader({ toaster, loader }) {
   const router = useRouter();
 
@@ -52,6 +52,28 @@ function MainHeader({ toaster, loader }) {
   const skeletonHeight =
     typeof window !== "undefined" ? window.innerHeight * 0.5 : 400;
 
+  const CustomLeftArrow = ({ carouselState, ...rest }) => (
+    <div
+      {...rest} // rest me sirf valid DOM props rahenge
+      className="hidden group-hover:flex absolute left-4 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full z-10 cursor-pointer transition"
+    >
+      <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+    </div>
+  );
+
+  const CustomRightArrow = ({ carouselState, ...rest }) => (
+    <div
+      {...rest}
+      className="hidden group-hover:flex absolute right-2 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full z-10 cursor-pointer transition"
+    >
+      <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </div>
+  );
+
   return (
     <>
       {loading || carouselImg.length === 0 ? (
@@ -76,50 +98,20 @@ function MainHeader({ toaster, loader }) {
             arrows
             showDots
             className="w-full"
-            customLeftArrow={
-              <div className="hidden group-hover:flex absolute left-4 top-1/2 transform -translate-y-1/2  text-white p-2 rounded-full z-10 cursor-pointer transition">
-                <svg
-                  className="w-10 h-10"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
-              </div>
-            }
-            customRightArrow={
-              <div className="hidden group-hover:flex absolute right-2 top-1/2 transform -translate-y-1/2  text-white p-2 rounded-full z-10 cursor-pointer transition">
-                <svg
-                  className="w-10 h-10"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
-              </div>
-            }
+            customLeftArrow={<CustomLeftArrow />}
+            customRightArrow={<CustomRightArrow />}
           >
             {carouselImg.map((img, idx) => (
               <div
                 key={idx}
-                className="w-full h-[150px] flex items-center justify-center overflow-hidden 
+                className="rel w-full h-[150px] flex items-center justify-center overflow-hidden 
                 md:h-[305px] lg:h-[320px] xl:h-[450px] 2xl:h-[570px] "
               >
-                <img
+                <Image
                   src={img.image || "/fallback.jpg"}
                   alt={`Carousel ${idx}`}
+                  fill
+                  priority={idx === 0}
                   className="w-full h-full md:object-contain object-contain"
                 />
               </div>

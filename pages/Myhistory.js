@@ -7,6 +7,7 @@ import { languageContext } from "./_app";
 import { RxCross2 } from "react-icons/rx";
 import { useTranslation } from "react-i18next";
 import Compressor from "compressorjs";
+import Image from "next/image";
 
 function Myhistory(props) {
   const router = useRouter();
@@ -41,7 +42,7 @@ function Myhistory(props) {
     Api("get", "getStatusCompletedProducts", "", router).then(
       (res) => {
         props.loader(false);
-  
+
         setBookingsData(res.data);
       },
       (err) => {
@@ -254,7 +255,9 @@ function Myhistory(props) {
                         className="relative col-span-3 flex md:gap-5 gap-2 bg-white p-3 rounded-lg shadow-sm border border-gray-100"
                         key={index}
                       >
-                        <img
+                        <Image
+                          width={100}
+                          height={100}
                           className="w-20 h-20 text-gray-600 rounded-[10px] object-cover border border-gray-200"
                           src={
                             product?.image?.[0] || "/api/placeholder/100/100"
@@ -327,8 +330,9 @@ function Myhistory(props) {
                 <form className="px-6 py-6" onSubmit={createProductRquest}>
                   {/* Product Image */}
                   <div className="flex justify-center mt-4 mb-6">
-                    <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200 overflow-hidden">
-                      <img
+                    <div className="w-24 h-24 bg-gray-100 rounded-lg flex items-center justify-center relative border border-gray-200 overflow-hidden">
+                      <Image
+                        fill
                         src={
                           selectedProduct?.image?.[0] ||
                           "/api/placeholder/100/100"
@@ -383,7 +387,9 @@ function Myhistory(props) {
                       <div className="grid grid-cols-3 gap-2 mb-3">
                         {images.map((image, index) => (
                           <div key={index} className="relative">
-                            <img
+                            <Image
+                              width={100}
+                              height={100}
                               src={image}
                               alt={`Preview ${index + 1}`}
                               className="w-full h-20 object-cover rounded-lg border border-gray-200"

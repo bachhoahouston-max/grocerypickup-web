@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { useRouter } from "next/router";
 import { cartContext, languageContext } from "@/pages/_app";
-
+import Image from "next/image";
 import { produce } from "immer";
 import { Api } from "@/services/service";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
@@ -190,14 +190,16 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                   )}
 
-                  <div className="relative">
-                    <img
+                  <div className="relative w-56 h-40 md:w-full md:h-44">
+                    <Image
                       src={item.product?.varients[0]?.image[0]}
-                      alt="vietnamese specialty food"
+                      alt="Vietnamese specialty food"
                       onClick={() => {
                         router.push(`/SaleDetails/${item?.product?.slug}`);
                       }}
-                      className="md:w-full w-56 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
+                      fill
+                      className="object-contain rounded-xl cursor-pointer"
+                      // sizes="(max-width: 768px) 224px, 100vw"
                     />
                   </div>
 

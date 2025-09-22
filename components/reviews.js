@@ -8,19 +8,20 @@ import "swiper/css/navigation";
 import { Navigation, Pagination } from "swiper/modules";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
-const ProductReviews = ({ productReviews,slug}) => {
-        const { t } = useTranslation()
-        const router = useRouter()
+const ProductReviews = ({ productReviews, slug }) => {
+  const { t } = useTranslation()
+  const router = useRouter()
   return (
     <>
       {productReviews.length > 0 && (
         <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between"> 
-          <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
-          <p className="text-black text-lg font-bold mb-5 cursor-pointer"
-          onClick={()=>router.push(`/Reviews/${slug}`)}
-          > View All</p>
+          <div className="flex justify-between">
+            <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
+            <p className="text-black text-lg font-bold mb-5 cursor-pointer"
+              onClick={() => router.push(`/Reviews/${slug}`)}
+            > View All</p>
           </div>
           <Swiper
             spaceBetween={20}
@@ -68,21 +69,23 @@ const ProductReviews = ({ productReviews,slug}) => {
                   {item?.images && item?.images?.length > 0 && (
                     <div className="pt-3">
                       {item?.images?.length === 1 ? (
-                        <div className="w-full">
-                          <img
+                        <div className="w-64 h-78 relative">
+                          <Image
+                            fill
                             src={item?.images[0]}
                             alt="Review image"
-                            className="w-64 h-78 object-cover  rounded-lg"
+                            className="h-full w-full object-cover  rounded-lg"
                           />
                         </div>
                       ) : (
                         <div className="grid grid-cols-2 gap-2">
                           {item?.images?.slice(0, 2).map((image, index) => (
-                            <div key={index} className="relative">
-                              <img
+                            <div key={index} className="w-64 h-78 relative">
+                              <Image
+                                fill
                                 src={image}
                                 alt={`Review image ${index + 1}`}
-                                className="w-64 h-78 object-contain rounded-lg"
+                                className="w-full h-full object-contain rounded-lg"
                               />
 
                               {index === 1 && item?.images?.length > 2 && (

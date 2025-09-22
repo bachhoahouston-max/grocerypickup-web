@@ -1,4 +1,4 @@
-import React, { useContext, useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { useRouter } from "next/router";
 import {
@@ -25,7 +25,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const [user] = useContext(userContext);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
 
-  // -------------------- Add to Cart --------------------
+ 
   const handleAddToCart = () => {
     const itemQuantity = Number(item?.Quantity ?? 0);
 
@@ -64,16 +64,10 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     toaster({ type: "success", message: "Product added to cart" });
   };
 
-  // -------------------- Favorite --------------------
-
-  // ✅ Derived state
   const isFavorite = Favorite.some(
     (fav) => fav._id === item?._id || fav?.product?._id === item?._id
   );
 
-
-
-  // ✅ Toggle favorite
   const toggleFavorite = async () => {
     if (!user?.token) {
       return toaster({ type: "error", message: "Login required" });
@@ -103,10 +97,9 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       }
     } catch (err) {
       loader(false);
-    } 
+    }
   };
 
-  // ✅ Load from localStorage if available (first time)
   useEffect(() => {
     const stored = localStorage.getItem("Favorite");
     if (stored) {
@@ -127,16 +120,17 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       key={i}
       className="bg-white w-full max-w-[350px] h-full rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative max-h-[380px]"
     >
-      <div className="relative">
-        <img
-          src={item.varients[0].image[0]}
-          alt={item?.imageAltName}
-          className="md:w-full w-56 md:h-44 h-40 object-contain rounded-xl cursor-pointer"
-          onClick={() => {
-            router.push(url);
-          }}
-        />
 
+      <div className="relative md:w-full w-56 md:h-44 h-40">
+        <Image
+          src={item.varients[0].image[0]}
+          alt={item?.imageAltName || "Product Image"}
+          className="object-contain rounded-xl cursor-pointer"
+          onClick={() => router.push(url)}
+          fill
+          sizes="200px"
+          priority
+        />
         <div
           className="absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[36px] md:h-[45px] h-[36px] flex justify-center items-center md:mb-1 mb-2"
           onClick={toggleFavorite}

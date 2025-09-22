@@ -4,6 +4,7 @@ import { Api } from "@/services/service";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import Image from "next/image";
 
 const Category = (props) => {
   const { t } = useTranslation();
@@ -62,8 +63,9 @@ const Category = (props) => {
               className="bg-white  hover:shadow-lg transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center md:py-4"
               onClick={() => router.push(`/categories/${cat?.slug}`)}
             >
-              <div className="w-full h-full rounded-lg overflow-hidden mb-3">
-                <img
+              <div className="relative w-full h-full rounded-lg overflow-hidden mb-3">
+                <Image
+                fill
                   src={cat.image}
                   alt={cat.label}
                   className="w-full h-full object-cover"

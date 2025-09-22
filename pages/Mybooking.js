@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { MdFileDownload } from "react-icons/md";
 import Barcode from "react-barcode";
+import Image from "next/image";
 
 function Mybooking(props) {
   const ref = useRef();
@@ -68,7 +69,7 @@ function Mybooking(props) {
       })
       .catch((err) => {
         props.loader(false);
-      
+
         props.toaster({ type: "error", message: err?.message });
       });
   };
@@ -140,7 +141,7 @@ function Mybooking(props) {
           })
           .catch((err) => {
             props.loader(false);
-        
+
             props.toaster({
               type: "error",
               message: err?.message || "Something went wrong",
@@ -182,7 +183,7 @@ function Mybooking(props) {
       })
       .catch((err) => {
         props.loader(false);
-      
+
         props.toaster({ type: "error", message: err?.message });
       });
   };
@@ -762,7 +763,9 @@ function Mybooking(props) {
                         }}
                       >
                         <div className="flex-shrink-0">
-                          <img
+                          <Image
+                            width={100}
+                            height={100}
                             className="w-20 h-20 rounded-md object-contain border border-gray-200 bg-white"
                             src={
                               product.image?.[0] || "/api/placeholder/100/100"

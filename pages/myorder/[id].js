@@ -14,6 +14,7 @@ import { FaMoneyBillWave } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
 import { Api } from "@/services/service";
 import { languageContext } from "../_app";
+import Image from "next/image";
 
 export default function OrderDetails(props) {
   const router = useRouter();
@@ -144,7 +145,8 @@ export default function OrderDetails(props) {
                           key={index}
                           className="h-60 sm:h-72 md:h-80 lg:h-[22rem] xl:h-[24rem] flex items-center justify-center p-4"
                         >
-                          <img
+                          <Image
+                            fill
                             src={img}
                             alt={`Product image ${index + 1}`}
                             className="max-h-full object-contain"
@@ -156,7 +158,8 @@ export default function OrderDetails(props) {
                       ))
                     ) : (
                       <div className="h-60 sm:h-72 md:h-80 flex items-center justify-center p-4">
-                        <img
+                        <Image
+                          fill
                           src="/default-product-image.png"
                           alt="Default product image"
                           className="max-h-full object-contain"

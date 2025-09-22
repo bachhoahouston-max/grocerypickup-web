@@ -752,11 +752,13 @@ const Navbar = (props) => {
             src="/Logo2.png"
             alt="Grocery logo with palm tree and text 'Tropicana' in green and 'Freshness' in blue"
             className="object-contain cursor-pointer"
-            width="150"
-            height="50"
+            width={150}
+            height={50}
+            style={{ width: "auto", height: "auto" }} // maintain aspect ratio
             onClick={() => router.push("/")}
           />
         </div>
+
 
         {/* Search Bar */}
         <div className="flex items-center justify-center flex-grow mx-4 relative">
@@ -1349,7 +1351,7 @@ const Navbar = (props) => {
               </>
             ) : (
               <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
-                <Image src="/cart2.jpg" width={100} height={100}  />
+                <Image src="/cart2.jpg" width={100} height={100} />
                 <p className="text-black  text-[18px]">
                   {t("Your cart is empty")}
                 </p>
@@ -1367,13 +1369,16 @@ const Navbar = (props) => {
             {cartData?.map((item, i) => (
               <div key={i} className="grid w-full md:gap-3 gap-2 mt-3">
                 <div className="flex justify-start md:gap-4 gap-4 items-start  w-full">
-                  <div className="md:w-[120px] w-[80px] rounded-[10px] flex items-center justify-center">
-                    <img
-                      className="md:w-32 md:h-32 w-20  object-cover md:object-cover"
+                  <div className="relative md:w-[120px] w-[80px] md:h-[120px] h-[80px] rounded-[10px] flex items-center justify-center overflow-hidden">
+                    <Image
                       src={item?.selectedImage || item?.image}
                       alt="item"
+                      fill
+                      className="object-cover rounded-[10px]"
+                      sizes="120px"
                     />
                   </div>
+
 
                   <div className="md:w-full  w-[250px] flex flex-col justify-start items-start md:gap-0 gap-2">
                     <p className="md:pl-3 w-full  text-custom-purple  md:text-base text-[14px]">

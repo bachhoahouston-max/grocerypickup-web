@@ -5,6 +5,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { Api } from '@/services/service';
 import Head from 'next/head';
 import { useTranslation } from "react-i18next";
+import Image from 'next/image';
 
 const forgotPassword = (props) => {
     const { t } = useTranslation()
@@ -135,8 +136,8 @@ const forgotPassword = (props) => {
             <div className="font-sans bg-white  flex flex-col items-center justify-center">
                 <div className="max-w-7xl w-full mt-14 mb-20 md:mb-0 md:mt-0">
                     <div className="mt-0 md:mt-10 grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 py-0 md:py-8">
-                        <div className="hidden md:flex justify-center items-center">
-                            <img src="/image-99.png" alt="Forgot Password" className="w-[590px] h-[566px]" />
+                        <div className="hidden md:flex justify-center items-center w-[590px] h-[566px] relative">
+                            <Image fill src="/image-99.png" alt="Forgot Password" className="" />
                         </div>
                         <div className=" h-auto md:h-[506px] border-[2px] md:m-0 mx-4 rounded-xl border-black md:px-12 px-4 flex flex-col justify-center items-center py-8">
                             <h3 className="text-black text-[24px] md:text-[40px] font-bold text-center mb-12">{t("Forgot Password")}</h3>

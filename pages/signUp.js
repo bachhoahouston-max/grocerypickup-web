@@ -6,6 +6,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { userContext } from "./_app";
 import Head from "next/head";
+import Image from "next/image";
 
 const SignUp = (props) => {
   const { t } = useTranslation();
@@ -179,11 +180,12 @@ const SignUp = (props) => {
         </div>
         <div className="max-w-7xl w-full mt-0 md:mt-6 grid lg:grid-cols-2 md:grid-cols-2 gap-4 md:py-8">
           <div>
-            <div className="hidden md:flex justify-center items-center">
-              <img
+            <div className="hidden w-[590px] h-[766px] md:flex justify-center items-center">
+              <Image
                 src="/image2.jpeg"
                 alt="Sign Up"
-                className="w-[590px] h-[766px]"
+                fill
+                className="w-full h-full"
               />
             </div>
           </div>

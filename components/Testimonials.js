@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { FaStar } from "react-icons/fa6";
+import Image from "next/image";
 
 const Testimonials = () => {
   const { t } = useTranslation();
@@ -58,10 +59,12 @@ const Testimonials = () => {
               key={testimonial.id}
               className="relative bg-[url('/backgound12.png')] bg-cover bg-center bg-no-repeat rounded-lg flex flex-col justify-center items-center h-64 md:h-80 w-80 md:w-[350px] lg:w-[350px] xl:w-[420px] transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl"
             >
-              <img
+              <Image
                 alt={`Portrait of ${testimonial.name}`}
                 className="absolute top-[-45px] left-1/2 transform -translate-x-1/2 w-20 h-20 md:w-24 md:h-24 rounded-full mx-auto mb-8 border-4 border-white"
                 src={testimonial.image}
+                width={60}
+                height={60}
               />
               <h3 className="text-lg md:text-2xl mt-6 text-black font-semibold">
                 {testimonial.name}

@@ -280,13 +280,7 @@ export default function Home(props) {
                       </li>
                     ))}
                   </ul>
-                  {/* <div className="md:flex hidden ms-4 mt-4">
-                  <img
-                    src="./Rectangle3.png"
-                    alt="Decorative image"
-                    className="w-full h-[496px]"
-                  />
-                </div> */}
+                 
                 </div>
 
                 {/* Product Grid */}

@@ -14,13 +14,14 @@ const Footer = () => {
     <footer className="p-10 bg-custom-green text-black font-sans">
       <div className="container mx-auto xl:max-w-7xl border-b w-[90%] border-b-white pb-8">
         <div className="w-full flex flex-col md:flex-row justify-between ">
-       
+
           <div className="md:w-1/3 w-full mb-6 md:mb-0">
             <Image
               alt="Tropicano logo"
               className="mb-4 cursor-pointer"
               height="50"
               src="/Logo2.png"
+              style={{ width: "auto", height: "auto" }}
               width="180"
               onClick={() => router.push("/")}
             />

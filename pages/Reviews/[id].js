@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { userContext } from "../_app";
 import { Api } from "@/services/service";
+import Image from "next/image";
 
 const ProductReviews = (props) => {
     const router = useRouter()
@@ -71,7 +72,9 @@ const ProductReviews = (props) => {
                                     <div>
                                         {item.images.length === 1 ? (
                                             <div className="w-full">
-                                                <img
+                                                <Image
+                                                    width={100}
+                                                    height={100}
                                                     src={item.images[0]}
                                                     alt="Review image"
                                                     className="h-[180px] w-full object-contain rounded-lg"
@@ -81,7 +84,9 @@ const ProductReviews = (props) => {
                                             <div className="grid grid-cols-2 gap-2">
                                                 {item.images.slice(0, 2).map((image, index) => (
                                                     <div key={index} className="relative">
-                                                        <img
+                                                        <Image
+                                                            width={100}
+                                                            height={100}
                                                             src={image}
                                                             alt={`Review image ${index + 1}`}
                                                             className="w-full h-[180px] object-cover rounded-md"

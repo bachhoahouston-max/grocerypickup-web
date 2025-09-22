@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Api } from "@/services/service";
 import { Shield, Users, Truck, Star, CheckCircle, Clock } from 'lucide-react';
 import Head from "next/head";
+import Image from "next/image";
 
 const AboutUs = (props) => {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ const AboutUs = (props) => {
     props.loader(true);
     Api("get", "getTeamMembers", "", router).then(
       (res) => {
-        props.loader(false);   
+        props.loader(false);
         if (res?.success) {
           setTeamMembers(res?.team || []);
         } else {
@@ -98,11 +99,13 @@ const AboutUs = (props) => {
             </p>
           </div>
         </div>
-        <div className="md:flex hidden w-full md:w-auto">
-          <img
-            alt="bach hoa houston"
-            className="w-[800px] h-auto"
+        <div className="relative flex w-auto h-full">
+          <Image
             src="/Store.png"
+            alt="Bach Hoa Houston"
+            className="object-contain"
+            width={800}
+            height={800}
           />
         </div>
       </div>
@@ -181,9 +184,11 @@ const AboutUs = (props) => {
                 </div>
               </div>
               <div className="lg:w-1/2 relative md:flex hidden">
-                <div className="aspect-square lg:aspect-auto lg:h-full bg-gradient-to-br from-[#F38529]/20 to-green-100 flex items-center justify-center h-[500px] w-[800px]">
-                  <img
+                <div className="aspect-square lg:aspect-auto lg:h-full bg-gradient-to-br from-[#F38529]/20 to-green-100 relative flex items-center justify-center h-[500px] w-[800px]">
+                  <Image
+                    fill
                     src="/Rectangle25.png"
+                    sizes=""
                     alt="bach hoa houston"
                     className="w-full h-full object-cover rounded-2xl shadow-xl"
                   />
@@ -227,8 +232,9 @@ const AboutUs = (props) => {
                   key={index}
                   className=" flex flex-col justify-center hover:-translate-y-[20px]  items-center pb-6 rounded-[20px] w-full h-auto hover:shadow-lg transition-transform duration-500 cursor-pointer"
                 >
-                  <div className="w-[320px] h-[400px]  md:w-[300px] md:h-[350px] rounded-xl overflow-hidden mb-4 ">
-                    <img
+                  <div className="w-[320px] h-[400px]  md:w-[300px] md:h-[350px] rounded-xl overflow-hidden mb-4 relative">
+                    <Image
+                      fill
                       alt="vegan food near me"
                       className="w-full h-full object-cover"
                       src={member.memberimage}
