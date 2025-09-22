@@ -7,10 +7,9 @@ function ShopFasterTropicana() {
 
   return (
     <div className="relative w-full min-h-[400px] md:h-[666px] md:p-0 p-5">
-      {/* Background Image */}
       <div className="absolute inset-0">
         <Image
-          src="/download2.png" // Make sure this file exists in /public folder
+          src="/download2.png" 
           alt="Grocery pickup"
           fill
           priority
@@ -18,7 +17,6 @@ function ShopFasterTropicana() {
         />
       </div>
 
-      {/* Content Section */}
       <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5 max-w-7xl mx-auto h-full relative">
         <div className="flex flex-col justify-center items-start">
           <p className="md:text-[55px] text-2xl font-bold text-custom-purple md:leading-[70px] text-[#35035C]">

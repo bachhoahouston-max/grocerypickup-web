@@ -109,7 +109,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         localStorage.removeItem("Favorite");
       }
     }
-  }, [setFavorite]);
+  }, [Favorite]);
 
 
   const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
