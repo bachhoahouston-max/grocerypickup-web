@@ -42,7 +42,7 @@ const Footer = () => {
               <a
                 aria-label="Instagram"
                 className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px]"
-                href="https://www.instagram.com/bachhoahouston/"
+                href="https://www.instagram.com/bachhoahouston2025/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D#"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -51,7 +51,7 @@ const Footer = () => {
               <a
                 aria-label="Facebook Group"
                 className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px]"
-                href="https://www.facebook.com/groups/1861501697993458"
+                href="https://www.facebook.com/people/Bach-Hoa-Houston/61579418325421/"
                 target="_blank"
                 rel="noopener noreferrer"
               >

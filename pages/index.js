@@ -155,7 +155,7 @@ export default function Home(props) {
   };
   const getNewArrivals = async () => {
     props.loader(true);
-    Api("get", "getNewArrival", router).then(
+    Api("get", `getNewArrival?limit=35`, router).then(
       (res) => {
         props.loader(false);
         if (res.status) {
@@ -168,6 +168,7 @@ export default function Home(props) {
       }
     );
   };
+
 
   const fetchCategories = () => {
     props.loader(true);
