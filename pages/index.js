@@ -644,9 +644,12 @@ export function BestSeller(props) {
     fetchData();
   }, []);
 
-  const handleCategoryClick = (categoryId) => {
-    setSelectedCategory(categoryId);
-    fetchProductsByCategory(categoryId);
+  // const handleCategoryClick = (categoryId) => {
+  //   setSelectedCategory(categoryId);
+  //   fetchProductsByCategory(categoryId);
+  // };
+  const handleCategoryClick1 = (path) => {
+    router.push(path);
   };
 
   const fetchProductsByCategory = async (categoryId) => {
