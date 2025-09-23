@@ -326,6 +326,15 @@ const Navbar = (props) => {
 
   const [pincodes, setPincodes] = useState([]);
 
+  useEffect(() => {
+    if (openCart) {
+      fetchCoupons();
+      getAllPincodes();
+      getShippingCost();
+    }
+
+  }, [openCart])
+
   const getAllPincodes = () => {
     Api("get", "getPinCode", null, router)
       .then((res) => {
@@ -899,9 +908,7 @@ const Navbar = (props) => {
               onClick={() => {
                 setOpenCart(true);
                 setMobileMenu(!mobileMenu);
-                fetchCoupons();
-                getAllPincodes();
-                getShippingCost();
+
               }}
             >
               <BsCart2 className=" md:text-3xl text-[#F38529] text-lg cursor-pointer" />

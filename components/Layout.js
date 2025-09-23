@@ -15,11 +15,11 @@ const Layout = ({ children, loader, toaster }) => {
   const [showAnnouncement, setShowAnnouncement] = useState(true);
 
   useEffect(() => {
-    const handleRouteStart = () => loader(true);
-    const handleRouteComplete = () => loader(false);
+    // const handleRouteStart = () => loader(true);
+    // const handleRouteComplete = () => loader(false);
 
-    router.events.on("routeChangeStart", handleRouteStart);
-    router.events.on("routeChangeComplete", handleRouteComplete);
+    // router.events.on("routeChangeStart", handleRouteStart);
+    // router.events.on("routeChangeComplete", handleRouteComplete);
 
     const handleScroll = () => {
       if (window.scrollY > 100) {
