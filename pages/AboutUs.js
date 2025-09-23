@@ -5,22 +5,40 @@ import { useRouter } from "next/router";
 import { LuBoomBox } from "react-icons/lu";
 import { useTranslation } from "react-i18next";
 import { Api } from "@/services/service";
+import { FaStore, FaCarSide, FaTruck, FaShippingFast } from "react-icons/fa"; // example icons
 import { Shield, Users, Truck, Star, CheckCircle, Clock } from 'lucide-react';
 import Head from "next/head";
 import Image from "next/image";
+
+
+const services = [
+  {
+    title: "In Store Pickup",
+    description: "Pick it up inside the store",
+    icon: <FaStore className="md:text-5xl text-4xl mb-2" />,
+  },
+  {
+    title: "Curbside Pickup",
+    description: "We bring it out to your car",
+    icon: <FaCarSide className="md:text-5xl text-4xl mb-2" />,
+  },
+  {
+    title: "Next Day Local Delivery",
+    description: "Cut off time 8 pm",
+    icon: <FaTruck className="md:text-5xl text-4xl mb-2" />,
+  },
+  {
+    title: "Shipping",
+    description: "Delivery in 3 to 5 business days",
+    icon: <FaShippingFast className="md:text-5xl text-4xl mb-2" />,
+  },
+];
 
 const AboutUs = (props) => {
   const { t } = useTranslation();
   const router = useRouter();
 
   const [teamMembers, setTeamMembers] = useState([]);
-
-  const services = [
-    { description: "Online Payment" },
-    { description: "Maintenance Request Management" },
-    { description: "Stakeholder Communication" },
-    { description: "Document Management" },
-  ];
 
   useEffect(() => {
     getTeamMembers();
@@ -220,70 +238,61 @@ const AboutUs = (props) => {
       </div>
 
       <div className="bg-gradient-to-br from-orange-50 to-yellow-50">
-        <div className="max-w-7xl container mx-auto">
-          <div className="md:mb-20 mb-10 md:mx-0 mx-6">
-            <h2 className="text-2xl md:text-3xl font-semibold mb-8 md:mb-12 pt-12 text-black">
-              {t("Our Team")}
-            </h2>
+        {teamMembers.length > 0 && (
+          <div className="max-w-7xl container mx-auto">
+            <div className="md:mb-20 mb-10 md:mx-0 mx-6">
+              <h2 className="text-2xl md:text-3xl font-semibold mb-8 md:mb-12 pt-12 text-black">
+                {t("Our Team")}
+              </h2>
 
-            <div className="grid grid-cols-1  md:grid-cols-4 lg:grid-cols-4 gap-4 md:gap-6">
-              {teamMembers.map((member, index) => (
-                <div
-                  key={index}
-                  className=" flex flex-col justify-center hover:-translate-y-[20px]  items-center pb-6 rounded-[20px] w-full h-auto hover:shadow-lg transition-transform duration-500 cursor-pointer"
-                >
-                  <div className="w-[320px] h-[400px]  md:w-[300px] md:h-[350px] rounded-xl overflow-hidden mb-4 relative">
-                    <Image
-                      fill
-                      alt="vegan food near me"
-                      className="w-full h-full object-cover"
-                      src={member.memberimage}
-                    />
+              <div className="grid grid-cols-1  md:grid-cols-4 lg:grid-cols-4 gap-4 md:gap-6">
+                {teamMembers.map((member, index) => (
+                  <div
+                    key={index}
+                    className=" flex flex-col justify-center hover:-translate-y-[20px]  items-center pb-6 rounded-[20px] w-full h-auto hover:shadow-lg transition-transform duration-500 cursor-pointer"
+                  >
+                    <div className="w-[320px] h-[400px]  md:w-[300px] md:h-[350px] rounded-xl overflow-hidden mb-4 relative">
+                      <Image
+                        fill
+                        alt="vegan food near me"
+                        className="w-full h-full object-cover"
+                        src={member.memberimage}
+                      />
+                    </div>
+                    <div className="hover:ms-4">
+                      <span className="text-xl  font-semibold mb-2 text-black">
+                        {member.membername} {""}
+                      </span>
+                      <span className="text-lg  text-black">
+                        ({member.memberposition})
+                      </span>
+                    </div>
                   </div>
-                  <div className="hover:ms-4">
-                    <span className="text-xl  font-semibold mb-2 text-black">
-                      {member.membername} {""}
-                    </span>
-                    <span className="text-lg  text-black">
-                      ({member.memberposition})
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
+
         {/* Our Services Section */}
         <div className="bg-[#F5F5F5]">
-          <div className="max-w-7xl container mx-auto ">
+          <div className="max-w-7xl container mx-auto">
             <h2 className="text-xl font-semibold mb-14 pt-14 text-black md:mx-0 mx-6">
               {t("Our Services")}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-20 md:mx-0 mx-6">
-              <div className="bg-custom-green hover:-translate-y-[20px] transition-transform duration-300 rounded-[18px] w-full h-auto cursor-pointer p-4 text-white text-center flex justify-center flex-col items-center">
-                <LuBoomBox className="md:text-5xl text-4xl mb-2" />
-                <p className="md:text-[19px] text-[16px]">
-                  {t("Online Payment")}
-                </p>
-              </div>
-              <div className="bg-custom-green rounded-[18px] hover:-translate-y-[20px] transition-transform duration-300 w-full h-auto cursor-pointer p-4 text-white text-center flex justify-center flex-col items-center">
-                <LuBoomBox className="md:text-5xl text-4xl mb-2" />
-                <p className="md:text-[19px] text-[16px]">
-                  {t("Maintenance Request Management")}
-                </p>
-              </div>
-              <div className="bg-custom-green rounded-[18px] hover:-translate-y-[20px] transition-transform duration-300 w-full h-auto cursor-pointer p-4 text-white text-center flex justify-center flex-col items-center">
-                <LuBoomBox className="md:text-5xl text-4xl mb-2" />
-                <p className="md:text-[19px] text-[16px]">
-                  {t("Stakeholder Communication")}
-                </p>
-              </div>
-              <div className="bg-custom-green rounded-[18px] hover:-translate-y-[20px] transition-transform duration-300 cursor-pointer w-full h-auto p-4 text-white text-center flex justify-center flex-col items-center">
-                <LuBoomBox className="md:text-5xl text-4xl mb-2" />
-                <p className="md:text-[19px] text-[16px]">
-                  {t("Document Management")}
-                </p>
-              </div>
+              {services.map((service, index) => (
+                <div
+                  key={index}
+                  className="bg-custom-green hover:-translate-y-[20px] transition-transform duration-300 rounded-[18px] w-full h-auto cursor-pointer p-4 text-white text-center flex justify-center flex-col items-center"
+                >
+                  {service.icon}
+                  <p className="md:text-[19px] text-[16px] font-semibold">
+                    {t(service.title)}
+                  </p>
+                  <p className="text-sm mt-1">{t(service.description)}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -752,15 +752,13 @@ const Navbar = (props) => {
             src="/Logo2.png"
             alt="Grocery logo with palm tree and text 'Tropicana' in green and 'Freshness' in blue"
             className="object-contain cursor-pointer"
-            width={150}
-            height={50}
+            width={180}
+            height={60}
             style={{ width: "auto", height: "auto" }} // maintain aspect ratio
             onClick={() => router.push("/")}
           />
         </div>
 
-
-        {/* Search Bar */}
         <div className="flex items-center justify-center flex-grow mx-4 relative">
           <input
             type="text"
@@ -1077,7 +1075,7 @@ const Navbar = (props) => {
                     </span>
                     <br />
                     <span className="text-gray-500 text-[13px]">
-                      {t("Cut of time 8 pm")}
+                      {t("Cut off time 8 pm")}
                     </span>
                   </label>
                 </div>
