@@ -64,29 +64,24 @@ const Navbar = (props) => {
   const { t } = useTranslation();
   const isLoggedIn = user?._id || user?.token;
 
-  useEffect(() => {
-    const fetchCoupons = async () => {
-      props.loader(true);
-      Api("get", "GetAllCoupons", "", router).then(
-        (res) => {
-          props.loader(false);
-          const currentDate = new Date();
-          const validCoupons = (res.data || []).filter((coupon) => {
-            const expiryDate = new Date(coupon.expiryDate);
-            return expiryDate > currentDate && coupon.isActive;
-          });
-          setCoupons(validCoupons);
-          setFilteredCoupons(validCoupons);
-        },
-        (err) => {
-          props.loader(false);
-          props.toaster({ type: "error", message: err?.message });
-        }
-      );
-    };
 
-    fetchCoupons();
-  }, []);
+  const fetchCoupons = async () => {
+    Api("get", "GetAllCoupons", "", router).then(
+      (res) => {
+        const currentDate = new Date();
+        const validCoupons = (res.data || []).filter((coupon) => {
+          const expiryDate = new Date(coupon.expiryDate);
+          return expiryDate > currentDate && coupon.isActive;
+        });
+        setCoupons(validCoupons);
+        setFilteredCoupons(validCoupons);
+      },
+      (err) => {
+        props.loader(false);
+        props.toaster({ type: "error", message: err?.message });
+      }
+    );
+  };
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
@@ -332,10 +327,8 @@ const Navbar = (props) => {
   const [pincodes, setPincodes] = useState([]);
 
   const getAllPincodes = () => {
-    props.loader(true);
     Api("get", "getPinCode", null, router)
       .then((res) => {
-        props.loader(false);
         if (res?.error) {
           props.toaster({ type: "error", message: res?.error });
         } else {
@@ -351,9 +344,7 @@ const Navbar = (props) => {
       });
   };
 
-  useEffect(() => {
-    getAllPincodes();
-  }, []);
+
   const hasFetchedFavourite = useRef(false); // track once
 
   useEffect(() => {
@@ -370,7 +361,6 @@ const Navbar = (props) => {
   }, []);
 
   const getProfileData = () => {
-    props.loader(true);
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -420,10 +410,8 @@ const Navbar = (props) => {
   const [currentShipmentCost, setCurrentShipmentCost] = useState(0);
 
   const getShippingCost = async () => {
-    props.loader(true);
     try {
       const res = await Api("get", "getShippingCost", "", props.router);
-      props.loader(false);
 
       if (res.shippingCosts && res.shippingCosts.length > 0) {
         const costs = res.shippingCosts[0];
@@ -436,9 +424,7 @@ const Navbar = (props) => {
     }
   };
 
-  useEffect(() => {
-    getShippingCost();
-  }, []);
+
 
   useEffect(() => {
     const sumWithInitial = cartData?.reduce(
@@ -915,6 +901,9 @@ const Navbar = (props) => {
               onClick={() => {
                 setOpenCart(true);
                 setMobileMenu(!mobileMenu);
+                fetchCoupons();
+                getAllPincodes();
+                getShippingCost();
               }}
             >
               <BsCart2 className=" md:text-3xl text-[#F38529] text-lg cursor-pointer" />

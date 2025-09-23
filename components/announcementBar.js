@@ -24,7 +24,6 @@ function announcementBar({
   }, []);
 
   const getShippingCosts = async () => {
-    loader(true);
     try {
       const res = await Api("get", "getShippingCost", null, router);
       loader(false);

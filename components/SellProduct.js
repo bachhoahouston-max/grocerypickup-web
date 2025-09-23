@@ -82,7 +82,7 @@ const SellProduct = ({ loader, toaster }) => {
   };
 
   const getSale = async () => {
-    loader(true);
+    // loader(true);
     try {
       const res = await Api("get", "getActiveFlashSales", router);
       if (res.status) {
@@ -199,7 +199,7 @@ const SellProduct = ({ loader, toaster }) => {
                       }}
                       fill
                       className="object-contain rounded-xl cursor-pointer"
-                      // sizes="(max-width: 768px) 224px, 100vw"
+                    // sizes="(max-width: 768px) 224px, 100vw"
                     />
                   </div>
 

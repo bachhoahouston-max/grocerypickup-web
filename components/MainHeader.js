@@ -1,11 +1,24 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { Api } from "@/services/service";
 
-function MainHeader({ carouselImg = [] }) {
+function MainHeader() {
+  const router = useRouter();
+  const [carouselImg, setData] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const res = await Api("get", "getsetting", "", router);
+      setData(res?.setting[0]?.carousel);
+    }
+    fetchData();
+  }, [router]);
+
   const responsive = {
     all: {
       breakpoint: { max: 4000, min: 0 },

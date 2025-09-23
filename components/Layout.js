@@ -2,7 +2,7 @@ import Footer from "./Footer.js";
 import HeaderFirst from "./HeaderFirst.js";
 import Navbar from "./navbar.js";
 import MobileFooter from "./MobileFooter.js";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, Suspense } from "react";
 import { useRouter } from "next/router.js";
 import { userContext } from "@/pages/_app.js";
 import AnnouncementBar from "./announcementBar.js";
@@ -44,28 +44,33 @@ const Layout = ({ children, loader, toaster }) => {
     <>
       <div className="flex-1 flex-col bg-white relative">
         <div className="fixed w-full top-0 z-50 bg-white transition-all duration-300">
-        
+
           <div
-            className={`transition-all duration-500 ease-in-out transform ${
-              showAnnouncement ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
-            }`}
+            className={`transition-all duration-500 ease-in-out transform ${showAnnouncement ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full"
+              }`}
           >
-            <AnnouncementBar
-              announcementBar={showAnnouncement}
-              setAnnouncementBar={setShowAnnouncement}
+            <Suspense fallback={<div>Loading.....</div>}>
+              <AnnouncementBar
+                announcementBar={showAnnouncement}
+                setAnnouncementBar={setShowAnnouncement}
+                loader={loader}
+                toaster={toaster}
+              />
+            </Suspense>
+
+          </div>
+          <Suspense fallback={<div>Loading.....</div>}>
+            <Navbar
+              user={user}
+              setUser={setUser}
               loader={loader}
               toaster={toaster}
+              opens={opens}
             />
-          </div>
-
-          <Navbar
-            user={user}
-            setUser={setUser}
-            loader={loader}
-            toaster={toaster}
-            opens={opens}
-          />
-          <HeaderFirst loader={loader} toaster={toaster} />
+          </Suspense>
+          <Suspense fallback={<div>Loading.....</div>}>
+            <HeaderFirst loader={loader} toaster={toaster} />
+          </Suspense>
         </div>
 
         <div className="pt-[88px] md:pt-[145px] max-w-screen overflow-x-hidden z-0">
