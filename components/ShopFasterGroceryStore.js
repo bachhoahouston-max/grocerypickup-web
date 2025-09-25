@@ -27,7 +27,7 @@ function ShopFasterGroceryStore() {
           </p>
 
           <div className="flex md:flex-row flex-col justify-start items-center gap-5 md:pt-10 mt-4">
-            {/* iOS App Store */}
+ 
             <a
               href="https://apps.apple.com/us/app/b%C3%A1ch-ho%C3%A1-houston/id6745395289"
               target="_blank"
@@ -38,11 +38,11 @@ function ShopFasterGroceryStore() {
                 alt="Download on the App Store"
                 width={219}
                 height={63}
-                className="md:h-[63px] h-[50px] md:w-[219px] w-full object-contain"
+                className="md:h-[63px] h-[48px] md:w-[219px] w-full object-contain"
               />
             </a>
 
-            {/* Google Play Store */}
+     
             <a
               href="https://play.google.com/store/apps/details?id=com.bachhoahouston"
               target="_blank"
@@ -51,9 +51,9 @@ function ShopFasterGroceryStore() {
               <Image
                 src="/image14.png"
                 alt="Get it on Google Play"
-                width={239}
+                width={269}
                 height={73}
-                className="md:h-[63px] h-[58px] md:w-[219px] w-full object-contain"
+                className="md:h-[73px] h-[55px] md:w-[269px] w-full object-contain"
               />
             </a>
           </div>
