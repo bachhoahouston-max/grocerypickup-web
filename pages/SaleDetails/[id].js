@@ -1,5 +1,5 @@
 import GroceryCategories from "@/components/GroceryCatories";
-import ShopFasterMarketplace from "@/components/ShopFasterMarketplace";
+import ShopFasterMarketplace from "@/components/ShopFasterGroceryStore";
 import React, { useContext, useEffect, useState } from "react";
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";

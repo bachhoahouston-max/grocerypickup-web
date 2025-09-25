@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ShopFasterTropicana from "@/components/ShopFasterMarketplace";
+import ShopFasterTropicana from "@/components/ShopFasterGroceryStore";
 import { Api } from "@/services/service";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";

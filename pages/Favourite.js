@@ -2,7 +2,7 @@ import { Api } from "@/services/service";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import GroceryCategories from "@/components/GroceryCatories";
-import ShopFasterTropicana from "@/components/ShopFasterMarketplace";
+import ShopFasterTropicana from "@/components/ShopFasterGroceryStore";
 import { useTranslation } from "react-i18next";
 import { userContext } from "./_app";
 import Head from "next/head";

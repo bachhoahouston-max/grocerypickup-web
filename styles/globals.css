@@ -173,14 +173,48 @@ body {
   }
 }
 
-/* .product-image {
-  display: block;
-  max-width: 100%;
-  height: auto;
+/* globals.css */
+.carousel-container {
+  padding: 0 !important;
 }
 
-.magnifier-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-} */
+.react-multi-carousel-list {
+  padding: 10px 0;
+}
+
+.react-multi-carousel-item {
+  padding: 0 8px;
+}
+
+.react-multi-carousel-dot-list {
+  bottom: -30px;
+}
+
+.react-multi-carousel-dot button {
+  background: #ddd;
+  border: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.react-multi-carousel-dot--active button {
+  background: #f38529;
+}
+
+.react-multiple-carousel__arrow {
+  background: #f38529 !important;
+  border: none !important;
+  color: white !important;
+  min-width: 35px !important;
+  min-height: 35px !important;
+}
+
+.react-multiple-carousel__arrow:hover {
+  background: #e67419 !important;
+}
+
+.react-multiple-carousel__arrow::before {
+  font-size: 14px !important;
+}
+

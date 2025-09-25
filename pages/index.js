@@ -23,6 +23,7 @@ import ProductCategory from "@/components/ProductCategory";
 import Head from "next/head";
 import { useContext } from "react";
 import { favoriteProductContext, userContext } from "./_app";
+import ShopFasterGroceryStore from "@/components/ShopFasterGroceryStore";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -216,6 +217,7 @@ export default function Home(props) {
         </div>
         <DealsOnOrganicFood />
         <Testimonials />
+        <ShopFasterGroceryStore />
       </div>
     </>
 
@@ -303,52 +305,6 @@ export function BulkSellerSection(props) {
         )}
       </div>
 
-      {/* Custom CSS for better carousel styling */}
-      <style jsx>{`
-          .carousel-container {
-            padding: 0 !important;
-          }
-
-          .react-multi-carousel-list {
-            padding: 10px 0;
-          }
-
-          .react-multi-carousel-item {
-            padding: 0 8px;
-          }
-
-          .react-multi-carousel-dot-list {
-            bottom: -30px;
-          }
-
-          .react-multi-carousel-dot button {
-            background: #ddd;
-            border: none;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-          }
-
-          .react-multi-carousel-dot--active button {
-            background: #f38529;
-          }
-
-          .react-multiple-carousel__arrow {
-            background: #f38529 !important;
-            border: none !important;
-            color: white !important;
-            min-width: 35px !important;
-            min-height: 35px !important;
-          }
-
-          .react-multiple-carousel__arrow:hover {
-            background: #e67419 !important;
-          }
-
-          .react-multiple-carousel__arrow::before {
-            font-size: 14px !important;
-          }
-        `}</style>
     </>
   )
 
@@ -435,53 +391,6 @@ export function NewArrivalSection(props) {
           </div>
         )}
       </div>
-
-      {/* Custom CSS for better carousel styling */}
-      <style jsx>{`
-          .carousel-container {
-            padding: 0 !important;
-          }
-
-          .react-multi-carousel-list {
-            padding: 10px 0;
-          }
-
-          .react-multi-carousel-item {
-            padding: 0 8px;
-          }
-
-          .react-multi-carousel-dot-list {
-            bottom: -30px;
-          }
-
-          .react-multi-carousel-dot button {
-            background: #ddd;
-            border: none;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-          }
-
-          .react-multi-carousel-dot--active button {
-            background: #f38529;
-          }
-
-          .react-multiple-carousel__arrow {
-            background: #f38529 !important;
-            border: none !important;
-            color: white !important;
-            min-width: 35px !important;
-            min-height: 35px !important;
-          }
-
-          .react-multiple-carousel__arrow:hover {
-            background: #e67419 !important;
-          }
-
-          .react-multiple-carousel__arrow::before {
-            font-size: 14px !important;
-          }
-        `}</style>
     </>
   )
 
@@ -564,52 +473,7 @@ export function CategorySection() {
           </div>
         )}
       </div>
-
-      <style jsx>{`
-          .carousel-container {
-            padding: 0 !important;
-          }
-
-          .react-multi-carousel-list {
-            padding: 10px 0;
-          }
-
-          .react-multi-carousel-item {
-            padding: 0 8px;
-          }
-
-          .react-multi-carousel-dot-list {
-            bottom: -30px;
-          }
-
-          .react-multi-carousel-dot button {
-            background: #ddd;
-            border: none;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-          }
-
-          .react-multi-carousel-dot--active button {
-            background: #f38529;
-          }
-
-          .react-multiple-carousel__arrow {
-            background: #f38529 !important;
-            border: none !important;
-            color: white !important;
-            min-width: 35px !important;
-            min-height: 35px !important;
-          }
-
-          .react-multiple-carousel__arrow:hover {
-            background: #e67419 !important;
-          }
-
-          .react-multiple-carousel__arrow::before {
-            font-size: 14px !important;
-          }
-        `}</style>
+   
     </>
 
   )
