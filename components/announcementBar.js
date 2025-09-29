@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 
-function announcementBar({
-  announcementBar,
-  setAnnouncementBar,
-  loader,
-  toaster,
-}) {
+function AnnouncementBar({ announcementBar, setAnnouncementBar, loader, toaster }) {
   const [shipmentCostMessage, setShipmentCostMessage] = useState("");
   const router = useRouter();
 
@@ -44,36 +39,37 @@ function announcementBar({
     <>
       <style>
         {`
-    @keyframes marquee {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-50%); }
-    }
-    .marquee-animate {
-      animation: marquee 15s linear infinite;
-    }
-  `}
+@keyframes marquee-mobile {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}
+
+@media (max-width: 640px) {
+  .animate-marquee-mobile {
+    animation: marquee-mobile 15s linear infinite;
+  }
+}
+
+@media (min-width: 641px) {
+  .animate-marquee-mobile {
+    animation: none; /* desktop: no animation */
+  }
+}
+`}
       </style>
 
       <div
-        className={`transition-all duration-500 ease-in-out ${announcementBar
-          ? "opacity-100 max-h-12"
-          : "opacity-0 max-h-0 overflow-hidden"
+        className={`transition-all duration-500 ease-in-out ${announcementBar ? "opacity-100 max-h-12" : "opacity-0 max-h-0 overflow-hidden"
           }`}
       >
-        <div className="relative w-full h-12 overflow-hidden flex  justify-center items-center bg-[#f38529] text-white">
-          <div className="flex whitespace-nowrap 
-                    sm:animate-none    /* desktop: no animation */
-                    animate-[marquee_15s_linear_infinite] /* mobile: run */">
+        <div className="relative w-full h-12 overflow-hidden flex justify-center items-center bg-[#f38529] text-white">
+          <div className="absolute whitespace-nowrap animate-marquee-mobile" style={{ left: '50%' }}>
             <span className="pr-8">{shipmentCostMessage}</span>
-            {/* <span className="pr-8">{shipmentCostMessage}</span> */}
           </div>
         </div>
       </div>
-
-
-
     </>
   );
 }
 
-export default announcementBar;
+export default AnnouncementBar;
