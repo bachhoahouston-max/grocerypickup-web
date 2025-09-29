@@ -540,13 +540,14 @@ const Navbar = (props) => {
       pickupOption === "localDelivery" ||
       pickupOption === "ShipmentDelivery"
     ) {
-      const { email, name, phoneNumber, lastname } = localAddress;
+      const { email, name, phoneNumber, lastname, address } = localAddress;
 
       if (
         !email?.trim() ||
         !name?.trim() ||
         !phoneNumber?.toString().trim() ||
-        !lastname?.trim()
+        !lastname?.trim() ||
+        !address?.trim()
       ) {
         return props.toaster({
           type: "error",
