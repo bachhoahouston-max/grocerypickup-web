@@ -63,9 +63,12 @@ function AnnouncementBar({ announcementBar, setAnnouncementBar, loader, toaster 
           }`}
       >
         <div className="relative w-full h-12 overflow-hidden flex justify-center items-center bg-[#f38529] text-white">
-          <div className="absolute whitespace-nowrap animate-marquee-mobile" style={{ left: '50%' }}>
+          <div
+            className="absolute whitespace-nowrap animate-marquee-mobile left-1/2 md:left-[30%]"
+          >
             <span className="pr-8">{shipmentCostMessage}</span>
           </div>
+
         </div>
       </div>
     </>
