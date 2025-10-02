@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 import { useTranslation } from "react-i18next";
 
-const GOOGLE_API_KEY = "AIzaSyDHd5FoyP2sDBo0vO2i0Zq7TIUZ_7GhBcI";
+const GOOGLE_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 const libraries = ["places"];
 
 const AddressInput = ({ profileData, setProfileData, className, value }) => {
