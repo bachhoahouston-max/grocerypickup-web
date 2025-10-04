@@ -104,11 +104,11 @@ const Footer = () => {
                 <li className="pb-1 md:pb-2 hover:underline">
                   <Link href="/StoreLocation">{t("Store Location")}</Link>
                 </li>
-                <li className="pb-1 md:pb-2 hover:underline">
+                {/* <li className="pb-1 md:pb-2 hover:underline">
                   <Link href="/FranchiseOpportunity">
                     {t("Franchise Opportunity")}
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </div>
 

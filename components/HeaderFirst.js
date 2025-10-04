@@ -146,7 +146,7 @@ const HeaderFirst = (props) => {
               )}
             </div>
 
-            <p
+            {/* <p
               className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] font-bold transition-transform duration-300 hover:-translate-y-[5px] cursor-pointer ml-2 
     ${selectedTab === "FranchiseOpportunity"
                   ? "text-custom-green"
@@ -159,7 +159,7 @@ const HeaderFirst = (props) => {
               }}
             >
               {t("Franchise Opportunity")}
-            </p>
+            </p> */}
 
             <p
               className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 
