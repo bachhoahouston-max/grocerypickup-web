@@ -330,7 +330,7 @@ function Categories(props) {
                 <div className="bg-custom-green w-[250px] h-full px-5 py-5 md:hidden block md:col-span-1">
                   <div className="border-b border-custom-gray">
                     <div className="flex justify-between items-center w-full pb-5">
-                      <p className="text-black font-semibold text-lg">
+                      <p className="text-white font-semibold text-lg">
                         {t("Sort By")}
                       </p>
                       {!openData && (
