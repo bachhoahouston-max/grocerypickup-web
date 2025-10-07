@@ -41,7 +41,7 @@ function Account(props) {
 
 
   const TabButtons = () => (
-    <div className="flex gap-4 mb-4 border-b border-gray-200 pb-2">
+    <div className="px-4 flex gap-4 mb-4 border-b border-gray-200 pb-2">
       <button
         onClick={() => setActiveTab("profile")}
         className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${activeTab === "profile"
@@ -76,7 +76,7 @@ function Account(props) {
   );
 
   return (
-    <div className={`w-full px-4 md:px-6 md:mt-8 mt-10 pb-8`}>
+    <div className={`w-full  md:px-6 md:mt-8 mt-10 pb-8`}>
       <div className="max-w-6xl mx-auto">
         {!user?.token ? (
           <div className="flex flex-col justify-center items-center w-full min-h-[550px] gap-6">
@@ -96,7 +96,7 @@ function Account(props) {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 px-4">
               <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
                 {/* User Info */}
                 <div className="flex items-center gap-4 mb-6">
