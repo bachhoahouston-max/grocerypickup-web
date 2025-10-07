@@ -4,11 +4,12 @@ import { userContext } from "./_app";
 import { PiSignOutFill } from "react-icons/pi";
 import Swal from "sweetalert2";
 import EditProfile from "./editProfile";
-import { UserRound } from "lucide-react";
+import { UserRound, ShoppingBag, History, ChevronRight } from "lucide-react";
 
 function Account(props) {
   const router = useRouter();
   const [user, setUser] = useContext(userContext);
+  const [activeTab, setActiveTab] = useState("profile");
 
   const logout = () => {
     Swal.fire({
@@ -39,57 +40,103 @@ function Account(props) {
   };
 
 
-  return (
-    <div className={`w-full px-2 md:mt-8 mt-20 pb-4 `}>
-      <div className="flex justify-center mx-auto  max-w-7xl  items-center gap-3">
-        <div>
-          {!user?.token ? (
-            <div className="flex flex-col justify-center items-center w-full min-h-[550px] gap-6">
-              {/* Icon with Message */}
-              <div className="flex flex-col items-center gap-6 text-gray-700 text-[18px] font-medium">
-                <UserRound className="w-20 h-20 text-custom-green" />
-                <span className="text-center w-[80%]">
-                  You are not logged in. Please sign in to view your profile.
-                </span>
-              </div>
+  const TabButtons = () => (
+    <div className="flex gap-4 mb-4 border-b border-gray-200 pb-2">
+      <button
+        onClick={() => setActiveTab("profile")}
+        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${activeTab === "profile"
+            ? "bg-custom-green text-white shadow-lg"
+            : "text-gray-600 hover:text-custom-green hover:bg-gray-50"
+          }`}
+      >
+        <UserRound className="w-5 h-5" />
+        Profile
+      </button>
+      <button
+        onClick={() => router.push("/Mybooking")}
+        className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${activeTab === "orders"
+            ? "bg-custom-green text-white shadow-lg"
+            : "text-gray-600 hover:text-custom-green hover:bg-gray-50"
+          }`}
+      >
+        <ShoppingBag className="w-5 h-5" />
+        Orders
+      </button>
+      <button
+        onClick={() => router.push("/Myhistory")}
+        className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${activeTab === "history"
+            ? "bg-custom-green text-white shadow-lg"
+            : "text-gray-600 hover:text-custom-green hover:bg-gray-50"
+          }`}
+      >
+        <History className="w-5 h-5" />
+        History
+      </button>
+    </div>
+  );
 
-              <button
-                className="bg-custom-green rounded-[15px] px-6 py-2 text-white text-[18px] font-normal"
-                onClick={() => {
-                  router.push("/signIn");
-                }}
-              >
-                Sign In
-              </button>
+  return (
+    <div className={`w-full px-4 md:px-6 md:mt-8 mt-10 pb-8`}>
+      <div className="max-w-6xl mx-auto">
+        {!user?.token ? (
+          <div className="flex flex-col justify-center items-center w-full min-h-[550px] gap-6">
+            <div className="flex flex-col items-center gap-6 text-gray-700 text-[18px] font-medium">
+              <UserRound className="w-20 h-20 text-custom-green" />
+              <span className="text-center w-[80%]">
+                You are not logged in. Please sign in to view your profile.
+              </span>
             </div>
-          ) : (
-            <div className="flex items-center">
-              <div className="w-[40px] h-[40px] bg-custom-green rounded-full flex justify-center items-center">
-                <div
-                  onClick={() => {
-                    logout()
-                  }}
-                  className="w-[40px] h-[40px] bg-custom-green rounded-full flex justify-center items-center text-white font-semibold"
-                >
-                  <PiSignOutFill className="text-white w-[23px] h-[23px]" />
+            <button
+              className="bg-custom-green rounded-[15px] px-8 py-3 text-white text-[18px] font-semibold hover:bg-custom-green/90 transition-colors shadow-lg"
+              onClick={() => router.push("/signIn")}
+            >
+              Sign In
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+                {/* User Info */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-custom-green h-16 w-16 rounded-full flex justify-center items-center shadow-lg">
+                    <p className="font-bold text-white text-xl text-center capitalize">
+                      {user?.username?.charAt(0).toUpperCase()}
+                    </p>
+                  </div>
+                  <div>
+                    <h2 className="font-bold text-xl text-gray-800 capitalize">
+                      {user?.username}
+                    </h2>
+                    <p className="text-gray-600 text-sm">{user?.email}</p>
+                  </div>
                 </div>
+
+                {/* Logout Button */}
+                <button
+                  onClick={logout}
+                  className="w-full bg-red-50 text-red-600 py-3 rounded-xl font-semibold hover:bg-red-100 transition-colors flex items-center justify-center gap-2 border border-red-200"
+                >
+                  <PiSignOutFill className="w-5 h-5" />
+                  Sign Out
+                </button>
               </div>
             </div>
-          )}
-        </div>
-        {user?.token && (
-          <div className="bg-custom-green h-[40px] w-[40px] rounded-full flex justify-center items-center group relative">
-            <p className="font-bold text-white text-base text-center capitalize">
-              {user?.username?.charAt(0).toUpperCase()}
-            </p>
+
+    
+            <div className="lg:col-span-2">
+              <TabButtons />
+
+              {activeTab === "profile" && (
+                <div className="bg-white">
+                  <EditProfile loader={props?.loader} toaster={props?.toaster} />
+                </div>
+              )}
+            </div>
           </div>
         )}
       </div>
-      {user?.token && (
-        <div>
-          <EditProfile loader={props?.loader} toaster={props?.toaster} />
-        </div>
-      )}
     </div>
   );
 }

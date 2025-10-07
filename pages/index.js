@@ -109,7 +109,7 @@ export default function Home(props) {
               {t("Explore by Categories")}
             </p>
             <p
-              className="text-black md:text-[18px] text-[16px] font-semibold hover:text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
+              className=" md:text-[18px] text-[16px] font-semibold text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
               onClick={() =>
                 router.push("/AllCategory")
               }
@@ -129,7 +129,7 @@ export default function Home(props) {
               {t("New Arrivals")}
             </p>
             <p
-              className="text-black md:text-[18px] text-[16px] font-semibold hover:text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
+              className=" md:text-[18px] text-[16px] font-semibold text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
               onClick={() =>
                 router.push("/categories/all?category=all&sort_by=new")
               }
@@ -149,7 +149,7 @@ export default function Home(props) {
               {t("Bulk Best Sellers")}
             </p>
             <p
-              className="text-black md:text-[18px] text-[16px] font-semibold hover:text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
+              className=" md:text-[18px] text-[16px] font-semibold text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
               onClick={() =>
                 router.push("/categories/bulk-buy")
               }

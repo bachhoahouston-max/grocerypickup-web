@@ -93,7 +93,10 @@ const Footer = () => {
               </h3>
               <ul>
                 <li className="pb-1 md:pb-2 hover:underline">
-                  <Link href="/">{t("Home")}</Link>
+                  <Link href="/Mybooking">{t("My Order")}</Link>
+                </li>
+                <li className="pb-1 md:pb-2 hover:underline">
+                  <Link href="/Myhistory">{t("History")}</Link>
                 </li>
                 <li className="pb-1 md:pb-2 hover:underline">
                   <Link href="/AboutUs">{t("About Us")}</Link>
@@ -101,9 +104,7 @@ const Footer = () => {
                 <li className="pb-1 md:pb-2 hover:underline">
                   <Link href="/ContactUs">{t("Contact")}</Link>
                 </li>
-                <li className="pb-1 md:pb-2 hover:underline">
-                  <Link href="/StoreLocation">{t("Store Location")}</Link>
-                </li>
+
                 {/* <li className="pb-1 md:pb-2 hover:underline">
                   <Link href="/FranchiseOpportunity">
                     {t("Franchise Opportunity")}
@@ -139,10 +140,7 @@ const Footer = () => {
               </h3>
               <ul>
                 <li className="pb-1 md:pb-2 hover:underline">
-                  <Link href="/Myhistory">{t("History")}</Link>
-                </li>
-                <li className="pb-1 md:pb-2 hover:underline">
-                  <Link href="/Mybooking">{t("My Order")}</Link>
+                  <Link href="/StoreLocation">{t("Store Location")}</Link>
                 </li>
                 <li className="pb-1 md:pb-2 hover:underline">
                   <Link href="/JoinOurDelievryTeam">

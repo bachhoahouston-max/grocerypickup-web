@@ -358,7 +358,7 @@ function ProductDetails(props) {
                               <Image
                                 width={500}
                                 height={300}
-                                className="h-[500px] w-full object-contain cursor-move"
+                                className="md:h-[500px] w-full object-contain cursor-move"
                                 src={item}
                                 alt={productsId?.imageAltName || "Product image"}
                               />
