@@ -18,8 +18,9 @@ export function middleware(request) {
     const response = NextResponse.redirect(redirectUrl);
     response.cookies.set("redirected_once", "true", {
       path: "/",
-      maxAge: 60 * 60 * 1, // 1 day
+      maxAge: 60 * 5, // 5 minutes
     });
+
     return response;
   }
 
