@@ -13,7 +13,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="p-10 bg-[#5CB447] text-black font-sans"
+      className="p-10 bg-custom-green text-black font-sans"
       role="contentinfo"
       aria-label="Website Footer"
     >

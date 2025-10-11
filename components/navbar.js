@@ -948,7 +948,7 @@ getProfileData();
       {/* Cart Drawer */}
       <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
         <div
-          className={`md:w-[750px] w-full min-w-[390px]  relative  bg-[#5CB447] pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
+          className={`md:w-[750px] w-full min-w-[390px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
             } 
           ${cartData.length > 1 ? "pb-8" : "pb-40"} `}
         >

@@ -13,9 +13,9 @@ function MobileFooter() {
     const {t} = useTranslation();
     const [openCart, setOpenCart] = useContext(openCartContext);
     const [cartData, setCartData] = useContext(cartContext)
-    
+
     return (
-        <div className='bg-[#5CB447] w-full h-14 grid grid-cols-4'>
+        <div className='bg-custom-green w-full h-14 grid grid-cols-4'>
             <div className='flex flex-col justify-center items-center'>
                 <IoHomeOutline className='w-[20px] h-[20px] text-white' onClick={() => { router.push('/') }} />
                 <p className='text-white font-normal text-xs'>{t("Home")}</p>
