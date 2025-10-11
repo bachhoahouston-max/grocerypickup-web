@@ -91,9 +91,9 @@ function Payment(props) {
       isShipmentDelivery: localCheckoutData.isShipmentDelivery,
       paymentStatus: stripeRes.payment_status,
       customerDetails: stripeRes.customer_details || {},
-      from: router.query.from,
       isOnce: localCheckoutData.isOnce,
-      discountCode: localCheckoutData.discountCode
+      discountCode: localCheckoutData.discountCode,
+      from:"website"
     };
 
     const createRes = await Api(
