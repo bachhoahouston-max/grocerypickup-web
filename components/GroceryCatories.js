@@ -115,6 +115,8 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
   const itemQuantity = cartItem ? cartItem.qty : 0;
 
+
+  
   return (
     <div
       key={i}

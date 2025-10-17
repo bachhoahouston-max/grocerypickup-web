@@ -215,9 +215,9 @@ export default function Home(props) {
             </div>
           </div>
         </div>
-        <DealsOnOrganicFood />
+        {/* <DealsOnOrganicFood />
         <Testimonials />
-        <ShopFasterGroceryStore />
+        <ShopFasterGroceryStore /> */}
       </div>
     </>
 

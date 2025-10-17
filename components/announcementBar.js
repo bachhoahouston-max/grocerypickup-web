@@ -59,14 +59,14 @@ function AnnouncementBar({ announcementBar, setAnnouncementBar, loader, toaster 
       </style>
 
       <div
-        className={`transition-all duration-500 ease-in-out ${announcementBar ? "opacity-100 max-h-12" : "opacity-0 max-h-0 overflow-hidden"
+        className={`transition-all duration-500 ease-in-out ${announcementBar ? "opacity-100 max-h-10" : "opacity-0 max-h-0 overflow-hidden"
           }`}
       >
-        <div className="relative w-full h-12 overflow-hidden flex justify-center items-center bg-custom-green text-white">
+        <div className="relative w-full h-10 overflow-hidden flex justify-center items-center bg-custom-green text-white">
           <div
             className="absolute whitespace-nowrap animate-marquee-mobile left-1/2 md:left-[30%]"
           >
-            <span className="pr-8">{shipmentCostMessage}</span>
+            <span className="pr-8 text-sm">{shipmentCostMessage}</span>
           </div>
 
         </div>

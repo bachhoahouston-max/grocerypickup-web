@@ -6,6 +6,7 @@ import { useEffect, useState, useContext, Suspense } from "react";
 import { useRouter } from "next/router.js";
 import { userContext } from "@/pages/_app.js";
 import AnnouncementBar from "./announcementBar.js";
+import LeftLayout from "./LeftLayout.js";
 
 const Layout = ({ children, loader, toaster }) => {
   const [user, setUser] = useContext(userContext);
@@ -68,12 +69,18 @@ const Layout = ({ children, loader, toaster }) => {
               opens={opens}
             />
           </Suspense>
-          <Suspense fallback={<div>Loading.....</div>}>
+          {/* <Suspense fallback={<div>Loading.....</div>}>
             <HeaderFirst loader={loader} toaster={toaster} />
+          </Suspense> */}
+
+          <Suspense>
+            <LeftLayout loader={loader}
+              toaster={toaster} />
           </Suspense>
+
         </div>
 
-        <div className="pt-[88px] md:pt-[145px] max-w-screen overflow-x-hidden z-0">
+        <div className="pt-[88px] md:pt-[120px] max-w-screen overflow-x-hidden z-0">
           <main className="flex-1">{children}</main>
         </div>
 

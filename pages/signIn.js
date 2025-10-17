@@ -6,6 +6,7 @@ import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import Head from "next/head";
 import Image from "next/image";
+import Link from "next/link";
 const SignIn = (props) => {
   const { t } = useTranslation();
   const router = useRouter();
@@ -84,43 +85,54 @@ const SignIn = (props) => {
           href="https://www.bachhoahouston.com/signIn"
         />
       </Head>
-      <div className="font-sans bg-white flex flex-col items-center justify-center">
-        <div className="max-w-7xl mx-auto w-full mt-12 md:mt-2">
-          <div className="mx-auto ms-6 md:ms-20 md:mt-8 mt-8">
-            <h1 className="text-[34px] md:text-[64px] text-black">
-              {t("Welcome")}
-            </h1>
+      <div className="font-sans  flex flex-col items-center justify-center md:min-h-[670px]">
+        <div className="max-w-7xl mx-auto w-full">
+
+          <div className="flex md:hidden flex-col justify-center items-center">  <h1 className="mt-8 text-[34px] md:text-[48px] text-black">
+            {t("Welcome")}
+          </h1>
             <p className="md:text-[20px] text-[16px] text-[#858080]">
               {" "}
               {t("Please enter your sign in details")}.
             </p>
-          </div>
-          <div className="grid lg:grid-cols-2 md:grid-cols-2 gap-4 py-8">
-            <div className="hidden md:flex w-[555px] h-[766px] justify-center items-center relative">
+            <div className=" w-full h-[120px] justify-center items-center relative mb-8">
               <Image
-                src="/image2.jpeg"
+                src="/ladies.png"
                 alt="Sign In"
                 fill
-                className="object-cover" // ensures image covers the parent
+                className="object-contain" // ensures image covers the parent
               />
             </div>
 
+            {/* <div className="mt-6 relative  w-[170px]  h-14 mb-4 ">
+              <Link href="/" aria-label="Go to homepage">
+                <Image
+                  alt="Bach Hoa Houston grocery pickup logo"
+                  className="mb-4 cursor-pointer "
+                  fill
+                  src="/logo-bachahoustan.png"
+                  priority
+                />
+              </Link>
+            </div> */}
+            </div>
+          <div className="bg-custom-lightGreen rounded-[22px]  grid lg:grid-cols-3 md:grid-cols-3 shadow-[2px_4px_4px_4px_#00000040] md:mx-0 mx-3 mb-12 md:mb-0">
             <form
               onSubmit={submit}
-              className="border-[2px] mx-4 rounded-xl border-black md:px-12 px-3 flex flex-col justify-center items-center md:mb-8 mb-20"
+              className="bg-white rounded-[22px] md:px-12 px-5 md:py-0 py-6 flex flex-col justify-center items-start col-span-2 border-[1px] border-[#2E7D3240] "
             >
-              <h3 className="text-black md:text-[40px] text-[28px] font-bold text-center md:mb-8 mb-4 mt-4">
+              <h3 className="text-black md:text-[48px] text-[20px] font-bold md:mb-10 mb-8 mt-4">
                 {t("Sign in")}
               </h3>
 
-              <div className="relative flex items-center w-full md:mb-14 mb-8">
-                <label className="text-gray-800 text-[16px] md:text-[20px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px]">
+              <div className="relative flex items-center  md:mb-14 mb-8 w-full md:w-[80%]">
+                <label className="text-gray-800 text-[16px] md:text-[18px] bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px]">
                   {t("Email")}
                 </label>
                 <input
                   type="email"
                   placeholder="demo@gmail.com"
-                  className="px-4 py-3 bg-white w-full text-[16px] md:text-[18px] border-2 border-black rounded-xl text-black outline-none"
+                  className="px-4 py-3 bg-white w-full text-[14px] md:text-[18px] border-[1px] border-black/25 rounded-xl text-black outline-none "
                   value={userDetail.email}
                   onChange={(e) => {
                     setUserDetail({
@@ -132,14 +144,14 @@ const SignIn = (props) => {
                 />
               </div>
 
-              <div className="relative flex items-center w-full mb-4">
-                <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[16px] md:text-[20px]">
+              <div className="relative flex items-center w-full md:w-[80%] mb-4">
+                <label className="text-gray-800 bg-white absolute px-2 md:top-[-18px] top-[-12px] left-[18px] text-[16px] md:text-[18px]">
                   {t("Password")}
                 </label>
                 <input
                   type={!eyeIcon ? "password" : "text"}
                   placeholder="***********"
-                  className="px-4 py-3 bg-white w-full border-2 border-[#000000] rounded-xl outline-none text-[16px] text-black md:text-[18px]"
+                  className="px-4 py-3 bg-white w-full border-[1px] border-black/25 rounded-xl outline-none text-[14px] text-black md:text-[18px]"
                   value={userDetail.password}
                   onChange={(e) => {
                     setUserDetail({
@@ -169,7 +181,7 @@ const SignIn = (props) => {
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center justify-end gap-4 w-full mb-4">
+              <div className="flex flex-wrap items-center justify-start gap-4 w-full mb-4">
                 <div>
                   <p
                     className="text-black cursor-pointer font-semibold text-sm hover:underline"
@@ -180,10 +192,10 @@ const SignIn = (props) => {
                 </div>
               </div>
 
-              <div className="mt-2 w-full">
+              <div className="mt-2 w-full md:w-[80%]">
                 <button
                   type="submit"
-                  className="w-full shadow-xl py-3.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[16px] md:text-[20px] bg-custom-green focus:outline-none cursor-pointer"
+                  className="w-full shadow-xl md:py-3.5 py-2.5 px-4 text-sm tracking-wider font-semibold rounded-xl text-white text-[16px] md:text-[20px] bg-custom-green focus:outline-none cursor-pointer"
                 >
                   {t("Sign in")}
                 </button>
@@ -199,6 +211,37 @@ const SignIn = (props) => {
                 </span>
               </p>
             </form>
+            <div className="md:flex hidden rounded-tr-[22px] rounded-br-[22px] bg-custom-lightGreen  flex-col justify-center items-center ">
+
+              <h1 className="mt-4 text-[34px] md:text-[48px] text-black">
+                {t("Welcome")}
+              </h1>
+              <p className="md:text-[20px] text-[16px] text-[#858080] mt-4 mb-4">
+                {" "}
+                {t("Please enter your sign in details")}.
+              </p>
+              <div className="hidden md:flex w-full h-[320px] justify-center items-center relative">
+                <Image
+                  src="/ladies.png"
+                  alt="Sign In"
+                  fill
+                  className="object-contain" // ensures image covers the parent
+                />
+              </div>
+
+              <div className="mt-6 relative  w-[170px]  h-14 mb-10 ">
+                <Link href="/" aria-label="Go to homepage">
+                  <Image
+                    alt="Bach Hoa Houston grocery pickup logo"
+                    className="mb-4 cursor-pointer "
+                    fill
+                    src="/logo-bachahoustan.png"
+                    priority
+                  />
+                </Link>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
