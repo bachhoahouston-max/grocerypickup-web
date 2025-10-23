@@ -168,7 +168,7 @@ export default function Home(props) {
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
               <FontAwesomeIcon
                 icon={faBoxOpen}
-                className="text-xl text-[#F38529] mb-2"
+                className="text-xl text-custom-green mb-2"
               />
               <h3 className="text-[16px] md:text-[18px] md:text-lg font-semibold text-black">
                 {t("Product Package")}
@@ -180,7 +180,7 @@ export default function Home(props) {
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
               <FontAwesomeIcon
                 icon={faHeadset}
-                className="text-xl text-[#F38529] mb-4"
+                className="text-xl text-custom-green mb-4"
               />
               <h3 className="text-[16px] md:text-[18px] font-semibold text-black">
                 {t("7 Days A Week Support")}
@@ -192,7 +192,7 @@ export default function Home(props) {
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
               <FontAwesomeIcon
                 icon={faTruck}
-                className="text-xl text-[#F38529] mb-4"
+                className="text-xl text-custom-green mb-4"
               />
               <h3 className="text-[16px] md:text-[18px] font-semibold text-black">
                 {t("Next Day Local Delivery")}
@@ -204,7 +204,7 @@ export default function Home(props) {
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
               <FontAwesomeIcon
                 icon={faLock}
-                className="text-xl text-[#F38529] mb-4"
+                className="text-xl text-custom-green mb-4"
               />
               <h3 className="text-[16px] md:text-[18px] font-semibold text-black">
                 {t("Payment Secure")}
@@ -215,9 +215,7 @@ export default function Home(props) {
             </div>
           </div>
         </div>
-        {/* <DealsOnOrganicFood />
-        <Testimonials />
-        <ShopFasterGroceryStore /> */}
+        
       </div>
     </>
 

@@ -34,7 +34,7 @@ import HeaderFirst from "./HeaderFirst";
 const Navbar = (props) => {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false)
-  const [showHover, setShowHover] = useState(true);
+  const [showHover, setShowHover] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [user, setUser] = useContext(userContext);
   const [CartTotal, setCartTotal] = useState(0);
@@ -779,7 +779,7 @@ const Navbar = (props) => {
             ) : (
               <div
                 className="relative group cursor-pointer"
-                onClick={() => setShowHover(true)}
+                onClick={() => setShowHover(!showHover)}
               >
                 <div className="w-10 h-10 bg-custom-green rounded-full flex items-center justify-center">
                   <p className="text-white font-bold text-base">
