@@ -20,11 +20,20 @@ function MainHeader() {
   }, [router]);
 
   const responsive = {
-    all: {
-      breakpoint: { max: 4000, min: 0 },
-      items: 1,
+    desktop: {
+      breakpoint: { max: 4000, min: 1024 }, // adjust min-width for desktop
+      items: 3,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 768 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 767, min: 0 },
+      items: 2, // mobile shows 2 items
     },
   };
+
 
   const CustomLeftArrow = ({ ...rest }) => (
     <div {...rest} className="hidden group-hover:flex absolute left-4 top-1/2 transform -translate-y-1/2 text-white p-2 rounded-full z-10 cursor-pointer transition">
@@ -43,7 +52,7 @@ function MainHeader() {
   );
 
   return (
-    <div className="mx-auto max-w-8xl overflow-hidden group relative md:mt-15 mt-7">
+    <div className="mx-auto max-w-8xl overflow-hidden group relative md:mt-15 mt-5">
       <Carousel
         responsive={responsive}
         infinite
@@ -58,15 +67,15 @@ function MainHeader() {
         {carouselImg.map((img, idx) => (
           <div
             key={idx}
-            className="relative w-full h-[150px] flex items-center justify-center overflow-hidden 
-              md:h-[305px] lg:h-[320px] xl:h-[450px] 2xl:h-[570px] "
+            className="relative w-full h-[170px] flex items-center justify-center overflow-hidden 
+              md:h-[305px] lg:h-[320px] xl:h-[450px]"
           >
             <Image
               src={img.image || "/fallback.jpg"}
               alt={`Bachahoustan banner ${idx}`}
               fill
               priority={idx === 0}
-              className="w-full h-full md:object-contain object-contain"
+              className="w-full h-full object-cover"
             />
           </div>
         ))}

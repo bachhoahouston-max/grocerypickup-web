@@ -71,8 +71,8 @@ const HeaderFirst = (props) => {
 
   return (
     <>
-      <nav className="bg-white border-t-1 border-[#F0F1F1] relative">
-        <div className=" mt-2 mx-auto px-4 py-2 md:flex hidden justify-center items-center mr-20">
+      <nav className="bg-white  relative">
+        <div className="mt-2 mx-auto px-4 py-2 md:flex hidden ">
           <div className="hidden flex-1 lg:flex justify-center xl:space-x-6 lg:space-x-3">
             <p
               className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${selectedTab === "home"
@@ -203,7 +203,8 @@ const HeaderFirst = (props) => {
 
           </div>
         </div>
-        <div className="2xl:right-20 lg:right-8  absolute top-2 px-4 py-2 flex justify-end items-center">
+
+        {/* <div className="2xl:right-20 lg:right-8  absolute top-2 px-4 py-2 flex justify-end items-center">
           <div className="hidden lg:flex items-center space-x-2 mr-2 transition-transform duration-300 hover:-translate-y-[5px]">
             <BiPhoneCall className="text-[#F38529] 2xl:text-3xl lg:text-xl" />
             <a
@@ -213,7 +214,7 @@ const HeaderFirst = (props) => {
               832-230-9288
             </a>
           </div>
-          <div className="rounded-lg lg:flex hidden">
+          {/* <div className="rounded-lg lg:flex hidden">
             <select
               className="bg-white w-full font-normal text-sm text-black outline-none cursor-pointer"
               value={lang}
@@ -222,8 +223,9 @@ const HeaderFirst = (props) => {
               <option value={"en"}>English</option>
               <option value={"vi"}>Vietnamese</option>
             </select>
-          </div>
-        </div>
+          </div> 
+        </div> */}
+
       </nav>
 
 

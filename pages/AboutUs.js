@@ -5,11 +5,10 @@ import { useRouter } from "next/router";
 import { LuBoomBox } from "react-icons/lu";
 import { useTranslation } from "react-i18next";
 import { Api } from "@/services/service";
-import { FaStore, FaCarSide, FaTruck, FaShippingFast } from "react-icons/fa"; // example icons
-import { Shield, Users, Truck, Star, CheckCircle, Clock } from 'lucide-react';
+import { FaStore, FaCarSide, FaTruck, FaShippingFast } from "react-icons/fa";
+import { Shield, Users, Truck, Star, CheckCircle, Clock, Leaf, ShoppingCart } from 'lucide-react';
 import Head from "next/head";
 import Image from "next/image";
-
 
 const services = [
   {
@@ -62,6 +61,7 @@ const AboutUs = (props) => {
       }
     );
   };
+
   const features = [
     {
       icon: Shield,
@@ -82,6 +82,7 @@ const AboutUs = (props) => {
       color: "bg-purple-50 text-purple-600"
     }
   ];
+
   return (
     <>
       <Head>
@@ -93,78 +94,76 @@ const AboutUs = (props) => {
         />
       </Head>
 
-      <div className="w-full bg-[#f59b51] mx-auto flex flex-col md:flex-row justify-center items-center">
-        <div className="md:py-18 py-8 w-full md:w-[780px] h-auto ps-4 md:ps-24">
-          <nav className="mb-4 mt-18 md:mt-12 text-[16px] md:text-start text-center">
-            <span className="text-white mr-1">{t("Home")} /</span>
-            <span className="text-white">{t("About Us")}</span>
-          </nav>
-          <h1 className="md:mt-12 mt-4 md:text-start text-center text-[25px] md:text-3xl md:leading-[50px] leading-10 font-bold text-white mb-4">
-            {t("Welcome to our online grocery store")}!
-          </h1>
-          <p className="text-white md:text-start w-[90%] text-center mb-6 text-[15px] leading-[32px]">
-            {t(
-              "We provide fresh, high-quality groceries with a focus on convenience and customer satisfaction. From local produce to everyday essentials, we ensure fast and reliable delivery. Our mission is to bring the best products straight to your doorstep, making grocery shopping easier and hassle-free"
-            )}
-          </p>
-          <div className="flex justify-center md:justify-start mt-6">
-            <p
-              className="bg-[#F38529] cursor-pointer text-white px-6 py-3 rounded-lg text-[15px] inline-flex items-center"
-              onClick={() => router.push("/categories/all")}
-            >
-              {t("Shop Now")}
-              <FontAwesomeIcon icon={faArrowRight} className="ml-2" />
-            </p>
+      <div className="max-w-7xl mx-auto px-4">
+
+
+        <div className="bg-custom-lightGreen rounded-3xl  my-20 relative">
+          <div className="flex flex-col lg:flex-row ">
+            <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+              <h1 className="text-[24px] md:text-[30px]  font-bold text-gray-900 mb-4 leading-tight">
+                {t("Welcome to our online grocery store")}!
+              </h1>
+              <p className="text-gray-700 mb-6 text-[15px] leading-relaxed">
+                {t(
+                  "We provide fresh, high-quality groceries with a focus on convenience and customer satisfaction. From local produce to everyday essentials, we ensure fast and reliable delivery. Our mission is to bring the best products straight to your doorstep, making grocery shopping easier and hassle-free"
+                )}
+              </p>
+              <div className="flex mt-6">
+                <button
+                  className="bg-[#2E7D3266] cursor-pointer  text-black px-6 py-3 rounded-lg text-[15px] inline-flex items-center transition-colors"
+                  onClick={() => router.push("/categories/all")}
+                >
+                  {t("Shop Now")}
+                  <ShoppingCart size={20} className="ml-2" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="absolute -top-14 right-10 lg:w-[600px] md:flex hidden">
+            <div className="relative w-full h-[400px] lg:h-[500px]">
+              <Image
+                fill
+                src="/Store.png"
+                alt="bach hoa houston"
+                className="object-cover rounded-2xl"
+              />
+            </div>
           </div>
         </div>
-        <div className="relative flex w-auto h-full">
-          <Image
-            src="/Store.png"
-            alt="Bach Hoa Houston"
-            className="object-contain"
-            width={800}
-            height={800}
-          />
-        </div>
-      </div>
 
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50">
-        {/* Hero Section */}
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#F38529]/10 to-transparent"></div>
-          <div className="container mx-auto px-4 py-20">
+
+        <div className="md:mt-28">
+          <div className="bg-[#D4E8D4] rounded-3xl px-6 py-12">
             <div className="text-center max-w-4xl mx-auto">
-              <div className="inline-flex items-center gap-2 bg-[#F38529] text-white px-6 py-2 rounded-full text-sm font-medium mb-4">
-                <Star className="w-4 h-4" />
-                Why Work With Us
+              <h2 className="text-[28px] md:text-[36px] font-bold text-gray-900 mb-3">
+                Why Shop From Us
+              </h2>
+              <div className="flex justify-center items-center gap-2 mb-4">
+                <Leaf className="text-gray-700 w-5 h-5 md:flex hidden" />
+                <p className="text-[20px] md:text-[24px] text-gray-900">
+                  Bringing <span className="text-[#5FBA47] font-semibold">Freshness</span> & Convenience Together
+                </p>
+                <Leaf className="text-gray-700 w-5 h-5 md:flex hidden" />
               </div>
-              <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-                Bringing Freshness &
-                <span className="text-[#F38529]"> Convenience</span> Together
-              </p>
-              <p className="text-xl text-gray-600 mb-4 leading-relaxed">
+              <p className="text-[15px] text-gray-600 leading-relaxed">
                 We combine quality products with hassle-free shopping to make
                 your daily grocery experience smoother and smarter
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Features Grid */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="grid md:grid-cols-3 gap-8 mb-20">
+          {/* Feature Cards */}
+          <div className="grid md:grid-cols-3 gap-6 md:mt-20 mt-10 mb-16">
             {features.map((feature, index) => (
               <div key={index} className="group">
-                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100">
-                  <div
-                    className={`${feature.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <feature.icon className="w-8 h-8" />
+                <div className="bg-[#D4E8D4] rounded-2xl p-8 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center">
+                  <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <feature.icon className="text-gray-900" size={48} />
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                  <h3 className="text-[18px] font-bold text-gray-900 mb-3">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-600 leading-relaxed text-[13px]">
                     {feature.description}
                   </p>
                 </div>
@@ -172,128 +171,108 @@ const AboutUs = (props) => {
             ))}
           </div>
 
-          {/* About Section with Image */}
-          <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
-            <div className="flex flex-col lg:flex-row max-h-[550px] h-full">
+
+          <div className="bg-custom-lightGreen rounded-3xl  my-12 md:my-28 relative ">
+            <div className="flex flex-col lg:flex-row ">
               <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-                <div className="inline-flex items-center gap-2 bg-[#F38529]/10 text-[#F38529] px-4 py-2 rounded-full text-sm font-medium mb-6 w-fit">
-                  <CheckCircle className="w-4 h-4" />
-                  About Our Service
-                </div>
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-6 leading-tight">
+                <h2 className="text-[28px] lg:text-[32px] font-bold text-gray-900 mb-6 leading-tight">
                   Modern Grocery Delivery Service
                 </h2>
-                <p className="text-gray-600 text-lg leading-relaxed mb-8">
+                <p className="text-gray-700 text-[15px] leading-relaxed mb-8">
                   We are a modern grocery pickup and delivery service committed
                   to making your daily shopping easier, faster, and more
                   reliable. With a wide range of fresh produce, pantry staples,
                   and household essentials, we bring convenience to your
                   doorstep.
                 </p>
-                <div className="flex items-center gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-[#F38529]" />
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center gap-2 bg-[#2E7D3266]
+ px-4 py-2 rounded-full text-[13px] text-gray-900">
+                    <Clock className="w-4 h-4 " />
                     Fast Delivery
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Star className="w-4 h-4 text-[#F38529]" />
+                  <div className="flex items-center gap-2 bg-[#2E7D3266] px-4 py-2 rounded-full text-[13px] text-gray-800">
+                    <Star className="w-4 h-4 " />
                     Trusted by Hundreds
                   </div>
                 </div>
               </div>
-              <div className="lg:w-1/2 relative md:flex hidden">
-                <div className="aspect-square lg:aspect-auto lg:h-full bg-gradient-to-br from-[#F38529]/20 to-green-100 relative flex items-center justify-center h-[500px] w-[800px]">
-                  <Image
-                    fill
-                    src="/Rectangle25.png"
-                    sizes=""
-                    alt="bach hoa houston"
-                    className="w-full h-full object-cover rounded-2xl shadow-xl"
-                  />
-                </div>
+            </div>
+            <div className="absolute -top-10 right-10 lg:w-[500px] md:flex hidden">
+              <div className="relative w-full h-[400px] lg:h-[400px]">
+                <Image
+                  fill
+                  src="/Rectangle25.png"
+                  alt="bach hoa houston"
+                  className="object-cover rounded-2xl"
+                />
               </div>
             </div>
           </div>
+
         </div>
 
-        {/* Stats Section */}
-        <div className="bg-[#F38529] text-white py-16">
-          <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-3 gap-8 text-center">
-              <div>
-                <div className="text-4xl font-bold mb-2">500+</div>
-                <div className="text-orange-100">Happy Families</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold mb-2">24/7</div>
-                <div className="text-orange-100">Customer Support</div>
-              </div>
-              <div>
-                <div className="text-4xl font-bold mb-2">99%</div>
-                <div className="text-orange-100">On-Time Delivery</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="bg-gradient-to-br from-orange-50 to-yellow-50">
         {teamMembers.length > 0 && (
-          <div className="max-w-7xl container mx-auto">
-            <div className="md:mb-20 mb-10 md:mx-0 mx-6">
-              <h2 className="text-2xl md:text-3xl font-semibold mb-8 md:mb-12 pt-12 text-black">
-                {t("Our Team")}
-              </h2>
+          <div className="mb-16">
+            <h2 className="text-center text-[28px] md:text-[32px] font-bold mb-12 text-gray-900">
+              {t("Our Team")}
+            </h2>
 
-              <div className="grid grid-cols-1  md:grid-cols-4 lg:grid-cols-4 gap-4 md:gap-6">
-                {teamMembers.map((member, index) => (
-                  <div
-                    key={index}
-                    className=" flex flex-col justify-center hover:-translate-y-[20px]  items-center pb-6 rounded-[20px] w-full h-auto hover:shadow-lg transition-transform duration-500 cursor-pointer"
-                  >
-                    <div className="w-[320px] h-[400px]  md:w-[300px] md:h-[350px] rounded-xl overflow-hidden mb-4 relative">
-                      <Image
-                        fill
-                        alt="vegan food near me"
-                        className="w-full h-full object-cover"
-                        src={member.memberimage}
-                      />
-                    </div>
-                    <div className="hover:ms-4">
-                      <span className="text-xl  font-semibold mb-2 text-black">
-                        {member.membername} {""}
-                      </span>
-                      <span className="text-lg  text-black">
-                        ({member.memberposition})
-                      </span>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              {teamMembers.map((member, index) => (
+                <div
+                  key={index}
+                  className="max-w-80 bg-black text-white rounded-2xl cursor-pointer hover:-translate-y-2 hover:shadow-lg transition-all duration-300 flex flex-col items-center pb-6"
+                >
+                  {/* Image container */}
+                  <div className="relative -mt-px overflow-hidden rounded-2xl w-full h-[350px]">
+                    <Image
+                      fill
+                      alt={member.membername}
+                      src={member.memberimage}
+                      className="object-cover object-top hover:scale-105 transition-all duration-300"
+                    />
+                    <div className="absolute bottom-0 z-10 h-60 w-full bg-gradient-to-t pointer-events-none from-black to-transparent"></div>
                   </div>
-                ))}
-              </div>
+
+                  {/* Text details */}
+                  <div className="px-4  text-center mt-4">
+                    <p className="text-lg">{member.membername}</p>
+                    <p className="text-sm font-medium bg-gradient-to-r from-[#22c55e] via-[#16a34a] to-[#15803d] text-transparent bg-clip-text">
+
+                      {member.memberposition}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
-        {/* Our Services Section */}
-        <div className="bg-[#F5F5F5]">
-          <div className="max-w-7xl container mx-auto">
-            <h2 className="text-xl font-semibold mb-14 pt-14 text-black md:mx-0 mx-6">
-              {t("Our Services")}
-            </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-20 md:mx-0 mx-6">
-              {services.map((service, index) => (
-                <div
-                  key={index}
-                  className="bg-custom-green hover:-translate-y-[20px] transition-transform duration-300 rounded-[18px] w-full h-auto cursor-pointer p-4 text-white text-center flex justify-center flex-col items-center"
-                >
-                  {service.icon}
-                  <p className="md:text-[19px] text-[16px] font-semibold">
-                    {t(service.title)}
-                  </p>
-                  <p className="text-sm mt-1">{t(service.description)}</p>
-                </div>
-              ))}
-            </div>
+
+
+
+
+        <div className="mb-16">
+          <h2 className="text-center text-[28px] md:text-[32px] font-bold mb-12 text-gray-900">
+            {t("Modern Grocery Delivery Service")}
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-8">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className="bg-[#D4E8D4] hover:-translate-y-2 transition-all duration-300 rounded-2xl px-4 py-8 text-center flex flex-col items-center cursor-pointer hover:shadow-lg"
+              >
+                <p className="text-black/90">  {service.icon}</p>
+                <p className="text-[18px] md:text-[20px] font-semibold text-gray-900">
+                  {t(service.title)}
+                </p>
+                <p className="text-[14px] md:text-[15px] text-gray-700 mt-2">
+                  {t(service.description)}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

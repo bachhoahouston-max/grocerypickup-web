@@ -5,7 +5,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { CiHeart } from "react-icons/ci";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { Search, X, Check } from "lucide-react";
+import { Search, X, Check, Menu, Heart, ShoppingCart } from "lucide-react";
 import { Drawer } from "@mui/material";
 import { IoMdClose, IoIosArrowBack } from "react-icons/io";
 import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
@@ -29,12 +29,12 @@ import AddressInput from "./addressInput";
 import { useTranslation } from "react-i18next";
 import { languageContext } from "@/pages/_app";
 import Image from "next/image";
+import HeaderFirst from "./HeaderFirst";
 
 const Navbar = (props) => {
   const router = useRouter();
-  const [serchData, setSearchData] = useState("");
-  const inputRef2 = useRef(null);
-  const [showHover, setShowHover] = useState(true);
+  const [isMobile, setIsMobile] = useState(false)
+  const [showHover, setShowHover] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [user, setUser] = useContext(userContext);
   const [CartTotal, setCartTotal] = useState(0);
@@ -227,7 +227,7 @@ const Navbar = (props) => {
     profileData.lastname,
     profileData.mobile,
     profileData.username,
-  ],[]);
+  ], []);
 
   const getLocalDateOnly = (date) => {
     return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -323,6 +323,10 @@ const Navbar = (props) => {
   const closeDrawers = async () => {
     setOpenCart(false);
   };
+
+  const closeMobile = async () => {
+    setIsMobile(false)
+  }
 
   const [pincodes, setPincodes] = useState([]);
 
@@ -741,211 +745,185 @@ const Navbar = (props) => {
 
   return (
     <>
-      <header className="flex max-w-8xl shadow-lg justify-between items-center p-4 bg-white ">
+      <header className="md:shadow-none shadow-md bg-white w-full sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto flex items-center md:justify-between justify-center md:gap-0 gap-14 ps-4 py-2">
 
-        <div className="md:ms-32 lg:ms-10 xl:ms-28 ms-0 flex items-center">
-          <Image
-            src="/Logo2.png"
-            alt="Grocery logo with palm tree and text 'Tropicana' in green and 'Freshness' in blue"
-            className="object-contain cursor-pointer"
-            width={180}
-            height={60}
-            style={{ width: "auto", height: "auto" }} // maintain aspect ratio
-            onClick={() => router.push("/")}
-          />
-        </div>
-
-        <div className="flex items-center justify-center flex-grow mx-4 relative">
-          <input
-            type="text"
-            ref={inputRef2}
-            value={serchData}
-            onChange={(e) => setSearchData(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                if (serchData.trim() === "") {
-                  props.toaster({
-                    type: "error",
-                    message: "Please enter search value",
-                  });
-                  return;
-                }
-                router.push(`/Search/${serchData}`);
-              }
-            }}
-            placeholder={t("Search for products...")}
-            className="relative md:text-[15px] text-[11px] text-black md:text-lg w-[150px] md:w-[500px] p-2 border border-[#F38529] rounded-l-md focus:outline-none pr-10"
-          />
-
-          <button
-            className="py-[5px] xl:py-[9px] md:py-[8.5px] md:px-4 px-1 bg-custom-green cursor-pointer rounded-r-md"
-            onClick={() => {
-              if (serchData.trim() === "") {
-                props.toaster({
-                  type: "error",
-                  message: "Please enter search value",
-                });
-                return;
-              }
-              router.push(`/Search/${serchData}`);
-            }}
-          >
-            <FontAwesomeIcon icon={faSearch} className="text-white relative" />
-          </button>
-        </div>
-
-        <div className="2xl:mr-20 xl:mr-8 lg:mr-8  mr-1 flex">
-          <div className="hidden md:flex items-center space-x-4 mr-4">
-            {user?.token === undefined ? (
-              <>
-                <div
-                  className="text-white border-2 rounded-full w-[40px] h-[40px] cursor-pointer border-black flex justify-center items-center"
-                  onClick={() => router.push("/signIn")}
-                >
-                  <IoPersonOutline className="text-black text-xl" />
-                </div>
-                <div className="text-black flex items-center w-20 cursor-pointer">
-                  <span onClick={() => router.push("/signIn")}>
-                    {" "}
-                    {t("Sign in")}
-                  </span>
-                </div>
-              </>
-            ) : (
-              <div
-                className="bg-custom-green text-black h-[40px] w-[40px] rounded-full flex items-center justify-center cursor-pointer relative group"
-                onClick={() => setShowHover(true)}
-              >
-                <p className="font-bold text-white text-base text-center capitalize">
-                  {user?.username?.charAt(0).toUpperCase() || "T"}
-                </p>
-                {showHover && (
-                  <div className="lg:absolute top-4 right-0 lg:min-w-[250px] group-hover:text-black hidden group-hover:lg:block hover:lg:block md:z-40">
-                    <div className="bg-custom-green lg:shadow-inner z-10 rounded-md lg:mt-8 shadow-inner">
-                      <ul>
-                        <li className="px-3 shadow-inner py-2 flex justify-between">
-                          <div
-                            className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
-                            onClick={() => {
-                              router.push("/Mybooking");
-                            }}
-                          >
-                            {t("My Order")}
-                          </div>
-                          <IoIosArrowForward className="text-2xl text-white" />
-                        </li>
-                        <li className="px-3 shadow-inner py-2 flex justify-between">
-                          <div
-                            className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
-                            onClick={() => {
-                              router.push("/Myhistory");
-                            }}
-                          >
-                            {t("History")}
-                          </div>
-                          <IoIosArrowForward className="text-2xl text-white" />
-                        </li>
-
-                        <li className="px-3 shadow-inner py-2 flex justify-between">
-                          <div
-                            className="block px-5 py-1 pl-0 text-white text-left font-semibold text-[16px]"
-                            onClick={() => {
-                              router.push("/editProfile");
-                            }}
-                          >
-                            {t("Edit Profile")}
-                          </div>
-                          <IoIosArrowForward className="text-2xl text-white" />
-                        </li>
-
-                        <li className="px-3 shadow-inner py-2 flex justify-between">
-                          <div
-                            onClick={() => {
-                              Swal.fire({
-                                text: t("Are you sure you want to logout?"),
-                                showCancelButton: true,
-                                confirmButtonText: t("Yes"),
-                                cancelButtonText: t("No"),
-                                confirmButtonColor: "#F38529",
-                                cancelButtonColor: "#F38529",
-                                customClass: {
-                                  confirmButton: "px-12 rounded-xl",
-                                  cancelButton:
-                                    "px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none",
-                                  title: "text-[20px] text-black",
-                                  actions: "swal2-actions-no-hover",
-                                  popup: "rounded-[15px] shadow-custom-green",
-                                },
-                                buttonsStyling: true,
-                                reverseButtons: true,
-                                width: "320px",
-                              }).then(function (result) {
-                                if (result.isConfirmed) {
-                                  setUser({});
-                                  setShowHover(false);
-                                  localStorage.removeItem("userDetail");
-                                  localStorage.removeItem("token");
-                                  router.push("/signIn");
-                                }
-                              });
-                            }}
-                            className="block px-5 py-1 pl-0 text-white text-left font-semibold text-base"
-                          >
-                            {t("Sign out")}
-                          </div>
-                          <IoIosArrowForward className="text-2xl text-white" />
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+          <div className="flex items-center">
+            <Image
+              src="/Logo2.png"
+              alt="Tropicana logo"
+              className="object-contain cursor-pointer"
+              width={160}
+              height={50}
+              onClick={() => router.push("/")}
+            />
           </div>
 
-          <div className="flex items-center justify-end md:space-x-2">
+          <div className="hidden md:flex flex-grow justify-center">
+            <HeaderFirst loader={props.loader} toaster={props.toaster} />
+          </div>
+
+
+          <div className="hidden md:flex items-center md:space-x-4">
+
+            {user?.token === undefined ? (
+              <div
+                className="flex items-center space-x-2 cursor-pointer"
+                onClick={() => router.push("/signIn")}
+              >
+                <div className="flex items-center justify-center w-10 h-10 border-2 border-gray-800 rounded-full">
+                  <IoPersonOutline className="text-black text-lg" />
+                </div>
+                <span className="text-gray-800 font-medium">{t("Sign in")}</span>
+              </div>
+            ) : (
+              <div
+                className="relative group cursor-pointer"
+                onClick={() => setShowHover(!showHover)}
+              >
+                <div className="w-10 h-10 bg-custom-green rounded-full flex items-center justify-center">
+                  <p className="text-white font-bold text-base">
+                    {user?.username?.charAt(0).toUpperCase() || "T"}
+                  </p>
+                </div>
+
+                {/* Hover Dropdown */}
+                {showHover && (
+                  <div className="absolute right-0 top-12 bg-custom-green text-white rounded-lg shadow-lg w-56 py-2">
+                    <ul className="divide-y divide-white/20">
+                      <li
+                        className="px-4 py-2 hover:bg-white/10 flex justify-between items-center cursor-pointer"
+                        onClick={() => {
+                          setShowHover(false);
+                          router.push("/Mybooking")
+                        }}
+                      >
+                        {t("My Order")}
+                        <IoIosArrowForward className="text-xl" />
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-white/10 flex justify-between items-center cursor-pointer"
+                        onClick={() => {
+                          setShowHover(false);
+                          router.push("/Myhistory")
+                        }}
+                      >
+                        {t("History")}
+                        <IoIosArrowForward className="text-xl" />
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-white/10 flex justify-between items-center cursor-pointer"
+                        onClick={() => {
+                          setShowHover(false)
+                          router.push("/editProfile")
+                        }}
+                      >
+                        {t("Edit Profile")}
+                        <IoIosArrowForward className="text-xl" />
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-white/10 flex justify-between items-center cursor-pointer"
+                        onClick={() => {
+                          Swal.fire({
+                            text: t("Are you sure you want to logout?"),
+                            showCancelButton: true,
+                            confirmButtonText: t("Yes"),
+                            cancelButtonText: t("No"),
+                            confirmButtonColor: "#F38529",
+                            cancelButtonColor: "#F38529",
+                            customClass: {
+                              confirmButton: "px-12 rounded-xl",
+                              cancelButton:
+                                "px-12 py-2 rounded-lg text-white border-[12px] border-custom-green",
+                            },
+                            buttonsStyling: true,
+                            reverseButtons: true,
+                            width: "320px",
+                          }).then((result) => {
+                            if (result.isConfirmed) {
+                              setUser({});
+                              setShowHover(false);
+                              localStorage.removeItem("userDetail");
+                              localStorage.removeItem("token");
+                              router.push("/signIn");
+                            }
+                          });
+                        }}
+                      >
+                        {t("Sign out")}
+                        <IoIosArrowForward className="text-xl" />
+                      </li>
+                    </ul>
+                  </div>
+                )}
+
+
+              </div>
+            )}
+
+
             <div
-              className="relative cursor-pointer md:flex hidden"
+              className="relative cursor-pointer hidden md:flex"
               onClick={() => {
                 setOpenCart(true);
                 setMobileMenu(!mobileMenu);
-getProfileData();
+                getProfileData();
               }}
             >
-              <BsCart2 className=" md:text-3xl text-[#F38529] text-lg cursor-pointer" />
+              <ShoppingCart className="text-custom-green text-2xl" />
               {cartData.length > 0 && (
-                <div className="absolute bg-[#F38529] text-white rounded-full md:w-4.5 w-3.5 h-3.5 md:h-4.5 flex items-center justify-center  md:text-[9px] text-[7px] ">
+                <span className="absolute -top-2 -right-2 bg-[#F38529] text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
                   {cartData.length}
-                </div>
+                </span>
               )}
             </div>
+
 
             <div
               className="relative cursor-pointer"
               onClick={() => router.push("/Favourite")}
             >
-              <CiHeart className=" text-[#F38529] text-3xl md:text-3xl  cursor-pointer" />
+              <Heart className="text-custom-green text-2xl" />
               {Favorite.length > 0 && (
-                <div className="absolute bg-[#F38529] text-white rounded-full full md:w-4.5 w-4 h-4 md:h-4.5 flex items-center justify-center -top-[1px]  md:text-[9px] text-[7px]  ">
+                <span className="absolute -top-2 -right-2 bg-[#F38529] text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
                   {Favorite.length}
-                </div>
+                </span>
               )}
             </div>
-            <div className="rounded-lg flex md:hidden justify-center ">
-              <select
-                className="bg-white w-[40px] font-normal text-[11px] text-black outline-none cursor-pointer border py-2 rounded-[5px]"
-                value={lang}
-                onChange={(e) => handleClick(e.target.value)}
-              >
-                <option value={"en"}>EN</option>
-                <option value={"vi"}>VI</option>
-              </select>
+          </div>
+
+          <div className="md:hidden flex justify-end items-center gap-3">
+
+            <select
+              className="bg-white border border-gray-300 text-sm px-2 py-2 rounded-md text-gray-700 focus:outline-none"
+              value={lang}
+              onChange={(e) => handleClick(e.target.value)}
+            >
+              <option value="en">EN</option>
+              <option value="vi">VI</option>
+            </select>
+
+            <div
+              className="relative cursor-pointer"
+              onClick={() => router.push("/Favourite")}
+            >
+              <Heart className="text-custom-green" size={24} />
+              {Favorite.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-custom-green text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
+                  {Favorite.length}
+                </span>
+              )}
             </div>
+
+          </div>
+          <div>
+
           </div>
         </div>
       </header>
 
-      {/* Cart Drawer */}
+
+
       <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
         <div
           className={`md:w-[750px] w-full min-w-[390px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
@@ -1738,6 +1716,16 @@ getProfileData();
           )}
         </div>
       </Drawer>
+
+
+      <Drawer open={isMobile} onClose={closeMobile} anchor={"left"}>
+        <div
+          className="md:w-[750px]  w-[300px]  relative  bg-custom-green pt-5 md:px-10 px-5"
+        >
+          <p className="text-black"> hiii </p>
+        </div>
+      </Drawer>
+
     </>
   );
 };

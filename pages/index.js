@@ -1,8 +1,6 @@
 
 import { Suspense, useEffect, useState } from "react";
 import MainHeader from "@/components/MainHeader";
-import Testimonials from "@/components/Testimonials";
-import DealsOnOrganicFood from "@/components/DealsOnOrganicFood";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -23,7 +21,6 @@ import ProductCategory from "@/components/ProductCategory";
 import Head from "next/head";
 import { useContext } from "react";
 import { favoriteProductContext, userContext } from "./_app";
-import ShopFasterGroceryStore from "@/components/ShopFasterGroceryStore";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -215,9 +212,7 @@ export default function Home(props) {
             </div>
           </div>
         </div>
-        <DealsOnOrganicFood />
-        <Testimonials />
-        <ShopFasterGroceryStore />
+       
       </div>
     </>
 

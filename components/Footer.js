@@ -7,33 +7,34 @@ import { MdEmail } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 import Link from "next/link";
+import { Facebook, Mail, Phone } from "lucide-react";
 
 const Footer = () => {
   const { t } = useTranslation();
 
   return (
     <footer
-      className="p-10 bg-custom-green text-black font-sans"
+      className="py-10 bg-custom-lightGreen text-black font-sans rounded-tl-[50px] rounded-tr-[50px] "
       role="contentinfo"
       aria-label="Website Footer"
     >
-      <div className="container mx-auto xl:max-w-7xl border-b w-[90%] border-b-white pb-8">
+      <div className="container mx-auto xl:max-w-7xl border-b-[2px] w-[90%] border-b-gray-500  pb-8">
+        <div className="relative md:w-[200px] w-[170px] md:h-16 h-14 mb-5 ">
+          <Link href="/" aria-label="Go to homepage">
+            <Image
+              alt="Bach Hoa Houston grocery pickup logo"
+              className="mb-4 cursor-pointer "
+              fill
+              src="/logo-bachahoustan.png"
+              priority
+            />
+          </Link>
+        </div>
         <div className="w-full flex flex-col md:flex-row justify-between">
           {/* Left Section */}
           <div className="md:w-1/3 w-full mb-6 md:mb-0">
-            <Link href="/" aria-label="Go to homepage">
-              <Image
-                alt="Bach Hoa Houston grocery pickup logo"
-                className="mb-4 cursor-pointer"
-                height={50}
-                src="/Logo2.png"
-                style={{ width: "auto", height: "auto" }}
-                width={180}
-                priority
-              />
-            </Link>
 
-            <p className="text-[16px] md:text-[19px] text-white">
+            <p className="text-[16px] md:text-[19px] text-black">
               {t("Commitment to Quality")}
             </p>
 
@@ -41,7 +42,7 @@ const Footer = () => {
             <div className="flex space-x-4 mt-4">
               <a
                 aria-label="Instagram"
-                className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px]"
+                className="text-black border-2 rounded-full w-[40px] h-[40px] border-black flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px]"
                 href="https://www.instagram.com/bachhoahouston2025/?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw%3D%3D#"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -50,20 +51,20 @@ const Footer = () => {
               </a>
               <a
                 aria-label="Facebook Group"
-                className="text-white border-2 rounded-full w-[40px] h-[40px] border-white flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px]"
+                className="text-black border-2 rounded-full w-[40px] h-[40px] border-black flex justify-center items-center transition-transform duration-300 hover:-translate-y-[8px]"
                 href="https://www.facebook.com/people/Bach-Hoa-Houston/61579418325421/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <FaFacebookF />
+                <Facebook />
               </a>
             </div>
 
             {/* Contact Info */}
-            <div className="mt-6 text-white">
+            <div className="mt-6 text-black">
               <ul>
                 <li className="flex items-center mb-2 transition-transform duration-300 hover:-translate-y-[8px]">
-                  <IoCall className="text-2xl mr-2" aria-hidden="true" />
+                  <Phone className="text-2xl mr-2" aria-hidden="true" />
                   <a
                     href="tel:832-230-9288"
                     className="text-[16px] md:text-[19px]"
@@ -72,7 +73,7 @@ const Footer = () => {
                   </a>
                 </li>
                 <li className="flex items-center transition-transform duration-300 hover:-translate-y-[8px]">
-                  <MdEmail className="text-2xl mr-2" aria-hidden="true" />
+                  <Mail className="text-2xl mr-2" aria-hidden="true" />
                   <a
                     href="mailto:contact@bachhoahouston.com"
                     className="text-[16px] md:text-[19px]"
@@ -85,7 +86,7 @@ const Footer = () => {
           </div>
 
           {/* Right Section - Links */}
-          <div className="md:w-2/3 w-full flex flex-col md:flex-row text-white">
+          <div className="md:w-2/3 w-full flex flex-col md:flex-row text-black">
             {/* Useful Links */}
             <div className="w-full md:w-1/3 mb-4 md:mb-0">
               <h3 className="font-bold mb-4 lg:text-[19px] text-[18px]">
@@ -164,16 +165,52 @@ const Footer = () => {
           </div>
         </div>
       </div>
+      <div className="">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between py-6 gap-4">
 
-      {/* Bottom */}
-      <div className="flex justify-center pb-12 md:pb-6">
-        <div className="border-white mt-4 text-[16px] pt-4 text-center text-white">
-          <p>
-            © {new Date().getFullYear()} Bach Hoa Houston.{" "}
-            {t("All rights reserved")}
-          </p>
+          {/* Copyright */}
+          <div className="text-center md:text-left text-sm md:text-base text-gray-700">
+            <p>
+              © {new Date().getFullYear()} <span className="font-semibold text-black">Bach Hoa Houston</span>.{" "}
+              {t("All rights reserved")}
+            </p>
+          </div>
+
+          {/* App Store Buttons */}
+          <div className="flex flex-row items-center justify-center gap-3 md:mb-0 mb-5">
+            <a
+              href="https://apps.apple.com/us/app/b%C3%A1ch-ho%C3%A1-houston/id6745395289"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform transform hover:scale-105"
+            >
+              <Image
+                src="/image13.png"
+                alt="Download on the App Store"
+                width={180}
+                height={55}
+                className="w-[160px] sm:w-[180px] md:w-[165px] h-auto object-contain"
+              />
+            </a>
+
+            <a
+              href="https://play.google.com/store/apps/details?id=com.bachhoahouston"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-transform transform hover:scale-105"
+            >
+              <Image
+                src="/image14.png"
+                alt="Get it on Google Play"
+                width={180}
+                height={55}
+                className="w-[160px] sm:w-[180px] md:w-[190px] h-auto object-contain"
+              />
+            </a>
+          </div>
         </div>
       </div>
+
     </footer>
   );
 };

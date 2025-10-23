@@ -2,10 +2,14 @@ import { Api } from "@/services/service";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import GroceryCategories from "@/components/GroceryCatories";
-import ShopFasterTropicana from "@/components/ShopFasterGroceryStore";
 import { useTranslation } from "react-i18next";
 import { userContext } from "./_app";
 import Head from "next/head";
+import { Backpack, ChevronLeft, ShoppingCart } from "lucide-react";
+import { ArrowBack } from "@mui/icons-material";
+
+
+
 function Favourite(props) {
   const router = useRouter();
   const { t } = useTranslation();
@@ -24,7 +28,7 @@ function Favourite(props) {
     Api("get", "getFavourite", null, router, { id: user._id }).then(
       (res) => {
         props.loader(false);
-    
+
         setFavouriteList(res.data);
       },
       (err) => {
@@ -44,20 +48,32 @@ function Favourite(props) {
           href="https://www.bachhoahouston.com/Favourite"
         />
       </Head>
-      <div className="mx-auto max-w-7xl py-12">
-        <div className="flex flex-col justify-center items-center">
-          <h1 className="text-center text-[35px] md:text-[45px] font-semibold mb-2 text-black">
-            {t("My")}
-            <span className="ml-2 text-[35px] md:text-[45px] font-semibold mb-4 text-custom-green">
-              {t("Favorite")}
-            </span>
-          </h1>
-          <p className="md:px-0  px-12 text-center  text-[16px] mb-6  w-full md:w-[40%] text-black">
-            {" "}
-            {t("Quickly access your favorite items for easy reordering")}.
-          </p>
+      <div className="mx-auto max-w-7xl md:py-6 py-14 px-4">
+
+        <div className="flex items-center gap-1 text-sm text-gray-500 md:mb-6 mb-4">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center text-gray-600 hover:text-custom-green transition"
+          >
+            <span className="text-xs ">Home</span>
+          </button>
+          <span className="text-gray-800"><ChevronLeft size={14}/> </span>
+          <span className="font-semibold text-black text-xs">Wishlist</span>
         </div>
-        <div className="grid xl:grid-cols-7 lg:grid-cols-6 grid-cols-2 md:px-0 px-4 w-full md:gap-4 gap-2">
+
+        <div className="flex justify-start items-center">
+          <button
+            onClick={() => router.back()}
+            className="-mt-10 flex items-center gap-1 text-gray-600 hover:text-custom-green transition"
+          >
+            <ChevronLeft size={32}/>
+          </button>
+          <h1 className="text-lg md:text-2xl font-bold text-gray-800 mb-10">
+            {t("Your Wishlist")}
+          </h1>
+        </div>
+
+        <div className="grid xl:grid-cols-7 lg:grid-cols-6 grid-cols-2 md:gap-4 gap-2">
           {favouriteList.length > 0 ? (
             favouriteList.map((item, i) => (
               <div key={i} className="w-full">
@@ -71,17 +87,23 @@ function Favourite(props) {
               </div>
             ))
           ) : (
-            <div className="flex justify-center items-center col-span-10 h-[200px] md:h-[300px]">
-              <p className="text-black font-semibold text-xl md:text-2xl text-center">
-                {t("No favourites product available")}
+            <div className="flex flex-col justify-center items-center col-span-full h-[450px]">
+              <div className="bg-gray-100 p-6 rounded-full mb-10"> 
+              <ShoppingCart size={45} className="text-black"/> 
+              </div>
+              <p className="text-gray-700 text-lg md:text-2xl font-semibold mb-2">
+                {t("Your wishlist is empty")}
+              </p>
+              <p className="text-gray-500 text-sm md:text-base text-center max-w-md">
+                {t("Start adding your favorite items and they’ll appear here!")}
               </p>
             </div>
           )}
         </div>
+        
       </div>
-      <section className="w-full md:pt-10 pt-5 pb-5">
-        <ShopFasterTropicana />
-      </section>
+
+
     </>
   );
 }

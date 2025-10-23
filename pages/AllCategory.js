@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ShopFasterTropicana from "@/components/ShopFasterGroceryStore";
 import { Api } from "@/services/service";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
@@ -80,9 +79,7 @@ const Category = (props) => {
         </div>
       </div>
 
-      <section className="w-full md:flex hidden md:pt-10 pt-5 pb-5">
-        <ShopFasterTropicana />
-      </section>
+    
     </>
   );
 };

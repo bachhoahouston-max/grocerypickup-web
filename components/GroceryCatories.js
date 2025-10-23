@@ -25,7 +25,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const [user] = useContext(userContext);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
 
- 
+
   const handleAddToCart = () => {
     const itemQuantity = Number(item?.Quantity ?? 0);
 
@@ -118,89 +118,70 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   return (
     <div
       key={i}
-      className="bg-white w-full max-w-[350px] h-full rounded-lg md:p-1 p-0 hover:translate-y-[-10px] transition-all duration-500  items-center flex flex-col mt-2 relative max-h-[380px]"
+      className="bg-white w-full max-w-[350px] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 relative"
     >
+      {/* Category Badge */}
+      <div className="absolute top-6 left-6 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
+        {item.categoryName}
+      </div>
 
-      <div className="relative md:w-full w-40 md:h-44 h-40">
+      {/* Favorite Button */}
+      <div
+        className="absolute top-6 right-6 rounded-full bg-white w-12 h-12 flex justify-center items-center shadow-md cursor-pointer hover:scale-110 transition-transform"
+        onClick={toggleFavorite}
+      >
+        {isFavorite ? (
+          <FaHeart className="text-red-600 w-6 h-6" />
+        ) : (
+          <FaRegHeart className="text-black w-6 h-6" />
+        )}
+      </div>
+
+      {/* Product Image */}
+      <div className="relative w-full h-64 flex items-center justify-center mb-4">
         <Image
           src={item.varients[0].image[0]}
           alt={item?.imageAltName || "Product Image"}
-          className="object-contain rounded-xl cursor-pointer"
+          className="object-contain cursor-pointer"
           onClick={() => router.push(url)}
           fill
-          // sizes="100px"
           priority
         />
-        <div
-          className="absolute rounded-full bottom-[-22px] left-1/2 transform -translate-x-1/2 bg-gray-200 md:w-[45px] w-[36px] md:h-[45px] h-[36px] flex justify-center items-center md:mb-1 mb-2"
-          onClick={toggleFavorite}
-        >
-          {isFavorite ? (
-            <FaHeart className="text-red-700 md:w-[23px] w-[18px] md:h-[23px] h-[20px]" />
-          ) : (
-            <FaRegHeart className="text-black md:w-[23px] w-[18px] md:h-[23px] h-[20px]" />
-          )}
-        </div>
       </div>
 
-      <h2 className="text-xs text-gray-400 font-normal mt-4 md:mt-8">
-        {item.categoryName}
-      </h2>
+      {/* Product Name */}
+      <h3 className="text-black text-lg font-semibold mb-3 min-h-[56px] line-clamp-2">
+        {lang === "en"
+          ? item.name
+          : item.vietnamiesName || item.name}
+      </h3>
 
-      <div className="flex flex-col items-center justify-center h-12">
-        <p className="xl:flex lg:hidden text-sm 2xl:hidden lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
-          {lang === "en"
-            ? (item.name.length > 30 ? item.name.slice(0, 30) + "..." : item.name)
-            : (item.vietnamiesName?.length > 30
-              ? item.vietnamiesName.slice(0, 30) + "..."
-              : item.vietnamiesName)}
-
-        </p>
-        <p className="lg:flex xl:hidden 2xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
-          {item.name.length > 25 ? item.name.slice(0, 25) + "..." : item.name}
-          {lang === "en"
-            ? (item.name.length > 25 ? item.name.slice(0, 25) + "..." : item.name)
-            : (item.vietnamiesName?.length > 25
-              ? item.vietnamiesName.slice(0, 25) + "..."
-              : item.vietnamiesName)}
-
-        </p>
-        <p className="lg:hidden xl:hidden 2xl:flex  hidden text-sm 2xl:[text-18px]  text-black font-semibold pt-1 ">
-          {lang === "en"
-            ? (item.name.length > 40 ? item.name.slice(0, 40) + "..." : item.name)
-            : (item.vietnamiesName?.length > 40
-              ? item.vietnamiesName.slice(0, 40) + "..."
-              : item.vietnamiesName)}
-
-        </p>
-      </div>
-
-      <div className="flex justify-between items-center md:pt-2 pt-0">
-        <p className="text-custom-gold text-[20px] lg:text-[17px] 2xl:[text-20px] font-semibold">
-          {constant.currency}
-          {item?.price_slot[0]?.our_price}
-
+      {/* Price and Add to Cart */}
+      <div className="flex justify-between items-center gap-3">
+        {/* Price */}
+        <div className="flex flex-col">
+          <p className="text-red-500 text-2xl font-bold">
+            {constant.currency} {item?.price_slot[0]?.our_price}
+          </p>
           {item?.price_slot[0]?.other_price && (
-            <del className="font-medium text-[20px] lg:text-[14px] 2xl:[text-18px] text-custom-black ml-2">
-              {constant.currency}
-              {item?.price_slot[0]?.other_price}
+            <del className="text-gray-400 text-sm font-medium">
+              {constant.currency} {item?.price_slot[0]?.other_price}
             </del>
           )}
-        </p>
-      </div>
+        </div>
 
-      {item?.Quantity <= 0 ? (
-        <button
-          className="font-bold bg-[#5CB447]/80 w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-gray-200  flex justify-center items-center cursor-not-allowed"
-        >
-
-          {t("Out of Stock")}
-        </button>
-      ) : (
-        itemQuantity > 0 ? (
-          <div className="bg-gray-100 w-[120px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex items-center">
+        {/* Add to Cart / Quantity Controls */}
+        {item?.Quantity <= 0 ? (
+          <button
+            className="bg-gray-400 text-white font-semibold px-6 py-3 rounded-full text-sm cursor-not-allowed flex items-center gap-2"
+            disabled
+          >
+            {t("Out of Stock")}
+          </button>
+        ) : itemQuantity > 0 ? (
+          <div className="bg-gray-100 rounded-full flex items-center px-2 py-1">
             <div
-              className="bg-[#5CB447] cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-2 py-1.5 items-center"
+              className="bg-green-600 hover:bg-green-700 cursor-pointer rounded-full w-9 h-9 flex justify-center items-center transition-colors"
               onClick={() => {
                 const updatedCart = cartData.map((cartItem) => {
                   if (cartItem._id === item._id) {
@@ -212,7 +193,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                         total: (newQty * (cartItem.price || 0)).toFixed(2),
                       };
                     } else {
-                      return cartItem; // Don't change anything if qty is 1
+                      return cartItem;
                     }
                   }
                   return cartItem;
@@ -225,14 +206,15 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 );
               }}
             >
-              <IoRemoveSharp className="md:h-[23px] h-[20px] w-[30px] md:w-[25px] text-white" />
+              <IoRemoveSharp className="text-white w-5 h-5" />
             </div>
 
-            <p className="text-black md:text-xl text-lg font-medium text-center mx-3 ">
+            <p className="text-black text-lg font-semibold mx-4 min-w-[20px] text-center">
               {itemQuantity}
             </p>
+
             <div
-              className="md:px-2 px-2 py-1.5 bg-[#5CB447] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+              className="bg-green-600 hover:bg-green-700 cursor-pointer rounded-full w-9 h-9 flex justify-center items-center transition-colors"
               onClick={() => {
                 const updatedCart = cartData.map((cartItem) => {
                   if (cartItem._id === item._id) {
@@ -247,13 +229,9 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                     return {
                       ...cartItem,
                       qty: cartItem.qty + 1,
-                      total: ((cartItem.price || 0) * (cartItem.qty + 1)).toFixed(
-                        2
-                      ),
+                      total: ((cartItem.price || 0) * (cartItem.qty + 1)).toFixed(2),
                     };
                   }
-
-                  // Return all other items unchanged
                   return cartItem;
                 });
 
@@ -264,19 +242,19 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 );
               }}
             >
-              <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
+              <IoAddSharp className="text-white w-5 h-5" />
             </div>
           </div>
         ) : (
           <button
-            className="font-bold bg-[#5CB447] w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-white cursor-pointer flex justify-center items-center"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
             onClick={handleAddToCart}
           >
-            <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold " />
             {t("Add")}
+            <FiShoppingCart className="w-5 h-5" />
           </button>
-        ))
-      }
+        )}
+      </div>
     </div>
   );
 };

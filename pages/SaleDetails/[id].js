@@ -1,5 +1,4 @@
 import GroceryCategories from "@/components/GroceryCatories";
-import ShopFasterMarketplace from "@/components/ShopFasterGroceryStore";
 import React, { useContext, useEffect, useState } from "react";
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
@@ -717,9 +716,6 @@ function ProductDetails(props) {
           <ProductReviews productReviews={productReviews} slug={productsId.slug} />
         </section>
 
-        <section className="w-full hidden md:flex">
-          <ShopFasterMarketplace />
-        </section>
       </div>
     </>
 

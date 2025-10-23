@@ -4,9 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --custom-green: #f38529;
+  --custom-green: #2e7d32;
   --custom-black: #292727;
-  --custom-Gold: #f38021; /* Example custom green color */
+  --custom-Gold: #f38021;
+  --custom-lightGreen: #cadecb;
 }
 
 @theme {
@@ -113,6 +114,13 @@ body {
 .text-custom-gold {
   color: var(--custom-Gold);
 }
+.text-custom-lightGreen {
+  color: var(--custom-lightGreen);
+}
+
+.bg-custom-lightGreen {
+  background-color: var(--custom-lightGreen);
+}
 .bg-custom-gold {
   background-color: var(--custom-Gold);
 }
@@ -217,4 +225,3 @@ body {
 .react-multiple-carousel__arrow::before {
   font-size: 14px !important;
 }
-
