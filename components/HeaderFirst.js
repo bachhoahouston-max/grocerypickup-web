@@ -75,9 +75,9 @@ const HeaderFirst = (props) => {
         <div className="mt-2 mx-auto px-4 py-2 md:flex hidden ">
           <div className="hidden flex-1 lg:flex justify-center xl:space-x-6 lg:space-x-3">
             <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${selectedTab === "home"
+              className={`text-[16px] font-medium transition-transform duration-300 hover:-translate-y-[5px]  cursor-pointer ml-2 ${selectedTab === "home"
                 ? "text-custom-green"
-                : "text-custom-black hover:!text-[#F38529]"
+                : "text-custom-black hover:!text-[#2e7d32]"
                 }`}
               onClick={(e) => {
                 e.preventDefault();
@@ -88,9 +88,9 @@ const HeaderFirst = (props) => {
             </p>
             <div className="relative flex transition-transform duration-300 hover:-translate-y-[5px]" ref={dropdownRef}>
               <button
-                className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  font-bold cursor-pointer inline-flex items-center ${selectedTab === "AllCategory"
+                className={`text-[16px] font-medium cursor-pointer inline-flex items-center ${selectedTab === "AllCategory"
                   ? "text-custom-green"
-                  : "text-custom-black hover:!text-[#F38529]"
+                  : "text-custom-black hover:!text-[#2e7d32]"
                   }`}
                 onClick={(e) => {
                   e.preventDefault();
@@ -109,7 +109,7 @@ const HeaderFirst = (props) => {
               />
 
               {dropdownOpen && (
-                <div className="absolute top-full left-0 mt-4 bg-custom-gold shadow-lg rounded-xl w-[241px] overflow-hidden z-20 pt-3 pb-4">
+                <div className="absolute top-full left-0 mt-4 bg-custom-green shadow-lg rounded-xl w-[241px] overflow-hidden z-20 pt-3 pb-2">
                   {category.slice(0, 6).map((cat, index) => (
                     <div key={index} className="flex flex-col justify-between">
                       <div
@@ -133,10 +133,10 @@ const HeaderFirst = (props) => {
                   ))}
 
                   <p
-                    className="px-4 py-1.5 text-white text-[16px] cursor-pointer"
+                    className=" px-4 py-1.5 text-white text-[16px] cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
-                      setDropdownOpen(false); // Close dropdown
+                      setDropdownOpen(false); 
                       handleNavigation("/categories/all", "allCategories");
                     }}
                   >
@@ -147,10 +147,10 @@ const HeaderFirst = (props) => {
             </div>
 
             {/* <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] font-bold transition-transform duration-300 hover:-translate-y-[5px] cursor-pointer ml-2 
+              className={`text-[16px] font-medium transition-transform duration-300 hover:-translate-y-[5px] cursor-pointer ml-2 
     ${selectedTab === "FranchiseOpportunity"
                   ? "text-custom-green"
-                  : "text-custom-black hover:!text-[#F38529]"
+                  : "text-custom-black hover:!text-[#2e7d32]"
                 }
   `}
               onClick={(e) => {
@@ -162,10 +162,10 @@ const HeaderFirst = (props) => {
             </p> */}
 
             <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px] transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 
+              className={`text-[16px] font-medium transition-transform duration-300 hover:-translate-y-[5px]  cursor-pointer ml-2 
     ${selectedTab === "AboutUs"
                   ? "text-custom-green"
-                  : "text-custom-black hover:!text-[#F38529]"
+                  : "text-custom-black hover:!text-[#2e7d32]"
                 }
   `}
               onClick={(e) => {
@@ -176,9 +176,9 @@ const HeaderFirst = (props) => {
               {t("About Us")}
             </p>
             <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  font-bold cursor-pointer transition-transform duration-300 hover:-translate-y-[5px] ml-2 ${selectedTab === "Contact"
+              className={`text-[16px] font-medium cursor-pointer transition-transform duration-300 hover:-translate-y-[5px] ml-2 ${selectedTab === "Contact"
                 ? "text-custom-green"
-                : "text-custom-black hover:!text-[#F38529]"
+                : "text-custom-black hover:!text-[#2e7d32]"
                 }`}
               onClick={(e) => {
                 e.preventDefault();
@@ -189,9 +189,9 @@ const HeaderFirst = (props) => {
             </p>
 
             <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  transition-transform duration-300 hover:-translate-y-[5px] font-semibold cursor-pointer ml-2 ${selectedTab === "StoreLocation"
+              className={`text-[16px] font-medium transition-transform duration-300 hover:-translate-y-[5px] cursor-pointer ml-2 ${selectedTab === "StoreLocation"
                 ? "text-custom-green"
-                : "text-custom-black hover:!text-[#F38529]"
+                : "text-custom-black hover:!text-[#2e7d32]"
                 }`}
               onClick={(e) => {
                 e.preventDefault();

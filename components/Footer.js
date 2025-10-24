@@ -182,32 +182,50 @@ const Footer = () => {
               href="https://apps.apple.com/us/app/b%C3%A1ch-ho%C3%A1-houston/id6745395289"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-transform transform hover:scale-105"
+              className="transition-transform transform hover:scale-105 flex flex-col items-start max-w-[150px] bg-white px-3 py-1 rounded-md"
             >
-              <Image
-                src="/image13.png"
-                alt="Download on the App Store"
-                width={180}
-                height={55}
-                className="w-[160px] sm:w-[180px] md:w-[165px] h-auto object-contain"
-              />
+              <p className="text-black text-[16px] whitespace-nowrap">
+                Download on the
+              </p>
+              <div className="flex  justify-center items-center gap-2">
+                <p className="text-black text-[16px] whitespace-nowrap">
+                  App Store
+                </p>
+                <Image
+                  src="/AppStore.png"
+                  alt="Download on the App Store"
+                  width={25}
+                  height={15}
+                  className="object-contain"
+                />
+              </div>
             </a>
 
             <a
               href="https://play.google.com/store/apps/details?id=com.bachhoahouston"
               target="_blank"
               rel="noopener noreferrer"
-              className="transition-transform transform hover:scale-105"
+              className="transition-transform transform hover:scale-105 bg-white px-3 py-1 rounded-md max-w-[150px] flex flex-wrap items-start"
             >
-              <Image
-                src="/image14.png"
-                alt="Get it on Google Play"
-                width={180}
-                height={55}
-                className="w-[160px] sm:w-[180px] md:w-[190px] h-auto object-contain"
-              />
+
+              <p className="text-black text-[16px] whitespace-nowrap">
+                Download on the
+              </p>
+              <div className="flex  justify-center items-center gap-2">
+                <p className="text-black text-[16px] whitespace-nowrap">
+                  Play Store
+                </p>
+                <Image
+                  src="/GooglePlay.png"
+                  alt="Download on the Google Play Store"
+                  width={25}
+                  height={15}
+                  className="object-contain"
+                />
+              </div>
             </a>
           </div>
+
         </div>
       </div>
 

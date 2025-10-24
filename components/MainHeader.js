@@ -9,19 +9,19 @@ import { Api } from "@/services/service";
 
 function MainHeader() {
   const router = useRouter();
-  const [carouselImg, setData] = useState([]);
+  const [carouselImg, setCarouselImg] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       const res = await Api("get", "getsetting", "", router);
-      setData(res?.setting[0]?.carousel);
+      setCarouselImg(res?.setting[0]?.carousel);
     }
     fetchData();
   }, [router]);
 
   const responsive = {
     desktop: {
-      breakpoint: { max: 4000, min: 1024 }, // adjust min-width for desktop
+      breakpoint: { max: 4000, min: 1024 },
       items: 3,
     },
     tablet: {
@@ -30,7 +30,7 @@ function MainHeader() {
     },
     mobile: {
       breakpoint: { max: 767, min: 0 },
-      items: 2, // mobile shows 2 items
+      items: 2,
     },
   };
 
@@ -52,7 +52,7 @@ function MainHeader() {
   );
 
   return (
-    <div className="mx-auto max-w-8xl overflow-hidden group relative md:mt-15 mt-5">
+    <div className="group relative mt-7">
       <Carousel
         responsive={responsive}
         infinite
@@ -68,7 +68,7 @@ function MainHeader() {
           <div
             key={idx}
             className="relative w-full h-[170px] flex items-center justify-center overflow-hidden 
-              md:h-[305px] lg:h-[320px] xl:h-[450px]"
+              md:h-[305px] lg:h-[320px] xl:h-[450px] rounded-[28px]"
           >
             <Image
               src={img.image || "/fallback.jpg"}

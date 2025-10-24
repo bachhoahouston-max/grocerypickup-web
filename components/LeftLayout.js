@@ -44,7 +44,7 @@ const LeftLayout = (props) => {
         <div className="bg-white p-3 shadow-md w-full hidden md:flex">
             <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
 
-                <div className="flex flex-1 justify-center ps-36">
+                <div className="flex flex-1 justify-center ps-48">
                     <div className="flex items-center w-full max-w-lg bg-gray-50 rounded-full px-4 py-2 border-2 relative">
                         <Search size={20} className="text-gray-400" />
                         <form onSubmit={handleSearchSubmit} className="flex-1">
@@ -57,7 +57,7 @@ const LeftLayout = (props) => {
                             />
                         </form>
 
-                        {/* X Icon to clear input */}
+              
                         {searchData && (
                             <button
                                 type="button"
@@ -72,22 +72,22 @@ const LeftLayout = (props) => {
 
               
                 <div className="flex items-center gap-3 pl-6">
-                    <span className="text-sm text-gray-600">Language:</span>
-                    <div className="flex bg-gray-200 rounded-full overflow-hidden border border-gray-300">
+                    <span className="text-sm text-gray-600">Select Language:</span>
+                    <div className="flex bg-gray-200 rounded-full overflow-hidden border border-gray-300 gap-2">
                         <button
                             onClick={() => handleClick("en")}
-                            className={`px-4 py-2 cursor-pointer text-xs font-semibold transition ${lang === "en"
-                                    ? "bg-custom-green text-white"
-                                    : "text-gray-700 hover:bg-gray-300"
+                            className={`px-3 py-2 cursor-pointer text-xs font-semibold transition ${lang === "en"
+                                    ? "bg-custom-green text-white rounded-full"
+                                    : "text-gray-700"
                                 }`}
                         >
                             EN
                         </button>
                         <button
                             onClick={() => handleClick("vi")}
-                            className={`px-4 py-2 text-xs cursor-pointer font-semibold transition ${lang === "vi"
-                                    ? "bg-custom-green text-white"
-                                    : "text-gray-700 hover:bg-gray-300"
+                            className={`px-3 py-2 text-xs cursor-pointer font-semibold transition ${lang === "vi"
+                                    ? "bg-custom-green text-white rounded-full"
+                                    : "text-gray-700 "
                                 }`}
                         >
                             VI

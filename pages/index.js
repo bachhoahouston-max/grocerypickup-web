@@ -21,6 +21,7 @@ import ProductCategory from "@/components/ProductCategory";
 import Head from "next/head";
 import { useContext } from "react";
 import { favoriteProductContext, userContext } from "./_app";
+import ShopByCategory from "@/components/ShopByCategory";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ export default function Home(props) {
           href="https://www.bachhoahouston.com/"
         />
       </Head>
-      <div className="">
+      <div className="mx-auto md:max-w-7xl ">
         <Suspense fallback={<div>Loading.....</div>}>
           <MainHeader />
         </Suspense>
@@ -74,12 +75,16 @@ export default function Home(props) {
         <Suspense fallback={<div>Loading.....</div>}>
           <SellProduct loader={props.loader} toaster={props.toaster} />
         </Suspense>
+        <Suspense fallback={<div>Loading.....</div>}>
+          <ShopByCategory loader={props.loader} toaster={props.toaster} />
+        </Suspense>
+
 
         <div className="bg-white w-full ">
           <section className="bg-white w-full relative flex flex-col justify-center items-center">
             <div className="container mx-auto px-2 md:px-0">
               <div className="flex justify-center flex-col items-center">
-                <h1 className="text-center text-[20px] md:text-2xl font-bold mb-4 mt-4 text-black">
+                <h1 className="text-center text-[20px] md:text-2xl font-bold mb-10 mt-10 text-black">
                   {t("Bách Hoá Houston Best Sellers")}
                 </h1>
 
@@ -100,27 +105,8 @@ export default function Home(props) {
           </section>
         </div>
 
-        <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5">
-          <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
-            <p className="text-black 2xl:text-[24px] xl:text-[21px] lg:text-[19px] text-[17px] font-semibold">
-              {t("Explore by Categories")}
-            </p>
-            <p
-              className=" md:text-[18px] text-[16px] font-semibold text-[#F38529] hover:underline cursor-pointer transition-transform duration-300 hover:-translate-y-[5px]"
-              onClick={() =>
-                router.push("/AllCategory")
-              }
-            >
-              {t("View All")}
-            </p>
-          </div>
 
-          <Suspense fallback={<div>Loading.....</div>}>
-            <CategorySection loader={props.loader} toaster={props.toaster} />
-          </Suspense>
-        </section>
-
-        <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5 pb-5">
+        {/* <section className="container  py-8 md:px-0 px-5 pb-5">
           <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
             <p className="text-black 2xl:text-[24px] xl:text-[21px] lg:text-[19px] text-[17px] font-semibold">
               {t("New Arrivals")}
@@ -140,7 +126,7 @@ export default function Home(props) {
         </section>
 
 
-        <section className="container mx-auto md:max-w-8xl lg:max-w-9xl py-8 md:px-4 px-5 pb-5">
+        <section className="container  py-8 md:px-0 px-5 pb-5">
           <div className="flex flex-row justify-between w-full mb-6 px-1 md:px-6">
             <p className="text-black 2xl:text-[24px] xl:text-[21px] lg:text-[19px] text-[17px] font-semibold">
               {t("Bulk Best Sellers")}
@@ -158,14 +144,14 @@ export default function Home(props) {
             <BulkSellerSection loader={props.loader} toaster={props.toaster} />
           </Suspense>
 
-        </section>
+        </section> */}
 
-        <div className="container mx-auto md:max-w-8xl lg:max-w-9xl py-12 md:px-4 px-5">
+        <div className="container  py-12 md:px-0 px-5">
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 md:gap-12 gap-4">
-            <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
+            <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl rounded-md">
               <FontAwesomeIcon
                 icon={faBoxOpen}
-                className="text-xl text-[#F38529] mb-2"
+                className="text-xl text-custom-green mb-2"
               />
               <h3 className="text-[16px] md:text-[18px] md:text-lg font-semibold text-black">
                 {t("Product Package")}
@@ -177,7 +163,7 @@ export default function Home(props) {
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
               <FontAwesomeIcon
                 icon={faHeadset}
-                className="text-xl text-[#F38529] mb-4"
+                className="text-xl text-custom-green mb-4"
               />
               <h3 className="text-[16px] md:text-[18px] font-semibold text-black">
                 {t("7 Days A Week Support")}
@@ -189,7 +175,7 @@ export default function Home(props) {
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
               <FontAwesomeIcon
                 icon={faTruck}
-                className="text-xl text-[#F38529] mb-4"
+                className="text-xl text-custom-green mb-4"
               />
               <h3 className="text-[16px] md:text-[18px] font-semibold text-black">
                 {t("Next Day Local Delivery")}
@@ -201,7 +187,7 @@ export default function Home(props) {
             <div className="bg-white p-4 shadow-md text-center transition-transform duration-300 hover:-translate-y-[8px] hover:shadow-xl">
               <FontAwesomeIcon
                 icon={faLock}
-                className="text-xl text-[#F38529] mb-4"
+                className="text-xl text-custom-green mb-4"
               />
               <h3 className="text-[16px] md:text-[18px] font-semibold text-black">
                 {t("Payment Secure")}
@@ -212,7 +198,7 @@ export default function Home(props) {
             </div>
           </div>
         </div>
-       
+
       </div>
     </>
 
@@ -235,12 +221,12 @@ export function BulkSellerSection(props) {
   const responsive1 = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 7,
+      items: 6,
       slidesToSlide: 1,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 7,
+      items: 5,
       slidesToSlide: 1,
     },
     tablet: {
@@ -259,7 +245,7 @@ export function BulkSellerSection(props) {
 
   return (
     <>
-      <div className="bg-white w-full px-1 md:px-6 2xl:px-0">
+      <div className="bg-white w-full ">
         {bulkProduct && bulkProduct.length > 0 ? (
           <Carousel
             responsive={responsive1}
@@ -321,17 +307,17 @@ export function NewArrivalSection(props) {
   const responsive1 = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 7,
+      items: 6,
       slidesToSlide: 1,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 7,
+      items: 5,
       slidesToSlide: 1,
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 3,
+      items: 2,
       slidesToSlide: 1,
     },
     mobile: {
@@ -346,7 +332,7 @@ export function NewArrivalSection(props) {
   return (
 
     <>
-      <div className="bg-white w-full px-1 md:px-6 2xl:px-0">
+      <div className="bg-white w-full ">
         {newArivalsData && newArivalsData.length > 0 ? (
           <Carousel
             responsive={responsive1}
@@ -468,7 +454,7 @@ export function CategorySection() {
           </div>
         )}
       </div>
-   
+
     </>
 
   )
@@ -478,10 +464,8 @@ export function CategorySection() {
 
 export function BestSeller(props) {
   const router = useRouter();
-  const [data, setData] = useState(null);
   const [category, setCategory] = useState([]);
   const [productsData, setProductsData] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [productList, setProductList] = useState([]);
   const [iscatdata, setIscatdata] = useState(false);
   const { t } = useTranslation();
@@ -492,7 +476,7 @@ export function BestSeller(props) {
       setCategory(cat.data)
       const res = await Api(
         "get",
-        `getTopSoldProduct?page=1&limit=12`,
+        `getTopSoldProduct?page=1&limit=20`,
         null,
         router
       )
@@ -503,40 +487,9 @@ export function BestSeller(props) {
     fetchData();
   }, []);
 
-  // const handleCategoryClick = (categoryId) => {
-  //   setSelectedCategory(categoryId);
-  //   fetchProductsByCategory(categoryId);
-  // };
   const handleCategoryClick1 = (path) => {
     router.push(path);
   };
-
-  const fetchProductsByCategory = async (categoryId) => {
-    props.loader(true);
-    let url = `getProductbycategory/${categoryId}`;
-    let params = {};
-
-    Api("get", url, "", router, params).then(
-      (res) => {
-        props.loader(false);
-        if (res.data && Array.isArray(res.data)) {
-          setProductsData(res.data);
-          setIscatdata(true);
-        } else {
-          console.error("Unexpected response format:", res);
-          props.toaster({
-            type: "error",
-            message: "Unexpected response format",
-          });
-        }
-      },
-      (err) => {
-        props.loader(false);
-        props.toaster({ type: "error", message: err?.message });
-      }
-    );
-  };
-
 
 
   if (!productList) return <div>Loading.....</div>;
@@ -574,7 +527,7 @@ export function BestSeller(props) {
 
       </div> */}
 
-      
+
       <div className="relative w-full md:w-full grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto md:mx-1 md:space-x-2 space-x-0">
         {iscatdata ? (
           productsData.length > 0 ? (

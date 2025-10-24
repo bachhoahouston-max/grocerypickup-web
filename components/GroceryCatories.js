@@ -118,16 +118,16 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   return (
     <div
       key={i}
-      className="bg-white w-full max-w-[350px] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 relative"
+      className="bg-white w-full rounded-[12px] shadow-lg hover:shadow-xl transition-all duration-300 p-4 relative"
     >
       {/* Category Badge */}
-      <div className="absolute top-6 left-6 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-50">
+      <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-50">
         {item.categoryName}
       </div>
 
       {/* Favorite Button */}
       <div
-        className="absolute top-6 right-6 rounded-full bg-white m:w-12 md:h-12 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer hover:scale-110 transition-transform z-50"
+        className="absolute top-6 right-6 rounded-full bg-white md:w-11 md:h-11 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer hover:scale-110 transition-transform z-50"
         onClick={toggleFavorite}
       >
         {isFavorite ? (
@@ -181,7 +181,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         ) : itemQuantity > 0 ? (
           <div className="bg-gray-100 rounded-full flex items-center px-2 py-1">
             <div
-              className="bg-green-600 hover:bg-green-700 cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
+              className="bg-custom-green  cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
               onClick={() => {
                 const updatedCart = cartData.map((cartItem) => {
                   if (cartItem._id === item._id) {
@@ -214,7 +214,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             </p>
 
             <div
-              className="bg-green-600 hover:bg-green-700 cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
+              className="bg-custom-green cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
               onClick={() => {
                 const updatedCart = cartData.map((cartItem) => {
                   if (cartItem._id === item._id) {
@@ -247,7 +247,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
           </div>
         ) : (
           <button
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
+            className="bg-custom-green bg-custom-green text-white font-semibold px-4 py-2 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
             onClick={handleAddToCart}
           >
             {t("Add")}
