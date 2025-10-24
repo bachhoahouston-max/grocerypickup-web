@@ -52,7 +52,7 @@ function ReturnPolicy(props) {
         </h1>
 
         <section className="bg-white w-full flex flex-col justify-center items-center">
-          <div className="max-w-6xl mx-auto w-full md:px-5 px-5 md:pt-5 pt-2 md:pb-10 pb-5 md:min-h-screen">
+          <div className="max-w-7xl mx-auto w-full md:px-5 px-5 md:pt-5 pt-2 md:pb-10 pb-5 md:min-h-screen">
             {loading ? (
               <p className="text-base text-black font-normal md:pb-5">
                 Loading...

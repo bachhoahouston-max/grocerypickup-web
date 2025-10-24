@@ -75,9 +75,9 @@ export default function Home(props) {
           <SellProduct loader={props.loader} toaster={props.toaster} />
         </Suspense>
 
-        <div className="bg-white w-full min-h-screen">
+        <div className="bg-white w-full ">
           <section className="bg-white w-full relative flex flex-col justify-center items-center">
-            <div className="container mx-auto px-6 md:px-0  md:max-w-9xl lg:max-w-9xl">
+            <div className="container mx-auto px-2 md:px-0">
               <div className="flex justify-center flex-col items-center">
                 <h1 className="text-center text-[20px] md:text-2xl font-bold mb-4 mt-4 text-black">
                   {t("Bách Hoá Houston Best Sellers")}
@@ -545,7 +545,7 @@ export function BestSeller(props) {
 
     <div className="flex md:flex-row flex-col ">
       {/* Sidebar */}
-      <div className=" hidden md:flex flex-col md:w-1/6  w-full">
+      {/* <div className=" hidden md:flex flex-col md:w-1/6  w-full">
         <ul className="rounded-lg p-4 space-y-2">
           <li
             onClick={() => handleCategoryClick1("/categories/all")}
@@ -572,10 +572,10 @@ export function BestSeller(props) {
           ))}
         </ul>
 
-      </div>
+      </div> */}
 
-      {/* Product Grid */}
-      <div className="relative w-full md:w-5/6 grid md:grid-cols-5 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto md:mx-1 md:space-x-2 space-x-0">
+      
+      <div className="relative w-full md:w-full grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto md:mx-1 md:space-x-2 space-x-0">
         {iscatdata ? (
           productsData.length > 0 ? (
             productsData

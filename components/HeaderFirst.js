@@ -189,7 +189,7 @@ const HeaderFirst = (props) => {
             </p>
 
             <p
-              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  transition-transform duration-300 hover:-translate-y-[5px] font-bold cursor-pointer ml-2 ${selectedTab === "StoreLocation"
+              className={`xl:text-[14px] 2xl:text-[16px] lg:text-[13px]  transition-transform duration-300 hover:-translate-y-[5px] font-semibold cursor-pointer ml-2 ${selectedTab === "StoreLocation"
                 ? "text-custom-green"
                 : "text-custom-black hover:!text-[#F38529]"
                 }`}

@@ -121,24 +121,24 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       className="bg-white w-full max-w-[350px] rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-4 relative"
     >
       {/* Category Badge */}
-      <div className="absolute top-6 left-6 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full">
+      <div className="absolute top-6 left-6 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-50">
         {item.categoryName}
       </div>
 
       {/* Favorite Button */}
       <div
-        className="absolute top-6 right-6 rounded-full bg-white w-12 h-12 flex justify-center items-center shadow-md cursor-pointer hover:scale-110 transition-transform"
+        className="absolute top-6 right-6 rounded-full bg-white m:w-12 md:h-12 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer hover:scale-110 transition-transform z-50"
         onClick={toggleFavorite}
       >
         {isFavorite ? (
-          <FaHeart className="text-red-600 w-6 h-6" />
+          <FaHeart className="text-red-600 md:w-6 md:h-6 h-5 w-5" />
         ) : (
-          <FaRegHeart className="text-black w-6 h-6" />
+          <FaRegHeart className="text-black md:w-6 md:h-6 h-5 w-5" />
         )}
       </div>
 
       {/* Product Image */}
-      <div className="relative w-full h-64 flex items-center justify-center mb-4">
+      <div className="relative w-full h-48 flex items-center justify-center mb-4 z-0">
         <Image
           src={item.varients[0].image[0]}
           alt={item?.imageAltName || "Product Image"}
@@ -150,7 +150,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       </div>
 
       {/* Product Name */}
-      <h3 className="text-black text-lg font-semibold mb-3 min-h-[56px] line-clamp-2">
+      <h3 className="text-black md:text-md text-sm font-semibold mb-3 min-h-[40px] line-clamp-2">
         {lang === "en"
           ? item.name
           : item.vietnamiesName || item.name}
@@ -160,11 +160,11 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <div className="flex justify-between items-center gap-3">
         {/* Price */}
         <div className="flex flex-col">
-          <p className="text-red-500 text-2xl font-bold">
+          <p className="text-custom-green md:text-xl text-lg font-bold">
             {constant.currency} {item?.price_slot[0]?.our_price}
           </p>
           {item?.price_slot[0]?.other_price && (
-            <del className="text-gray-400 text-sm font-medium">
+            <del className="text-custom-green text-sm font-medium">
               {constant.currency} {item?.price_slot[0]?.other_price}
             </del>
           )}
@@ -173,7 +173,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         {/* Add to Cart / Quantity Controls */}
         {item?.Quantity <= 0 ? (
           <button
-            className="bg-gray-400 text-white font-semibold px-6 py-3 rounded-full text-sm cursor-not-allowed flex items-center gap-2"
+            className="bg-gray-400 text-white font-semibold px-4 py-2 rounded-full text-sm cursor-not-allowed flex items-center gap-2"
             disabled
           >
             {t("Out of Stock")}
@@ -181,7 +181,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         ) : itemQuantity > 0 ? (
           <div className="bg-gray-100 rounded-full flex items-center px-2 py-1">
             <div
-              className="bg-green-600 hover:bg-green-700 cursor-pointer rounded-full w-9 h-9 flex justify-center items-center transition-colors"
+              className="bg-green-600 hover:bg-green-700 cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
               onClick={() => {
                 const updatedCart = cartData.map((cartItem) => {
                   if (cartItem._id === item._id) {
@@ -209,12 +209,12 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
               <IoRemoveSharp className="text-white w-5 h-5" />
             </div>
 
-            <p className="text-black text-lg font-semibold mx-4 min-w-[20px] text-center">
+            <p className="text-black text-lg font-semibold mx-4 min-w-[10px] text-center">
               {itemQuantity}
             </p>
 
             <div
-              className="bg-green-600 hover:bg-green-700 cursor-pointer rounded-full w-9 h-9 flex justify-center items-center transition-colors"
+              className="bg-green-600 hover:bg-green-700 cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
               onClick={() => {
                 const updatedCart = cartData.map((cartItem) => {
                   if (cartItem._id === item._id) {
@@ -247,7 +247,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
           </div>
         ) : (
           <button
-            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
             onClick={handleAddToCart}
           >
             {t("Add")}
