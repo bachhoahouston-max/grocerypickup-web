@@ -94,16 +94,16 @@ const AboutUs = (props) => {
         />
       </Head>
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 ">
 
 
-        <div className="bg-custom-lightGreen rounded-3xl  my-20 relative">
+        <div className="bg-custom-lightGreen rounded-3xl  my-28 relative">
           <div className="flex flex-col lg:flex-row ">
-            <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
-              <h1 className="text-[24px] md:text-[30px]  font-bold text-gray-900 mb-4 leading-tight">
+            <div className="max-w-2xl p-8 lg:p-12 flex flex-col justify-center">
+              <h1 className="text-[24px] md:text-[28px]  font-bold text-gray-900 mb-4 leading-tight">
                 {t("Welcome to our online grocery store")}!
               </h1>
-              <p className="text-gray-700 mb-6 text-[15px] leading-relaxed">
+              <p className="text-gray-700 mb-6 text-[17px] leading-relaxed">
                 {t(
                   "We provide fresh, high-quality groceries with a focus on convenience and customer satisfaction. From local produce to everyday essentials, we ensure fast and reliable delivery. Our mission is to bring the best products straight to your doorstep, making grocery shopping easier and hassle-free"
                 )}
@@ -119,7 +119,7 @@ const AboutUs = (props) => {
               </div>
             </div>
           </div>
-          <div className="absolute -top-14 right-10 lg:w-[600px] md:flex hidden">
+          <div className="absolute -top-16 right-10 lg:w-[550px] md:flex hidden">
             <div className="relative w-full h-[400px] lg:h-[500px]">
               <Image
                 fill
@@ -174,7 +174,7 @@ const AboutUs = (props) => {
 
           <div className="bg-custom-lightGreen rounded-3xl  my-12 md:my-28 relative ">
             <div className="flex flex-col lg:flex-row ">
-              <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
+              <div className="lg:max-w-2xl p-8 lg:p-12 flex flex-col justify-center">
                 <h2 className="text-[28px] lg:text-[32px] font-bold text-gray-900 mb-6 leading-tight">
                   Modern Grocery Delivery Service
                 </h2>

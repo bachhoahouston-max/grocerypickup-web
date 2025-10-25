@@ -5,7 +5,7 @@ import { IoPersonOutline } from "react-icons/io5";
 import { CiHeart } from "react-icons/ci";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { Search, X, Check, Menu, Heart, ShoppingCart } from "lucide-react";
+import { Search, X, Check, Menu, Heart, ShoppingCart, CircleUserRound } from "lucide-react";
 import { Drawer } from "@mui/material";
 import { IoMdClose, IoIosArrowBack } from "react-icons/io";
 import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
@@ -745,35 +745,34 @@ const Navbar = (props) => {
 
   return (
     <>
-      <header className="md:shadow-none shadow-md bg-white w-full sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex items-center md:justify-between justify-center md:gap-0 gap-14 ps-4 py-2">
+      <header className="md:shadow-none shadow-md bg-white w-full sticky top-0 z-100">
+        <div className="max-w-7xl mx-auto flex items-center md:justify-between justify-center md:gap-0 gap-14 md:ps-4 py-2">
 
-          <div className="flex items-center">
+          <div className="relative  md:w-40 w-full md:h-16 h-14 flex items-center">
             <Image
               src="/Logo2.png"
               alt="Tropicana logo"
+              fill
+              sizes="(max-width: 768px) 64px, 80px"
               className="object-contain cursor-pointer"
-              width={160}
-              height={50}
               onClick={() => router.push("/")}
             />
           </div>
+
 
           <div className="hidden md:flex flex-grow justify-center">
             <HeaderFirst loader={props.loader} toaster={props.toaster} />
           </div>
 
 
-          <div className="hidden md:flex items-center md:space-x-4">
+          <div className="hidden md:flex items-center md:space-x-8">
 
             {user?.token === undefined ? (
               <div
-                className="flex items-center space-x-2 cursor-pointer"
+                className="flex items-center space-x-4 cursor-pointer"
                 onClick={() => router.push("/signIn")}
               >
-                <div className="flex items-center justify-center w-10 h-10 border-2 border-gray-800 rounded-full">
-                  <IoPersonOutline className="text-black text-lg" />
-                </div>
+                <CircleUserRound className="text-black" size={30} />
                 <span className="text-gray-800 font-medium">{t("Sign in")}</span>
               </div>
             ) : (
@@ -870,9 +869,9 @@ const Navbar = (props) => {
                 getProfileData();
               }}
             >
-              <ShoppingCart className="text-custom-green text-2xl" />
+              <ShoppingCart className="text-black" size={28} />
               {cartData.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#F38529] text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-custom-green text-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
                   {cartData.length}
                 </span>
               )}
@@ -883,9 +882,9 @@ const Navbar = (props) => {
               className="relative cursor-pointer"
               onClick={() => router.push("/Favourite")}
             >
-              <Heart className="text-custom-green text-2xl" />
+              <Heart className="text-black" size={28} />
               {Favorite.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#F38529] text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-[#F38529] text-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
                   {Favorite.length}
                 </span>
               )}

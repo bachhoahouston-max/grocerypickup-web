@@ -73,9 +73,9 @@ const HeaderFirst = (props) => {
     <>
       <nav className="bg-white  relative">
         <div className="mt-2 mx-auto px-4 py-2 md:flex hidden ">
-          <div className="hidden flex-1 lg:flex justify-center xl:space-x-6 lg:space-x-3">
+          <div className="hidden flex-1 lg:flex justify-center lg:space-x-8">
             <p
-              className={`text-[16px] font-medium transition-transform duration-300 hover:-translate-y-[5px]  cursor-pointer ml-2 ${selectedTab === "home"
+              className={`text-[16px] font-medium transition-transform duration-300 hover:-translate-y-[5px]  cursor-pointer  ${selectedTab === "home"
                 ? "text-custom-green"
                 : "text-custom-black hover:!text-[#2e7d32]"
                 }`}
@@ -86,7 +86,7 @@ const HeaderFirst = (props) => {
             >
               {t("Home")}
             </p>
-            <div className="relative flex transition-transform duration-300 hover:-translate-y-[5px]" ref={dropdownRef}>
+            <div className=" ml-4 relative flex transition-transform duration-300 hover:-translate-y-[5px]" ref={dropdownRef}>
               <button
                 className={`text-[16px] font-medium cursor-pointer inline-flex items-center ${selectedTab === "AllCategory"
                   ? "text-custom-green"

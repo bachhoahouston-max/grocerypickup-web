@@ -30,7 +30,7 @@ function MainHeader() {
     },
     mobile: {
       breakpoint: { max: 767, min: 0 },
-      items: 2,
+      items: 1,
     },
   };
 
@@ -67,7 +67,7 @@ function MainHeader() {
         {carouselImg.map((img, idx) => (
           <div
             key={idx}
-            className="relative w-full h-[170px] flex items-center justify-center overflow-hidden 
+            className="relative w-full h-[310px] flex items-center justify-center overflow-hidden 
               md:h-[305px] lg:h-[320px] xl:h-[450px] rounded-[28px]"
           >
             <Image
