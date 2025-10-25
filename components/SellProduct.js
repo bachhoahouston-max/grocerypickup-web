@@ -7,6 +7,7 @@ import { produce } from "immer";
 import { Api } from "@/services/service";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
+import { Zap } from "lucide-react";
 
 const SellProduct = ({ loader, toaster }) => {
   const router = useRouter();
@@ -153,13 +154,15 @@ const SellProduct = ({ loader, toaster }) => {
   }, [saleData]);
 
   return (
-    <div className="container mb-2 md:mt-10 lg:mt-14 mt-4 mx-auto bg-white max-w-9xl md:px-6 px-6">
+    <div className="container mb-2 md:mt-10 lg:mt-14 mt-4 bg-white md:px-0 px-2">
       {saleData.length > 0 && (
         <>
-          <p className="text-black text-center md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
+          <p className="text-black flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
             {t("Offer of the Week")}
+            <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
-          <div className="md:mt-2 mt-2 relative w-full md:w-5/5 grid md:grid-cols-5 lg:grid-cols-7 grid-cols-2 gap-2.5 mx-auto md:mx-4 md:space-x-2 space-x-0">
+
+          <div className="md:mt-4 mt-2 grid md:grid-cols-5 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto">
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
                 (cartItem) => cartItem.id === item?.product?._id
@@ -170,18 +173,20 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className="bg-white w-full max-w-[390px] h-full md:h-[400px] rounded-lg md:p-2 p-1 hover:translate-y-[-10px] transition-all duration-500 flex items-center flex-col mt-2 relative"
-
+                  className="bg-white w-full rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 relative flex flex-col"
                 >
+                  {/* Category Badge */}
+                  <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
+                    {item.product?.categoryName}
+                  </div>
 
+                  {/* Sale Timer */}
                   {currentSale?.status !== "expired" && (
-                    <div className="absolute md:top-1 -top-2 -left-2 md:left-6 bg-custom-green  shadow-md rounded-md px-2 py-1.5 z-10 text-xs font-medium text-white">
-                      <p className="text-[12px] font-semibold">
-                        {currentSale?.status === "active"
-                          ? "Sale end in"
-                          : "sale start soon"}
+                    <div className="absolute top-3 right-3 bg-custom-green text-white text-xs px-2 py-1 rounded-md z-10">
+                      <p className="font-semibold text-[12px]">
+                        {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
                       </p>
-                      <div className="flex gap-1 text-center text-[10px] font-bold text-white">
+                      <div className="flex gap-1 text-[10px] font-bold">
                         <div>{currentSale?.days}d</div>:
                         <div>{currentSale?.hours}h</div>:
                         <div>{currentSale?.minutes}m</div>:
@@ -190,110 +195,78 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                   )}
 
-                  <div className="relative w-56 h-40 md:w-full md:h-44">
+                  {/* Product Image */}
+                  <div className="relative w-full h-48 mb-4">
                     <Image
                       src={item.product?.varients[0]?.image[0]}
-                      alt="Vietnamese specialty food"
-                      onClick={() => {
-                        router.push(`/SaleDetails/${item?.product?.slug}`);
-                      }}
+                      alt={item.product?.name || "Product Image"}
                       fill
                       className="object-contain rounded-xl cursor-pointer"
-                    // sizes="(max-width: 768px) 224px, 100vw"
+                      onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                     />
                   </div>
 
-                  <h2 className="text-xs text-gray-400 font-normal mt-4">
-                    {item.product?.categoryName}
-                  </h2>
-                  <div className="flex justify-center items-center h-10 mt-1">
-                    <p className="xl:flex lg:hidden text-sm lg:text-[14px]  2xl:[text-18px]  text-black font-semibold pt-1 ">
-                      {lang === "en"
-                        ? (item.product?.name.length > 30 ? item.product.name.slice(0, 30) + "..." : item.product.name)
-                        : (item.product.vietnamiesName?.length > 30
-                          ? item.product.vietnamiesName.slice(0, 30) + "..."
-                          : item.product.vietnamiesName)}
-                    </p>
-                    <p className="lg:flex xl:hidden  hidden text-sm lg:text-[12px] 2xl:[text-18px]  text-black font-semibold pt-1 ">
+                  {/* Product Name */}
+                  <h3 className="text-black font-semibold text-sm md:text-md line-clamp-2 mb-2">
+                    {lang === "en"
+                      ? item.product?.name
+                      : item.product?.vietnamiesName || item.product?.name}
+                  </h3>
 
-                      {lang === "en"
-                        ? (item.product?.name.length > 25 ? item.product.name.slice(0, 25) + "..." : item.product.name)
-                        : (item.product.vietnamiesName?.length > 25
-                          ? item.product.vietnamiesName.slice(0, 25) + "..."
-                          : item.product.vietnamiesName)}
-
-                    </p>
-                  </div>
-
-                  <div className="h-12 md:flex-row flex-col flex justify-center mb-1 md:gap-2 items-center md:pt-2 pt-0">
-                    <div className="gap-2 flex items-center pt-1">
-                      <span className="text-custom-gold text-[20px] lg:text-[17px] 2xl:[text-20px] font-semibold">
-                        ${item.price}
+                  {/* Price Section */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-custom-green font-semibold text-lg md:text-xl">
+                      ${item.price}
+                    </span>
+                    {item?.price_slot?.our_price && (
+                      <span className="text-gray-500 text-sm line-through">
+                        ${item.price_slot?.our_price}
                       </span>
-                      {item?.price_slot &&
-                        item.price_slot?.our_price && (
-                          <span className="text-sm text-gray-500 line-through font-semibold">
-                            ${item.price_slot?.our_price}
-                          </span>
+                    )}
+                    {item.product?.price_slot?.[0]?.our_price && (
+                      <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded">
+                        {Math.round(
+                          ((item.price_slot?.our_price - item.price) /
+                            item.price_slot?.our_price) *
+                          100
                         )}
-                      {item.product?.price_slot &&
-                        item.product.price_slot[0]?.our_price && (
-                          <span className="md:text-[10px] text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded">
-                            {Math.round(
-                              ((item.price_slot?.our_price -
-                                item.price) /
-                                item.price_slot?.our_price) *
-                              100
-                            )}
-                            % OFF
-                          </span>
-                        )}
-                    </div>
-
+                        % OFF
+                      </span>
+                    )}
                   </div>
 
+                  {/* Add to Cart / Quantity Controls */}
                   {item?.product?.Quantity <= 0 ? (
                     <button
-                      className="font-bold bg-[#5CB447]/80 w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-gray-200  flex justify-center items-center cursor-not-allowed"
+                      className="w-full py-2 bg-gray-400 text-white font-semibold rounded-full cursor-not-allowed"
                     >
-
                       {t("Out of Stock")}
                     </button>
-                  ) : (
-                    itemQuantity > 0 ? (
-                      <div className="w-[100px] h-[32px] rounded-[8px] md:mt-2 mt-1 flex justify-center items-center">
-                        <div
-                          className="bg-[#5CB447]  cursor-pointer rounded-[8px] rounded-r-none flex justify-center md:px-2 px-1 py-1.5 items-center"
-                          onClick={() => {
-                            if (itemQuantity > 1) {
-                              handleRemoveFromCart(item);
-                            }
-                          }}
-                        >
-                          <IoRemoveSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
-                        </div>
-                        <p className="text-black md:text-xl text-lg font-medium text-center px-3 md:py-0.5 py-0 border-y-2 border-y-gray-200">
-                          {itemQuantity}
-                        </p>
-                        <div
-                          className="md:px-2 px-1 py-1.5 bg-[#5CB447]  cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
-                          onClick={() => {
-                            handleAddToCart(item);
-                          }}
-                        >
-                          <IoAddSharp className="md:h-[23px] h-[20px] w-[20px] md:w-[25px] text-white" />
-                        </div>
+                  ) : itemQuantity > 0 ? (
+                    <div className="flex justify-center items-center gap-2">
+                      <div
+                        className="bg-custom-green cursor-pointer rounded-l-full w-8 h-8 flex justify-center items-center"
+                        onClick={() => itemQuantity > 1 && handleRemoveFromCart(item)}
+                      >
+                        <IoRemoveSharp className="text-white w-5 h-5" />
                       </div>
-                    ) : (
-                      <button
-                        className="font-bold bg-[#5CB447]  w-[120px] md:mt-2 mt-1 rounded-[6px] md:px-2 px-0 py-1.5 text-[13px] md:text-[12px] lg:text-[13px] 2xl:text-[16px] text-white cursor-pointer flex justify-center items-center"
+                      <p className="text-center font-medium text-black">{itemQuantity}</p>
+                      <div
+                        className="bg-custom-green cursor-pointer rounded-r-full w-8 h-8 flex justify-center items-center"
                         onClick={() => handleAddToCart(item)}
                       >
-                        <FiShoppingCart className="md:w-[18px] w-[14px] h-[14px] md:h-[18px] text-white md:mr-2 mr-1 font-bold" />
-                        <p>{t("Add")}</p>
-                      </button>
-                    ))}
-
+                        <IoAddSharp className="text-white w-5 h-5" />
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      className="w-full py-2 bg-custom-green text-white font-semibold rounded-full flex justify-center items-center gap-2 hover:bg-green-700 transition"
+                      onClick={() => handleAddToCart(item)}
+                    >
+                      <FiShoppingCart className="w-5 h-5" />
+                      {t("Add")}
+                    </button>
+                  )}
                 </div>
               );
             })}
@@ -301,6 +274,7 @@ const SellProduct = ({ loader, toaster }) => {
         </>
       )}
     </div>
+
   );
 };
 

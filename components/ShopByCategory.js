@@ -41,7 +41,7 @@ function ShopByCategory({ toaster, loader }) {
   return (
     <div className="bg-white px-4 md:my-8 my-8 mb-16">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-12">
+        <h1 className="text-2xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  mb-12">
           Shop By Category
         </h1>
 

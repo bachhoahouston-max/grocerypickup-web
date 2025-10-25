@@ -1,17 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
 @import "tailwindcss";
-/* @import "tw-animate-css"; */
 
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+  --font-poppins: "Poppins", sans-serif;
   --custom-green: #2e7d32;
   --custom-black: #292727;
   --custom-Gold: #f38021;
   --custom-lightGreen: #cadecb;
+  --breakpoint-3xl: 1922px;
 }
 
-@theme {
-  --breakpoint-3xl: 1922px;
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-poppins); /* ✅ Default site-wide font */
 }
 
 :root {
@@ -94,12 +99,6 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 .text-custom-green {

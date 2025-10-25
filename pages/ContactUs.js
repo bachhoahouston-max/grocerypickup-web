@@ -137,27 +137,27 @@ const FeedbackForm = (props) => {
         />
       </Head>
 
-      <div className="min-h-[600px] md:mt-10 mt-14 md:mb-0 mb-10">
+      <div className="min-h-[600px] md:mt-5 mt-14 md:mb-0 mb-10">
         <div className="container mx-auto px-4 py-2 md:py-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 max-w-7xl mx-auto">
 
             {/* Left Side - Content */}
             <div className="flex flex-col justify-start">
               <div className="mb-6">
-                <p className="text-gray-500 text-sm mb-2">Home › {t("Contact Us")}</p>
-                <h1 className="text-black font-bold text-[40px] md:text-[56px] leading-tight">
+                <p className="text-gray-500 text-sm mb-2 font-poppins">Home › {t("Contact Us")}</p>
+                <h1 className="text-black font-poppins font-light text-[88px] leading-[116px] tracking-normal">
                   Get in-touch<br />with us!
                 </h1>
               </div>
 
-              <p className="text-gray-700 text-base mb-8">
+              <p className="text-gray-700 text-base mb-8 font-poppins">
                 We're here to help! Whether you have a question about our services or need assistance with your account or want to provide feedback, our team is ready to assist you.
               </p>
 
               <div className="space-y-4">
                 <div>
                   <p className="text-gray-700 font-medium mb-1">{t("Email")}:</p>
-                  <p className="text-black text-lg">contact@bachhaohoustan.com</p>
+                  <p className="text-black text-lg font-poppins">contact@bachhoahouston.com</p>
                 </div>
 
                 <div>
@@ -170,12 +170,12 @@ const FeedbackForm = (props) => {
             {/* Right Side - Form */}
             <div className="flex items-start lg:items-center">
               <form
-                className="bg-[#C8D5B9] p-6 md:p-8 rounded-3xl w-full"
+                className="bg-[#2E7D3240] p-6 md:p-8 rounded-3xl w-full"
                 onSubmit={submitFeedback}
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="text-black font-medium text-sm block mb-2">
+                    <label className="font-poppins text-black font-medium text-sm block mb-2">
                       {t("Full Name")}
                     </label>
                     <input
@@ -184,7 +184,7 @@ const FeedbackForm = (props) => {
                       value={formData.fullName}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className={`w-full px-4 py-3 text-gray-700 bg-white rounded-full outline-none ${errors.fullName ? "border-2 border-red-500" : "border-0"
+                      className={`w-full font-poppins px-4 py-3 text-gray-700 bg-white rounded-full outline-none ${errors.fullName ? "border-2 border-red-500" : "border-0"
                         }`}
                       placeholder={t("Enter your name")}
                       required
@@ -195,7 +195,7 @@ const FeedbackForm = (props) => {
                   </div>
 
                   <div>
-                    <label className="text-black font-medium text-sm block mb-2">
+                    <label className="font-poppins text-black font-medium text-sm block mb-2">
                       {t("Phone No")}
                     </label>
                     <input
@@ -205,7 +205,7 @@ const FeedbackForm = (props) => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       maxLength={10}
-                      className={`w-full px-4 py-3 text-gray-700 bg-white rounded-full outline-none ${errors.phoneNumber ? "border-2 border-red-500" : "border-0"
+                      className={`w-full px-4 font-poppins py-3 text-gray-700 bg-white rounded-full outline-none ${errors.phoneNumber ? "border-2 border-red-500" : "border-0"
                         }`}
                       placeholder={t("Enter your phone number")}
                       required
@@ -259,7 +259,7 @@ const FeedbackForm = (props) => {
                 <div className="text-center">
                   <button
                     type="submit"
-                    className="bg-[#4A7C59] hover:bg-[#3d6b4a] text-white font-medium py-3 px-8 rounded-full transition-colors"
+                    className="bg-[#2E7D32] hover:bg-[#3d6b4a] text-white font-medium py-3 px-8 rounded-full transition-colors cursor-pointer"
                   >
                     {t("Send Message")}
                   </button>

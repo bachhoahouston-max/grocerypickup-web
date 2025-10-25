@@ -127,7 +127,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
       {/* Favorite Button */}
       <div
-        className="absolute top-6 right-6 rounded-full bg-white md:w-11 md:h-11 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer hover:scale-110 transition-transform z-50"
+        className="absolute top-6 right-6 border-[3px] border-black rounded-full bg-white md:w-11 md:h-11 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer  z-50"
         onClick={toggleFavorite}
       >
         {isFavorite ? (

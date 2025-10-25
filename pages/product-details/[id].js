@@ -62,7 +62,7 @@ function ProductDetails(props) {
     },
     tablet: {
       breakpoint: { max: 1024, min: 464 },
-      items: 2,
+      items: 1,
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
@@ -330,9 +330,21 @@ function ProductDetails(props) {
           href={`https://www.bachhoahouston.com/product-details/${productsId?.slug}`}
         />
       </Head>
-      <div className="bg-white w-full">
-        <section className="bg-white w-full md:pt-10 pt-14 md:pb-5 pb-5 ">
-          <div className="max-w-7xl  mx-auto w-full md:px-4 px-5">
+      <div className="bg-white w-full max-w-7xl mx-auto md:pt-10 pt-14 md:pb-10 pb-5 md:px-0 px-3">
+        <section className="bg-white w-full ">
+          <div className="flex flex-wrap items-center text-gray-500 text-xs md:text-sm mt-2 mb-2 gap-1">
+            <p className="font-medium">{t("Home")}</p>
+            <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
+
+            <p className="font-medium">{productsId?.categoryName}</p>
+            <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
+
+            <p className="font-semibold truncate max-w-xs md:max-w-sm">
+              {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
+            </p>
+          </div>
+
+          <div className="w-full ">
             <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
               <div className="p-[10px] rounded-[15px]">
                 <Carousel
@@ -429,15 +441,15 @@ function ProductDetails(props) {
                   ))}
                 </Carousel>
               </div>
-              <div className="flex justify-start items-center w-full">
+              <div className="flex justify-start items-start w-full">
                 <div className="flex flex-col justify-start items-start w-full">
                   <div className="flex justify-between items-center w-full">
-                    <h1 className="text-black md:text-[32px] text-2xl font-semibold">
+                    <h1 className="text-black md:text-[32px] text-2xl font-medium">
                       {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
                     </h1>
 
                     <div
-                      className="w-[46px] h-[46px] bg-custom-offWhite rounded-full flex justify-center items-center cursor-pointer"
+                      className="p-2 border-[3px] border-black rounded-full flex justify-center items-center cursor-pointer"
                       onClick={addremovefavourite}
                     >
                       {!productsId?.favourite && (
@@ -449,19 +461,8 @@ function ProductDetails(props) {
                     </div>
                   </div>
 
-                  <div className="flex text-gray-400 mt-1 mb-1 ">
-                    <p className="md:text-[18px] text-[14px]">{t("Home")}</p>
-                    <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
-                    <p className="md:text-[18px] text-[14px]">
-                      {productsId?.categoryName}
-                    </p>
-                    <SlArrowRight className="font-bold text-sm md:mt-1.5 mt-1 mr-1 ml-1" />
-                    <p className="md:text-[18px] text-[14px] w-full">
-                      {" "}
-                      {lang === "en" ? productsId?.name : productsId?.vietnamiesName}{" "}
-                    </p>
-                  </div>
-                  <div className="pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
+
+                  <div className="pt-7 md:pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
                     {priceSlot &&
                       priceSlot.map((data, i) => {
                         const otherprice = parseFloat(data?.other_price);
@@ -477,9 +478,9 @@ function ProductDetails(props) {
                                 setSelectedPrice(data);
                                 setPriceIndex(i);
                               }}
-                              className={`bg-custom-lightPurple cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
+                              className={`cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
                                         ${priceIndex == i
-                                  ? "bg-[#FFF5CB]"
+                                  ? "bg-[#2E7D321A]"
                                   : "bg-white"
                                 }
                             `}
@@ -522,9 +523,9 @@ function ProductDetails(props) {
 
                   {isInCart ? (
                     <>
-                      <div className="flex mt-5">
+                      <div className="flex mt-7 md:mt-20">
                         <div
-                          className="h-[42px] w-[44px] bg-[#5CB447] cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                          className="h-[42px] w-[44px] bg-custom-green cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
                           onClick={handleDecreaseQty}
                         >
                           <IoRemoveSharp className="h-[24px] w-[24px] text-white" />
@@ -558,11 +559,11 @@ function ProductDetails(props) {
 
                   )}
                   {productsId.isShipmentAvailable ? (
-                    <p className="text-black font-normal text-[17px] mt-2">
+                    <p className="text-black font-normal text-[17px] md:mt-5 mt-2">
                       {t("Shipment Delivery is available")}
                     </p>
                   ) : (
-                    <p className="text-black font-normal text-[17px] mt-2">
+                    <p className="text-black font-normal text-[17px] md:mt-5 mt-2">
                       {t("Shipment Delivery is not available")}
                     </p>
                   )}
@@ -570,13 +571,12 @@ function ProductDetails(props) {
               </div>
             </div>
           </div>
-          <div className="mx-auto md:my-6 my-3 py-4 max-w-7xl md:px-6 xl:px-0 px-6">
+          <div className="md:my-6 my-3 py-4 ">
             <p className="text-black text-xl md:text-2xl font-bold mb-3">
               {t("About Product")}
             </p>
 
             <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-              {/* Short Description */}
               <div className="md:col-span-2">
                 <p className="text-black text-base md:text-[18px] font-bold">
                   {t(" Description")}:
@@ -634,11 +634,12 @@ function ProductDetails(props) {
             </div>
           </div>
           <ProductReviews productReviews={productReviews} slug={productsId.slug} />
+
           <div className="bg-white max-w-7xl mx-auto mt-6">
-            <p className="text-black text-xl font-bold md:mb-5 mb-5 md:mt-0 mt-4 md:ms-4 ms-4">
+            <p className="text-black text-xl font-bold md:mb-5 mb-5 md:mt-0 mt-4 4">
               {t("Similar Products")}
             </p>
-            <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-3 md:mx-4 xl:mx-0 ms-4">
+            <div className="grid  lg:grid-cols-5 grid-cols-2 md:gap-2 gap-3 ">
               {productList.map((item, i) => (
                 <div key={i} className="w-full md:mb-5">
                   <GroceryCategories
@@ -654,10 +655,10 @@ function ProductDetails(props) {
           </div>
 
           <div className="bg-white max-w-7xl mx-auto">
-            <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 md:ms-4 ms-4">
+            <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 ">
               {t("You might also like")}
             </p>
-            <div className="grid md:grid-cols-6 lg:grid-cols-7 grid-cols-2 md:gap-2 gap-3 md:mx-4 xl:mx-0 ms-4">
+            <div className="grid lg:grid-cols-5 grid-cols-2 md:gap-2 gap-3 md:mx-4 xl:mx-0 ms-4">
               {productList.map((item, i) => (
                 <div key={i} className="w-full md:mb-5">
                   <GroceryCategories
@@ -672,7 +673,6 @@ function ProductDetails(props) {
             </div>
           </div>
         </section>
-
       </div>
     </>
 
