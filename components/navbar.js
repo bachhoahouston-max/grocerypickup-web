@@ -1717,14 +1717,6 @@ const Navbar = (props) => {
       </Drawer>
 
 
-      <Drawer open={isMobile} onClose={closeMobile} anchor={"left"}>
-        <div
-          className="md:w-[750px]  w-[300px]  relative  bg-custom-green pt-5 md:px-10 px-5"
-        >
-          <p className="text-black"> hiii </p>
-        </div>
-      </Drawer>
-
     </>
   );
 };

@@ -121,13 +121,13 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       className="bg-white w-full rounded-[12px] shadow-lg hover:shadow-xl transition-all duration-300 p-4 relative"
     >
       {/* Category Badge */}
-      <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-50">
+      <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
         {item.categoryName}
       </div>
 
       {/* Favorite Button */}
       <div
-        className="absolute top-6 right-6 border-[3px] border-black rounded-full bg-white md:w-11 md:h-11 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer  z-50"
+        className="absolute top-6 right-6 border-[3px] border-black rounded-full bg-white md:w-11 md:h-11 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer  z-10"
         onClick={toggleFavorite}
       >
         {isFavorite ? (

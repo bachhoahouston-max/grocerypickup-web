@@ -79,7 +79,7 @@ function Account(props) {
     <div className={`w-full  md:px-6 md:mt-8 mt-10 pb-8`}>
       <div className="max-w-6xl mx-auto">
         {!user?.token ? (
-          <div className="flex flex-col justify-center items-center w-full min-h-[550px] gap-6">
+          <div className="flex flex-col justify-center items-center w-full md:min-h-[550px] min-h-[680px] gap-6">
             <div className="flex flex-col items-center gap-6 text-gray-700 text-[18px] font-medium">
               <UserRound className="w-20 h-20 text-custom-green" />
               <span className="text-center w-[80%]">

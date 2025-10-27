@@ -85,7 +85,7 @@ const SignIn = (props) => {
           href="https://www.bachhoahouston.com/signIn"
         />
       </Head>
-      <div className="font-sans  flex flex-col items-center justify-center md:min-h-[670px]">
+      <div className="font-sans  flex flex-col items-center justify-center md:min-h-[670px] min-h-[750px] w-full">
         <div className="max-w-7xl mx-auto w-full">
 
           <div className="flex md:hidden flex-col justify-center items-center">  <h1 className="mt-8 text-[34px] md:text-[48px] text-black">

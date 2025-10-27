@@ -1,5 +1,5 @@
 
-import { Suspense, useEffect, useState ,useRef } from "react";
+import { Suspense, useEffect, useState, useRef } from "react";
 import MainHeader from "@/components/MainHeader";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
@@ -13,6 +13,7 @@ import Head from "next/head";
 import { useContext } from "react";
 import { favoriteProductContext, userContext } from "./_app";
 import ShopByCategory from "@/components/ShopByCategory";
+import { FaChevronUp, FaTag } from "react-icons/fa";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -94,7 +95,7 @@ export default function Home(props) {
 
 
 
- function BestSeller(props) {
+function BestSeller(props) {
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -106,18 +107,16 @@ export default function Home(props) {
 
   const observerRef = useRef(null);
 
-  // Fetch categories & first page products
   useEffect(() => {
     async function fetchData() {
       const cat = await Api("get", "getCategory", null, router);
       setCategory(cat.data);
 
-      fetchProducts(1, true); // Fetch initial page
+      fetchProducts(1, true);
     }
     fetchData();
   }, []);
 
-  // Fetch products function (with page & reset option)
   const fetchProducts = async (pageNum, reset = false) => {
     setLoadingMore(true);
     const res = await Api(
@@ -130,7 +129,6 @@ export default function Home(props) {
     setLoadingMore(false);
   };
 
-  // Infinite scroll observer
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
 
@@ -146,14 +144,12 @@ export default function Home(props) {
     return () => observerRef.current?.disconnect();
   }, [loadingMore]);
 
-  // Fetch next page when page changes
   useEffect(() => {
     if (page > 1) {
       fetchProducts(page);
     }
   }, [page]);
 
-  // Category Click handlers
   const handleCategoryClick1 = () => {
     setSelectedCategory("all");
     setPage(1);
@@ -166,14 +162,15 @@ export default function Home(props) {
     fetchProducts(1, true);
   };
 
-  // CATEGORY DROPDOWN COMPONENT
+
   const CategoryDropdown = () => {
     const [open, setOpen] = useState(false);
 
     const selectedName =
       selectedCategory === "all"
         ? t("View All")
-        : category.find((cat) => cat._id === selectedCategory)?.name || t("View All");
+        : category?.find((cat) => cat._id === selectedCategory)?.name ||
+        t("View All");
 
     const handleSelect = (value) => {
       setOpen(false);
@@ -182,29 +179,49 @@ export default function Home(props) {
     };
 
     return (
-      <div className="relative w-full md:w-1/6 mb-4">
+      <div className="relative w-full md:w-2/8 mb-4">
+        {/* Button */}
         <button
           onClick={() => setOpen(!open)}
-          className="w-full bg-gray-100 flex items-center justify-between px-4 py-3 rounded-lg shadow-sm font-bold text-sm text-black hover:shadow-md transition"
+          className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg shadow-sm transition font-semibold text-gray-800"
         >
-          <span>{t("Filter")}: {selectedName}</span>
-          <FaChevronDown className={`transition-transform ${open ? "rotate-180" : ""}`} />
+          <span className="flex items-center gap-2">
+            <FaTag className="text-custom-green" />
+            {t("Filter")} : {selectedName}
+          </span>
+          <FaChevronDown
+            className={`text-custom-green cursor-pointer transition-transform duration-300 ${open ? "rotate-180" : ""
+              }`}
+          />
         </button>
 
+        {/* Dropdown List */}
         {open && (
-          <ul className="absolute z-20 bg-white w-full mt-2 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+          <ul className="absolute left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-xl max-h-64 overflow-y-auto z-30">
+            {/* View All Option */}
             <li
               onClick={() => handleSelect("all")}
-              className={`px-4 py-2 text-sm font-bold cursor-pointer hover:bg-gray-100 ${selectedCategory === "all" ? "text-custom-green" : "text-black"}`}
+              className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === "all"
+                ? "text-custom-green bg-gray-50"
+                : "text-gray-800"
+                }`}
             >
+              <FaTag />
               {t("View All")}
             </li>
+
+            {/* Category Options */}
             {category.slice(0, 13).map((cat, index) => (
               <li
                 key={index}
                 onClick={() => handleSelect(cat._id)}
-                className={`px-4 py-2 text-sm font-bold cursor-pointer hover:bg-gray-100 ${selectedCategory === cat._id ? "text-custom-green" : "text-black"}`}
+                className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === cat._id
+                  ? "text-custom-green bg-gray-50"
+                  : "text-gray-800"
+                  }`}
               >
+                {/* You can replace <FaTag /> with cat.icon if available */}
+                <FaTag />
                 {cat.name}
               </li>
             ))}
@@ -213,6 +230,9 @@ export default function Home(props) {
       </div>
     );
   };
+
+
+
 
   return (
     <div className="flex flex-col">
