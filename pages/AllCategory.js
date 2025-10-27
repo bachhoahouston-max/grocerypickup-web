@@ -67,7 +67,7 @@ const Category = (props) => {
                   src={cat.image}
                   alt={cat.label}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                 />
               </div>
 

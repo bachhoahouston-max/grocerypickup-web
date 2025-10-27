@@ -543,7 +543,7 @@ function ProductDetails(props) {
 
                   </div>
 
-                  <div className="pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
+                  <div className="md:pt-20 pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
                     {prizeSlot && (
                       <div>
                         <div
@@ -594,49 +594,51 @@ function ProductDetails(props) {
                     )}
                   </div>
 
-
-                  {isInCart ? (
-                    <>
-                      <div className="p-1 flex justify-between mt-7 md:mt-20 w-[250px] bg-gray-100 rounded-2xl">
-                        <div
-                          className="px-2.5 py-2 bg-custom-green cursor-pointer  rounded-full flex justify-center items-center"
-                          onClick={handleDecreaseQty}
-                        >
-                          <IoRemoveSharp className="text-white text-lg" />
+                  <div className="md:pt-16 pt-5">
+                    {isInCart ? (
+                      <>
+                        <div className="p-1 flex justify-between w-[250px] bg-gray-100 rounded-2xl">
+                          <div
+                            className="px-2.5 py-2 bg-custom-green cursor-pointer  rounded-full flex justify-center items-center"
+                            onClick={handleDecreaseQty}
+                          >
+                            <IoRemoveSharp className="text-white text-lg" />
+                          </div>
+                          <p className="text-black md:text-xl text-lg font-medium text-center px-3  py-1">
+                            {availableQty}
+                          </p>
+                          <div
+                            className="rounded-full bg-custom-green cursor-pointer px-2.5 py-2 flex justify-center items-center"
+                            onClick={handleIncreaseQty}
+                          >
+                            <IoAddSharp className=" text-white text-lg" />
+                          </div>
                         </div>
-                        <p className="text-black md:text-xl text-lg font-medium text-center px-3  py-1">
-                          {availableQty}
-                        </p>
-                        <div
-                          className="rounded-full bg-custom-green cursor-pointer px-2.5 py-2 flex justify-center items-center"
-                          onClick={handleIncreaseQty}
-                        >
-                          <IoAddSharp className=" text-white text-lg" />
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    productsId.Quantity <= 0 ? (
-                      <button
-                        className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md w-[250px] md:mt-5 mt-4 cursor-not-allowed "
-                      >
-                        {t("Out of Stock")}
-                      </button>
+                      </>
                     ) : (
-                      <button
-                        className="bg-custom-green px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md md:mt-5 mt-4 cursor-pointer"
-                        onClick={handleAddToCart}
-                      >
-                        {t("Add to Cart")}
-                      </button>
-                    )
-                  )}
+                      productsId.Quantity <= 0 ? (
+                        <button
+                          className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md w-[250px] md:mt-5 mt-4 cursor-not-allowed "
+                        >
+                          {t("Out of Stock")}
+                        </button>
+                      ) : (
+                        <button
+                          className="bg-custom-green px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md md:mt-5 mt-4 cursor-pointer"
+                          onClick={handleAddToCart}
+                        >
+                          {t("Add to Cart")}
+                        </button>
+                      )
+                    )}
+
+                  </div>
                   {productsId.isShipmentAvailable ? (
-                    <p className="text-black font-normal text-[17px] mt-2 md:mt-7">
+                    <p className="text-black font-normal text-[17px] mt-3 md:mt-7">
                       {t("Shipment Delivery is available")}
                     </p>
                   ) : (
-                    <p className="text-black font-normal text-[17px] mt-2 md:mt-7">
+                    <p className="text-black font-normal text-[17px] mt-3 md:mt-7">
                       {t("Shipment Delivery is not available")}
                     </p>
                   )}
