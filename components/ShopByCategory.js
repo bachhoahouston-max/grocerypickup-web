@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Api } from '@/services/service';
 import { useRouter } from 'next/router';
+import { useTranslation } from "react-i18next";
 
 const CategoryCard = ({ item, url, router }) => (
   <div
@@ -26,10 +27,11 @@ const CategoryCard = ({ item, url, router }) => (
   </div>
 );
 
-function ShopByCategory({ toaster, loader }) {
+function ShopByCategory() {
   const [categorys, setCategory] = useState([]);
   const router = useRouter();
-
+  const { t } = useTranslation();
+  
   useEffect(() => {
     async function fetchData() {
       const cat = await Api('get', 'getCategory', null, router);
@@ -42,7 +44,7 @@ function ShopByCategory({ toaster, loader }) {
     <div className="bg-white px-4 my-4 mb-0 md:mb-10">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-2xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 ">
-          Shop By Category
+          {t("Shop By Category")}
         </h1>
 
         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
@@ -66,7 +68,7 @@ function ShopByCategory({ toaster, loader }) {
 
             </div>
             <p className="text-black text-[14px] sm:text-[16px] font-semibold text-center">
-              New Arrivals
+              {t("New Arrivals")}
             </p>
           </div>
           {/* <div

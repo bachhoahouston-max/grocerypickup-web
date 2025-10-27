@@ -66,19 +66,19 @@ const AboutUs = (props) => {
     {
       icon: Shield,
       title: "Quality You Can Trust",
-      description: "We provide the freshest, most reliable groceries, ensuring every product meets high-quality standards. Our customers trust us for freshness and consistency.",
+      description: "We provide the freshest, most reliable groceries, ensuring every product meets high-quality standards. Our customers trust us for freshness and consistency",
       color: "bg-blue-50 text-blue-600"
     },
     {
       icon: Users,
       title: "Customer-Centric Approach",
-      description: "Our focus is on you. With easy ordering, quick delivery, and a commitment to customer satisfaction, we make grocery shopping simple and stress-free.",
+      description: "Our focus is on you. With easy ordering, quick delivery, and a commitment to customer satisfaction, we make grocery shopping simple and stress-free",
       color: "bg-green-50 text-green-600"
     },
     {
       icon: Truck,
       title: "Convenience at Your Doorstep",
-      description: "From local produce to pantry essentials, we bring the best directly to you. Enjoy the convenience of a hassle-free, fast, and reliable shopping experience.",
+      description: "From local produce to pantry essentials, we bring the best directly to you. Enjoy the convenience of a hassle-free, fast, and reliable shopping experience",
       color: "bg-purple-50 text-purple-600"
     }
   ];
@@ -99,7 +99,7 @@ const AboutUs = (props) => {
 
         <div className="bg-custom-lightGreen rounded-3xl  my-28 relative">
           <div className="flex flex-col lg:flex-row ">
-            <div className="max-w-2xl p-8 lg:p-12 flex flex-col justify-center">
+            <div className="max-w-2xl p-8 lg:p-12 flex flex-col justify-center min-h-[450px]">
               <h1 className="text-[24px] md:text-[28px]  font-bold text-gray-900 mb-4 leading-tight">
                 {t("Welcome to our online grocery store")}!
               </h1>
@@ -119,8 +119,8 @@ const AboutUs = (props) => {
               </div>
             </div>
           </div>
-          <div className="absolute -top-16 right-10 lg:w-[550px] md:flex hidden">
-            <div className="relative w-full h-[400px] lg:h-[500px]">
+          <div className="absolute -top-13 right-10 lg:w-[550px] md:flex hidden">
+            <div className="relative w-full h-[420px] lg:h-[550px]">
               <Image
                 fill
                 src="/Store.png"
@@ -136,35 +136,34 @@ const AboutUs = (props) => {
           <div className="bg-[#D4E8D4] rounded-3xl px-6 py-12">
             <div className="text-center max-w-4xl mx-auto">
               <h2 className="text-[28px] md:text-[36px] font-bold text-gray-900 mb-3">
-                Why Shop From Us
+                {t("Why Shop From Us")}
               </h2>
               <div className="flex justify-center items-center gap-2 mb-4">
                 <Leaf className="text-gray-700 w-5 h-5 md:flex hidden" />
                 <p className="text-[20px] md:text-[24px] text-gray-900">
-                  Bringing <span className="text-[#5FBA47] font-semibold">Freshness</span> & Convenience Together
+                  {t("Bringing")} <span className="text-[#5FBA47] font-semibold">{t("Freshness")}</span> {t("& Convenience Together")}
                 </p>
                 <Leaf className="text-gray-700 w-5 h-5 md:flex hidden" />
               </div>
               <p className="text-[15px] text-gray-600 leading-relaxed">
-                We combine quality products with hassle-free shopping to make
-                your daily grocery experience smoother and smarter
+                {t("We combine quality products with hassle-free shopping to make your daily grocery experience smoother and smarter")}
               </p>
             </div>
           </div>
 
           {/* Feature Cards */}
-          <div className="grid md:grid-cols-3 gap-6 md:mt-20 mt-10 mb-16">
+          <div className="grid md:grid-cols-3 gap-6 md:mt-20 mt-10 mb-16 ">
             {features.map((feature, index) => (
               <div key={index} className="group">
-                <div className="bg-[#D4E8D4] rounded-2xl p-8 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center">
+                <div className="bg-[#D4E8D4] rounded-2xl min-h-[280px] p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 flex flex-col items-center text-center">
                   <div className="mb-6 group-hover:scale-110 transition-transform duration-300">
                     <feature.icon className="text-gray-900" size={48} />
                   </div>
                   <h3 className="text-[18px] font-bold text-gray-900 mb-3">
-                    {feature.title}
+                    {t(feature.title)}
                   </h3>
                   <p className="text-gray-600 leading-relaxed text-[13px]">
-                    {feature.description}
+                    {t(feature.description)}
                   </p>
                 </div>
               </div>
@@ -176,24 +175,20 @@ const AboutUs = (props) => {
             <div className="flex flex-col lg:flex-row ">
               <div className="lg:max-w-2xl p-8 lg:p-12 flex flex-col justify-center">
                 <h2 className="text-[28px] lg:text-[32px] font-bold text-gray-900 mb-6 leading-tight">
-                  Modern Grocery Delivery Service
+                  {t("Modern Grocery Delivery Service")}
                 </h2>
                 <p className="text-gray-700 text-[15px] leading-relaxed mb-8">
-                  We are a modern grocery pickup and delivery service committed
-                  to making your daily shopping easier, faster, and more
-                  reliable. With a wide range of fresh produce, pantry staples,
-                  and household essentials, we bring convenience to your
-                  doorstep.
+                  {t("We are a modern grocery pickup and delivery service committed to making your daily shopping easier, faster, and more reliable. With a wide range of fresh produce, pantry staples, and household essentials, we bring convenience to your doorstep")}.
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <div className="flex items-center gap-2 bg-[#2E7D3266]
  px-4 py-2 rounded-full text-[13px] text-gray-900">
                     <Clock className="w-4 h-4 " />
-                    Fast Delivery
+                    {t("Fast Delivery")}
                   </div>
                   <div className="flex items-center gap-2 bg-[#2E7D3266] px-4 py-2 rounded-full text-[13px] text-gray-800">
                     <Star className="w-4 h-4 " />
-                    Trusted by Hundreds
+                    {t("Trusted by Hundreds")}
                   </div>
                 </div>
               </div>
@@ -249,9 +244,6 @@ const AboutUs = (props) => {
             </div>
           </div>
         )}
-
-
-
 
 
         <div className="mb-16">

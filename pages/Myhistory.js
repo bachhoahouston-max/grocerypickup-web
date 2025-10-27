@@ -434,7 +434,7 @@ function Myhistory(props) {
 
                   <div className="flex justify-center">
                     <button
-                      className="bg-custom-gold w-full md:h-[50px] h-[45px] rounded-lg text-white font-semibold text-base hover:shadow-lg transition-all duration-200 disabled:opacity-50"
+                      className="bg-custom-green w-full py-3 rounded-lg text-white font-semibold text-base hover:shadow-lg transition-all duration-200 disabled:opacity-50"
                       type="submit"
                       disabled={reviewsData.description.length < 20}
                     >

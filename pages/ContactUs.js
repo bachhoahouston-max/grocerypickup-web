@@ -146,12 +146,12 @@ const FeedbackForm = (props) => {
               <div className="mb-6">
                 <p className="text-gray-500 text-sm mb-2 font-poppins">Home › {t("Contact Us")}</p>
                 <h1 className="text-black font-poppins font-light text-[88px] leading-[116px] tracking-normal">
-                  Get in-touch<br />with us!
+                  {t("Get in-touch")}<br />{t("with us")}!
                 </h1>
               </div>
 
               <p className="text-gray-700 text-base mb-8 font-poppins">
-                We're here to help! Whether you have a question about our services or need assistance with your account or want to provide feedback, our team is ready to assist you.
+                {t("We're here to help! Whether you have a question about our services or need assistance with your account or want to provide feedback, our team is ready to assist you")}.
               </p>
 
               <div className="space-y-4">

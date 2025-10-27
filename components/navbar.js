@@ -37,6 +37,7 @@ const Navbar = (props) => {
   const [showHover, setShowHover] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [user, setUser] = useContext(userContext);
+  const [searchData, setSearchData] = useState("");
   const [CartTotal, setCartTotal] = useState(0);
   const [openCart, setOpenCart] = useContext(openCartContext);
   const [CartItem, setCartItem] = useState(0);
@@ -52,17 +53,18 @@ const Navbar = (props) => {
   const [coupons, setCoupons] = useState([]);
   const [filteredCoupons, setFilteredCoupons] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCoupon, setSelectedCoupon] = useState(null);
   const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
   const [isOnce, setIsOnce] = useState(false)
-  // const [lang, setLang] = useState(null);
   const { lang, changeLang } = useContext(languageContext);
   const { i18n } = useTranslation();
   const { t } = useTranslation();
   const isLoggedIn = user?._id || user?.token;
+  const [pincodes, setPincodes] = useState([]);
+  const [date, setDate] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
 
   const fetchCoupons = async () => {
@@ -174,9 +176,6 @@ const Navbar = (props) => {
     lng: null,
   });
 
-  const [date, setDate] = useState(null);
-  const [parkingNo, setParkingNo] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
 
   const handleOptionChange = (event) => {
     setPickupOption(event.target.value);
@@ -323,12 +322,6 @@ const Navbar = (props) => {
   const closeDrawers = async () => {
     setOpenCart(false);
   };
-
-  const closeMobile = async () => {
-    setIsMobile(false)
-  }
-
-  const [pincodes, setPincodes] = useState([]);
 
   useEffect(() => {
     if (openCart) {
@@ -483,7 +476,6 @@ const Navbar = (props) => {
     setCartData([]);
     setDate(null);
     setLocalAddress([]);
-    setParkingNo("");
     setPickupOption("orderPickup");
     localStorage.removeItem("addCartDetail");
     setSearchTerm("");
@@ -502,8 +494,6 @@ const Navbar = (props) => {
 
 
     if (nextState.length === 0) {
-
-      setSelectedCoupon(null);
       setSearchTerm("");
       getProfileData();
     }
@@ -743,12 +733,27 @@ const Navbar = (props) => {
     );
   };
 
+  const handleSearchSubmit = (e) => {
+    e?.preventDefault();
+    if (searchData.trim() === "") {
+      props.toaster({
+        type: "error",
+        message: "Please enter search value",
+      });
+      return;
+    }
+    props.loader(true);
+    router.push(`/Search/${searchData}`);
+    // setSearchData("");
+    props.loader(false);
+  };
+
   return (
     <>
       <header className="md:shadow-none shadow-md bg-white w-full sticky top-0 z-100">
-        <div className="max-w-7xl mx-auto flex items-center md:justify-between justify-center md:gap-0 gap-14 md:ps-4 py-2">
+        <div className="max-w-7xl mx-auto flex items-center md:justify-between justify-center md:gap-0 gap-2 md:ps-0 ps-4 py-2">
 
-          <div className="relative  md:w-40 w-full md:h-16 h-14 flex items-center">
+          <div className="relative md:w-40 w-32 h-14  flex items-center ">
             <Image
               src="/Logo2.png"
               alt="Tropicana logo"
@@ -759,11 +764,9 @@ const Navbar = (props) => {
             />
           </div>
 
-
           <div className="hidden md:flex flex-grow justify-center">
             <HeaderFirst loader={props.loader} toaster={props.toaster} />
           </div>
-
 
           <div className="hidden md:flex items-center md:space-x-8">
 
@@ -891,10 +894,32 @@ const Navbar = (props) => {
             </div>
           </div>
 
-          <div className="md:hidden flex justify-end items-center gap-3">
+          <div className="md:hidden flex items-center  bg-gray-50 rounded-full px-4 py-2 border-2 relative">
+            <Search size={17} className="text-gray-400" />
+            <form onSubmit={handleSearchSubmit} className="flex-1">
+              <input
+                type="text"
+                value={searchData}
+                onChange={(e) => setSearchData(e.target.value)}
+                placeholder="Search"
+                className="w-full bg-transparent text-black text-sm px-2 outline-none placeholder:text-gray-400"
+              />
+            </form>
+            {searchData && (
+              <button
+                type="button"
+                onClick={() => setSearchData("")}
+                className="absolute right-3 text-gray-400 hover:text-gray-600 transition"
+              >
+                <X size={18} />
+              </button>
+            )}
+          </div>
+
+          <div className="md:hidden flex justify-end items-center gap-1">
 
             <select
-              className="bg-white border border-gray-300 text-sm px-2 py-2 rounded-md text-gray-700 focus:outline-none"
+              className="bg-white border border-gray-300 text-sm px-1 py-2 rounded-md text-gray-700 focus:outline-none"
               value={lang}
               onChange={(e) => handleClick(e.target.value)}
             >
@@ -915,8 +940,9 @@ const Navbar = (props) => {
             </div>
 
           </div>
-          <div>
 
+
+          <div>
           </div>
         </div>
       </header>

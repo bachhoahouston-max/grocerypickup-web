@@ -68,7 +68,7 @@ export default function Home(props) {
         <Suspense fallback={<div>Loading.....</div>}>
           <ShopByCategory loader={props.loader} toaster={props.toaster} />
         </Suspense>
-        
+
         <Suspense fallback={<div>Loading.....</div>}>
           <SellProduct loader={props.loader} toaster={props.toaster} />
         </Suspense>
@@ -76,12 +76,9 @@ export default function Home(props) {
         <div className="bg-white w-full ">
           <section className="bg-white w-full relative flex flex-col justify-center items-center">
             <div className="container mx-auto px-2 md:px-0">
-              <div className="flex justify-center flex-col items-center">
-                <h1 className=" text-[20px] md:text-2xl font-bold mb-10 mt-10 text-black">
-                  {t("All Products")}
-                </h1>
-
-              </div>
+              <h1 className=" text-[20px] md:text-2xl font-bold mb-10 mt-10 text-black">
+                {t("All Products")}
+              </h1>
               <Suspense fallback={<div>Loading.....</div>}>
                 <BestSeller loader={props.loader} toaster={props.toaster} />
               </Suspense>
@@ -258,9 +255,8 @@ function BestSeller(props) {
         )}
       </div>
 
-      {/* Infinite Scroll Loader */}
       <div id="infinite-loader" className="text-center py-4">
-        {loadingMore && <p className="text-black">Loading more...</p>}
+        {loadingMore && <p className="text-black">{t("Loading more")}...</p>}
       </div>
     </div>
   );

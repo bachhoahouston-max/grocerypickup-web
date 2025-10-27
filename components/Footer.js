@@ -185,11 +185,11 @@ const Footer = () => {
               className="transition-transform transform hover:scale-105 flex flex-col items-start max-w-[150px] bg-white px-3 py-1 rounded-md"
             >
               <p className="text-black text-[16px] whitespace-nowrap">
-                Download on the
+                {t("Download on the")}
               </p>
               <div className="flex  justify-center items-center gap-2">
                 <p className="text-black text-[16px] whitespace-nowrap">
-                  App Store
+                  {t("App Store")}
                 </p>
                 <Image
                   src="/AppStore.png"
@@ -209,11 +209,11 @@ const Footer = () => {
             >
 
               <p className="text-black text-[16px] whitespace-nowrap">
-                Download on the
+                {("Download on the")}
               </p>
               <div className="flex  justify-center items-center gap-2">
                 <p className="text-black text-[16px] whitespace-nowrap">
-                  Play Store
+                  {t("Play Store")}
                 </p>
                 <Image
                   src="/GooglePlay.png"
