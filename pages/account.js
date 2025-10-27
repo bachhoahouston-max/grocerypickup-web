@@ -41,10 +41,10 @@ function Account(props) {
 
 
   const TabButtons = () => (
-    <div className="px-4 flex gap-4 mb-4 border-b border-gray-200 pb-2">
+    <div className="px-4 w-full flex justify-between gap-4 mb-4 border-b border-gray-200 pb-2">
       <button
         onClick={() => setActiveTab("profile")}
-        className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${activeTab === "profile"
+        className={`flex w-1/2 items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${activeTab === "profile"
             ? "bg-custom-green text-white shadow-lg"
             : "text-gray-600 hover:text-custom-green hover:bg-gray-50"
           }`}
@@ -52,7 +52,7 @@ function Account(props) {
         <UserRound className="w-5 h-5" />
         Profile
       </button>
-      <button
+      {/* <button
         onClick={() => router.push("/Mybooking")}
         className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${activeTab === "orders"
             ? "bg-custom-green text-white shadow-lg"
@@ -61,10 +61,10 @@ function Account(props) {
       >
         <ShoppingBag className="w-5 h-5" />
         Orders
-      </button>
+      </button> */}
       <button
         onClick={() => router.push("/Myhistory")}
-        className={`flex items-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${activeTab === "history"
+        className={`flex w-1/2 items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all ${activeTab === "history"
             ? "bg-custom-green text-white shadow-lg"
             : "text-gray-600 hover:text-custom-green hover:bg-gray-50"
           }`}

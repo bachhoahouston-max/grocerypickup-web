@@ -118,7 +118,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   return (
     <div
       key={i}
-      className="bg-white w-full rounded-[12px] shadow-lg hover:shadow-xl transition-all duration-300 p-4 relative"
+      className="bg-white w-full rounded-[12px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-4 p-2.5 relative"
     >
       {/* Category Badge */}
       <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
@@ -209,7 +209,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
               <IoRemoveSharp className="text-white w-5 h-5" />
             </div>
 
-            <p className="text-black text-lg font-semibold mx-4 min-w-[10px] text-center">
+            <p className="text-black text-lg font-semibold md:mx-4 mx-2 min-w-[10px] text-center">
               {itemQuantity}
             </p>
 
