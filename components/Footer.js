@@ -177,7 +177,7 @@ const Footer = () => {
           </div>
 
           {/* App Store Buttons */}
-          <div className="flex flex-row items-center justify-center gap-3 md:mb-0 mb-5">
+          <div className="flex flex-row items-center justify-center gap-3 md:mb-0 mb-10">
             <a
               href="https://apps.apple.com/us/app/b%C3%A1ch-ho%C3%A1-houston/id6745395289"
               target="_blank"

@@ -52,7 +52,7 @@ const LeftLayout = (props) => {
                                 type="text"
                                 value={searchData}
                                 onChange={(e) => setSearchData(e.target.value)}
-                                placeholder="Search"
+                                placeholder={t("Search")}
                                 className="w-full bg-transparent text-black text-sm px-3 outline-none placeholder:text-gray-400"
                             />
                         </form>

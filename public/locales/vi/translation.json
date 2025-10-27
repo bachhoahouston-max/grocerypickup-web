@@ -288,7 +288,7 @@
   "Tap to add photos": "Nhấn để thêm ảnh",
   "Submit Review": "Gửi đánh giá",
   "Offer of the Week": "Ưu đãi của tuần",
-  "Back": "Quay Lạ",
+  "Back": "Quay Lại",
   "In-store Pickup": "Nhận hàng tại cửa hàng",
   "Local Delivery": "Giao hàng địa phương",
   "7 Days A Week Support": "Hỗ trợ 7 ngày trong tuần",
@@ -320,5 +320,11 @@
   "All rights reserved": "Tous droits réservés",
   "Shop By Category": "Acheter par catégorie",
   "Filter": "Filtrer",
-  "Loading more": "Chargement en cours"
+  "Loading more": "Chargement en cours",
+  "No Products Found": "Aucun produit trouvé",
+  "Try searching with different keywords or explore other categories": "Essayez de rechercher avec d'autres mots-clés ou explorez d'autres catégories",
+  "Search": "Rechercher",
+  "My order": "Ma commande"
+
+
 }
