@@ -523,21 +523,21 @@ function ProductDetails(props) {
 
                   {isInCart ? (
                     <>
-                      <div className="flex mt-7 md:mt-20">
+                      <div className="p-1 flex justify-between mt-7 md:mt-20 w-[250px] bg-gray-100 rounded-2xl">
                         <div
-                          className="h-[42px] w-[44px] bg-custom-green cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                          className="px-2.5 py-2 bg-custom-green cursor-pointer  rounded-full flex justify-center items-center"
                           onClick={handleDecreaseQty}
                         >
-                          <IoRemoveSharp className="h-[24px] w-[24px] text-white" />
+                          <IoRemoveSharp className="text-white text-lg" />
                         </div>
-                        <p className="text-black md:text-xl text-lg font-medium text-center px-3 border-y-2 border-y-gray-200 py-1">
+                        <p className="text-black md:text-xl text-lg font-medium text-center px-3  py-1">
                           {availableQty}
                         </p>
                         <div
-                          className="h-[42px] w-[44px] bg-[#5CB447] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                          className="rounded-full bg-custom-green cursor-pointer px-2.5 py-2 flex justify-center items-center"
                           onClick={handleIncreaseQty}
                         >
-                          <IoAddSharp className="h-[24px] w-[24px] text-white" />
+                          <IoAddSharp className=" text-white text-lg" />
                         </div>
                       </div>
                     </>
@@ -549,11 +549,11 @@ function ProductDetails(props) {
                         {t("Out of Stock")}
                       </button>
                     ) : (
-                      <button
-                        className="bg-[#5CB447] w-[136px] h-[42px] rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1 cursor-pointer"
+                       <button
+                        className="bg-custom-green md:mt-20 px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md  mt-4 cursor-pointer"
                         onClick={handleAddToCart}
                       >
-                        {t("ADD")}
+                        {t("Add to Cart")}
                       </button>
                     )
 

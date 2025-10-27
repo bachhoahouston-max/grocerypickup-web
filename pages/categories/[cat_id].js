@@ -209,7 +209,6 @@ function Categories(props) {
         <section className="bg-white w-full relative flex flex-col justify-center items-center">
           <div className="md:max-w-7xl mx-auto w-full md:px-0 px-2 md:pt-10 pt-8 md:pb-10 pb-0">
 
-            {/* Desktop View */}
             <div className="md:flex hidden flex-col w-full mb-4 mt-4">
               <div className="flex justify-between items-center gap-4 bg-white border border-gray-200 shadow-md px-6 py-4 rounded-xl">
                 <h1 className="text-xl md:text-2xl font-bold text-gray-800">
@@ -298,7 +297,6 @@ function Categories(props) {
               </div>
             </div>
 
-            {/* Mobile View */}
             <div className="flex md:hidden flex-col w-full mb-4 mt-4">
               <div className="flex justify-between items-center px-4 py-3 bg-white border border-gray-200 shadow-md rounded-lg">
                 <h1 className="text-lg font-bold text-gray-800">{t("All Products")}</h1>
@@ -352,8 +350,8 @@ function Categories(props) {
               )}
             </div>
 
-            <div className=" md:mt-0 mt-2">
-              <div className="grid lg:grid-cols-5 xl:grid-cols-5 md:grid-cols-4 grid-cols-2 mb-6 space-x-2 justify-between">
+            <div className="md:mt-0 mt-2">
+              <div className="grid lg:grid-cols-4 xl:grid-cols-4 md:grid-cols-4 grid-cols-2 mb-6 space-x-2 justify-between">
                 {productList.length > 0 ? (
                   productList.map((item, i) => (
                     <div key={`${item?.id || item?.slug}-${i}`} className="p-1 w-full md:mb-5 mb-2">

@@ -257,7 +257,7 @@ function Mybooking(props) {
 
   return (
     <>
-      <div className="mx-auto max-w-7xl py-12 min-h-screen mt-10 md:mt-2">
+      <div className="mx-auto max-w-7xl py-12 min-h-screen md:mt-2">
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-center text-[35px] md:text-[45px] font-semibold text-black mb-2">
             {t("My")}
@@ -270,7 +270,7 @@ function Mybooking(props) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-2 md:mx-auto md:gap-4 gap-4 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mx-2 md:mx-auto md:gap-4 gap-4 max-w-7xl">
           {bookingsData && bookingsData.length > 0 ? (
             bookingsData.map((booking, key) => (
               <div

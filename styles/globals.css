@@ -206,11 +206,11 @@ body {
 }
 
 .react-multi-carousel-dot--active button {
-  background: #f38529;
+  background: #2e7d32;
 }
 
 .react-multiple-carousel__arrow {
-  background: #f38529 !important;
+  background: #2e7d32 !important;
   border: none !important;
   color: white !important;
   min-width: 35px !important;
@@ -218,7 +218,7 @@ body {
 }
 
 .react-multiple-carousel__arrow:hover {
-  background: #e67419 !important;
+  background: #2e7d32 !important;
 }
 
 .react-multiple-carousel__arrow::before {

@@ -78,7 +78,7 @@ function Search(props) {
             <section className="bg-white w-full flex flex-col justify-center items-center">
                 <div className="md:px-16 mx-auto w-full px-2 md:mt-10 mt-10 md:pb-10 pb-5">
                     <p className='text-black font-bold text-[20px] md:text-[24px] mb-5 md:mt-0 mt-2'>{t("Search Result")} </p>
-                    <div className='grid md:grid-cols-5 lg:grid-cols-7 grid-cols-2 w-full md:gap-2 gap-2'>
+                    <div className='grid sm:grid-cols-3 lg:grid-cols-4 grid-cols-2 w-full md:gap-2 gap-2'>
                         {productList.map((item, i) => (
                             <div key={i} className='w-full'>
                                 <GroceryCatories
@@ -100,11 +100,11 @@ function Search(props) {
                             </h2>
 
                             <p className="text-gray-500 max-w-md">
-                                {t("Try searching with different keywords or explore other categories.")}
+                                {t("Try searching with different keywords or explore other categories")}
                             </p>
 
                             <button
-                                onClick={() => router.push("/AllCa")} // replace with your desired route
+                                onClick={() => router.push("/categories/all")} // replace with your desired route
                                 className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition"
                             >
                                 {t("Browse Products")}

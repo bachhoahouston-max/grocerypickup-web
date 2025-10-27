@@ -42,9 +42,7 @@ export default function Home(props) {
     }
   };
 
-  const handleCategoryClick1 = (path) => {
-    router.push(path);
-  };
+
 
   return (
     <>
@@ -119,7 +117,7 @@ function BestSeller(props) {
     setLoadingMore(true);
     const res = await Api(
       "get",
-      `getTopSoldProduct?page=${pageNum}&limit=15`,
+      `getTopSoldProduct?page=${pageNum}&limit=16`,
       null,
       router
     );

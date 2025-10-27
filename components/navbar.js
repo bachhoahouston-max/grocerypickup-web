@@ -887,7 +887,7 @@ const Navbar = (props) => {
             >
               <Heart className="text-black" size={28} />
               {Favorite.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#F38529] text-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-custom-green text-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
                   {Favorite.length}
                 </span>
               )}
@@ -978,8 +978,8 @@ const Navbar = (props) => {
                     showCancelButton: true,
                     confirmButtonText: t("Yes"),
                     cancelButtonText: t("No"),
-                    confirmButtonColor: "#F38529",
-                    cancelButtonColor: "#F38529",
+                    confirmButtonColor: "#2e7d32",
+                    cancelButtonColor: "#2e7d32",
                     customClass: {
                       confirmButton: "px-12 rounded-xl",
                       cancelButton:
@@ -1354,7 +1354,7 @@ const Navbar = (props) => {
                   {t("Your cart is empty")}
                 </p>
                 <button
-                  className=" text-custom-green border-2 border-custom-green text-[20px] font-medium rounded-[18px] md:w-[180px] w-full mt-2 py-2 px-1"
+                  className=" text-custom-green border-2 border-custom-green text-[20px] font-medium rounded-[18px] md:w-[180px] w-full mt-2 py-2 px-3"
                   onClick={() => {
                     setOpenCart(false);
                     router.push("/categories/all");
@@ -1408,7 +1408,7 @@ const Navbar = (props) => {
                         <div className="flex justify-center items-center  md:mt-0 mt-3 md:gap-10 gap-4">
                           <div className="bg-gray-100 md:w-[153px] w-[125px] md:h-[39px] rounded-[8px] flex justify-center items-center">
                             <div
-                              className="h-[39px] w-[51px] bg-[#5CB447] cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                              className="h-[39px] w-[51px] bg-[#2e7d32] cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
                               onClick={() => {
                                 if (item.qty > 1) {
                                   const nextState = produce(
@@ -1433,7 +1433,7 @@ const Navbar = (props) => {
                               {item?.qty}
                             </p>
                             <div
-                              className="h-[39px] w-[51px] bg-[#5CB447] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                              className="h-[39px] w-[51px] bg-[#2e7d32] cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
                               onClick={() => {
                                 const nextState = produce(cartData, (draft) => {
                                   if (draft[i].qty + 1 > item.Quantity) {
@@ -1485,7 +1485,7 @@ const Navbar = (props) => {
                 <div className="flex text-center w-full md:-mt-6 -mt-3">
                   {pickupOption === "ShipmentDelivery" &&
                     (item.isShipmentAvailable ? (
-                      <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                      <p className="text-custom-green text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
                         {t("Product is available for Shipment Delivery")}
                       </p>
                     ) : (
@@ -1496,7 +1496,7 @@ const Navbar = (props) => {
 
                   {pickupOption === "driveUp" &&
                     (item.isCurbSidePickupAvailable ? (
-                      <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                      <p className="text-custom-green text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
                         {t("Product is available for CurbSide Pickup")}
                       </p>
                     ) : (
@@ -1506,7 +1506,7 @@ const Navbar = (props) => {
                     ))}
                   {pickupOption === "orderPickup" &&
                     (item.isInStoreAvailable ? (
-                      <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                      <p className="text-custom-green text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
                         {t("Product is available for In Store Pickup")}
                       </p>
                     ) : (
@@ -1516,7 +1516,7 @@ const Navbar = (props) => {
                     ))}
                   {pickupOption === "localDelivery" &&
                     (item.isNextDayDeliveryAvailable ? (
-                      <p className="text-green-500 text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
+                      <p className="text-custom-green text-sm md:text-base md:mt-3 mt-4 w-full md:text-center">
                         {t("Product is available for Next Day Delivery")}
                       </p>
                     ) : (
@@ -1560,7 +1560,7 @@ const Navbar = (props) => {
                 )}
 
                 {appliedCoupon && (
-                  <div className=" text-green-800 rounded-md flex items-center justify-end w-full md:w-[400px]">
+                  <div className=" text-custom-green rounded-md flex items-center justify-end w-full md:w-[400px]">
                     <span className="text-base">
                       {t("Coupon")} {" "}
                       {t("applied!")}

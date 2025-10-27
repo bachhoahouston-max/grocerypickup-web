@@ -522,9 +522,9 @@ function ProductDetails(props) {
                   ))}
                 </Carousel>
               </div>
-              <div className="flex justify-start items-center w-full">
+              <div className="flex justify-start items-start w-full">
                 <div className="flex flex-col justify-start items-start w-full">
-                  <div className="flex justify-between items-center w-full">
+                  <div className=" flex justify-between items-center w-full">
                     <h1 className="text-black md:text-[32px] text-2xl font-semibold">
                       {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
                     </h1>
@@ -543,7 +543,7 @@ function ProductDetails(props) {
 
                   </div>
 
-                  <div className="pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
+                  <div className="pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
                     {prizeSlot && (
                       <div>
                         <div
@@ -557,17 +557,17 @@ function ProductDetails(props) {
                         >
                           {prizeSlot?.other_price && (
                             <>
-                            <div className="bg-custom-green p-2 rounded-full absolute -top-4 -right-4"> 
-                              <p className="text-white text-center text-[9px] font-medium ">
-                                {(
-                                  ((parseFloat(prizeSlot.other_price) -
-                                    parseFloat(prizeSlot.our_price)) /
-                                    parseFloat(prizeSlot.other_price)) *
-                                  100
-                                ).toFixed(2)}
-                                %<br />
-                                {t("off")}
-                              </p>
+                              <div className="bg-custom-green p-2 rounded-full absolute -top-4 -right-4">
+                                <p className="text-white text-center text-[9px] font-medium ">
+                                  {(
+                                    ((parseFloat(prizeSlot.other_price) -
+                                      parseFloat(prizeSlot.our_price)) /
+                                      parseFloat(prizeSlot.other_price)) *
+                                    100
+                                  ).toFixed(2)}
+                                  %<br />
+                                  {t("off")}
+                                </p>
                               </div>
                             </>
                           )}
@@ -597,46 +597,46 @@ function ProductDetails(props) {
 
                   {isInCart ? (
                     <>
-                      <div className="flex mt-5">
+                      <div className="p-1 flex justify-between mt-7 md:mt-20 w-[250px] bg-gray-100 rounded-2xl">
                         <div
-                          className="px-4 py-2.5 bg-custom-green cursor-pointer rounded-[8px] rounded-r-none flex justify-center items-center"
+                          className="px-2.5 py-2 bg-custom-green cursor-pointer  rounded-full flex justify-center items-center"
                           onClick={handleDecreaseQty}
                         >
-                          <IoRemoveSharp className="h-[24px] w-[24px] text-white" />
+                          <IoRemoveSharp className="text-white text-lg" />
                         </div>
-                        <p className="text-black md:text-xl text-lg font-medium text-center  border-y-2 border-y-gray-200 py-1.5 px-6">
+                        <p className="text-black md:text-xl text-lg font-medium text-center px-3  py-1">
                           {availableQty}
                         </p>
                         <div
-                          className="px-4 py-2.5 bg-custom-green cursor-pointer rounded-[8px] rounded-l-none flex justify-center items-center"
+                          className="rounded-full bg-custom-green cursor-pointer px-2.5 py-2 flex justify-center items-center"
                           onClick={handleIncreaseQty}
                         >
-                          <IoAddSharp className="h-[24px] w-[24px] text-white" />
+                          <IoAddSharp className=" text-white text-lg" />
                         </div>
                       </div>
                     </>
                   ) : (
                     productsId.Quantity <= 0 ? (
                       <button
-                        className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed "
+                        className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md w-[250px] md:mt-5 mt-4 cursor-not-allowed "
                       >
                         {t("Out of Stock")}
                       </button>
                     ) : (
                       <button
-                        className="bg-custom-green px-4 py-3rounded-[8px] text-white font-semibold text-xl md:mt-5 mt-4 py-1 cursor-pointer"
+                        className="bg-custom-green px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md md:mt-5 mt-4 cursor-pointer"
                         onClick={handleAddToCart}
                       >
-                        {t("ADD")}
+                        {t("Add to Cart")}
                       </button>
                     )
                   )}
                   {productsId.isShipmentAvailable ? (
-                    <p className="text-black font-normal text-[17px] mt-2">
+                    <p className="text-black font-normal text-[17px] mt-2 md:mt-7">
                       {t("Shipment Delivery is available")}
                     </p>
                   ) : (
-                    <p className="text-black font-normal text-[17px] mt-2">
+                    <p className="text-black font-normal text-[17px] mt-2 md:mt-7">
                       {t("Shipment Delivery is not available")}
                     </p>
                   )}
@@ -650,7 +650,7 @@ function ProductDetails(props) {
             </p>
 
             <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-           
+
               <div className="md:col-span-2">
                 <p className="text-black text-base md:text-[18px] font-bold">
                   {t(" Description")}:

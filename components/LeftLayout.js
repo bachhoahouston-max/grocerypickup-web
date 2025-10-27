@@ -62,7 +62,7 @@ const LeftLayout = (props) => {
                             <button
                                 type="button"
                                 onClick={() => setSearchData("")}
-                                className="absolute right-3 text-gray-400 hover:text-gray-600 transition"
+                                className="absolute cursor-pointer right-3 text-gray-400 hover:text-gray-600 transition"
                             >
                                 <X size={18} />
                             </button>
