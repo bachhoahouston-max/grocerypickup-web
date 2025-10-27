@@ -135,7 +135,7 @@ const forgotPassword = (props) => {
     return (
         <>
             <div className="font-sans  flex flex-col items-center justify-center h-[700px] md:h-[650px] ">
-                <div className="max-w-7xl mx-auto w-full ">
+                <div className="max-w-7xl mx-auto w-full mt-4">
 
                     <div className="flex md:hidden flex-col justify-center items-center">  <h1 className="mt-8 text-[34px] md:text-[48px] text-black">
                         {t("Oppssss!")}
@@ -146,7 +146,7 @@ const forgotPassword = (props) => {
                         </p>
                         <div className=" w-full h-[150px] justify-center items-center relative mb-4">
                             <Image
-                                src="/ladies.png"
+                                src="/imageBacha.png"
                                 alt="Sign In"
                                 fill
                                 className="object-contain" // ensures image covers the parent
@@ -272,7 +272,7 @@ const forgotPassword = (props) => {
                             </p>
                             <div className="hidden md:flex w-full h-[320px] justify-center items-center relative">
                                 <Image
-                                    src="/ladies.png"
+                                    src="/imageBacha.png"
                                     alt="Sign In"
                                     fill
                                     className="object-contain" // ensures image covers the parent

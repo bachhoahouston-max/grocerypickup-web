@@ -67,8 +67,8 @@ function MainHeader() {
         {carouselImg.map((img, idx) => (
           <div
             key={idx}
-            className="relative w-full h-[310px] flex items-center justify-center overflow-hidden 
-              md:h-[305px] lg:h-[320px] xl:h-[450px] rounded-[28px]"
+            className="relative aspect-square w-full h-[310px] flex items-center justify-center overflow-hidden 
+              md:h-[305px] lg:h-[320px] xl:h-[410px] rounded-[28px]"
           >
             <Image
               src={img.image || "/fallback.jpg"}

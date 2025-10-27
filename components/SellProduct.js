@@ -154,7 +154,7 @@ const SellProduct = ({ loader, toaster }) => {
   }, [saleData]);
 
   return (
-    <div className="container mb-2 md:mt-10 lg:mt-14 mt-4 bg-white md:px-0 px-2">
+    <div className="container  md:mt-10 lg:mt-14 mt-4 bg-white md:px-0 px-2 mb-12">
       {saleData.length > 0 && (
         <>
           <p className="text-black flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">
@@ -162,7 +162,7 @@ const SellProduct = ({ loader, toaster }) => {
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
 
-          <div className="md:mt-4 mt-2 grid md:grid-cols-5 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto">
+          <div className="md:mt-4 mt-2 grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto">
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
                 (cartItem) => cartItem.id === item?.product?._id

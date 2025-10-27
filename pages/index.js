@@ -238,7 +238,7 @@ function BestSeller(props) {
     <div className="flex flex-col">
       <CategoryDropdown />
 
-      <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto w-full">
+      <div className="grid md:grid-cols-4 lg:grid-cols-4  grid-cols-2 gap-4 mx-auto w-full">
         {productList.length > 0 ? (
           productList.map((item, i) => (
             <GroceryCatories

@@ -332,7 +332,7 @@ function ProductDetails(props) {
       </Head>
       <div className="bg-white w-full max-w-7xl mx-auto md:pt-10 pt-14 md:pb-10 pb-5 md:px-0 px-3">
         <section className="bg-white w-full ">
-          <div className="flex flex-wrap items-center text-gray-500 text-xs md:text-sm mt-2 mb-2 gap-1">
+          <div className="flex flex-wrap items-center text-gray-500 text-xs md:text-sm mt-2 mb-2 gap-1 md:ps-4">
             <p className="font-medium">{t("Home")}</p>
             <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
 
@@ -635,30 +635,11 @@ function ProductDetails(props) {
           </div>
           <ProductReviews productReviews={productReviews} slug={productsId.slug} />
 
-          <div className="bg-white max-w-7xl mx-auto mt-6">
-            <p className="text-black text-xl font-bold md:mb-5 mb-5 md:mt-0 mt-4 4">
-              {t("Similar Products")}
-            </p>
-            <div className="grid  lg:grid-cols-5 grid-cols-2 md:gap-2 gap-3 ">
-              {productList.map((item, i) => (
-                <div key={i} className="w-full md:mb-5">
-                  <GroceryCategories
-                    loader={props.loader}
-                    toaster={props.toaster}
-                    item={item}
-                    i={i}
-                    url={`/product-details/${item?.slug}`}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-
           <div className="bg-white max-w-7xl mx-auto">
             <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 ">
               {t("You might also like")}
             </p>
-            <div className="grid lg:grid-cols-5 grid-cols-2 md:gap-2 gap-3 md:mx-4 xl:mx-0 ms-4">
+            <div className="grid lg:grid-cols-4 grid-cols-2 md:gap-2 gap-3 md:mx-4 xl:mx-0 ms-4">
               {productList.map((item, i) => (
                 <div key={i} className="w-full md:mb-5">
                   <GroceryCategories
