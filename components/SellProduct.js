@@ -154,7 +154,7 @@ const SellProduct = ({ loader, toaster }) => {
   }, [saleData]);
 
   return (
-    <div className="container  md:mt-10 lg:mt-14 mt-4 bg-white md:px-0 px-2 mb-12">
+    <div className="container  md:mt-10 lg:mt-14 mb-4 bg-white md:px-0 px-2 mt-12">
       {saleData.length > 0 && (
         <>
           <p className="text-black flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-6">

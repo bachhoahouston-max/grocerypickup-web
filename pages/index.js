@@ -64,13 +64,14 @@ export default function Home(props) {
           <MainHeader />
         </Suspense>
 
-        <Suspense fallback={<div>Loading.....</div>}>
-          <SellProduct loader={props.loader} toaster={props.toaster} />
-        </Suspense>
+
         <Suspense fallback={<div>Loading.....</div>}>
           <ShopByCategory loader={props.loader} toaster={props.toaster} />
         </Suspense>
-
+        
+        <Suspense fallback={<div>Loading.....</div>}>
+          <SellProduct loader={props.loader} toaster={props.toaster} />
+        </Suspense>
 
         <div className="bg-white w-full ">
           <section className="bg-white w-full relative flex flex-col justify-center items-center">

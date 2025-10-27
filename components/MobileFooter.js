@@ -2,10 +2,11 @@ import React, { useContext } from "react";
 import { FiShoppingCart } from "react-icons/fi";
 import { CgProfile } from "react-icons/cg";
 import { IoHomeOutline } from "react-icons/io5";
-import { TbCategory } from "react-icons/tb";
+import { FaFirstOrder } from "react-icons/fa6";
 import { useRouter } from "next/router";
 import { cartContext, openCartContext } from "@/pages/_app";
 import { useTranslation } from "react-i18next";
+import { ListOrdered } from "lucide-react";
 
 function MobileFooter() {
   const router = useRouter();
@@ -21,9 +22,9 @@ function MobileFooter() {
       path: "/",
     },
     {
-      label: t("Categories"),
-      icon: TbCategory,
-      path: "/AllCategory",
+      label: t("My order"),
+      icon: ListOrdered,
+      path: "/Mybooking",
     },
     {
       label: t("Cart"),
