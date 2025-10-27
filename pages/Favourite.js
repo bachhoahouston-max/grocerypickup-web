@@ -48,7 +48,7 @@ function Favourite(props) {
           href="https://www.bachhoahouston.com/Favourite"
         />
       </Head>
-      <div className="mx-auto max-w-7xl md:py-6 py-14 px-4">
+      <div className="mx-auto max-w-7xl md:py-6 py-4 px-3 min-h-screen mt-8">
 
         <div className="flex items-center gap-1 text-sm text-gray-500 md:mb-6 mb-4">
           <button
@@ -73,7 +73,7 @@ function Favourite(props) {
           </h1>
         </div>
 
-        <div className="grid xl:grid-cols-7 lg:grid-cols-6 grid-cols-2 md:gap-4 gap-2">
+        <div className="grid xl:grid-cols-4 lg:grid-cols-4 grid-cols-2 md:gap-4 gap-2">
           {favouriteList.length > 0 ? (
             favouriteList.map((item, i) => (
               <div key={i} className="w-full">
