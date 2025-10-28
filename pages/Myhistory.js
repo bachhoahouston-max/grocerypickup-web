@@ -246,7 +246,7 @@ function Myhistory(props) {
 
                 <div
                   className={
-                    expandedHistoryId === booking._id ? "block mt-4" : "hidden"
+                    expandedHistoryId === booking._id ? "hidden" : "block mt-4"
                   }
                 >
                   <div className="grid md:grid-cols-3 grid-cols-1 w-full gap-5 bg-gray-50 md:p-3 p-1 rounded-[10px] border border-gray-200">
