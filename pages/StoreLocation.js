@@ -11,24 +11,23 @@ function StoreLocation(props) {
   const router = useRouter();
 
   const getStoreLocation = () => {
-    props.loader(true); // Show the loader while fetching
+    props.loader(true); 
     Api("get", "/content", router).then(
       (res) => {
-        props.loader(false); // Hide the loader after fetching
+        props.loader(false); 
 
         if (res?.status) {
           setStoreLocation(res?.data[0]?.StoreLocation);
-          setLoading(false); // Successfully fetched data, update loading state
+          setLoading(false); 
         } else {
           props.toaster({ type: "error", message: res?.data?.message });
-          setLoading(false); // Even if there's an error, we need to stop the loading
+          setLoading(false); 
         }
       },
       (err) => {
-        props.loader(false); // Hide loader if there's an error
-        props.toaster({ type: "error", message: err?.data?.message });
-        props.toaster({ type: "error", message: err?.message });
-        setLoading(false); // Stop loading in case of error
+        props.loader(false); 
+        props.toaster({ type: "error", message: err?.data?.message|| err?.message });
+        setLoading(false); 
       }
     );
   };
@@ -60,7 +59,7 @@ function StoreLocation(props) {
               </p>
             ) : (
               <div
-                className="md:text-[18px] text-[14px] text-black font-normal md:pb-5"
+                className="md:text-[18px] text-[14px] text-black font-normal md:pb-5 store-content"
                 dangerouslySetInnerHTML={{ __html: StoreLocation }}
               />
             )}

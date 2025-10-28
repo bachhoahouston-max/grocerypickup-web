@@ -370,7 +370,7 @@ const Navbar = (props) => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      props.toaster({ type: "error", message: "Authentication required" });
+      // props.toaster({ type: "error", message: "Authentication required" });
       props.loader(false);
       return;
     }

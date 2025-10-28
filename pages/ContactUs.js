@@ -157,14 +157,25 @@ const FeedbackForm = (props) => {
               <div className="space-y-4">
                 <div>
                   <p className="text-gray-700 font-medium mb-1">{t("Email")}:</p>
-                  <p className="text-black text-lg font-poppins">contact@bachhoahouston.com</p>
+                  <a
+                    href="mailto:contact@bachhoahouston.com"
+                    className="text-black text-lg font-poppins hover:text-blue-600 transition"
+                  >
+                    contact@bachhoahouston.com
+                  </a>
                 </div>
 
                 <div>
                   <p className="text-gray-700 font-medium mb-1">{t("Phone No")}:</p>
-                  <p className="text-black text-lg">832-230-9288</p>
+                  <a
+                    href="tel:8322309288"
+                    className="text-black text-lg hover:text-blue-600 transition"
+                  >
+                    832-230-9288
+                  </a>
                 </div>
               </div>
+
             </div>
 
             {/* Right Side - Form */}

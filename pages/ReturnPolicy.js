@@ -59,7 +59,7 @@ function ReturnPolicy(props) {
               </p>
             ) : (
               <div
-                className="text-[18px] text-black font-normal md:pb-5"
+                className="text-[18px] text-black font-normal md:pb-5 store-content"
                 dangerouslySetInnerHTML={{
                   __html: returnPolicyData?.returnPolicy,
                 }}

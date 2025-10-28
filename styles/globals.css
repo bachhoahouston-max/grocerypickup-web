@@ -215,6 +215,7 @@ body {
   color: white !important;
   min-width: 35px !important;
   min-height: 35px !important;
+  z-index: 10 !important;
 }
 
 .react-multiple-carousel__arrow:hover {
@@ -223,4 +224,10 @@ body {
 
 .react-multiple-carousel__arrow::before {
   font-size: 14px !important;
+}
+
+.store-content * {
+  font-family: 'Poppins', sans-serif !important;
+  color: #000 !important; /* optional */
+  font-size: inherit !important;
 }

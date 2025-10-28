@@ -56,7 +56,7 @@ function FranchiseOpportunity(props) {
                         {loading ? (
                             <p className="text-base text-black font-normal md:pb-5">Loading...</p>
                         ) : (
-                            <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5" dangerouslySetInnerHTML={{ __html: FranchiseOpportunity }} />
+                            <div className="md:text-[18px] text-[14px] text-black font-normal md:pb-5 store-content" dangerouslySetInnerHTML={{ __html: FranchiseOpportunity }} />
                         )}
                     </div>
                 </section>
