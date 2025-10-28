@@ -206,15 +206,16 @@ const SellProduct = ({ loader, toaster }) => {
                     />
                   </div>
 
-                  {/* Product Name */}
-                  <h3 className="text-black font-semibold text-sm md:text-md line-clamp-2 mb-2">
+                <div className="flex justify-center items-center"> 
+                  <h3 className="text-black font-semibold text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
                     {lang === "en"
                       ? item.product?.name
                       : item.product?.vietnamiesName || item.product?.name}
                   </h3>
+                  </div>
 
                   {/* Price Section */}
-                  <div className="flex items-center gap-2 mb-3">
+                  <div className="flex items-center justify-start gap-1 mb-3">
                     <span className="text-red-500 font-semibold text-lg md:text-xl">
                       ${item.price}
                     </span>
@@ -224,7 +225,7 @@ const SellProduct = ({ loader, toaster }) => {
                       </span>
                     )}
                     {item.product?.price_slot?.[0]?.our_price && (
-                      <span className="bg-red-100 text-red-600 text-xs px-2 py-1 rounded">
+                      <span className="bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded">
                         {Math.round(
                           ((item.price_slot?.our_price - item.price) /
                             item.price_slot?.our_price) *
