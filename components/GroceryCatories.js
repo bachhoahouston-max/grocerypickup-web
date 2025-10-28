@@ -160,15 +160,18 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <div className="flex justify-between items-center gap-3">
         {/* Price */}
         <div className="flex flex-col">
-          <p className="text-custom-green md:text-xl text-lg font-bold">
-            {constant.currency} {item?.price_slot[0]?.our_price}
+          <p className="text-custom-green md:text-xl text-[17px] font-bold">
+            {constant.currency}{" "}
+            {Number(item?.price_slot[0]?.our_price || 0).toFixed(2)}
           </p>
           {item?.price_slot[0]?.other_price && (
             <del className="text-custom-green text-sm font-medium">
-              {constant.currency} {item?.price_slot[0]?.other_price}
+              {constant.currency}{" "}
+              {Number(item?.price_slot[0]?.other_price || 0).toFixed(2)}
             </del>
           )}
         </div>
+
 
         {/* Add to Cart / Quantity Controls */}
         {item?.Quantity <= 0 ? (

@@ -257,7 +257,7 @@ function Mybooking(props) {
 
   return (
     <>
-      <div className="mx-auto max-w-7xl py-12 min-h-screen md:mt-2">
+      <div className="mx-auto max-w-7xl md:py-5 py-12 min-h-screen md:mt-2">
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-center text-[35px] md:text-[45px] font-semibold text-black mb-2">
             {t("My")}
@@ -640,7 +640,7 @@ function Mybooking(props) {
                         {booking?.isDriveUp && (
                           <button
                             onClick={() => toggleModal(booking._id)}
-                            className="px-4 py-2 bg-custom-gold hover:bg-yellow-600 text-white text-sm font-medium rounded-md cursor-pointer"
+                            className="px-4 py-2 bg-custom-green text-white text-sm font-medium rounded-md cursor-pointer"
                           >
                             {booking.parkingNo
                               ? t("Update Parking Spot")
@@ -651,7 +651,7 @@ function Mybooking(props) {
                         {booking?.isOrderPickup && (
                           <button
                             onClick={() => getSecrectCode(booking._id)}
-                            className="px-4 py-2 bg-custom-gold text-white text-sm font-medium rounded-md cursor-pointer"
+                            className="px-4 py-2 bg-custom-green text-white text-sm font-medium rounded-md cursor-pointer"
                           >
                             {t("I'm here")}
                           </button>
