@@ -48,7 +48,7 @@ function MobileFooter() {
           <div
             key={idx}
             className={`flex flex-col justify-center items-center transition 
-              ${isActive ? "bg-white text-black rounded-full w-18 h-18 m-2.5 " : "m-2.5 p-3 text-white"}`}
+              ${isActive ? "bg-white text-black rounded-full w-16 h-16 m-2.5 " : "m-2.5 p-3 text-white"}`}
             onClick={() => {
               if (item.isCart) {
                 setOpenCart(true);

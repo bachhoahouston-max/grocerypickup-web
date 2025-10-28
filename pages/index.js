@@ -4,7 +4,6 @@ import MainHeader from "@/components/MainHeader";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { FaChevronDown } from "react-icons/fa";
-import { FaArrowRight } from "react-icons/fa6";
 import GroceryCatories from "@/components/GroceryCatories";
 import SellProduct from "@/components/SellProduct";
 import { useTranslation } from "react-i18next";
@@ -13,7 +12,8 @@ import Head from "next/head";
 import { useContext } from "react";
 import { favoriteProductContext, userContext } from "./_app";
 import ShopByCategory from "@/components/ShopByCategory";
-import { FaChevronUp, FaTag } from "react-icons/fa";
+import { FaTag } from "react-icons/fa";
+import { Loader2 } from "lucide-react";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -91,6 +91,7 @@ export default function Home(props) {
 
 
 
+
 function BestSeller(props) {
   const router = useRouter();
   const { t } = useTranslation();
@@ -100,30 +101,59 @@ function BestSeller(props) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
-
   const observerRef = useRef(null);
+
 
   useEffect(() => {
     async function fetchData() {
       const cat = await Api("get", "getCategory", null, router);
-      setCategory(cat.data);
-
+      setCategory(cat.data || []);
       fetchProducts(1, true);
     }
     fetchData();
   }, []);
 
+
   const fetchProducts = async (pageNum, reset = false) => {
-    setLoadingMore(true);
-    const res = await Api(
-      "get",
-      `getTopSoldProduct?page=${pageNum}&limit=16`,
-      null,
-      router
-    );
-    setProductList((prev) => (reset ? res.data : [...prev, ...res.data]));
-    setLoadingMore(false);
+    try {
+      setLoadingMore(true);
+      const res = await Api(
+        "get",
+        `getTopSoldProduct?page=${pageNum}&limit=16`,
+        null,
+        router
+      );
+      if (res?.data) {
+        setProductList((prev) => (reset ? res.data : [...prev, ...res.data]));
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingMore(false);
+    }
   };
+
+  const fetchProductsByCategory = async (categoryId, pageNum = 1, limit = 16) => {
+    try {
+      setLoadingMore(true);
+      const res = await Api(
+        "get",
+        `getProductbycategory/${categoryId}?page=${pageNum}&limit=${limit}`,
+        "",
+        router
+      );
+      if (res?.data && Array.isArray(res.data)) {
+        setProductList((prev) => (pageNum === 1 ? res.data : [...prev, ...res.data]));
+      }
+    } catch (err) {
+      console.error(err);
+      props.toaster({ type: "error", message: err?.message });
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+
 
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
@@ -140,13 +170,19 @@ function BestSeller(props) {
     return () => observerRef.current?.disconnect();
   }, [loadingMore]);
 
+
   useEffect(() => {
     if (page > 1) {
-      fetchProducts(page);
+      if (selectedCategory === "all") {
+        fetchProducts(page);
+      } else {
+        fetchProductsByCategory(selectedCategory, 16 * page);
+      }
     }
   }, [page]);
 
-  const handleCategoryClick1 = () => {
+
+  const handleCategoryClickAll = () => {
     setSelectedCategory("all");
     setPage(1);
     fetchProducts(1, true);
@@ -155,28 +191,25 @@ function BestSeller(props) {
   const handleCategoryClick = (id) => {
     setSelectedCategory(id);
     setPage(1);
-    fetchProducts(1, true);
+    fetchProductsByCategory(id, 1);
   };
+
 
 
   const CategoryDropdown = () => {
     const [open, setOpen] = useState(false);
-
     const selectedName =
       selectedCategory === "all"
         ? t("View All")
-        : category?.find((cat) => cat._id === selectedCategory)?.name ||
-        t("View All");
+        : category?.find((cat) => cat._id === selectedCategory)?.name || t("View All");
 
     const handleSelect = (value) => {
       setOpen(false);
-      if (value === "all") handleCategoryClick1();
-      else handleCategoryClick(value);
+      value === "all" ? handleCategoryClickAll() : handleCategoryClick(value);
     };
 
     return (
       <div className="relative w-full md:w-2/8 mb-4">
-        {/* Button */}
         <button
           onClick={() => setOpen(!open)}
           className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg shadow-sm transition font-semibold text-gray-800"
@@ -186,15 +219,13 @@ function BestSeller(props) {
             {t("Filter")} : {selectedName}
           </span>
           <FaChevronDown
-            className={`text-custom-green cursor-pointer transition-transform duration-300 ${open ? "rotate-180" : ""
+            className={`text-custom-green transition-transform duration-300 ${open ? "rotate-180" : ""
               }`}
           />
         </button>
 
-        {/* Dropdown List */}
         {open && (
           <ul className="absolute left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-xl max-h-64 overflow-y-auto z-30">
-            {/* View All Option */}
             <li
               onClick={() => handleSelect("all")}
               className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === "all"
@@ -205,18 +236,15 @@ function BestSeller(props) {
               <FaTag />
               {t("View All")}
             </li>
-
-            {/* Category Options */}
-            {category.slice(0, 13).map((cat, index) => (
+            {category.slice(0, 13).map((cat) => (
               <li
-                key={index}
+                key={cat._id}
                 onClick={() => handleSelect(cat._id)}
                 className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === cat._id
                   ? "text-custom-green bg-gray-50"
                   : "text-gray-800"
                   }`}
               >
-                {/* You can replace <FaTag /> with cat.icon if available */}
                 <FaTag />
                 {cat.name}
               </li>
@@ -227,14 +255,11 @@ function BestSeller(props) {
     );
   };
 
-
-
-
   return (
     <div className="flex flex-col">
       <CategoryDropdown />
 
-      <div className="grid md:grid-cols-4 lg:grid-cols-4  grid-cols-2 gap-4 mx-auto w-full">
+      <div className="grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto w-full">
         {productList.length > 0 ? (
           productList.map((item, i) => (
             <GroceryCatories
@@ -253,8 +278,10 @@ function BestSeller(props) {
         )}
       </div>
 
-      <div id="infinite-loader" className="text-center py-4">
-        {loadingMore && <p className="text-black">{t("Loading more")}...</p>}
+      <div id="infinite-loader" className="text-center py-6 flex justify-center">
+        {loadingMore && (
+          <Loader2 className="text-custom-green animate-spin w-8 h-8" />
+        )}
       </div>
     </div>
   );

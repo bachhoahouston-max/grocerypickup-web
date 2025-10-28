@@ -210,92 +210,71 @@ function Categories(props) {
           <div className="md:max-w-7xl mx-auto w-full md:px-0 px-2 md:pt-10 pt-8 md:pb-10 pb-0">
 
             <div className="md:flex hidden flex-col w-full mb-4 mt-4">
-              <div className="flex justify-between items-center gap-4 bg-white border border-gray-200 shadow-md px-6 py-4 rounded-xl">
+              <div className="flex justify-between items-center flex-wrap gap-4 bg-white border border-gray-200 shadow-md px-6 py-4 rounded-xl">
+                {/* Title */}
                 <h1 className="text-xl md:text-2xl font-bold text-gray-800">
                   {t("All Products")}
                 </h1>
 
-                <div className="flex items-center gap-6">
+                {/* Filter Controls */}
+                <div className="flex flex-wrap justify-center items-center gap-4">
                   <p className="text-gray-800 flex items-center text-lg font-medium gap-2">
                     <Filter size={20} />
                     {t("Filter")}:
                   </p>
 
-                  {/* Sort By Dropdown */}
-                  <div className="relative w-[260px]">
-                    <button
-                      onClick={() => setOpenData(!openData)}
-                      className="w-full flex justify-between items-center bg-gray-50 hover:bg-gray-100 border border-gray-300 text-gray-800 font-medium text-base px-4 py-2 rounded-lg transition"
+                  {/* Sort By */}
+                  <div className="flex justify-center items-center gap-4">
+                    <label
+                      htmlFor="sortBy"
+                      className="text-gray-700 font-medium text-md"
                     >
-                      {selectedSortBy || t("Sort By")}
-                      {openData ? (
-                        <FaCircleChevronUp className="text-xl text-custom-green cursor-pointer" />
-                      ) : (
-                        <FaCircleChevronDown className="text-xl text-custom-green cursor-pointer" />
-                      )}
-                    </button>
-
-                    {openData && (
-                      <div className="absolute z-20 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
-                        {sortByData.map((item, i) => (
-                          <div
-                            key={i}
-                            onClick={() => {
-                              setSelectedSortBy(
-                                selectedSortBy === item?.value ? "" : item?.value
-                              );
-                              setOpenData(false);
-                            }}
-                            className={`px-4 py-2 cursor-pointer text-gray-700 hover:bg-gray-100 ${item?.value === selectedSortBy
-                                ? "bg-gray-200 font-semibold"
-                                : ""
-                              }`}
-                          >
-                            {t(item?.name)}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                      {t("Sort By")}:
+                    </label>
+                    <select
+                      id="sortBy"
+                      className="min-w-[220px] border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 text-gray-800 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-custom-green/50 outline-none"
+                      value={selectedSortBy}
+                      onChange={(e) => setSelectedSortBy(e.target.value)}
+                    >
+                      <option value="">{t("Select")}</option>
+                      {sortByData.map((item, i) => (
+                        <option key={i} value={item?.value}>
+                          {t(item?.name)}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
-                  {/* Categories Dropdown */}
-                  <div className="relative w-[260px]">
-                    <button
-                      onClick={() => setOpenCategory(!openCategory)}
-                      className="w-full flex justify-between items-center bg-gray-50 hover:bg-gray-100 border border-gray-300 text-gray-800 font-medium text-base px-4 py-2 rounded-lg transition"
+                  {/* Categories */}
+                  <div className="flex justify-center items-center gap-4">
+                    <label
+                      htmlFor="categories"
+                      className="text-gray-700 font-medium text-md "
                     >
-                      {selectedCategories || t("Categories")}
-                      {openCategory ? (
-                        <FaCircleChevronUp className="text-xl text-custom-green cursor-pointer" />
-                      ) : (
-                        <FaCircleChevronDown className="text-xl text-custom-green cursor-pointer" />
-                      )}
-                    </button>
-
-                    {openCategory && (
-                      <div className="absolute z-20 mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
-                        {categoryList.map((item, i) => (
-                          <div
-                            key={i}
-                            onClick={() => {
-                              router.replace(`/categories/${item.slug}`);
-                              setSelectedCategories(item?.slug);
-                              setOpenCategory(false);
-                            }}
-                            className={`px-4 py-2 cursor-pointer text-gray-700 hover:bg-gray-100 ${item.slug === selectedCategories
-                                ? "bg-gray-200 font-semibold"
-                                : ""
-                              }`}
-                          >
-                            {item?.name}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                      {t("Categories")}:
+                    </label>
+                    <select
+                      id="categories"
+                      className="min-w-[220px] border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 text-gray-800 cursor-pointer font-medium focus:outline-none focus:ring-2 focus:ring-custom-green/50"
+                      value={selectedCategories}
+                      onChange={(e) => {
+                        router.replace(`/categories/${e.target.value}`);
+                        setSelectedCategories(e.target.value);
+                      }}
+                    >
+                      <option value="">{t("Select")}</option>
+                      {categoryList.map((item, i) => (
+                        <option key={i} value={item.slug}>
+                          {item?.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
             </div>
+
 
             <div className="flex md:hidden flex-col w-full mb-4 mt-4">
               <div className="flex justify-between items-center px-4 py-3 bg-white border border-gray-200 shadow-md rounded-lg">
