@@ -182,7 +182,21 @@ const SellProduct = ({ loader, toaster }) => {
 
                   {/* Sale Timer */}
                   {currentSale?.status !== "expired" && (
-                    <div className="absolute top-3 right-3 bg-custom-green text-white text-xs px-2 py-1 rounded-md z-10">
+                    <div className="md:flex flex-col hidden  absolute md:top-3 md:right-3 bg-custom-green text-white text-xs md:px-4 px-6 py-1 rounded-md z-10">
+                      <p className="font-semibold text-[12px]">
+                        {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
+                      </p>
+                      <div className="flex gap-1 text-[10px] font-bold">
+                        <div>{currentSale?.days}d</div>:
+                        <div>{currentSale?.hours}h</div>:
+                        <div>{currentSale?.minutes}m</div>:
+                        <div>{currentSale?.seconds}s</div>
+                      </div>
+                    </div>
+                  )}
+
+                   {currentSale?.status !== "expired" && (
+                    <div className="md:hidden flex flex-col absolute bottom-38 bg-custom-green text-white text-xs  px-6 py-1 rounded-md z-10">
                       <p className="font-semibold text-[12px]">
                         {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
                       </p>
@@ -215,7 +229,7 @@ const SellProduct = ({ loader, toaster }) => {
                   </div>
 
                   {/* Price Section */}
-                  <div className="flex items-center justify-start gap-1 mb-3">
+                  <div className="flex items-center md:justify-center justify-start md:gap-3 gap-1 mb-3">
                     <span className="text-red-500 font-semibold text-lg md:text-xl">
                       ${item.price}
                     </span>
@@ -225,7 +239,7 @@ const SellProduct = ({ loader, toaster }) => {
                       </span>
                     )}
                     {item.product?.price_slot?.[0]?.our_price && (
-                      <span className="bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded">
+                      <span className="md:flex hidden bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded">
                         {Math.round(
                           ((item.price_slot?.our_price - item.price) /
                             item.price_slot?.our_price) *

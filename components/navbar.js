@@ -1348,13 +1348,13 @@ const Navbar = (props) => {
                   )}
               </>
             ) : (
-              <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center">
+              <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center md:min-h-[580px] min-h-[700px]">
                 <Image src="/cart2.jpg" alt="cart" width={100} height={100} style={{ width: "auto", height: "auto" }} />
-                <p className="text-black  text-[18px]">
+                <p className="text-black  text-[18px] mb-2 mt-2">
                   {t("Your cart is empty")}
                 </p>
                 <button
-                  className=" text-custom-green border-2 border-custom-green text-[20px] font-medium rounded-[18px] md:w-[180px] w-full mt-2 py-2 px-3"
+                  className=" text-custom-green border-2 border-custom-green text-[20px] font-medium rounded-[18px] px-4 md:px-8 mt-2 py-2 "
                   onClick={() => {
                     setOpenCart(false);
                     router.push("/categories/all");
@@ -1711,7 +1711,7 @@ const Navbar = (props) => {
             <>
               {isLoggedIn ? (
                 <button
-                  className="bg-custom-gold border-white border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-white cursor-pointer text-base text-center mt-5 mb-6"
+                  className="bg-white border-gray-200 border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-custom-green cursor-pointer text-lg md:texl-xl text-center mt-5 mb-6"
                   onClick={() => {
                     if (cartData?.length === 0) {
                       toaster &&
@@ -1728,7 +1728,7 @@ const Navbar = (props) => {
                 </button>
               ) : (
                 <button
-                  className="bg-custom-green border-white border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-white cursor-pointer text-base text-center mt-5 mb-6"
+                  className="bg-white border-gray-200 border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-black cursor-pointer text-lg md:texl-xl  text-center mt-5 mb-6"
                   onClick={() => {
                     setOpenCart(false);
                     router.push("/signIn");
