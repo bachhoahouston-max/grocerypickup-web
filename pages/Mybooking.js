@@ -370,7 +370,7 @@ function Mybooking(props) {
                             case "Driverassigned":
                               return (
                                 <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
-                                  {t("Driver assigned")}
+                                  {t("Driver Assigned")}
                                 </span>
                               );
                             default:
