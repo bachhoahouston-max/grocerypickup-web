@@ -209,7 +209,7 @@ function BestSeller(props) {
     };
 
     return (
-      <div className="relative w-full md:w-2/8 mb-4">
+      <div className="relative w-full md:w-[380px] mb-4">
         <button
           onClick={() => setOpen(!open)}
           className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg shadow-sm transition font-semibold text-gray-800"
