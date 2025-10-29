@@ -182,7 +182,7 @@ const SellProduct = ({ loader, toaster }) => {
 
                   {/* Sale Timer */}
                   {currentSale?.status !== "expired" && (
-                    <div className="md:flex flex-col hidden  absolute md:top-3 md:right-3 bg-custom-green text-white text-xs md:px-4 px-6 py-1 rounded-md z-10">
+                    <div className="md:flex flex-col hidden  absolute md:top-3 md:right-3 bg-custom-lightGreen text-custom-green text-xs md:px-4 px-6 py-1 rounded-md z-10">
                       <p className="font-semibold text-[12px]">
                         {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
                       </p>
@@ -196,7 +196,7 @@ const SellProduct = ({ loader, toaster }) => {
                   )}
 
                    {currentSale?.status !== "expired" && (
-                    <div className="md:hidden flex flex-col absolute bottom-38 bg-custom-green text-white text-xs  px-6 py-1 rounded-md z-10">
+                    <div className="md:hidden flex flex-col absolute bottom-38 bg-custom-lightGreen text-custom-green text-xs  px-6 py-1 rounded-md z-10">
                       <p className="font-semibold text-[12px]">
                         {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
                       </p>

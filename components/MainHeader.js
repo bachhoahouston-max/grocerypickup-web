@@ -67,7 +67,7 @@ function MainHeader() {
         {carouselImg.map((img, idx) => (
           <div
             key={idx}
-            className="relative aspect-square w-full h-[310px] flex items-center justify-center overflow-hidden 
+            className="relative aspect-square w-full h-[380px] flex items-center justify-center overflow-hidden 
               md:h-[305px] lg:h-[320px] xl:h-[410px] rounded-[28px]"
           >
             <Image
@@ -75,7 +75,7 @@ function MainHeader() {
               alt={`Bachahoustan banner ${idx}`}
               fill
               priority={idx === 0}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
         ))}
