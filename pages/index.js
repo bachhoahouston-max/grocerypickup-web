@@ -171,15 +171,16 @@ function BestSeller(props) {
   }, [loadingMore]);
 
 
-  useEffect(() => {
-    if (page > 1) {
-      if (selectedCategory === "all") {
-        fetchProducts(page);
-      } else {
-        fetchProductsByCategory(selectedCategory, 16 * page);
-      }
+useEffect(() => {
+  if (page > 1) {
+    if (selectedCategory === "all") {
+      fetchProducts(page);
+    } else {
+      fetchProductsByCategory(selectedCategory, page);
     }
-  }, [page]);
+  }
+}, [page]);
+
 
 
   const handleCategoryClickAll = () => {

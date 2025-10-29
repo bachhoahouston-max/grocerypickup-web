@@ -755,7 +755,7 @@ const Navbar = (props) => {
 
           <div className="relative md:w-40 w-32 h-14  flex items-center ">
             <Image
-              src="/logoBachahoustan.jpg"
+              src="/imagelogo.png"
               alt="bachhoustan logo"
               fill
               // sizes="(max-width: 768px) 64px, 80px"
