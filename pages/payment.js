@@ -187,7 +187,7 @@ function Payment(props) {
     props.loader(true);
     try {
       props.loader(true);
-      const res = await Api("post", "create-test-checkout-session", body, router);
+      const res = await Api("post", "create-checkout-session", body, router);
       props.loader(false);
 
       if (res && res.url) {
