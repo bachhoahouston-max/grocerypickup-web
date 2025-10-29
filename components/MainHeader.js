@@ -68,14 +68,14 @@ function MainHeader() {
           <div
             key={idx}
             className="relative aspect-square w-full h-full flex items-center justify-center overflow-hidden 
-              md:h-[305px] lg:h-[320px] xl:h-[410px] rounded-[28px]"
+              md:h-[305px] lg:h-[320px] xl:h-[410px] "
           >
             <Image
               src={img.image || "/fallback.jpg"}
               alt={`Bachahoustan banner ${idx}`}
               fill
               priority={idx === 0}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain rounded-[28px]"
             />
           </div>
         ))}
