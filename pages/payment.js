@@ -93,7 +93,7 @@ function Payment(props) {
       customerDetails: stripeRes.customer_details || {},
       isOnce: localCheckoutData.isOnce,
       discountCode: localCheckoutData.discountCode,
-      from:"website"
+      from: "website"
     };
 
     const createRes = await Api(
@@ -187,7 +187,7 @@ function Payment(props) {
     props.loader(true);
     try {
       props.loader(true);
-      const res = await Api("post", "create-checkout-session", body, router);
+      const res = await Api("post", "create-test-checkout-session", body, router);
       props.loader(false);
 
       if (res && res.url) {
