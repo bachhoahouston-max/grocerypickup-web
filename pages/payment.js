@@ -104,7 +104,6 @@ function Payment(props) {
     );
 
     if (createRes.status) {
-      props.loader(false);
       localStorage.removeItem("addCartDetail");
       localStorage.removeItem("checkoutData");
       setCartData([]);
@@ -113,6 +112,7 @@ function Payment(props) {
         type: "success",
         message: "Thank you! Your order was placed successfully.",
       });
+      props.loader(false);
     } else {
       props.toaster({ type: "error", message: "Order save failed" });
     }
@@ -187,7 +187,7 @@ function Payment(props) {
     props.loader(true);
     try {
       props.loader(true);
-      const res = await Api("post", "create-test-checkout-session", body, router);
+      const res = await Api("post", "create-checkout-session", body, router);
       props.loader(false);
 
       if (res && res.url) {
@@ -222,11 +222,11 @@ function Payment(props) {
 
   return (
     <div className="bg-white w-full">
-      <section className="bg-white w-full relative flex flex-col justify-center items-center md:min-h-screen">
+      <section className="bg-white w-full relative flex flex-col justify-center items-center md:min-h-[550px] min-h-[680px]">
         <div className="mx-auto w-full md:px-10 px-5 md:pt-10 pt-5 md:pb-10 pb-5">
           <div className="w-full mt-5">
             <div className="w-full flex flex-col gap-2 justify-center items-center py-10">
-              <p className="text-gray-600">
+              <p className="text-gray-600 mb-2">
                 {t("Redirecting to payment page...")}
               </p>
               <button
