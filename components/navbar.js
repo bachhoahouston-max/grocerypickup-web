@@ -1,11 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { IoPersonOutline } from "react-icons/io5";
-import { CiHeart } from "react-icons/ci";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { Search, X, Check, Menu, Heart, ShoppingCart, CircleUserRound } from "lucide-react";
+import { Search, X, Heart, ShoppingCart, CircleUserRound } from "lucide-react";
 import { Drawer } from "@mui/material";
 import { IoMdClose, IoIosArrowBack } from "react-icons/io";
 import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
@@ -23,8 +19,6 @@ import { IoIosArrowForward } from "react-icons/io";
 import DatePicker from "react-datepicker";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
-import { BsCart2 } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx";
 import AddressInput from "./addressInput";
 import { useTranslation } from "react-i18next";
 import { languageContext } from "@/pages/_app";
@@ -33,7 +27,6 @@ import HeaderFirst from "./HeaderFirst";
 
 const Navbar = (props) => {
   const router = useRouter();
-  const [isMobile, setIsMobile] = useState(false)
   const [showHover, setShowHover] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [user, setUser] = useContext(userContext);
@@ -901,7 +894,7 @@ const Navbar = (props) => {
                 type="text"
                 value={searchData}
                 onChange={(e) => setSearchData(e.target.value)}
-                placeholder="Search"
+                placeholder={t("Search")}
                 className="w-full bg-transparent text-black text-sm px-2 outline-none placeholder:text-gray-400"
               />
             </form>

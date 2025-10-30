@@ -90,8 +90,6 @@ export default function Home(props) {
 }
 
 
-
-
 function BestSeller(props) {
   const router = useRouter();
   const { t } = useTranslation();
@@ -101,6 +99,7 @@ function BestSeller(props) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true); // ✅ New state
   const observerRef = useRef(null);
 
 
@@ -123,7 +122,12 @@ function BestSeller(props) {
         null,
         router
       );
+
       if (res?.data) {
+        if (res.data.length === 0 || res.data.length < 16) {
+          setHasMore(false); 
+        }
+
         setProductList((prev) => (reset ? res.data : [...prev, ...res.data]));
       }
     } catch (err) {
@@ -133,6 +137,7 @@ function BestSeller(props) {
     }
   };
 
+  
   const fetchProductsByCategory = async (categoryId, pageNum = 1, limit = 16) => {
     try {
       setLoadingMore(true);
@@ -142,7 +147,12 @@ function BestSeller(props) {
         "",
         router
       );
+
       if (res?.data && Array.isArray(res.data)) {
+        if (res.data.length === 0 || res.data.length < limit) {
+          setHasMore(false);
+        }
+
         setProductList((prev) => (pageNum === 1 ? res.data : [...prev, ...res.data]));
       }
     } catch (err) {
@@ -153,50 +163,47 @@ function BestSeller(props) {
     }
   };
 
-
-
+  
   useEffect(() => {
-    if (observerRef.current) observerRef.current.disconnect();
-
-    observerRef.current = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !loadingMore) {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !loadingMore && hasMore) {
         setPage((prev) => prev + 1);
       }
     });
 
     const loader = document.querySelector("#infinite-loader");
-    if (loader) observerRef.current.observe(loader);
+    if (loader) observer.observe(loader);
 
-    return () => observerRef.current?.disconnect();
-  }, [loadingMore]);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore]); 
 
-
-useEffect(() => {
-  if (page > 1) {
-    if (selectedCategory === "all") {
-      fetchProducts(page);
-    } else {
-      fetchProductsByCategory(selectedCategory, page);
+  
+  useEffect(() => {
+    if (page > 1) {
+      if (selectedCategory === "all") {
+        fetchProducts(page);
+      } else {
+        fetchProductsByCategory(selectedCategory, page);
+      }
     }
-  }
-}, [page]);
-
+  }, [page]);
 
 
   const handleCategoryClickAll = () => {
     setSelectedCategory("all");
     setPage(1);
+    setHasMore(true);
     fetchProducts(1, true);
   };
 
   const handleCategoryClick = (id) => {
     setSelectedCategory(id);
     setPage(1);
+    setHasMore(true);
     fetchProductsByCategory(id, 1);
   };
 
-
-
+ 
   const CategoryDropdown = () => {
     const [open, setOpen] = useState(false);
     const selectedName =
@@ -230,8 +237,8 @@ useEffect(() => {
             <li
               onClick={() => handleSelect("all")}
               className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === "all"
-                ? "text-custom-green bg-gray-50"
-                : "text-gray-800"
+                  ? "text-custom-green bg-gray-50"
+                  : "text-gray-800"
                 }`}
             >
               <FaTag />
@@ -242,8 +249,8 @@ useEffect(() => {
                 key={cat._id}
                 onClick={() => handleSelect(cat._id)}
                 className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === cat._id
-                  ? "text-custom-green bg-gray-50"
-                  : "text-gray-800"
+                    ? "text-custom-green bg-gray-50"
+                    : "text-gray-800"
                   }`}
               >
                 <FaTag />
@@ -256,6 +263,7 @@ useEffect(() => {
     );
   };
 
+ 
   return (
     <div className="flex flex-col">
       <CategoryDropdown />
@@ -287,3 +295,4 @@ useEffect(() => {
     </div>
   );
 }
+

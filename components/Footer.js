@@ -209,7 +209,7 @@ const Footer = () => {
             >
 
               <p className="text-black text-[16px] whitespace-nowrap">
-                {("Download on the")}
+                {t("Download on the")}
               </p>
               <div className="flex  justify-center items-center gap-2">
                 <p className="text-black text-[16px] whitespace-nowrap">

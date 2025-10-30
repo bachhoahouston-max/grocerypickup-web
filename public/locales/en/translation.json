@@ -331,5 +331,12 @@
   "My order": "My order",
   "Out of Stock": "Out of Stock",
   "Driver Assigned": "Driver Assigned",
-  "Add to Cart":"Add to Cart"
+  "Add to Cart":"Add to Cart",
+
+  "You are not logged in. Please sign in to view your profile":"You are not logged in. Please sign in to view your profile",
+  "Sign In":"Sign In",
+  "Sign Out":"Sign Out",
+
+  "Product Recall Information":"Product Recall Information",
+  "Help Center":"Help Center"
 }

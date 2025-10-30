@@ -639,7 +639,7 @@ function ProductDetails(props) {
             <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 ">
               {t("You might also like")}
             </p>
-            <div className="grid lg:grid-cols-4 grid-cols-2 md:gap-2 gap-3 md:mx-4 xl:mx-0 ms-4">
+            <div className="grid lg:grid-cols-4 grid-cols-2 md:gap-2 gap-3  ">
               {productList.map((item, i) => (
                 <div key={i} className="w-full md:mb-5">
                   <GroceryCategories
