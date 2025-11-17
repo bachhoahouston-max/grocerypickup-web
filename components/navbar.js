@@ -741,6 +741,8 @@ const Navbar = (props) => {
     props.loader(false);
   };
 
+  const cartlenth = cartData.reduce((total, item) => total + (item.qty || 0), 0)
+
   return (
     <>
       <header className="md:shadow-none shadow-md bg-white w-full sticky top-0 z-100">
@@ -868,7 +870,7 @@ const Navbar = (props) => {
               <ShoppingCart className="text-black" size={28} />
               {cartData.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-custom-green text-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartData.length}
+                  {cartlenth}
                 </span>
               )}
             </div>
@@ -944,7 +946,7 @@ const Navbar = (props) => {
 
       <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
         <div
-          className={`md:w-[750px] w-full min-w-[390px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
+          className={`md:w-[750px] w-full relative bg-custom-green pt-5 md:px-10 px-2 ${!cartData.length ? "h-full " : ""
             } 
           ${cartData.length > 1 ? "pb-8" : "pb-40"} `}
         >
