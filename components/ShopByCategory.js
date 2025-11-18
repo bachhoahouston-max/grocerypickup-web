@@ -16,7 +16,7 @@ const CategoryCard = ({ item, url, router }) => (
           alt={item?.name || "Category"}
           fill
           className="object-cover rounded-full"
-          sizes="(max-width: 768px) 100px, 120px"
+          // sizes="(max-width: 768px) 100px, 120px"
         />
       </div>
 
@@ -62,7 +62,6 @@ function ShopByCategory() {
                   alt="Category"
                   fill
                   className="object-contain"
-                  sizes="(max-width: 768px) 100px, 120px"
                 />
               </div>
 

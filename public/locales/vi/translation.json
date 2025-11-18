@@ -20,7 +20,7 @@
   "Forgot Password?": "Quên mật khẩu?",
   "Haven't registered yet?": "Bạn vẫn chưa đăng ký?",
   "Search for products...": "Tìm kiếm sản phẩm...",
-  "My Order": "Đơn hàng của tôi",
+  "My Order": "Đơn Hàng Của Tôi",
   "History": "Lịch sử",
   "Edit Profile": "Chỉnh sửa hồ sơ",
   "Are you sure you want to logout?": "Bạn có chắc chắn muốn đăng xuất không?",
@@ -84,7 +84,7 @@
   "Quick delivery within just 5 days": "Giao hàng nhanh chỉ trong vòng 5 ngày",
   "Payment Secure": "Thanh toán an toàn",
   "Safe and secure payment options": "Tùy chọn thanh toán an toàn và bảo mật",
-  "off": "tắt",
+  "off": "Giảm",
   "Great deal on Organic food": "Ưu đãi lớn cho thực phẩm hữu cơ",
   "Enjoy off on fresh, organic groceries – clean, healthy, and chemical-free, straight from trusted farms": "Tận hưởng mức giảm giá cho các loại thực phẩm tươi, hữu cơ – sạch, lành mạnh và không chứa hóa chất, trực tiếp từ các trang trại đáng tin cậy",
   "Commitment to Quality": "Un engagement envers la qualité",
@@ -150,7 +150,7 @@
   "Select Gender": "Chọn giới tính",
   "Male": "Nam giới",
   "Female": "Nữ giới",
-  "Order": "Đặt hàng",
+  "Order": "Đơn Hàng",
   "View and manage all your order in one place": "Xem và quản lý tất cả đơn hàng của bạn ở một nơi",
   "Secret Code is": "Mã bí mật là",
   "Please do not share this with anyone": "Xin đừng chia sẻ điều này với bất kỳ ai",
@@ -325,8 +325,13 @@
   "My order": "Đơn Hàng",
   "Out of Stock": "Hết hàng",
   "Driver Assigned": "Tài Xế đã nhận đơn",
-  "Add to Cart":"Thêm vào giỏ hàng"
+  "Add to Cart": "Thêm vào giỏ hàng",
 
+  "You are not logged in. Please sign in to view your profile": "Bạn chưa đăng nhập. Vui lòng đăng nhập để xem hồ sơ của bạn",
+  "Sign In": "Đăng nhập",
+  "Sign Out": "Đăng xuất",
 
-
+  "Product Recall Information": "Thông tin thu hồi sản phẩm",
+  "Help Center": "Trung tâm trợ giúp",
+  "My cart":"Giỏ hàng của tôi"
 }

@@ -1,11 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { IoPersonOutline } from "react-icons/io5";
-import { CiHeart } from "react-icons/ci";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { Search, X, Check, Menu, Heart, ShoppingCart, CircleUserRound } from "lucide-react";
+import { Search, X, Heart, ShoppingCart, CircleUserRound } from "lucide-react";
 import { Drawer } from "@mui/material";
 import { IoMdClose, IoIosArrowBack } from "react-icons/io";
 import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
@@ -23,8 +19,6 @@ import { IoIosArrowForward } from "react-icons/io";
 import DatePicker from "react-datepicker";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
-import { BsCart2 } from "react-icons/bs";
-import { RxCross2 } from "react-icons/rx";
 import AddressInput from "./addressInput";
 import { useTranslation } from "react-i18next";
 import { languageContext } from "@/pages/_app";
@@ -33,7 +27,6 @@ import HeaderFirst from "./HeaderFirst";
 
 const Navbar = (props) => {
   const router = useRouter();
-  const [isMobile, setIsMobile] = useState(false)
   const [showHover, setShowHover] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [user, setUser] = useContext(userContext);
@@ -748,6 +741,8 @@ const Navbar = (props) => {
     props.loader(false);
   };
 
+  const cartlenth = cartData.reduce((total, item) => total + (item.qty || 0), 0)
+
   return (
     <>
       <header className="md:shadow-none shadow-md bg-white w-full sticky top-0 z-100">
@@ -867,15 +862,16 @@ const Navbar = (props) => {
             <div
               className="relative cursor-pointer hidden md:flex"
               onClick={() => {
-                setOpenCart(true);
-                setMobileMenu(!mobileMenu);
-                getProfileData();
+                // setOpenCart(true);
+                // setMobileMenu(!mobileMenu);
+                // getProfileData();
+                router.push("/Cart")
               }}
             >
               <ShoppingCart className="text-black" size={28} />
               {cartData.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-custom-green text-white text-[10px] font-semibold rounded-full w-5 h-5 flex items-center justify-center">
-                  {cartData.length}
+                  {cartlenth}
                 </span>
               )}
             </div>
@@ -901,7 +897,7 @@ const Navbar = (props) => {
                 type="text"
                 value={searchData}
                 onChange={(e) => setSearchData(e.target.value)}
-                placeholder="Search"
+                placeholder={t("Search")}
                 className="w-full bg-transparent text-black text-sm px-2 outline-none placeholder:text-gray-400"
               />
             </form>
@@ -947,11 +943,9 @@ const Navbar = (props) => {
         </div>
       </header>
 
-
-
       <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
         <div
-          className={`md:w-[750px] w-full min-w-[390px]  relative  bg-custom-green pt-5 md:px-10 px-5 ${!cartData.length ? "h-full " : ""
+          className={`md:w-[750px] w-full relative bg-custom-green pt-5 md:px-10 px-2 ${!cartData.length ? "h-full " : ""
             } 
           ${cartData.length > 1 ? "pb-8" : "pb-40"} `}
         >
