@@ -21,6 +21,7 @@ import AddressInput from "@/components/addressInput";
 import { useTranslation } from "react-i18next";
 import { languageContext } from "@/pages/_app";
 import Image from "next/image";
+import CartDrawer from "@/components/CartDrawer";
 
 
 function Cart(props) {
@@ -262,12 +263,9 @@ function Cart(props) {
 
 
     useEffect(() => {
-        if (openCart) {
-            fetchCoupons();
-            getAllPincodes();
-            getShippingCost();
-        }
-
+        fetchCoupons();
+        getAllPincodes();
+        getShippingCost();
     }, [openCart])
 
     const getAllPincodes = () => {
@@ -654,6 +652,44 @@ function Cart(props) {
 
         return `${month}/${day}/${year}`;
     }
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+    const createConfirmEmptyCart = (t, emptyCart) => {
+        const drawerElement = document.querySelector(".MuiDrawer-paper");
+
+        Swal.fire({
+            text: t("Are you sure you want to empty your cart?"),
+            showCancelButton: true,
+            confirmButtonText: t("Yes"),
+            cancelButtonText: t("No"),
+            confirmButtonColor: "#2e7d32",
+            cancelButtonColor: "#2e7d32",
+            customClass: {
+                confirmButton: "px-12 rounded-xl",
+                cancelButton: "px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none",
+                text: "text-[20px] text-black",
+                actions: "swal2-actions-no-hover",
+                popup: "rounded-[15px] shadow-custom-green",
+                container: "swal2-drawer-container",
+            },
+            buttonsStyling: true,
+            reverseButtons: true,
+            width: "320px",
+            target: drawerElement,
+            didOpen: () => {
+                const swalContainer = document.querySelector(".swal2-drawer-container");
+                if (swalContainer) {
+                    swalContainer.style.position = "absolute";
+                    swalContainer.style.zIndex = "9999";
+                }
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                emptyCart();
+            }
+        });
+    };
 
 
     return (
@@ -678,778 +714,523 @@ function Cart(props) {
                     {cartData.length > 0 && (
                         <button
                             className="text-black flex justify-center items-center gap-2 font-medium bg-white border-2 border-red-400 cursor-pointer text-[15px] rounded-[12px] md:px-4 px-3 py-2 "
-                            onClick={() => {
-                                const drawerElement =
-                                    document.querySelector(".MuiDrawer-paper");
-                                Swal.fire({
-                                    text: t("Are you sure you want to empty your cart?"),
-                                    showCancelButton: true,
-                                    confirmButtonText: t("Yes"),
-                                    cancelButtonText: t("No"),
-                                    confirmButtonColor: "#2e7d32",
-                                    cancelButtonColor: "#2e7d32",
-                                    customClass: {
-                                        confirmButton: "px-12 rounded-xl",
-                                        cancelButton:
-                                            "px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none",
-                                        text: "text-[20px] text-black",
-                                        actions: "swal2-actions-no-hover",
-                                        popup: "rounded-[15px] shadow-custom-green",
-                                        container: "swal2-drawer-container",
-                                    },
-                                    buttonsStyling: true,
-                                    reverseButtons: true,
-                                    width: "320px",
-                                    target: drawerElement,
-                                    didOpen: () => {
-                                        const swalContainer = document.querySelector(
-                                            ".swal2-drawer-container"
-                                        );
-                                        if (swalContainer) {
-                                            swalContainer.style.position = "absolute";
-                                            swalContainer.style.zIndex = "9999";
-                                        }
-                                    },
-                                }).then(function (result) {
-                                    if (result.isConfirmed) {
-                                        emptyCart();
-                                    }
-                                });
-                            }}
+                            onClick={() => createConfirmEmptyCart(t, emptyCart)}
                         >
                             {t("Empty Cart")}
                             <Trash size={20} />
                         </button>
                     )}
-                </div>
-
-                {cartData.length > 0 && (
-                    <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5 flex items-center justify-center ">
-                        <div className="rounded-lg p-2  items-center justify-center gap-3 md:gap-4 w-full grid  md:grid-cols-4 grid-cols-2">
-                            <div className="flex items-center">
-                                <input
-                                    type="radio"
-                                    id="orderPickup"
-                                    name="pickupOption"
-                                    value="orderPickup"
-                                    className="form-radio h-5 w-5 text-gray-600"
-                                    checked={pickupOption === "orderPickup"}
-                                    onChange={handleOptionChange}
-                                />
-                                <label htmlFor="orderPickup" className="ml-2">
-                                    <span className="font-semibold text-[15px]">
-                                        {t("In Store Pickup")}{" "}
-                                    </span>
-                                    <br />
-                                    <span className="text-gray-500 text-[13px] w-full">
-                                        {t("Pick it up inside the store")}
-                                    </span>
-                                </label>
-                            </div>
-
-                            <div className="flex items-center">
-                                <input
-                                    type="radio"
-                                    id="driveUp"
-                                    name="pickupOption"
-                                    value="driveUp"
-                                    className="form-radio h-5 w-5 text-green-600"
-                                    checked={pickupOption === "driveUp"}
-                                    onChange={handleOptionChange}
-                                />
-                                <label htmlFor="driveUp" className="ml-2">
-                                    <span className="font-semibold text-[15px]">
-                                        {t("Curbside Pickup")}
-                                    </span>
-                                    <br />
-                                    <span className="text-gray-500 text-[13px]">
-                                        {t("We bring it out to your car")}
-                                    </span>
-                                </label>
-                            </div>
-
-                            <div className="flex items-center">
-                                <input
-                                    type="radio"
-                                    id="localDelivery"
-                                    name="pickupOption"
-                                    value="localDelivery"
-                                    className="form-radio h-5 w-5 text-green-600"
-                                    checked={pickupOption === "localDelivery"}
-                                    onChange={handleOptionChange}
-                                />
-                                <label htmlFor="localDelivery" className="ml-2">
-                                    <span className="font-semibold text-[15px]">
-                                        {t("Next Day Local Delivery")}{" "}
-                                    </span>
-                                    <br />
-                                    <span className="text-gray-500 text-[13px]">
-                                        {t("Cut off time 8 pm")}
-                                    </span>
-                                </label>
-                            </div>
-                            <div className="flex items-center">
-                                <input
-                                    type="radio"
-                                    id="ShipmentDelivery"
-                                    name="pickupOption"
-                                    value="ShipmentDelivery"
-                                    className="form-radio h-5 w-5 text-green-600"
-                                    checked={pickupOption === "ShipmentDelivery"}
-                                    onChange={handleOptionChange}
-                                />
-                                <label htmlFor="localDelivery" className="ml-2">
-                                    <span className="font-semibold text-[15px]">
-                                        {t("Shipping")}
-                                    </span>
-                                    <br />
-                                    <span className="text-gray-500 text-[13px]">
-                                        {t("Delivery in 3 to 5 business days")}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {cartData.length > 0 &&
-                    (pickupOption === "driveUp" || pickupOption === "orderPickup") && (
-                        <div className="bg-white w-full rounded-[8px] shadow-md p-4 md:p-6 mt-5">
-                            <div className="text-center">
-                                <h1 className="text-xl font-semibold text-gray-800 mb-4">
-                                    {t("Select a Pickup Date")}
-                                </h1>
-
-                                <div className="relative inline-block text-left">
-                                    <input
-                                        type="text"
-                                        value={date ? formatDate(date) : t("Select date")}
-                                        placeholder={t("Select date")}
-                                        className="border border-gray-300 rounded-lg py-2 px-4 pr-10 text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                                        readOnly
-                                        onClick={handleIconClick}
-                                    />
-                                    <span
-                                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-orange-500 cursor-pointer"
-                                        onClick={handleIconClick}
-                                    >
-                                        <FaRegCalendarAlt size={18} />
-                                    </span>
-
-                                    {isOpen && (
-                                        <div className="absolute z-20 mt-2 shadow-lg">
-                                            <DatePicker
-                                                selected={date}
-                                                onChange={handleDateChange}
-                                                inline
-                                                minDate={minDate}
-                                                onClickOutside={() => setIsOpen(false)}
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-
-                                <p className="text-sm text-red-500 mt-3">
-                                    {t(
-                                        "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee"
-                                    )}
-                                    .
-                                </p>
-                            </div>
-                        </div>
-                    )}
-
-                {cartData.length > 0 &&
-                    (pickupOption === "localDelivery" ||
-                        pickupOption === "ShipmentDelivery") && (
-                        <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-2 mt-5">
-                            <div className="flex items-center justify-center w-full">
-                                <div className="relative md:grid-cols-2 grid-cols-1 ">
-                                    <h1 className="text-lg font-semibold ">
-                                        {t("Delivery Info")}
-                                    </h1>
-                                    {pickupOption === "localDelivery" && (
-                                        <p className="text-red-500 text-sm py-1  mb-2">
-                                            {t(
-                                                "Note: We currently deliver only to selected ZIP codes. Orders placed before 8 pm are eligible for next day delivery. Orders placed after 8pm will be available for delivery in 2 days"
-                                            )}
-                                            .
-                                        </p>
-                                    )}
-                                    {pickupOption === "localDelivery" && (
-                                        <div className="relative inline-block">
-                                            <input
-                                                type="text"
-                                                value={
-                                                    localAddress.dateOfDelivery
-                                                        ? formatDate(localAddress.dateOfDelivery)
-                                                        : t("Select date")
-                                                }
-                                                placeholder={t("Select date")}
-                                                className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
-                                                readOnly
-                                                required
-                                                onClick={handleIconClick}
-                                            />
-                                            <span
-                                                className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 cursor-pointer"
-                                                onClick={handleIconClick}
-                                            >
-                                                <FaRegCalendarAlt />
-                                            </span>
-                                            {isOpen && (
-                                                <div className="absolute z-10 mt-1">
-                                                    <DatePicker
-                                                        selected={localAddress.dateOfDelivery}
-                                                        onChange={handleDateChange1}
-                                                        inline
-                                                        onClickOutside={() => setIsOpen(false)}
-                                                        minDate={minDate1} // disables past dates
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        placeholder={t("First Name")}
-                                        value={localAddress.name}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        name="lastname"
-                                        placeholder={t("Last Name")}
-                                        value={localAddress.lastname}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
-                                        required
-                                    />
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        placeholder={t("Email")}
-                                        value={localAddress.email}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px] "
-                                        required
-                                    />
-
-                                    <input
-                                        type="text"
-                                        name="phoneNumber"
-                                        placeholder={t("Phone Number")}
-                                        value={localAddress.phoneNumber}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                        required
-                                    />
-
-                                    {pickupOption === "localDelivery" && (
-                                        <select
-                                            name="zipcode"
-                                            value={localAddress.zipcode}
-                                            onChange={handleInputChange1}
-                                            className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-2 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                            required
-                                        >
-                                            <option value="">{t("Select Zipcode")}</option>
-                                            {pincodes.map((zipcode, index) => (
-                                                <option key={index} value={zipcode.pincode}>
-                                                    {zipcode.pincode}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    )}
-
-                                    <AddressInput
-                                        setProfileData={setLocalAddress}
-                                        profileData={localAddress}
-                                        value={localAddress.address}
-                                        className=" m-1 border rounded-lg py-2 pl-2 md:pl-4 md:pr-2 pr-7 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  !z-[999999999] text-xs md:text-sm md:w-[608px] w-[295px]"
-                                        required
-                                    />
-
-                                    <input
-                                        type="text"
-                                        name="ApartmentNo"
-                                        placeholder={t("Enter Apartment # ")}
-                                        value={localAddress.ApartmentNo}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                    />
-
-                                    <input
-                                        type="text"
-                                        name="SecurityGateCode"
-                                        placeholder={t("Security Gate Code")}
-                                        value={localAddress.SecurityGateCode}
-                                        onChange={handleInputChange1}
-                                        className="m-1 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 grid-cols-1 text-sm w-[295px] md:w-[300px]"
-                                    />
-                                    {pickupOption === "ShipmentDelivery" && (
-                                        <p className="text-red-500 text-sm py-1 pl-2 md:pl-1 md:pr-2 pr-7">
-                                            {" "}
-                                            {t(
-                                                "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time"
-                                            )}
-                                            .{" "}
-                                        </p>
-                                    )}
-                                    <label className="flex items-center space-x-2 ps-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={localAddress.isBusinessAddress || false}
-                                            onChange={(e) =>
-                                                setLocalAddress({
-                                                    ...localAddress,
-                                                    isBusinessAddress: e.target.checked,
-                                                })
-                                            }
-                                        />
-                                        <span className="text-sm mt-1 mb-1">
-                                            {t("This is business address")}
-                                        </span>
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        name="BusinessAddress"
-                                        placeholder={t("Enter Company Name")}
-                                        value={localAddress.BusinessAddress}
-                                        onChange={handleInputChange1}
-                                        className="m-1.5 border rounded-lg h-10 py-2 pl-2 md:pl-4 pr-10 text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500  text-sm md:w-[608px] w-[295px]"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5">
-                    {cartData && cartData.length > 0 ? (
-                        <>
-                            <div className="flex justify-start items-center gap-5">
-                                <div className="md:w-[45px] w-[35px] h-[30px] md:h-[35px] rounded-[8px] bg-custom-green flex justify-center items-center">
-                                    <GoClock className="text-white md:w-[30px] w-[25px] md:h-[24px] h-[20px]" />
-                                </div>
-                                <div>
-                                    <p className="text-black font-semibold text-[18px]">
-                                        {pickupOption === "orderPickup" ||
-                                            pickupOption === "driveUp"
-                                            ? t("Pick up in 2 Hours")
-                                            : pickupOption === "localDelivery"
-                                                ? t("Delivery is next day")
-                                                : t("Delivery in 3 to 5 business days")}
-                                    </p>
-                                </div>
-                            </div>
-                            {(pickupOption === "orderPickup" ||
-                                pickupOption === "driveUp") && (
-                                    <p className="text-red-500 text-sm py-1 mb-2 px-2">
-                                        {t(
-                                            "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day."
-                                        )}
-                                    </p>
-                                )}
-                        </>
-                    ) : (
-                        <div className="bg-white w-full rounded-[5px] md:p-5 p-2 mt-5 flex flex-col justify-center items-center min-h-[400px]">
-                            <div className="relative w-32 h-32 mb-4">
-                                <Image
-                                    src="/cart2.jpg"
-                                    alt="cart"
-                                    fill
-                                   
-                                    className="" />
-                            </div>
-                            <p className="text-black  text-[18px] mb-2">
-                                {t("Your cart is empty")}
-                            </p>
-                            <button
-                                className=" text-custom-green border-2 border-custom-green text-[16px] font-medium rounded-[18px] cursor-pointer w-[200px] mt-2 py-2 px-4"
-                                onClick={() => {
-                                    setOpenCart(false);
-                                    router.push("/categories/all");
-                                }}
-                            >
-                                {t("Browse Products")}
-                            </button>
-                        </div>
-                    )}
-
-                    {cartData?.map((item, i) => (
-                        <div
-                            key={i}
-                            className="w-full bg-white rounded-xl shadow-md p-4 mt-3 flex flex-col md:flex-row items-start md:items-center justify-between gap-4"
-                        >
-                            {/* LEFT: Image */}
-                            <div className="relative w-[80px] h-[80px] md:w-[100px] md:h-[100px] flex-shrink-0 rounded-lg overflow-hidden">
-                                <Image
-                                    src={item?.selectedImage || item?.image}
-                                    alt="item"
-                                    fill
-                                    className="object-cover"
-                                    sizes="100px"
-                                />
-                            </div>
-
-                            {/* CENTER: Details */}
-                            <div className="flex flex-col flex-1">
-                                {/* Title */}
-                                <p className="text-custom-purple font-medium md:text-base text-sm leading-snug">
-                                    {lang === "en" ? item?.name : item?.vietnamiesName}
-                                </p>
-
-                                {/* Unit + Price */}
-                                <div className="text-sm text-custom-newGrayColors mt-1 flex gap-3 items-center">
-                                    <span>
-                                        {item?.price_slot?.value ?? 1}{" "}
-                                        {item?.price_slot?.unit ?? "unit"}
-                                    </span>
-                                    <span className="font-medium">
-                                        {constant.currency}
-                                        {item?.price}
-                                    </span>
-                                    {item?.price_slot?.other_price && (
-                                        <span className="line-through text-xs">
-                                            {constant.currency}
-                                            {item?.price_slot?.other_price}
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* Availability message */}
-                                <div className="mt-2">
-                                    {pickupOption === "ShipmentDelivery" &&
-                                        (item.isShipmentAvailable ? (
-                                            <p className="text-green-500 text-xs md:text-sm">
-                                                {t("Product is available for Shipment Delivery")}
-                                            </p>
-                                        ) : (
-                                            <p className="text-red-500 text-xs md:text-sm">
-                                                {t("Product is Not available for Shipment Delivery")}
-                                            </p>
-                                        ))}
-
-                                    {pickupOption === "driveUp" &&
-                                        (item.isCurbSidePickupAvailable ? (
-                                            <p className="text-green-500 text-xs md:text-sm">
-                                                {t("Product is available for CurbSide Pickup")}
-                                            </p>
-                                        ) : (
-                                            <p className="text-red-500 text-xs md:text-sm">
-                                                {t("Product is Not available for CurbSide Pickup")}
-                                            </p>
-                                        ))}
-
-                                    {pickupOption === "orderPickup" &&
-                                        (item.isInStoreAvailable ? (
-                                            <p className="text-green-500 text-xs md:text-sm">
-                                                {t("Product is available for In Store Pickup")}
-                                            </p>
-                                        ) : (
-                                            <p className="text-red-500 text-xs md:text-sm">
-                                                {t("Product is Not available for In Store Pickup")}
-                                            </p>
-                                        ))}
-
-                                    {pickupOption === "localDelivery" &&
-                                        (item.isNextDayDeliveryAvailable ? (
-                                            <p className="text-green-500 text-xs md:text-sm">
-                                                {t("Product is available for Next Day Delivery")}
-                                            </p>
-                                        ) : (
-                                            <p className="text-red-500 text-xs md:text-sm">
-                                                {t("Product is Not available for Next Day Delivery")}
-                                            </p>
-                                        ))}
-                                </div>
-                            </div>
-
-                            {/* RIGHT: Qty stepper & Total price */}
-                            <div className="flex flex-col items-end md:flex-row md:items-center gap-3 mt-2 md:mt-0">
-                                {/* Qty Stepper */}
-                                <div className="flex items-center bg-[#5CB447] rounded-full px-3 py-1">
-                                    <button
-                                        className="text-white text-lg font-bold"
-                                        onClick={() => {
-                                            if (item.qty > 1) {
-                                                const nextState = produce(cartData, (draft) => {
-                                                    draft[i].qty -= 1;
-                                                    const price = parseFloat(draft[i]?.price);
-                                                    draft[i].total = price * draft[i].qty;
-                                                });
-                                                setCartData(nextState);
-                                                localStorage.setItem(
-                                                    "addCartDetail",
-                                                    JSON.stringify(nextState)
-                                                );
-                                            }
-                                        }}
-                                    >
-                                        <IoRemoveSharp />
-                                    </button>
-                                    <span className="mx-4 text-white font-medium text-base">
-                                        {item?.qty}
-                                    </span>
-                                    <button
-                                        className="text-white text-lg font-bold"
-                                        onClick={() => {
-                                            const nextState = produce(cartData, (draft) => {
-                                                if (draft[i].qty + 1 > item.Quantity) {
-                                                    props.toaster({
-                                                        type: "error",
-                                                        message:
-                                                            "Item is not available in this quantity in stock. Please choose a different item.",
-                                                    });
-                                                    return;
-                                                }
-                                                draft[i].qty += 1;
-                                                const price = parseFloat(draft[i]?.price);
-                                                draft[i].total = price * draft[i].qty;
-                                            });
-                                            setCartData(nextState);
-                                            localStorage.setItem(
-                                                "addCartDetail",
-                                                JSON.stringify(nextState)
-                                            );
-                                        }}
-                                    >
-                                        <IoAddSharp />
-                                    </button>
-                                </div>
-
-                                {/* Total & Remove */}
-                                <div className="flex items-center gap-3">
-                                    <p className="text-custom-purple font-semibold text-base">
-                                        {constant.currency}
-                                        {item?.total}
-                                    </p>
-                                    <IoMdClose
-                                        className="w-5 h-5 text-custom-newGray cursor-pointer"
-                                        onClick={() => cartClose(item, i)}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-
 
                 </div>
 
-                {cartData.length > 0 && (
-                    <div className="bg-white w-full rounded-[5px] shadow-md md:p-5 p-3 mt-5">
-                        <div className="flex justify-between items-center w-full">
-                            <p className="text-custom-black font-semibold text-[18px]">
-                                {t("Cart Summary")}
-                            </p>
-                        </div>
-                        <div className=" pt-2 flex justify-between items-center w-full">
-                            <p className="text-custom-black font-normal text-base">
-                                {t("Subtotal")}
-                            </p>
-                            <p className="text-custom-black font-normal text-base">
-                                {constant.currency}
-                                {CartTotal}
-                            </p>
-                        </div>
-                        <div className=" pt-2 flex justify-between items-center w-full">
-                            <p className="text-custom-black font-normal text-base">
-                                {t("Coupon Discount")}
-                            </p>
 
-                            {!appliedCoupon && (
-                                <p
-                                    className="text-custom-green font-semibold hover:underline text-base cursor-pointer"
-                                    onClick={() => setOpenModel(true)}
-                                >
-                                    {t("Apply Coupon")}
-                                </p>
-                            )}
+                <div className="w-full flex flex-col md:flex-row gap-2 justify-center items-start mt-4">
+                    <CartDrawer
+                        toaster={props.toaster}
+                        pickupOption={pickupOption}
+                        setOpenCart={setOpenCart}
+                        cartClose={cartClose}
+                    />
+                    <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
+                        {cartData.length > 0 && (
+                            <div className="bg-white rounded-lg shadow-sm p-3">
+                                <div className="space-y-3">
+                                    <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
+                                        {[
+                                            {
+                                                id: "orderPickup",
+                                                title: t("In Store Pickup"),
+                                                subtitle: t("Pick it up inside the store"),
+                                                type: "pickup"
+                                            },
+                                            {
+                                                id: "driveUp",
+                                                title: t("Curbside Pickup"),
+                                                subtitle: t("We bring it out to your car"),
+                                                type: "pickup"
+                                            },
+                                            {
+                                                id: "localDelivery",
+                                                title: t("Next Day Local Delivery"),
+                                                subtitle: t("Cut off time 8 pm"),
+                                                type: "delivery"
+                                            },
+                                            {
+                                                id: "ShipmentDelivery",
+                                                title: t("Shipping"),
+                                                subtitle: t("Delivery in 3 to 5 business days"),
+                                                type: "delivery"
+                                            },
+                                        ].map((opt) => {
+                                            const selected = pickupOption === opt.id;
 
-                            {appliedCoupon && (
-                                <div className=" text-green-800 rounded-md flex items-center justify-end w-full md:w-[400px]">
-                                    <span className="text-base">
-                                        {t("Coupon")} {" "}
-                                        {t("applied!")}
-                                    </span>
-
-                                    <button
-                                        onClick={() => {
-                                            setAppliedCoupon(false)
-                                            setSearchTerm("");
-                                            setDiscountCode("")
-                                            setDiscount(0);
-                                            props.toaster({
-                                                type: "success",
-                                                message: "Coupon removed successfully",
-                                            });
-                                        }}
-                                        className="text-red-600 hover:text-red-800 text-sm ml-4"
-                                    >
-                                        <X size={18} />
-                                    </button>
-                                </div>
-                            )}
-                        </div>
-                        {appliedCoupon && (
-                            <div className=" pt-2 flex justify-between items-center w-full">
-                                <p className="text-custom-black font-normal text-base">
-                                    {t("Discount amount")}
-                                </p>
-                                <p className="text-custom-black font-normal text-base">
-                                    - {constant.currency}
-                                    {discount}
-                                </p>
-                            </div>
-                        )}
-                        {pickupOption === "localDelivery" && (
-                            <div className="flex justify-between items-center w-full pt-3 ">
-                                <p className="text-black font-normal text-base">
-                                    {t("Delivery Tip (optional)")}
-                                    <p className="text-black font-normal text-[12px]">
-                                        {t("100% of tip goes directly to your driver")}
-                                    </p>
-                                </p>
-                                <div>
-                                    <select
-                                        className="p-2 border rounded-sm"
-                                        value={deliverytip}
-                                        onChange={(e) => setdeliverytip(e.target.value)}
-                                    >
-                                        <option value="">{t("Select a tip")}</option>
-                                        <option value="0">$0</option>
-                                        <option value="2">$2</option>
-                                        <option value="5">$5</option>
-                                        <option value="8">$8</option>
-                                    </select>
-                                </div>
-                            </div>
-                        )}
-
-                        <div className="flex justify-between items-center w-full pt-2">
-                            <p className="text-black font-normal text-base">
-                                {t("Delivery Charges")}
-                            </p>
-
-                            {pickupOption === "orderPickup" ||
-                                pickupOption === "driveUp" ? (
-                                <p className="font-normal text-base">{t("$0.00")}</p>
-                            ) : pickupOption === "localDelivery" ? (
-                                CartTotal < 35 ? (
-                                    <p className="text-custom-black font-normal text-base">
-                                        {constant.currency} {currentLocalCost}
-                                    </p>
-                                ) : (
-                                    <p className="font-normal text-base">{t("$0.00")}</p>
-                                )
-                            ) : pickupOption === "ShipmentDelivery" ? (
-                                CartTotal < 200 ? (
-                                    <p className="text-custom-black font-normal text-base">
-                                        {constant.currency} {currentShipmentCost}
-                                    </p>
-                                ) : (
-                                    <p className=" font-normal text-base">{t("$0.00")}</p>
-                                )
-                            ) : null}
-                        </div>
-
-                        <div className="flex justify-between items-center w-full pt-5">
-                            <p className="text-custom-black font-bold text-[18px]">
-                                {t("Total Payable")}
-                            </p>
-                            <p className="text-custom-black font-bold text-base">
-                                {constant.currency}
-                                {mainTotal}
-                            </p>
-                        </div>
-
-                        {openModel && (
-                            <div className="w-full  mx-auto">
-                                <div className="mb-6">
-                                    <div className="flex justify-between items-center mb-2"></div>
-
-                                    {/* Search input */}
-                                    <div className="flex">
-                                        <div className="relative w-full">
-                                            <input
-                                                type="text"
-                                                className="w-full md:px-10 ps-6 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black md:text-[16px] text-sm"
-                                                placeholder={t("Enter coupon code or search coupons")}
-                                                value={searchTerm}
-                                                onChange={handleSearchChange}
-                                            />
-                                            <Search
-                                                className="absolute left-1 md:left-3 top-2.5 text-gray-400"
-                                                size={20}
-                                            />
-                                            {searchTerm && (
-                                                <button
-                                                    className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
-                                                    onClick={() => setSearchTerm("")}
+                                            return (
+                                                <label
+                                                    key={opt.id}
+                                                    className={`flex flex-col items-start p-4 rounded-lg border ${selected ? "border-green-400 shadow-md" : "border-gray-200"
+                                                        } cursor-pointer bg-white`}
                                                 >
-                                                    <X size={20} />
-                                                </button>
-                                            )}
-                                        </div>
-                                        <p
-                                            onClick={() => setOpenModel(false)}
-                                            className="text-black cursor-pointer text-[20px] font-bold md:mx-2 mx-1 pt-1"
-                                        >
-                                            {" "}
-                                            <X size={28} />
-                                        </p>
+                                                    <div className="flex items-start justify-between w-full">
+                                                        <div className="flex items-start gap-2">
+                                                            <input
+                                                                type="radio"
+                                                                id={opt.id}
+                                                                name="pickupOption"
+                                                                value={opt.id}
+                                                                checked={selected}
+                                                                onChange={handleOptionChange}
+                                                                className="hidden mt-1 form-radio h-4 w-4 text-green-600"
+                                                            />
+
+                                                            <div>
+                                                                <div className="font-semibold text-base md:text-lg text-black">
+                                                                    {opt.title}
+                                                                </div>
+                                                                <div className="text-gray-500 text-sm ">{opt.subtitle}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected ? "border-green-600" : "border-gray-300"
+                                                            }`}>
+                                                            <div
+                                                                className={`w-2 h-2 rounded-full ${selected ? "bg-green-600" : "bg-white"
+                                                                    }`}
+                                                            />
+                                                        </div>
+                                                    </div>
+
+
+                                                    {selected && opt.type === "pickup" && (
+                                                        <div className="bg-white pt-3">
+                                                            <p className=" mb-1 text-[13px] text-gray-700 text-start max-w-[430px md:text-[14px] font-semibold">
+                                                                {t("Pick up in 2 Hours")}
+                                                            </p>
+                                                            <div className="flex flex-col items-center gap-2">
+
+                                                                <div className="w-full max-w-[420px] relative">
+                                                                    <input
+                                                                        type="text"
+                                                                        value={date ? formatDate(date) : t("Select date")}
+                                                                        readOnly
+                                                                        onClick={handleIconClick}
+                                                                        className="w-full border rounded-lg py-2 px-3 pr-5 text-gray-700 focus:outline-none focus:ring-2 "
+                                                                    />
+
+                                                                    <span
+                                                                        onClick={handleIconClick}
+                                                                        className="absolute right-3 top-2 text-custom-green cursor-pointer"
+                                                                    >
+                                                                        <FaRegCalendarAlt size={18} />
+                                                                    </span>
+
+                                                                    {isOpen && DatePicker && (
+                                                                        <div className="absolute z-40 mt-2">
+                                                                            <DatePicker
+                                                                                selected={date}
+                                                                                onChange={handleDateChange}
+                                                                                inline
+                                                                                minDate={minDate}
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+
+                                                                <p className="text-[12px] text-gray-700 text-start max-w-[430px]">
+                                                                    {t(
+                                                                        "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee"
+                                                                    )}
+                                                                </p>
+                                                                <p className="text-[12px] text-gray-700 text-start max-w-[430px]">
+                                                                    {t(
+                                                                        "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day."
+                                                                    )}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {selected && opt.type === "delivery" && (
+                                                        <div className="bg-white w-full mt-4">
+                                                            <p className="text-black mb-2 font-semibold text-[16px] md:text-[15px]">
+                                                                {opt.id === "localDelivery"
+                                                                    ? t("Delivery is next day")
+                                                                    : t("Delivery in 3 to 5 business days")}
+                                                            </p>
+
+                                                            <div className="flex flex-col gap-3">
+
+                                                                {opt.id === "localDelivery" && (
+                                                                    <div className="relative w-full max-w-[640px]">
+                                                                        <input
+                                                                            type="text"
+                                                                            value={
+                                                                                localAddress.dateOfDelivery
+                                                                                    ? formatDate(localAddress.dateOfDelivery)
+                                                                                    : t("Select date")
+                                                                            }
+                                                                            readOnly
+                                                                            onClick={handleIconClick}
+                                                                            className="border text-black rounded-lg py-2 px-3 pr-10 w-full"
+                                                                        />
+
+                                                                        <span
+                                                                            onClick={handleIconClick}
+                                                                            className="absolute right-3 top-2 text-gray-400 cursor-pointer"
+                                                                        >
+                                                                            <FaRegCalendarAlt />
+                                                                        </span>
+
+                                                                        {isOpen && DatePicker && (
+                                                                            <div className="absolute z-40 mt-1">
+                                                                                <DatePicker
+                                                                                    selected={localAddress.dateOfDelivery}
+                                                                                    onChange={handleDateChange1}
+                                                                                    inline
+                                                                                    minDate={minDate1}
+                                                                                />
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="name"
+                                                                        placeholder={t("First Name")}
+                                                                        value={localAddress.name || ""}
+                                                                        onChange={handleInputChange1}
+                                                                        className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                    />
+
+                                                                    <input
+                                                                        type="text"
+                                                                        name="lastname"
+                                                                        placeholder={t("Last Name")}
+                                                                        value={localAddress.lastname || ""}
+                                                                        onChange={handleInputChange1}
+                                                                        className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                    />
+
+                                                                    <input
+                                                                        type="email"
+                                                                        name="email"
+                                                                        placeholder={t("Email")}
+                                                                        value={localAddress.email || ""}
+                                                                        onChange={handleInputChange1}
+                                                                        className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                    />
+
+                                                                    <input
+                                                                        type="text"
+                                                                        name="phoneNumber"
+                                                                        placeholder={t("Phone Number")}
+                                                                        value={localAddress.phoneNumber || ""}
+                                                                        onChange={handleInputChange1}
+                                                                        className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                    />
+
+                                                                    {opt.id === "localDelivery" && (
+                                                                        <select
+                                                                            name="zipcode"
+                                                                            value={localAddress.zipcode || ""}
+                                                                            onChange={handleInputChange1}
+                                                                            className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                        >
+                                                                            <option value="">{t("Select Zipcode")}</option>
+                                                                            {pincodes.map((z, idx) => (
+                                                                                <option key={idx} value={z.pincode}>
+                                                                                    {z.pincode}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                    )}
+
+                                                                    <textarea
+                                                                        name="address"
+                                                                        placeholder={t("Enter shipping address")}
+                                                                        value={localAddress.address || ""}
+                                                                        onChange={handleInputChange1}
+                                                                        className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                    />
+
+                                                                    <input
+                                                                        type="text"
+                                                                        name="ApartmentNo"
+                                                                        placeholder={t("Apartment #")}
+                                                                        value={localAddress.ApartmentNo || ""}
+                                                                        onChange={handleInputChange1}
+                                                                        className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                    />
+
+                                                                    <input
+                                                                        type="text"
+                                                                        name="SecurityGateCode"
+                                                                        placeholder={t("Security Gate Code")}
+                                                                        value={localAddress.SecurityGateCode || ""}
+                                                                        onChange={handleInputChange1}
+                                                                        className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                    />
+
+                                                                    <label className="flex items-center gap-2 mt-1">
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={localAddress.isBusinessAddress || false}
+                                                                            onChange={(e) =>
+                                                                                setLocalAddress({ ...localAddress, isBusinessAddress: e.target.checked })
+                                                                            }
+                                                                            className="form-checkbox"
+                                                                        />
+                                                                        <span className="text-sm text-black">{t("This is business address")}</span>
+                                                                    </label>
+
+                                                                    <input
+                                                                        type="text"
+                                                                        name="BusinessAddress"
+                                                                        placeholder={t("Enter Company Name")}
+                                                                        value={localAddress.BusinessAddress || ""}
+                                                                        onChange={handleInputChange1}
+                                                                        className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
+                                                                    />
+                                                                </div>
+
+                                                                {opt.id === "localDelivery" && (
+                                                                    <p className="text-[12px] text-gray-700 text-start">
+                                                                        {t(
+                                                                            "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee"
+                                                                        )}
+                                                                    </p>
+                                                                )}
+
+                                                                {opt.id === "ShipmentDelivery" && (
+                                                                    <p className="text-[12px] text-gray-700 text-start">
+                                                                        {t(
+                                                                            "We deliver to 49 US states. Hawaii delivery not supported."
+                                                                        )}
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </label>
+                                            );
+                                        })}
                                     </div>
                                 </div>
-
-                                {!appliedCoupon && (
-                                    <button
-                                        className="mt-4 w-full py-2 bg-custom-green text-white rounded-md  focus:outline-none  disabled:bg-gray-400 disabled:cursor-not-allowed"
-                                        onClick={handleApplyCoupon}
-                                    >
-                                        {t("Apply Coupon")}
-                                    </button>
-                                )}
                             </div>
                         )}
-                    </div>
-                )}
+                        {cartData.length > 0 && (
+                            <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
 
-                {cartData.length > 0 && (
-                    <>
-                        {isLoggedIn ? (
-                            <button
-                                className="bg-custom-gold border-white border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-white cursor-pointer text-base text-center mt-5 mb-6"
-                                onClick={() => {
-                                    if (cartData?.length === 0) {
-                                        toaster &&
-                                            toaster({
-                                                type: "warning",
-                                                message: "Your cart is empty",
-                                            });
-                                    } else {
-                                        createProductRquest();
-                                    }
-                                }}
-                            >
-                                {t("Proceed To Checkout")}
-                            </button>
-                        ) : (
-                            <button
-                                className="bg-custom-green border-white border-[3px] h-[50px] rounded-[12px] w-full font-semibold text-white cursor-pointer text-base text-center mt-5 mb-6"
-                                onClick={() => {
-                                    setOpenCart(false);
-                                    router.push("/signIn");
-                                }}
-                            >
-                                {t("Login to Checkout")}
-                            </button>
+                                <h4 className="text-xl font-bold text-gray-800 mb-4">
+                                    {t("Bill Summary")}
+                                </h4>
+
+                                <div className="space-y-3">
+
+                                    {/* Subtotal */}
+                                    <div className="flex justify-between items-center text-black">
+                                        <p className="text-base">{t("Subtotal")}</p>
+                                        <p className="text-base font-medium">
+                                            {constant.currency} {CartTotal}
+                                        </p>
+                                    </div>
+
+                                    {/* Coupon */}
+                                    <div className="flex justify-between items-center">
+                                        <p className="text-base text-black">{t("Coupon Discount")}</p>
+
+                                        {!appliedCoupon ? (
+                                            <p
+                                                onClick={() => setOpenModel(true)}
+                                                className="text-green-600 font-semibold cursor-pointer"
+                                            >
+                                                {t("Apply Coupon")}
+                                            </p>
+                                        ) : (
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-sm text-green-800">
+                                                    {t("Coupon applied!")}
+                                                </span>
+
+                                                <button
+                                                    onClick={() => {
+                                                        setAppliedCoupon(false);
+                                                        setSearchTerm("");
+                                                        setDiscountCode("");
+                                                        setDiscount(0);
+                                                        toaster?.({
+                                                            type: "success",
+                                                            message: "Coupon removed successfully",
+                                                        });
+                                                    }}
+                                                    className="text-red-600"
+                                                >
+                                                    <X size={18} />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Discount Amount */}
+                                    {appliedCoupon && (
+                                        <div className="flex justify-between items-center">
+                                            <p className="text-base">{t("Discount amount")}</p>
+                                            <p className="text-base font-medium">
+                                                - {constant.currency} {discount}
+                                            </p>
+                                        </div>
+                                    )}
+
+                                    {/* Delivery Tip */}
+                                    {pickupOption === "localDelivery" && (
+                                        <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="text-base text-black">{t("Delivery Tip (optional)")}</p>
+                                                <p className="text-xs text-black">
+                                                    {t("100% of tip goes directly to your driver")}
+                                                </p>
+                                            </div>
+
+                                            <select
+                                                className="p-2 border rounded-sm text-black"
+                                                value={deliverytip}
+                                                onChange={(e) => setdeliverytip(e.target.value)}
+                                            >
+                                                <option value="" className="text-black">{t("Select a tip")}</option>
+                                                <option value="0">$0</option>
+                                                <option value="2">$2</option>
+                                                <option value="5">$5</option>
+                                                <option value="8">$8</option>
+                                            </select>
+                                        </div>
+                                    )}
+
+                                    {/* Delivery Charges */}
+                                    <div className="flex text-black justify-between items-center">
+                                        <p className="text-base">{t("Delivery Charges")}</p>
+
+                                        <div>
+                                            {/* Pickup Free */}
+                                            {pickupOption === "orderPickup" || pickupOption === "driveUp" ? (
+                                                <span className="text-base">{t("$0.00")}</span>
+                                            ) : pickupOption === "localDelivery" ? (
+                                                CartTotal < 35 ? (
+                                                    <span className="text-base font-medium">
+                                                        {constant.currency} {currentLocalCost}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-base">{t("$0.00")}</span>
+                                                )
+                                            ) : pickupOption === "ShipmentDelivery" ? (
+                                                CartTotal < 200 ? (
+                                                    <span className="text-base font-medium">
+                                                        {constant.currency} {currentShipmentCost}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-base">{t("$0.00")}</span>
+                                                )
+                                            ) : null}
+                                        </div>
+                                    </div>
+
+                                    {/* Total Payable */}
+                                    <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+                                        <p className="text-lg font-bold text-black">{t("Total Payable")}</p>
+                                        <p className="text-lg font-bold text-black">
+                                            {constant.currency} {mainTotal}
+                                        </p>
+                                    </div>
+
+                                    {/* Coupon Modal */}
+                                    {openModel && (
+                                        <div className="mt-4 w-full">
+                                            <div className="bg-gray-50 p-3 rounded-md">
+                                                <div className="flex justify-between items-center mb-3">
+                                                    <h5 className="font-semibold text-black">{t("Apply Coupon")}</h5>
+
+                                                    <button
+                                                        onClick={() => setOpenModel(false)}
+                                                        className="text-black"
+                                                    >
+                                                        <X size={20} />
+                                                    </button>
+                                                </div>
+
+                                                <div className="flex flex-col md:flex-row gap-2">
+                                                    <input
+                                                        type="text"
+                                                        placeholder={t("Enter coupon code or search coupons")}
+                                                        value={searchTerm}
+                                                        onChange={handleSearchChange}
+                                                        className="flex-1 text-[14px] text-black border rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    />
+
+                                                    <button
+                                                        className="bg-custom-green text-white px-2 py-2 cursor-pointer text-sm rounded-md"
+                                                        onClick={handleApplyCoupon}
+                                                    >
+                                                        {t("Apply Coupon")}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Checkout Button */}
+                                    <div className="mt-4">
+                                        {isLoggedIn ? (
+                                            <button
+                                                className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
+                                                onClick={() => {
+                                                    if (cartData?.length === 0) {
+                                                        toaster?.({
+                                                            type: "warning",
+                                                            message: "Your cart is empty",
+                                                        });
+                                                    } else {
+                                                        createProductRquest && createProductRquest();
+                                                    }
+                                                }}
+                                            >
+                                                {t("Proceed To Checkout")}
+                                            </button>
+                                        ) : (
+                                            <button
+                                                className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
+                                                onClick={() => {
+                                                    setOpenCart(false);
+                                                    router.push("/signIn");
+                                                }}
+                                            >
+                                                {t("Login to Checkout")}
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
                         )}
-                    </>
+
+
+                    </div>
+                </div>
+
+
+                {cartData && cartData.length === 0 && (
+                    <div className="bg-white w-full rounded-[5px] md:p-5 p-4 mt-5 flex flex-col justify-center items-center min-h-[280px]">
+                        <div className="relative w-28 h-28 mb-4">
+                            <Image src="/cart2.jpg" alt="cart" fill className="object-contain" />
+                        </div>
+                        <p className="text-black text-[18px] mb-2">{t("Your cart is empty")}</p>
+                        <button
+                            className="text-custom-green border-2 border-custom-green text-[16px] font-medium rounded-[18px] cursor-pointer w-[200px] mt-2 py-2 px-4"
+                            onClick={() => {
+                                setOpenCart(false);
+                                router.push("/categories/all");
+                            }}
+                        >
+                            {t("Browse Products")}
+                        </button>
+                    </div>
                 )}
             </div>
         </div>

@@ -862,9 +862,10 @@ const Navbar = (props) => {
             <div
               className="relative cursor-pointer hidden md:flex"
               onClick={() => {
-                setOpenCart(true);
-                setMobileMenu(!mobileMenu);
-                getProfileData();
+                // setOpenCart(true);
+                // setMobileMenu(!mobileMenu);
+                // getProfileData();
+                router.push("/Cart")
               }}
             >
               <ShoppingCart className="text-black" size={28} />
@@ -941,8 +942,6 @@ const Navbar = (props) => {
           </div>
         </div>
       </header>
-
-
 
       <Drawer open={openCart} onClose={closeDrawers} anchor={"right"}>
         <div
