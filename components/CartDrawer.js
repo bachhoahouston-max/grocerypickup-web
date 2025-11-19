@@ -13,7 +13,6 @@ export default function CartDrawer({
     pickupOption,
     toaster,
     cartClose,
-    setOpenCart,
 }) {
     const router = useRouter();
     const { t } = useTranslation();
@@ -144,7 +143,7 @@ export default function CartDrawer({
 
 
                                         <div className="md:flex hidden flex-col items-end md:flex-row md:items-center gap-3 mt-2 md:mt-0">
-                                            <div className="flex items-center bg-[#5CB447] rounded-full px-3 py-1">
+                                            <div className="flex items-center bg-custom-green rounded-full px-3 py-1">
                                                 <button onClick={() => decreaseQty(i, item)}>
                                                     <IoRemoveSharp />
                                                 </button>
@@ -168,7 +167,7 @@ export default function CartDrawer({
                                         </div>
                                     </div>
                                     <div className="md:hidden flex flex-row items-center justify-center gap-3 mt-2 md:mt-0">
-                                        <div className="flex items-center bg-[#5CB447] rounded-full px-3 py-1">
+                                        <div className="flex items-center bg-custom-green rounded-full px-3 py-1">
                                             <button onClick={() => decreaseQty(i, item)}>
                                                 <IoRemoveSharp />
                                             </button>

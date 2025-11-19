@@ -42,6 +42,7 @@ function Payment(props) {
     const session_id = router.query.session_id;
     const localCheckoutData = JSON.parse(localStorage.getItem("checkoutData"));
     const cartDetails = JSON.parse(localStorage.getItem("addCartDetail"));
+
     let data = [];
 
     cartDetails.forEach((element) => {
@@ -56,6 +57,7 @@ function Payment(props) {
         seller_id: element.userid,
       });
     });
+    
     if (!session_id || !localCheckoutData || !cartDetails) return;
 
     props.loader(true);
