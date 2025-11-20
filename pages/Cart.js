@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { Trash, X } from "lucide-react";
-import { IoIosArrowBack } from "react-icons/io";
+import { CheckCircle, Trash, X } from "lucide-react";
+import { IoIosArrowBack, IoIosClose } from "react-icons/io";
 import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
 import { Api } from "@/services/service";
@@ -15,13 +15,14 @@ import Image from "next/image";
 import CartDrawer from "@/components/CartDrawer";
 import AddressForm from "@/components/AddressForm";
 import ShippingInfoCard from "@/components/ShippingInfoCard";
-import { create } from "@mui/material/styles/createTransitions";
 
 function Cart(props) {
   const router = useRouter();
   const [user, setUser] = useContext(userContext);
   const [CartTotal, setCartTotal] = useState(0);
   const [pincodes, setPincodes] = useState([]);
+  const [paymentChecked, setPaymentChecked] = useState(false);
+  const [cancelDone, setCancelDone] = useState(false);
   const [cartData, setCartData] = useContext(cartContext);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [mainTotal, setMainTotal] = useState(0);
@@ -34,11 +35,13 @@ function Cart(props) {
   const [discountCode, setDiscountCode] = useState(0);
   const [isOnce, setIsOnce] = useState(false);
   const { t } = useTranslation();
+  const [cancelPopup, setCancelPopup] = useState(false);
   const isLoggedIn = user?._id || user?.token;
   const [open, setOpen] = useState(false);
   const [currentLocalCost, setCurrentLocalCost] = useState(0);
   const [currentShipmentCost, setCurrentShipmentCost] = useState(0);
   const [orderId, setOrderID] = useState("");
+  const [successPopup, setSuccessPopup] = useState(false);
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -334,7 +337,7 @@ function Cart(props) {
       delivery = 0;
     }
 
-    setBaseCartTotal(sumWithInitial); // Save original value
+    setBaseCartTotal(sumWithInitial);
     setDeliveryCharge(delivery.toFixed(2));
 
     const cartAfterDiscount = sumWithInitial - discount;
@@ -487,7 +490,7 @@ function Cart(props) {
 
     d.forEach((element) => {
       data.push({
-        product: element?._id,
+        product: element?.id,
         image: element.selectedColor?.image,
         BarCode: element.BarCode,
         total: element.total,
@@ -603,7 +606,7 @@ function Cart(props) {
     props.loader && props.loader(true);
     console.log(newData);
 
-    const createRes = await Api("post", "createProductRquest", newData, router);
+    const createRes = await Api("post", "New-createProductRquest", newData, router);
 
     if (createRes.status) {
       const data = createRes.data.orders || [];
@@ -677,7 +680,7 @@ function Cart(props) {
         },
       ],
       success_url: `${window.location.origin}/Cart?session_id={CHECKOUT_SESSION_ID}&from=${router.query.from}&orderId=${ID}`,
-      //   cancel_url: `${window.location.origin}/Cart/cancel`,
+      cancel_url: `${window.location.origin}/Cart?status=cancelled&orderId=${ID}`,
     };
 
     // props.loader(true);
@@ -709,16 +712,39 @@ function Cart(props) {
   };
 
   useEffect(() => {
-    console.log("Checking payment status...", {
-      orderId: router.query.orderId,
-      sessionId: router.query.session_id,
-    });
-
     if (!router.isReady) return;
-    if (!router.query.orderId) return;
-    if (!router.query.session_id) return;
+    if (cancelDone) return; 
+
+    const CancelPayment = async () => {
+      props.loader(true);
+
+      try {
+        const data = { orderID: router.query.orderId };
+        const Res = await Api("post", "cancel-checkout-session", data, router);
+
+        if (Res.status) {
+          setCancelPopup(true);
+          setCancelDone(true); 
+        }
+      } catch (error) {
+        props.toaster({ type: "error", message: "Payment Failed" });
+      } finally {
+        props.loader(false);
+      }
+    };
+
+    if (router.query.status === "cancelled" && router.query.orderId) {
+      CancelPayment();
+    }
+  }, [router.isReady, router.query.status, router.query.orderId, cancelDone]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (paymentChecked) return;
+    if (!router.query.orderId || !router.query.session_id) return;
 
     const checkPayment = async () => {
+      setPaymentChecked(true);
       props.loader(true);
 
       const data = {
@@ -729,7 +755,7 @@ function Cart(props) {
       try {
         const stripeRes = await Api(
           "post",
-          "retrieve-checkout-session",
+          "new-retrieve-checkout-session",
           data,
           router
         );
@@ -738,26 +764,22 @@ function Cart(props) {
           localStorage.removeItem("addCartDetail");
           localStorage.removeItem("checkoutData");
           setCartData([]);
-
-          props.toaster({
-            type: "success",
-            message: "Payment Successful",
-          });
-
-          router.replace("/Mybooking");
+          setSuccessPopup(true);
         }
       } catch (error) {
-        props.toaster({
-          type: "error",
-          message: "Payment Failed",
-        });
+        props.toaster({ type: "error", message: "Payment Failed" });
       } finally {
         props.loader(false);
       }
     };
 
     checkPayment();
-  }, [router.isReady, orderId, router.query.session_id]);
+  }, [
+    router.isReady,
+    router.query.orderId,
+    router.query.session_id,
+    paymentChecked,
+  ]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 md:mt-5 mt-8 md:mb-0 mb-10">
@@ -787,7 +809,6 @@ function Cart(props) {
             </button>
           )}
         </div>
-
         <div className="w-full flex flex-col md:flex-row gap-2 justify-center items-start mt-4">
           <CartDrawer
             toaster={props.toaster}
@@ -1193,7 +1214,6 @@ function Cart(props) {
             )}
           </div>
         </div>
-
         {cartData && cartData.length === 0 && (
           <div className="bg-white w-full rounded-[5px] md:p-5 p-4 mt-5 flex flex-col justify-center items-center min-h-[280px]">
             <div className="relative w-28 h-28 mb-4">
@@ -1215,6 +1235,95 @@ function Cart(props) {
             >
               {t("Browse Products")}
             </button>
+          </div>
+        )}
+        {cancelPopup && (
+          <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex justify-center items-center z-[9999] px-4">
+            <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 relative animate-fadeIn">
+              <div className="flex justify-center mb-4">
+                <div className="bg-orange-100 text-orange-600 w-16 h-16 flex justify-center items-center rounded-full text-4xl">
+                  ⚠️
+                </div>
+              </div>
+
+              {/* Title */}
+              <h2 className="text-center text-2xl font-semibold text-gray-800">
+                Order Cancelled
+              </h2>
+
+              {/* Message */}
+              <p className="text-center text-gray-600 mt-2 text-sm">
+                You were redirected back from Stripe. Your order has been
+                cancelled successfully.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex justify-between gap-4 mt-6">
+                <button
+                  onClick={() => {
+                    setCancelPopup(false);
+                    router.push("/");
+                  }}
+                  className="w-1/2 bg-gray-200 cursor-pointer hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-medium"
+                >
+                  Home
+                </button>
+
+                <button
+                  onClick={() => {
+                    setCancelPopup(false);
+                    router.push("/Cart");
+                  }}
+                  className="w-1/2 bg-custom-green cursor-pointer text-white py-2 rounded-lg font-medium shadow"
+                >
+                  Move to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {successPopup && (
+          <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex justify-center items-center z-[9999] px-4">
+            <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 relative animate-fadeIn">
+              {/* Icon */}
+              <div className="flex justify-center mb-4">
+                <div className="bg-green-100 text-green-600 w-16 h-16 flex justify-center items-center rounded-full">
+                  <CheckCircle className="w-10 h-10" />
+                </div>
+              </div>
+
+              <h2 className="text-center text-2xl font-semibold text-gray-800">
+                Payment Successful
+              </h2>
+
+              <p className="text-center text-gray-600 mt-2 text-sm">
+                Your payment has been completed successfully. Your order is now
+                placed and being processed.
+              </p>
+
+              {/* Buttons */}
+              <div className="flex justify-between gap-4 mt-6">
+                <button
+                  onClick={() => {
+                    setSuccessPopup(false);
+                    router.push("/");
+                  }}
+                  className="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-medium cursor-pointer"
+                >
+                  Home
+                </button>
+
+                <button
+                  onClick={() => {
+                    setSuccessPopup(false);
+                    router.push("/Mybooking");
+                  }}
+                  className="w-1/2 bg-custom-green text-white py-2 rounded-lg font-medium shadow cursor-pointer"
+                >
+                  My Orders
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
