@@ -203,8 +203,8 @@ function Cart(props) {
             location: {
               type: "Point",
               coordinates: [
-                res?.data?.location?.coordinates[1] || 0,
                 res?.data?.location?.coordinates[0] || 0,
+                res?.data?.location?.coordinates[1] || 0,
               ],
             },
           });
@@ -638,7 +638,7 @@ function Cart(props) {
     }));
 
     const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
-    const deliveryCharge = parseFloat(checkoutData.deliveryfee || 0);
+    const deliveryCharge = parseFloat(pickupOption === "localDelivery" && CartTotal < 35 ? currentLocalCost : pickupOption === "ShipmentDelivery" && CartTotal < 200 ? currentShipmentCost : 0 || 0);
 
     const metadata = {
       userId: user?._id,
