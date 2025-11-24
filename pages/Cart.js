@@ -585,6 +585,7 @@ function Cart(props) {
         return false;
       }
     }
+    const deliveryTip = parseFloat(deliverytip || 0);
 
     let newData = {
       productDetail: data,
@@ -600,6 +601,7 @@ function Cart(props) {
       isLocalDelivery,
       isShipmentDelivery,
       dateOfDelivery: date || localAddress.dateOfDelivery,
+      Deliverytip: deliveryTip.toString(),
     };
 
     localStorage.setItem("checkoutData", JSON.stringify(newData));
@@ -610,6 +612,8 @@ function Cart(props) {
 
     if (createRes.status) {
       const data = createRes.data.orders || [];
+      console.log(data)
+
       setOrderID(data.orderId);
       createCheckoutSession(data.orderId);
     } else {
@@ -713,7 +717,7 @@ function Cart(props) {
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (cancelDone) return; 
+    if (cancelDone) return;
 
     const CancelPayment = async () => {
       props.loader(true);
@@ -724,7 +728,7 @@ function Cart(props) {
 
         if (Res.status) {
           setCancelPopup(true);
-          setCancelDone(true); 
+          setCancelDone(true);
         }
       } catch (error) {
         props.toaster({ type: "error", message: "Payment Failed" });
@@ -851,11 +855,10 @@ function Cart(props) {
                       return (
                         <label
                           key={opt.id}
-                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg border ${
-                            selected
-                              ? "border-green-400 shadow-md"
-                              : "border-gray-200"
-                          } cursor-pointer bg-white`}
+                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg border ${selected
+                            ? "border-green-400 shadow-md"
+                            : "border-gray-200"
+                            } cursor-pointer bg-white`}
                         >
                           <div className="flex items-start justify-between w-full">
                             <div className="flex items-start gap-2">
@@ -880,16 +883,14 @@ function Cart(props) {
                             </div>
 
                             <div
-                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                selected
-                                  ? "border-green-600"
-                                  : "border-gray-300"
-                              }`}
+                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
+                                ? "border-green-600"
+                                : "border-gray-300"
+                                }`}
                             >
                               <div
-                                className={`w-2 h-2 rounded-full ${
-                                  selected ? "bg-green-600" : "bg-white"
-                                }`}
+                                className={`w-2 h-2 rounded-full ${selected ? "bg-green-600" : "bg-white"
+                                  }`}
                               />
                             </div>
                           </div>
@@ -960,8 +961,8 @@ function Cart(props) {
                                       value={
                                         localAddress.dateOfDelivery
                                           ? formatDate(
-                                              localAddress.dateOfDelivery
-                                            )
+                                            localAddress.dateOfDelivery
+                                          )
                                           : t("Select date")
                                       }
                                       readOnly
@@ -1148,7 +1149,7 @@ function Cart(props) {
                       <div>
                         {/* Pickup Free */}
                         {pickupOption === "orderPickup" ||
-                        pickupOption === "driveUp" ? (
+                          pickupOption === "driveUp" ? (
                           <span className="text-base">{t("$0.00")}</span>
                         ) : pickupOption === "localDelivery" ? (
                           CartTotal < 35 ? (

@@ -30,9 +30,11 @@ const SellProduct = ({ loader, toaster }) => {
       };
 
       if (existingItemIndex === -1) {
+        console.log(item)
         draft.push({
           ...item,
           name: item?.product.name,
+          vietnamiesName: item?.product.vietnamiesName,
           id: item?.product?._id,
           selectedColor: item?.product.varients?.[0] || {},
           selectedImage: item.product?.varients[0]?.image[0] || "",
@@ -195,7 +197,7 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                   )}
 
-                   {currentSale?.status !== "expired" && (
+                  {currentSale?.status !== "expired" && (
                     <div className="md:hidden flex flex-col absolute bottom-38 bg-custom-lightGreen text-custom-green text-xs  px-6 py-1 rounded-md z-10">
                       <p className="font-semibold text-[12px]">
                         {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
@@ -220,12 +222,12 @@ const SellProduct = ({ loader, toaster }) => {
                     />
                   </div>
 
-                <div className="flex justify-center items-center"> 
-                  <h3 className="text-black font-semibold text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
-                    {lang === "en"
-                      ? item.product?.name
-                      : item.product?.vietnamiesName || item.product?.name}
-                  </h3>
+                  <div className="flex justify-center items-center">
+                    <h3 className="text-black font-semibold text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
+                      {lang === "en"
+                        ? item.product?.name
+                        : item.product?.vietnamiesName || item.product?.name}
+                    </h3>
                   </div>
 
                   {/* Price Section */}
@@ -258,32 +260,32 @@ const SellProduct = ({ loader, toaster }) => {
                       {t("Out of Stock")}
                     </button>
                   ) : itemQuantity > 0 ? (
-                    <div className="flex justify-center items-center"> 
-                    <div className="flex justify-between items-center gap-2 md:w-[200px] w-[150px] bg-gray-100 p-1 rounded-2xl">
-                      <div
-                        className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
-                        onClick={() => itemQuantity > 1 && handleRemoveFromCart(item)}
-                      >
-                        <IoRemoveSharp className="text-white w-5 h-5" />
+                    <div className="flex justify-center items-center">
+                      <div className="flex justify-between items-center gap-2 md:w-[200px] w-[150px] bg-gray-100 p-1 rounded-2xl">
+                        <div
+                          className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
+                          onClick={() => itemQuantity > 1 && handleRemoveFromCart(item)}
+                        >
+                          <IoRemoveSharp className="text-white w-5 h-5" />
+                        </div>
+                        <p className="text-center font-medium text-black">{itemQuantity}</p>
+                        <div
+                          className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
+                          onClick={() => handleAddToCart(item)}
+                        >
+                          <IoAddSharp className="text-white w-5 h-5" />
+                        </div>
                       </div>
-                      <p className="text-center font-medium text-black">{itemQuantity}</p>
-                      <div
-                        className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
-                        onClick={() => handleAddToCart(item)}
-                      >
-                        <IoAddSharp className="text-white w-5 h-5" />
-                      </div>
-                    </div>
                     </div>
                   ) : (
-                    <div className="mx-auto"> 
-                    <button
-                      className="w-[150px] py-2 bg-custom-green text-white md:w-[200px] font-semibold rounded-full flex justify-center items-center gap-2 hover:bg-green-700 transition"
-                      onClick={() => handleAddToCart(item)}
-                    >
-                      <FiShoppingCart className="w-5 h-5" />
-                      {t("Add")}
-                    </button>
+                    <div className="mx-auto">
+                      <button
+                        className="w-[150px] py-2 bg-custom-green text-white md:w-[200px] font-semibold rounded-full flex justify-center items-center gap-2 hover:bg-green-700 transition"
+                        onClick={() => handleAddToCart(item)}
+                      >
+                        <FiShoppingCart className="w-5 h-5" />
+                        {t("Add")}
+                      </button>
                     </div>
                   )}
                 </div>
