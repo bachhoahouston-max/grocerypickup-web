@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { Api } from '@/services/service';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import { Api } from "@/services/service";
+import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 
 const CategoryCard = ({ item, url, router }) => (
@@ -19,7 +19,6 @@ const CategoryCard = ({ item, url, router }) => (
           // sizes="(max-width: 768px) 100px, 120px"
         />
       </div>
-
     </div>
     <p className="text-black text-[14px] md:text-[16px] font-semibold text-center">
       {item?.name}
@@ -31,10 +30,10 @@ function ShopByCategory() {
   const [categorys, setCategory] = useState([]);
   const router = useRouter();
   const { t } = useTranslation();
-  
+
   useEffect(() => {
     async function fetchData() {
-      const cat = await Api('get', 'getCategory', null, router);
+      const cat = await Api("get", "getCategory", null, router);
       setCategory(cat.data);
     }
     fetchData();
@@ -43,12 +42,11 @@ function ShopByCategory() {
   return (
     <div className="bg-white px-4 my-4 mb-0 md:mb-10">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 ">
+        <h1 className="text-xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 ">
           {t("Shop By Category")}
         </h1>
 
-        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
-
+        <div className="hidden md:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
           <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
             onClick={() =>
@@ -64,7 +62,6 @@ function ShopByCategory() {
                   className="object-contain"
                 />
               </div>
-
             </div>
             <p className="text-black text-[14px] sm:text-[16px] font-semibold text-center">
               {t("New Arrivals")}
@@ -93,7 +90,6 @@ function ShopByCategory() {
             </p>
           </div> */}
 
-
           {categorys.map((category, index) => (
             <CategoryCard
               key={index}
@@ -102,6 +98,59 @@ function ShopByCategory() {
               router={router}
             />
           ))}
+        </div>
+
+        <div className="md:hidden overflow-x-auto scrollbar-hide px-1">
+          <div className="flex gap-6">
+            {/* New Arrival */}
+            <div
+              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px]"
+              onClick={() =>
+                router.push("/categories/all?category=all&sort_by=new")
+              }
+            >
+              <div className="relative mb-3">
+                <div className="relative w-16 h-16 rounded-full group-hover:scale-105 transition-all duration-300">
+                  <Image
+                    src="/NewArrival.png"
+                    alt="Category"
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+
+              {/* NAME FIX (wrap + max width) */}
+              <p className="text-black text-[13px] font-semibold text-center max-w-[70px] break-words">
+                {t("New Arrivals")}
+              </p>
+            </div>
+
+            {/* Loop Categories */}
+            {categorys.map((category, index) => (
+              <div
+                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px]"
+                key={index}
+                onClick={() => router.push("")}
+              >
+                <div className="relative mb-3">
+                  <div className="relative w-16 h-16 rounded-full shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+                    <Image
+                      src={category?.image}
+                      alt={category?.name || "Category"}
+                      fill
+                      className="object-cover rounded-full"
+                    />
+                  </div>
+                </div>
+
+                {/* NAME FIX (wrap + max width) */}
+                <p className="text-black text-[13px] font-semibold text-center max-w-[70px] break-words">
+                  {category?.name}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
