@@ -145,12 +145,12 @@ export default function CartDrawer({
                                         <div className="md:flex hidden flex-col items-end md:flex-row md:items-center gap-3 mt-2 md:mt-0">
                                             <div className="flex items-center bg-custom-green rounded-full px-3 py-1">
                                                 <button onClick={() => decreaseQty(i, item)}>
-                                                    <IoRemoveSharp color="white" />
+                                                    <IoRemoveSharp className="text-white text-xl" />
                                                 </button>
                                                 <span className="mx-4 text-white font-medium text-base">{item?.qty}</span>
 
                                                 <button onClick={() => increaseQty(i, item)}>
-                                                    <IoAddSharp color="white" />
+                                                    <IoAddSharp className="text-white text-xl" />
                                                 </button>
                                             </div>
 
