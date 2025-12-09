@@ -81,7 +81,7 @@ function MainHeader() {
           <div key={idx} className=" flex items-center justify-center overflow-hidden ">
             <div
 
-              className=" flex items-center justify-center overflow-hidden rounded-[28px] w-4/5 md:w-full"
+              className=" flex items-center justify-center overflow-hidden rounded-[28px] w-full md:w-full"
               style={{
                 position: "relative",
                 aspectRatio: ratio,
