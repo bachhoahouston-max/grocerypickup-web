@@ -16,7 +16,7 @@ const CategoryCard = ({ item, url, router }) => (
           alt={item?.name || "Category"}
           fill
           className="object-cover rounded-full"
-          // sizes="(max-width: 768px) 100px, 120px"
+        // sizes="(max-width: 768px) 100px, 120px"
         />
       </div>
     </div>
@@ -41,12 +41,12 @@ function ShopByCategory() {
 
   return (
     <div className="bg-white px-4 my-4 mb-0 md:mb-10">
-      <div className="max-w-7xl mx-auto">
+      <div className="md:max-w-7xl mx-auto max-w-96">
         <h1 className="text-xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 hidden md:flex">
           {t("Shop By Category")}
         </h1>
 
-        <div className="hidden md:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7  gap-6 md:gap-8">
+        <div className="hidden md:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7  gap-6 md:gap-8 ">
           <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
             onClick={() =>
@@ -98,6 +98,7 @@ function ShopByCategory() {
               router={router}
             />
           ))}
+          <div className="w-28 h-28"></div>
         </div>
 
         <div className="md:hidden overflow-x-auto scrollbar-hide px-1">

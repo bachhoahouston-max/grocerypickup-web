@@ -50,12 +50,8 @@ export default function Home(props) {
         />
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
-      <div className="mx-auto md:max-w-7xl ">
-        <div className="flex md:hidden mt-6">
-          <Suspense fallback={<div>Loading.....</div>}>
-            <ShopByCategory loader={props.loader} toaster={props.toaster} />
-          </Suspense>
-        </div>
+      <div className="mx-auto md:max-w-7xl mt-7">
+
         <Suspense fallback={<div>Loading.....</div>}>
           <MainHeader />
         </Suspense>
@@ -67,11 +63,15 @@ export default function Home(props) {
         <Suspense fallback={<div>Loading.....</div>}>
           <SellProduct loader={props.loader} toaster={props.toaster} />
         </Suspense>
-
+        <div className="flex md:hidden ">
+          <Suspense fallback={<div>Loading.....</div>}>
+            <ShopByCategory loader={props.loader} toaster={props.toaster} />
+          </Suspense>
+        </div>
         <div className="bg-white w-full ">
           <section className="bg-white w-full relative flex flex-col justify-center items-center">
             <div className="container mx-auto px-2 md:px-0">
-              <h1 className=" text-[20px] md:text-2xl font-bold md:mb-10 mb-5 md:mt-10 text-black">
+              <h1 className="hidden md:block text-[20px] md:text-2xl font-bold md:mb-10 mb-5 md:mt-10 text-black">
                 {t("All Products")}
               </h1>
               <Suspense fallback={<div>Loading.....</div>}>
@@ -204,7 +204,7 @@ function BestSeller(props) {
       selectedCategory === "all"
         ? t("View All")
         : category?.find((cat) => cat._id === selectedCategory)?.name ||
-          t("View All");
+        t("View All");
 
     const handleSelect = (value) => {
       setOpen(false);
@@ -222,9 +222,8 @@ function BestSeller(props) {
             {t("Filter")} : {selectedName}
           </span>
           <FaChevronDown
-            className={`text-custom-green transition-transform duration-300 ${
-              open ? "rotate-180" : ""
-            }`}
+            className={`text-custom-green transition-transform duration-300 ${open ? "rotate-180" : ""
+              }`}
           />
         </button>
 
@@ -232,11 +231,10 @@ function BestSeller(props) {
           <ul className="absolute left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-xl max-h-64 overflow-y-auto z-30">
             <li
               onClick={() => handleSelect("all")}
-              className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${
-                selectedCategory === "all"
-                  ? "text-custom-green bg-gray-50"
-                  : "text-gray-800"
-              }`}
+              className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === "all"
+                ? "text-custom-green bg-gray-50"
+                : "text-gray-800"
+                }`}
             >
               <FaTag />
               {t("View All")}
@@ -245,11 +243,10 @@ function BestSeller(props) {
               <li
                 key={cat._id}
                 onClick={() => handleSelect(cat._id)}
-                className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${
-                  selectedCategory === cat._id
-                    ? "text-custom-green bg-gray-50"
-                    : "text-gray-800"
-                }`}
+                className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === cat._id
+                  ? "text-custom-green bg-gray-50"
+                  : "text-gray-800"
+                  }`}
               >
                 <FaTag />
                 {cat.name}
@@ -263,14 +260,14 @@ function BestSeller(props) {
 
   return (
     <div className="flex flex-col relative">
-      <div className="md:hidden sticky top-0 z-40 bg-white px-2 py-2 shadow-sm">
+      {/* <div className="md:hidden sticky top-0 z-40 bg-white px-2 py-2 shadow-sm">
         <CategoryDropdown />
-      </div>
+      </div> */}
 
       <div className="hidden md:block">
         <CategoryDropdown />
       </div>
-      
+
       <div className="grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto w-full">
         {productList.length > 0 ? (
           productList.map((item, i) => (

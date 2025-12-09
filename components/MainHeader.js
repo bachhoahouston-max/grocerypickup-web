@@ -50,7 +50,7 @@ function MainHeader() {
       </svg>
     </div>
   );
-
+  const ratio = 1 / 1; // dynamic ratio
   return (
     <div className="group relative md:mt-7">
       <Carousel
@@ -65,18 +65,35 @@ function MainHeader() {
         customRightArrow={<CustomRightArrow />}
       >
         {carouselImg.map((img, idx) => (
-          <div
-            key={idx}
-            className="relative aspect-square w-full  flex items-center justify-center overflow-hidden 
-              md:h-[305px] lg:h-[320px] xl:h-[410px] rounded-[28px]"
-          >
-            <Image
-              src={img.image || "/fallback.jpg"}
-              alt={`Bachahoustan banner ${idx}`}
-              fill
-              priority={idx === 0}
-              className="w-full h-full object-cover"
-            />
+          // <div
+          //   key={idx}
+          //   className="relative aspect-square w-full  flex items-center justify-center overflow-hidden 
+          //     md:h-[305px] lg:h-[320px] xl:h-[410px] rounded-[28px]"
+          // >
+          //   <Image
+          //     src={img.image || "/fallback.jpg"}
+          //     alt={`Bachahoustan banner ${idx}`}
+          //     fill
+          //     priority={idx === 0}
+          //     className="w-full h-full object-cover"
+          //   />
+          // </div>
+          <div key={idx} className=" flex items-center justify-center overflow-hidden ">
+            <div
+
+              className=" flex items-center justify-center overflow-hidden rounded-[28px] w-4/5 md:w-full"
+              style={{
+                position: "relative",
+                aspectRatio: ratio,
+              }}
+            >
+              <Image
+                src={img.image || "/fallback.jpg"}
+                alt={`Bachahoustan banner ${idx}`}
+                fill
+                style={{ objectFit: "cover" }}
+              />
+            </div>
           </div>
         ))}
       </Carousel>

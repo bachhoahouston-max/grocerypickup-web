@@ -22,7 +22,7 @@ function MobileFooter() {
       path: "/",
     },
     {
-      label: t("My order"),
+      label: t("Orders"),
       icon: ListOrdered,
       path: "/Mybooking",
     },
@@ -49,29 +49,34 @@ function MobileFooter() {
         return (
           <div
             key={idx}
-            className={`flex flex-col justify-center items-center transition 
-              ${isActive ? "bg-white text-black rounded-full w-16 h-16 m-2.5 " : "m-2.5 p-3 text-white"}`}
-            onClick={() => {
-              router.push(item.path);
-            }}
+            className="flex justify-center items-center "
           >
-            <item.icon
-              className={`w-[20px] h-[20px] ${isActive ? "text-black" : "text-white"
-                }`}
-            />
+            <div
+              key={idx}
+              className={`flex flex-col justify-center items-center transition 
+              ${isActive ? "bg-white text-black rounded-full w-10 h-10 m-1 p-`" : "m-1 p-1 text-white w-10 h-10"}`}
+              onClick={() => {
+                router.push(item.path);
+              }}
+            >
+              <item.icon
+                className={`w-[20px] h-[20px] ${isActive ? "text-black" : "text-white"
+                  }`}
+              />
 
-            {item.label === t("Cart") && cartData.length > 0 && (
-              <div className="absolute bg-white text-custom-green rounded-full w-5 h-5 flex items-center justify-center text-[9px] top-6 right-36">
-                {cartlenth}
-              </div>
-            )}
+              {item.label === t("Cart") && cartData.length > 0 && (
+                <div className="absolute bg-white text-custom-green rounded-full w-5 h-5 flex items-center justify-center text-[9px] top-6 right-36">
+                  {cartlenth}
+                </div>
+              )}
 
-            <p
+              {/* <p
               className={`font-normal text-xs mt-1 ${isActive ? "text-black" : "text-white"
                 }`}
             >
               {item.label}
-            </p>
+            </p> */}
+            </div>
           </div>
         );
       })}
