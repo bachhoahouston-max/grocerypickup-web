@@ -42,7 +42,7 @@ function ShopByCategory() {
   return (
     <div className="bg-white px-4 my-4 mb-0 md:mb-10">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 ">
+        <h1 className="text-xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 hidden md:flex">
           {t("Shop By Category")}
         </h1>
 
@@ -131,7 +131,7 @@ function ShopByCategory() {
               <div
                 className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px]"
                 key={index}
-                onClick={() => router.push("")}
+                onClick={() => router.push(`/categories/${category?.slug}`)}
               >
                 <div className="relative mb-3">
                   <div className="relative w-16 h-16 rounded-full shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">

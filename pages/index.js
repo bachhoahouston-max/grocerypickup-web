@@ -72,7 +72,7 @@ export default function Home(props) {
         <div className="bg-white w-full ">
           <section className="bg-white w-full relative flex flex-col justify-center items-center">
             <div className="container mx-auto px-2 md:px-0">
-              <h1 className=" text-[20px] md:text-2xl font-bold mb-10 mt-10 text-black">
+              <h1 className=" text-[20px] md:text-2xl font-bold md:mb-10 mb-5 md:mt-10 text-black">
                 {t("All Products")}
               </h1>
               <Suspense fallback={<div>Loading.....</div>}>
