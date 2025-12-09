@@ -46,7 +46,7 @@ function ShopByCategory() {
           {t("Shop By Category")}
         </h1>
 
-        <div className="hidden md:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8">
+        <div className="hidden md:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7  gap-6 md:gap-8">
           <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
             onClick={() =>

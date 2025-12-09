@@ -52,7 +52,7 @@ function MainHeader() {
   );
 
   return (
-    <div className="group relative mt-7">
+    <div className="group relative md:mt-7">
       <Carousel
         responsive={responsive}
         infinite

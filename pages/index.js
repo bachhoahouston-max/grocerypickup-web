@@ -1,4 +1,3 @@
-
 import { Suspense, useEffect, useState, useRef } from "react";
 import MainHeader from "@/components/MainHeader";
 import { Api } from "@/services/service";
@@ -17,7 +16,7 @@ import { Loader2 } from "lucide-react";
 
 export default function Home(props) {
   const { t } = useTranslation();
-  const [user] = useContext(userContext)
+  const [user] = useContext(userContext);
   const router = useRouter();
   const [setFavorite] = useContext(favoriteProductContext);
 
@@ -38,7 +37,6 @@ export default function Home(props) {
       localStorage.setItem("Favorite", JSON.stringify(favs));
     } catch (err) {
       props.loader(false);
-
     }
   };
 
@@ -50,21 +48,22 @@ export default function Home(props) {
           name="description"
           content="Bachhoahouston offers top-quality groceries, beauty & more with fast home delivery, curbside pickup & shipping. Shop daily essentials now!"
         />
-        <link
-          rel="canonical"
-          href="https://www.bachhoahouston.com/"
-        />
+        <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
       <div className="mx-auto md:max-w-7xl ">
+        <div className="flex md:hidden mt-6">
+          <Suspense fallback={<div>Loading.....</div>}>
+            <ShopByCategory loader={props.loader} toaster={props.toaster} />
+          </Suspense>
+        </div>
         <Suspense fallback={<div>Loading.....</div>}>
           <MainHeader />
         </Suspense>
-
-
-        <Suspense fallback={<div>Loading.....</div>}>
-          <ShopByCategory loader={props.loader} toaster={props.toaster} />
-        </Suspense>
-
+        <div className="md:flex hidden">
+          <Suspense fallback={<div>Loading.....</div>}>
+            <ShopByCategory loader={props.loader} toaster={props.toaster} />
+          </Suspense>
+        </div>
         <Suspense fallback={<div>Loading.....</div>}>
           <SellProduct loader={props.loader} toaster={props.toaster} />
         </Suspense>
@@ -83,10 +82,8 @@ export default function Home(props) {
         </div>
       </div>
     </>
-
   );
 }
-
 
 function BestSeller(props) {
   const router = useRouter();
@@ -100,7 +97,6 @@ function BestSeller(props) {
   const [hasMore, setHasMore] = useState(true); // ✅ New state
   const observerRef = useRef(null);
 
-
   useEffect(() => {
     async function fetchData() {
       const cat = await Api("get", "getCategory", null, router);
@@ -109,7 +105,6 @@ function BestSeller(props) {
     }
     fetchData();
   }, []);
-
 
   const fetchProducts = async (pageNum, reset = false) => {
     try {
@@ -123,7 +118,7 @@ function BestSeller(props) {
 
       if (res?.data) {
         if (res.data.length === 0 || res.data.length < 16) {
-          setHasMore(false); 
+          setHasMore(false);
         }
 
         setProductList((prev) => (reset ? res.data : [...prev, ...res.data]));
@@ -135,8 +130,11 @@ function BestSeller(props) {
     }
   };
 
-  
-  const fetchProductsByCategory = async (categoryId, pageNum = 1, limit = 16) => {
+  const fetchProductsByCategory = async (
+    categoryId,
+    pageNum = 1,
+    limit = 16
+  ) => {
     try {
       setLoadingMore(true);
       const res = await Api(
@@ -151,7 +149,9 @@ function BestSeller(props) {
           setHasMore(false);
         }
 
-        setProductList((prev) => (pageNum === 1 ? res.data : [...prev, ...res.data]));
+        setProductList((prev) =>
+          pageNum === 1 ? res.data : [...prev, ...res.data]
+        );
       }
     } catch (err) {
       console.error(err);
@@ -161,7 +161,6 @@ function BestSeller(props) {
     }
   };
 
-  
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !loadingMore && hasMore) {
@@ -173,9 +172,8 @@ function BestSeller(props) {
     if (loader) observer.observe(loader);
 
     return () => observer.disconnect();
-  }, [hasMore, loadingMore]); 
+  }, [hasMore, loadingMore]);
 
-  
   useEffect(() => {
     if (page > 1) {
       if (selectedCategory === "all") {
@@ -185,7 +183,6 @@ function BestSeller(props) {
       }
     }
   }, [page]);
-
 
   const handleCategoryClickAll = () => {
     setSelectedCategory("all");
@@ -201,13 +198,13 @@ function BestSeller(props) {
     fetchProductsByCategory(id, 1);
   };
 
- 
   const CategoryDropdown = () => {
     const [open, setOpen] = useState(false);
     const selectedName =
       selectedCategory === "all"
         ? t("View All")
-        : category?.find((cat) => cat._id === selectedCategory)?.name || t("View All");
+        : category?.find((cat) => cat._id === selectedCategory)?.name ||
+          t("View All");
 
     const handleSelect = (value) => {
       setOpen(false);
@@ -225,8 +222,9 @@ function BestSeller(props) {
             {t("Filter")} : {selectedName}
           </span>
           <FaChevronDown
-            className={`text-custom-green transition-transform duration-300 ${open ? "rotate-180" : ""
-              }`}
+            className={`text-custom-green transition-transform duration-300 ${
+              open ? "rotate-180" : ""
+            }`}
           />
         </button>
 
@@ -234,10 +232,11 @@ function BestSeller(props) {
           <ul className="absolute left-0 right-0 mt-2 bg-white rounded-lg border border-gray-200 shadow-xl max-h-64 overflow-y-auto z-30">
             <li
               onClick={() => handleSelect("all")}
-              className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === "all"
+              className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${
+                selectedCategory === "all"
                   ? "text-custom-green bg-gray-50"
                   : "text-gray-800"
-                }`}
+              }`}
             >
               <FaTag />
               {t("View All")}
@@ -246,10 +245,11 @@ function BestSeller(props) {
               <li
                 key={cat._id}
                 onClick={() => handleSelect(cat._id)}
-                className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === cat._id
+                className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${
+                  selectedCategory === cat._id
                     ? "text-custom-green bg-gray-50"
                     : "text-gray-800"
-                  }`}
+                }`}
               >
                 <FaTag />
                 {cat.name}
@@ -261,11 +261,16 @@ function BestSeller(props) {
     );
   };
 
- 
   return (
-    <div className="flex flex-col">
-      <CategoryDropdown />
+    <div className="flex flex-col relative">
+      <div className="md:hidden sticky top-0 z-40 bg-white px-2 py-2 shadow-sm">
+        <CategoryDropdown />
+      </div>
 
+      <div className="hidden md:block">
+        <CategoryDropdown />
+      </div>
+      
       <div className="grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto w-full">
         {productList.length > 0 ? (
           productList.map((item, i) => (
@@ -285,7 +290,10 @@ function BestSeller(props) {
         )}
       </div>
 
-      <div id="infinite-loader" className="text-center py-6 flex justify-center">
+      <div
+        id="infinite-loader"
+        className="text-center py-6 flex justify-center"
+      >
         {loadingMore && (
           <Loader2 className="text-custom-green animate-spin w-8 h-8" />
         )}
@@ -293,4 +301,3 @@ function BestSeller(props) {
     </div>
   );
 }
-
