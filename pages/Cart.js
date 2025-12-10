@@ -607,18 +607,30 @@ function Cart(props) {
     localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
     console.log(newData);
+    try {
+      const createRes = await Api("post", "New-createProductRquest", newData, router);
+      if (createRes.status) {
+        const data = createRes.data.orders || [];
+        console.log(data)
+        setOrderID(data.orderId);
+        createCheckoutSession(data.orderId);
+      } else {
+        props.loader && props.loader(false);
+        props.toaster({ type: "error", message: "Order save failed" });
+      }
 
-    const createRes = await Api("post", "New-createProductRquest", newData, router);
-
-    if (createRes.status) {
-      const data = createRes.data.orders || [];
-      console.log(data)
-
-      setOrderID(data.orderId);
-      createCheckoutSession(data.orderId);
-    } else {
-      props.toaster({ type: "error", message: "Order save failed" });
+    } catch (err) {
+      props.loader && props.loader(false);
+      props.toaster({ type: "error", message: err?.message });
     }
+
+
+    // if (createRes.status) {
+
+    // } else {
+    //   props.loader && props.loader(false);
+    //   props.toaster({ type: "error", message: "Order save failed" });
+    // }
   };
 
   const createCheckoutSession = async (ID) => {
