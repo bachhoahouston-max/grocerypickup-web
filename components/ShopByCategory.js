@@ -98,14 +98,18 @@ function ShopByCategory() {
               router={router}
             />
           ))}
-          <div className="w-28 h-28"></div>
+
         </div>
 
-        <div className="md:hidden overflow-x-auto scrollbar-hide px-1">
-          <div className="flex gap-6">
+
+
+        {/* Mobile Category Row */}
+        <div className="md:hidden overflow-x-auto scrollbar-hide px-1 w-full">
+          <div className="flex gap-6 w-full min-w-0">
+
             {/* New Arrival */}
             <div
-              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px]"
+              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px] flex-shrink-0"
               onClick={() =>
                 router.push("/categories/all?category=all&sort_by=new")
               }
@@ -120,18 +124,16 @@ function ShopByCategory() {
                   />
                 </div>
               </div>
-
-              {/* NAME FIX (wrap + max width) */}
               <p className="text-black text-[13px] font-semibold text-center max-w-[70px] break-words">
                 {t("New Arrivals")}
               </p>
             </div>
 
-            {/* Loop Categories */}
+            {/* Category Items */}
             {categorys.map((category, index) => (
               <div
-                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px]"
                 key={index}
+                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px] flex-shrink-0"
                 onClick={() => router.push(`/categories/${category?.slug}`)}
               >
                 <div className="relative mb-3">
@@ -145,14 +147,15 @@ function ShopByCategory() {
                   </div>
                 </div>
 
-                {/* NAME FIX (wrap + max width) */}
                 <p className="text-black text-[13px] font-semibold text-center max-w-[70px] break-words">
                   {category?.name}
                 </p>
               </div>
             ))}
+
           </div>
         </div>
+
       </div>
     </div>
   );
