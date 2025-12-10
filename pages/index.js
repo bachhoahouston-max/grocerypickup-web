@@ -107,6 +107,7 @@ function BestSeller(props) {
   }, []);
 
   const fetchProducts = async (pageNum, reset = false) => {
+
     try {
       setLoadingMore(true);
       const res = await Api(
@@ -120,7 +121,7 @@ function BestSeller(props) {
         if (res.data.length === 0 || res.data.length < 16) {
           setHasMore(false);
         }
-
+        setPage(pageNum);
         setProductList((prev) => (reset ? res.data : [...prev, ...res.data]));
       }
     } catch (err) {

@@ -4,32 +4,53 @@ import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 
-const CategoryCard = ({ item, url, router }) => (
-  <div
-    className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
-    onClick={() => router.push(url)}
-  >
-    <div className="relative mb-3">
-      <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-full group-hover:shadow-xl group-hover:scale-105 shadow-md transition-all duration-300">
-        <Image
-          src={item?.image}
-          alt={item?.name || "Category"}
-          fill
-          className="object-cover rounded-full"
-        // sizes="(max-width: 768px) 100px, 120px"
-        />
+
+const CategoryCard = ({ item, url, router }) => {
+
+
+  return (
+    <div
+      className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
+      onClick={() => router.push(url)}
+    >
+      <div className="relative mb-3">
+        <div className="relative w-28 h-28 md:w-40 md:h-40 rounded-full group-hover:shadow-xl group-hover:scale-105 shadow-md transition-all duration-300">
+          <Image
+            src={item?.image}
+            alt={item?.name || "Category"}
+            fill
+            className="object-cover rounded-full"
+          // sizes="(max-width: 768px) 100px, 120px"
+          />
+        </div>
       </div>
+      <p className="text-black text-[14px] md:text-[16px] font-semibold text-center">
+        {item?.name}
+      </p>
     </div>
-    <p className="text-black text-[14px] md:text-[16px] font-semibold text-center">
-      {item?.name}
-    </p>
-  </div>
-);
+  )
+};
 
 function ShopByCategory() {
   const [categorys, setCategory] = useState([]);
   const router = useRouter();
   const { t } = useTranslation();
+
+  const [width, setWidth] = useState(360);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     console.log("window", window);
+  //     setWidth(window.innerWidth);
+  //   };
+  //   // if (typeof window !== 'undefined') {
+
+  //   window.addEventListener('resize', handleResize);
+  //   // }
+
+
+  //   return () => window.removeEventListener('resize', handleResize);
+  // }
+  //   , []);
 
   useEffect(() => {
     async function fetchData() {
@@ -37,16 +58,26 @@ function ShopByCategory() {
       setCategory(cat.data);
     }
     fetchData();
+
+    const handleResize = () => {
+      console.log("window", window);
+      setWidth(window.innerWidth);
+    };
+    if (typeof window !== 'undefined') {
+      handleResize();
+    }
+
+
   }, [router]);
 
   return (
     <div className="bg-white px-4 my-4 mb-0 md:mb-10">
-      <div className="md:max-w-7xl mx-auto max-w-96">
+      <div className="hidden md:block md:max-w-7xl mx-auto" >
         <h1 className="text-xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 hidden md:flex">
           {t("Shop By Category")}
         </h1>
 
-        <div className="hidden md:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7  gap-6 md:gap-8 ">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7  gap-6 md:gap-8 ">
           <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
             onClick={() =>
@@ -101,10 +132,11 @@ function ShopByCategory() {
 
         </div>
 
+      </div>
 
-
-        {/* Mobile Category Row */}
-        <div className="md:hidden overflow-x-auto scrollbar-hide px-1 w-full">
+      {/* Mobile Category Row */}
+      <div className="md:hidden" style={{ maxWidth: width - 32 }}>
+        <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
           <div className="flex gap-6 w-full min-w-0">
 
             {/* New Arrival */}
@@ -155,6 +187,11 @@ function ShopByCategory() {
 
           </div>
         </div>
+
+
+
+
+
 
       </div>
     </div>
