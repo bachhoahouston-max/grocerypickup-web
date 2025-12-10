@@ -9,7 +9,7 @@ import {
   favoriteProductContext,
   languageContext
 } from "../_app";
-import { Api } from "@/services/service";
+import { Api, ConstantsUrl } from "@/services/service";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { produce } from "immer";
@@ -30,12 +30,12 @@ function ProductDetails(props) {
   const router = useRouter();
   const { lang } = useContext(languageContext)
   const [user, setUser] = useContext(userContext);
-  const [productsId, setProductsId] = useState({});
-  const [selectedColor, setSelectedColor] = useState("");
-  const [selectedImageList, setSelectedImageList] = useState([]);
+  const [productsId, setProductsId] = useState(props?.product);
+  const [selectedColor, setSelectedColor] = useState(props?.product?.varients[0]);
+  const [selectedImageList, setSelectedImageList] = useState(props?.product?.varients[0].image);
   const [selectedImage, setSelectedImage] = useState("");
-  const [productReviews, setProductReviews] = useState([]);
-  const [productList, SetProductList] = useState([]);
+  const [productReviews, setProductReviews] = useState(props?.product?.reviews);
+  const [productList, SetProductList] = useState(props?.relatedProducts);
   const [cartData, setCartData] = useContext(cartContext);
   const [priceSlot, setPriceSlote] = useState([]);
   const [priceIndex, setPriceIndex] = useState(0);
@@ -44,12 +44,13 @@ function ProductDetails(props) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInCart, setIsInCart] = React.useState(false);
   const [availableQty, setAvailableQty] = React.useState(0);
+  console.log(props)
 
-  useEffect(() => {
-    if (router?.query?.id) {
-      getProductById();
-    }
-  }, [router?.query?.id]);
+  // useEffect(() => {
+  //   if (router?.query?.id) {
+  //     getProductById();
+  //   }
+  // }, [router?.query?.id]);
 
   const responsive = {
     superLargeDesktop: {
@@ -208,6 +209,11 @@ function ProductDetails(props) {
   };
 
   const getProductById = async () => {
+    // const productRes = await fetch(`${ConstantsUrl}getProductByslug/${router?.query?.id}`);
+    // const product = await productRes.json();
+
+    // const data = await Api("get", `getProductByslug/${router?.query?.id}`, "", '');
+    // console.log("Product data:", data);
     let url = `getProductByslug/${router?.query?.id}`;
     if (user?.token) {
       url = `getProductByslug/${router?.query?.id}?user=${user?._id}`;
@@ -237,6 +243,7 @@ function ProductDetails(props) {
         props.toaster({ type: "error", message: err?.message });
       }
     );
+
   };
 
   const getproductByCategory = async (category_id, product_id) => {
@@ -549,7 +556,7 @@ function ProductDetails(props) {
                         {t("Out of Stock")}
                       </button>
                     ) : (
-                       <button
+                      <button
                         className="bg-custom-green md:mt-20 px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md  mt-4 cursor-pointer"
                         onClick={handleAddToCart}
                       >
@@ -661,3 +668,39 @@ function ProductDetails(props) {
 }
 
 export default ProductDetails;
+
+
+
+export async function getServerSideProps(context) {
+  const { id } = context.params;
+
+  const baseUrl = ConstantsUrl; // example: https://api.bachhoahouston.com
+
+  try {
+    // const productRes = await fetch(`${baseUrl}getProductByslug/${id}`);
+
+    const productRes = await Api("get", `getProductByslug/${id}`, "", '');
+    const product = productRes.data;
+
+    const relatedRes = await fetch(
+      `${baseUrl}getProductBycategoryId?category=${product.category.slug}&product_id=${product._id}`
+    );
+    const relatedProducts = await relatedRes.json();
+    const sameItem = relatedProducts?.data?.filter((f) => f._id !== product._id);
+
+    return {
+      props: {
+        product,
+        relatedProducts: sameItem,
+      },
+    };
+  } catch (err) {
+    return {
+      props: {
+        product: null,
+        relatedProducts: [],
+      },
+    };
+  }
+}
+
