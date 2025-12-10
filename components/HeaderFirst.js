@@ -33,7 +33,7 @@ const HeaderFirst = (props) => {
   }, []);
 
   const CategoryData = () => {
-    props.loader(true);
+    // props.loader(true);
 
     Api("get", "getCategory", null).then(
       (res) => {
@@ -136,7 +136,7 @@ const HeaderFirst = (props) => {
                     className=" px-4 py-1.5 text-white text-[16px] cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
-                      setDropdownOpen(false); 
+                      setDropdownOpen(false);
                       handleNavigation("/categories/all", "allCategories");
                     }}
                   >

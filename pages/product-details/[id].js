@@ -37,9 +37,9 @@ function ProductDetails(props) {
   const [productReviews, setProductReviews] = useState(props?.product?.reviews);
   const [productList, SetProductList] = useState(props?.relatedProducts);
   const [cartData, setCartData] = useContext(cartContext);
-  const [priceSlot, setPriceSlote] = useState([]);
+  const [priceSlot, setPriceSlote] = useState(props?.product?.price_slot);
   const [priceIndex, setPriceIndex] = useState(0);
-  const [selectedPrice, setSelectedPrice] = useState({});
+  const [selectedPrice, setSelectedPrice] = useState(props?.product?.price_slot[0]);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInCart, setIsInCart] = React.useState(false);
