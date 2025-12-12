@@ -42,6 +42,7 @@ function Cart(props) {
   const [currentShipmentCost, setCurrentShipmentCost] = useState(0);
   const [orderId, setOrderID] = useState("");
   const [successPopup, setSuccessPopup] = useState(false);
+  const [shipcCost, setShipCost] = useState({})
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -168,6 +169,7 @@ function Cart(props) {
         const costs = res.shippingCosts[0];
         setCurrentLocalCost(costs.ShippingCostforLocal || 0);
         setCurrentShipmentCost(costs.ShipmentCostForShipment || 0);
+        setShipCost(costs)
       }
     } catch (err) {
       props.loader(false);
@@ -330,9 +332,9 @@ function Cart(props) {
     let delivery = 0;
 
     if (pickupOption === "localDelivery") {
-      delivery = sumWithInitial <= 35 ? currentLocalCost : 0;
+      delivery = sumWithInitial <= shipcCost?.minShippingCostforLocal ? currentLocalCost : 0;
     } else if (pickupOption === "ShipmentDelivery") {
-      delivery = sumWithInitial <= 200 ? currentShipmentCost : 0;
+      delivery = sumWithInitial <= shipcCost?.minShipmentCostForShipment ? currentShipmentCost : 0;
     } else {
       delivery = 0;
     }
@@ -494,7 +496,7 @@ function Cart(props) {
         image: element.selectedColor?.image,
         BarCode: element.BarCode,
         total: element.total,
-        price: element.total,
+        price: element.price,
         qty: element.qty,
         seller_id: element.userid,
         isShipmentAvailable: element.isShipmentAvailable,
@@ -608,7 +610,7 @@ function Cart(props) {
     props.loader && props.loader(true);
     console.log(newData);
     try {
-      const createRes = await Api("post", "New-createProductRquest", newData, router);
+      const createRes = await Api("post", "createProductRquest", newData, router);
       if (createRes.status) {
         const data = createRes.data.orders || [];
         console.log(data)
@@ -650,7 +652,7 @@ function Cart(props) {
     }));
 
     const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
-    const deliveryCharge = parseFloat(pickupOption === "localDelivery" && CartTotal < 35 ? currentLocalCost : pickupOption === "ShipmentDelivery" && CartTotal < 200 ? currentShipmentCost : 0 || 0);
+    const deliveryCharge = parseFloat(pickupOption === "localDelivery" && CartTotal < shipcCost?.minShippingCostforLocal ? currentLocalCost : pickupOption === "ShipmentDelivery" && CartTotal < shipcCost?.minShipmentCostForShipment ? currentShipmentCost : 0 || 0);
 
     const metadata = {
       userId: user?._id,
@@ -867,9 +869,9 @@ function Cart(props) {
                       return (
                         <label
                           key={opt.id}
-                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg border ${selected
-                            ? "border-green-400 shadow-md"
-                            : "border-gray-200"
+                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg  ${selected
+                            ? "border-green-400 shadow-md border-3"
+                            : "border-gray-200 border"
                             } cursor-pointer bg-white`}
                         >
                           <div className="flex items-start justify-between w-full">
@@ -1164,7 +1166,7 @@ function Cart(props) {
                           pickupOption === "driveUp" ? (
                           <span className="text-base">{t("$0.00")}</span>
                         ) : pickupOption === "localDelivery" ? (
-                          CartTotal < 35 ? (
+                          CartTotal < shipcCost?.minShippingCostforLocal ? (
                             <span className="text-base font-medium">
                               {constant.currency} {currentLocalCost}
                             </span>
@@ -1172,7 +1174,7 @@ function Cart(props) {
                             <span className="text-base">{t("$0.00")}</span>
                           )
                         ) : pickupOption === "ShipmentDelivery" ? (
-                          CartTotal < 200 ? (
+                          CartTotal < shipcCost?.minShipmentCostForShipment ? (
                             <span className="text-base font-medium">
                               {constant.currency} {currentShipmentCost}
                             </span>
