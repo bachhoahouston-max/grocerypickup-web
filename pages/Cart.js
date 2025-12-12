@@ -604,6 +604,7 @@ function Cart(props) {
       isShipmentDelivery,
       dateOfDelivery: date || localAddress.dateOfDelivery,
       Deliverytip: deliveryTip.toString(),
+      order_platform: 'web'
     };
 
     localStorage.setItem("checkoutData", JSON.stringify(newData));
