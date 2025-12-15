@@ -42,6 +42,8 @@ function Cart(props) {
   const [currentShipmentCost, setCurrentShipmentCost] = useState(0);
   const [orderId, setOrderID] = useState("");
   const [successPopup, setSuccessPopup] = useState(false);
+  const [minimumLocalCost, setMinimumLocalCost] = useState("");
+  const [minimumShippingCost, setMinimumShippingCost] = useState("");
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -168,6 +170,8 @@ function Cart(props) {
         const costs = res.shippingCosts[0];
         setCurrentLocalCost(costs.ShippingCostforLocal || 0);
         setCurrentShipmentCost(costs.ShipmentCostForShipment || 0);
+        setMinimumLocalCost(costs?.minShippingCostforLocal || 0);
+        setMinimumShippingCost(costs?.minShipmentCostForShipment || 0);
       }
     } catch (err) {
       props.loader(false);
@@ -330,9 +334,10 @@ function Cart(props) {
     let delivery = 0;
 
     if (pickupOption === "localDelivery") {
-      delivery = sumWithInitial <= 35 ? currentLocalCost : 0;
+      delivery = sumWithInitial <= minimumLocalCost ? currentLocalCost : 0;
     } else if (pickupOption === "ShipmentDelivery") {
-      delivery = sumWithInitial <= 200 ? currentShipmentCost : 0;
+      delivery =
+        sumWithInitial <= minimumShippingCost ? currentShipmentCost : 0;
     } else {
       delivery = 0;
     }
@@ -608,22 +613,25 @@ function Cart(props) {
     props.loader && props.loader(true);
     console.log(newData);
     try {
-      const createRes = await Api("post", "New-createProductRquest", newData, router);
+      const createRes = await Api(
+        "post",
+        "New-createProductRquest",
+        newData,
+        router
+      );
       if (createRes.status) {
         const data = createRes.data.orders || [];
-        console.log(data)
+        console.log(data);
         setOrderID(data.orderId);
         createCheckoutSession(data.orderId);
       } else {
         props.loader && props.loader(false);
         props.toaster({ type: "error", message: "Order save failed" });
       }
-
     } catch (err) {
       props.loader && props.loader(false);
       props.toaster({ type: "error", message: err?.message });
     }
-
 
     // if (createRes.status) {
 
@@ -650,7 +658,13 @@ function Cart(props) {
     }));
 
     const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
-    const deliveryCharge = parseFloat(pickupOption === "localDelivery" && CartTotal < 35 ? currentLocalCost : pickupOption === "ShipmentDelivery" && CartTotal < 200 ? currentShipmentCost : 0 || 0);
+    const deliveryCharge = parseFloat(
+      pickupOption === "localDelivery" && CartTotal < minimumLocalCost
+        ? currentLocalCost
+        : pickupOption === "ShipmentDelivery" && CartTotal < minimumShippingCost
+        ? currentShipmentCost
+        : 0 || 0
+    );
 
     const metadata = {
       userId: user?._id,
@@ -797,6 +811,10 @@ function Cart(props) {
     paymentChecked,
   ]);
 
+  const remainingLocal = Number(minimumLocalCost) - Number(CartTotal);
+
+  const remainingShipping = Number(minimumShippingCost) - Number(CartTotal);
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 md:mt-5 mt-8 md:mb-0 mb-10">
       <div
@@ -867,10 +885,11 @@ function Cart(props) {
                       return (
                         <label
                           key={opt.id}
-                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg border ${selected
-                            ? "border-green-400 shadow-md"
-                            : "border-gray-200"
-                            } cursor-pointer bg-white`}
+                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg border ${
+                            selected
+                              ? "border-green-400 shadow-md"
+                              : "border-gray-200"
+                          } cursor-pointer bg-white`}
                         >
                           <div className="flex items-start justify-between w-full">
                             <div className="flex items-start gap-2">
@@ -895,14 +914,16 @@ function Cart(props) {
                             </div>
 
                             <div
-                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
-                                ? "border-green-600"
-                                : "border-gray-300"
-                                }`}
+                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                selected
+                                  ? "border-green-600"
+                                  : "border-gray-300"
+                              }`}
                             >
                               <div
-                                className={`w-2 h-2 rounded-full ${selected ? "bg-green-600" : "bg-white"
-                                  }`}
+                                className={`w-2 h-2 rounded-full ${
+                                  selected ? "bg-green-600" : "bg-white"
+                                }`}
                               />
                             </div>
                           </div>
@@ -973,8 +994,8 @@ function Cart(props) {
                                       value={
                                         localAddress.dateOfDelivery
                                           ? formatDate(
-                                            localAddress.dateOfDelivery
-                                          )
+                                              localAddress.dateOfDelivery
+                                            )
                                           : t("Select date")
                                       }
                                       readOnly
@@ -1106,6 +1127,32 @@ function Cart(props) {
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
+                  {pickupOption === "localDelivery" &&
+                    (remainingLocal > 0 ? (
+                      <h2 className="text-md text-gray-800 mb-2">
+                        {t("Add")} {constant.currency}
+                        {remainingLocal.toFixed(2)}{" "}
+                        {t("more to get Free Local Delivery")}
+                      </h2>
+                    ) : (
+                      <h2 className="text-md text-green-600 mb-2 font-semibold">
+                        🎉 {t("Free Local Delivery available")}
+                      </h2>
+                    ))}
+
+                  {pickupOption === "ShipmentDelivery" &&
+                    (remainingShipping > 0 ? (
+                      <h2 className="text-md text-gray-800 mb-2">
+                        {t("Add")} {constant.currency}
+                        {remainingShipping.toFixed(0)}{" "}
+                        {t("more to get Free Shipping Delivery")}
+                      </h2>
+                    ) : (
+                      <h2 className="text-md text-green-600 mb-2 font-semibold">
+                         {t("Free Shipping available")}
+                      </h2>
+                    ))}
+
                   <h4 className="text-xl font-bold text-gray-800 mb-4">
                     {t("Bill Summary")}
                   </h4>
@@ -1154,17 +1201,15 @@ function Cart(props) {
                       </div>
                     )}
 
-                    {/* Delivery Charges */}
                     <div className="flex text-black justify-between items-center">
                       <p className="text-base">{t("Delivery Charges")}</p>
 
                       <div>
-                        {/* Pickup Free */}
                         {pickupOption === "orderPickup" ||
-                          pickupOption === "driveUp" ? (
+                        pickupOption === "driveUp" ? (
                           <span className="text-base">{t("$0.00")}</span>
                         ) : pickupOption === "localDelivery" ? (
-                          CartTotal < 35 ? (
+                          CartTotal < minimumLocalCost ? (
                             <span className="text-base font-medium">
                               {constant.currency} {currentLocalCost}
                             </span>
@@ -1172,7 +1217,7 @@ function Cart(props) {
                             <span className="text-base">{t("$0.00")}</span>
                           )
                         ) : pickupOption === "ShipmentDelivery" ? (
-                          CartTotal < 200 ? (
+                          CartTotal < minimumShippingCost ? (
                             <span className="text-base font-medium">
                               {constant.currency} {currentShipmentCost}
                             </span>
