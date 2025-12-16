@@ -1113,7 +1113,7 @@ function Cart(props) {
                 <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
                   {pickupOption === "localDelivery" &&
                     (remainingLocal > 0 ? (
-                      <h2 className="text-md text-gray-800 mb-2">
+                      <h2 className="text-md text-orange-500 mb-2 font-bold">
                         {t("Add")} {constant.currency}
                         {remainingLocal.toFixed(2)}{" "}
                         {t("more to get Free Local Delivery")}
@@ -1126,7 +1126,7 @@ function Cart(props) {
 
                   {pickupOption === "ShipmentDelivery" &&
                     (remainingShipping > 0 ? (
-                      <h2 className="text-md text-gray-800 mb-2">
+                      <h2 className="text-md text-orange-500 mb-2 font-bold">
                         {t("Add")} {constant.currency}
                         {remainingShipping.toFixed(0)}{" "}
                         {t("more to get Free Shipping Delivery")}
