@@ -614,19 +614,17 @@ function Cart(props) {
       const createRes = await Api("post", "createProductRquest", newData, router);
       if (createRes.status) {
         const data = createRes.data.orders || [];
-        console.log(data)
+        console.log(data);
         setOrderID(data.orderId);
         createCheckoutSession(data.orderId);
       } else {
         props.loader && props.loader(false);
         props.toaster({ type: "error", message: "Order save failed" });
       }
-
     } catch (err) {
       props.loader && props.loader(false);
       props.toaster({ type: "error", message: err?.message });
     }
-
 
     // if (createRes.status) {
 
@@ -799,6 +797,10 @@ function Cart(props) {
     router.query.session_id,
     paymentChecked,
   ]);
+
+  const remainingLocal = Number(shipcCost?.minShippingCostforLocal) - Number(CartTotal);
+
+  const remainingShipping = Number(shipcCost?.minShipmentCostForShipment) - Number(CartTotal);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 md:mt-5 mt-8 md:mb-0 mb-10">
@@ -1109,6 +1111,32 @@ function Cart(props) {
                 </div>
 
                 <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
+                  {pickupOption === "localDelivery" &&
+                    (remainingLocal > 0 ? (
+                      <h2 className="text-md text-gray-800 mb-2">
+                        {t("Add")} {constant.currency}
+                        {remainingLocal.toFixed(2)}{" "}
+                        {t("more to get Free Local Delivery")}
+                      </h2>
+                    ) : (
+                      <h2 className="text-md text-green-600 mb-2 font-semibold">
+                        🎉 {t("Free Local Delivery available")}
+                      </h2>
+                    ))}
+
+                  {pickupOption === "ShipmentDelivery" &&
+                    (remainingShipping > 0 ? (
+                      <h2 className="text-md text-gray-800 mb-2">
+                        {t("Add")} {constant.currency}
+                        {remainingShipping.toFixed(0)}{" "}
+                        {t("more to get Free Shipping Delivery")}
+                      </h2>
+                    ) : (
+                      <h2 className="text-md text-green-600 mb-2 font-semibold">
+                        {t("Free Shipping available")}
+                      </h2>
+                    ))}
+
                   <h4 className="text-xl font-bold text-gray-800 mb-4">
                     {t("Bill Summary")}
                   </h4>
@@ -1157,12 +1185,10 @@ function Cart(props) {
                       </div>
                     )}
 
-                    {/* Delivery Charges */}
                     <div className="flex text-black justify-between items-center">
                       <p className="text-base">{t("Delivery Charges")}</p>
 
                       <div>
-                        {/* Pickup Free */}
                         {pickupOption === "orderPickup" ||
                           pickupOption === "driveUp" ? (
                           <span className="text-base">{t("$0.00")}</span>
