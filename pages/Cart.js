@@ -42,7 +42,8 @@ function Cart(props) {
   const [currentShipmentCost, setCurrentShipmentCost] = useState(0);
   const [orderId, setOrderID] = useState("");
   const [successPopup, setSuccessPopup] = useState(false);
-  const [shipcCost, setShipCost] = useState({})
+  const [shipcCost, setShipCost] = useState({});
+  const [serviceFee, setServiceFee] = useState(0);
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -169,7 +170,8 @@ function Cart(props) {
         const costs = res.shippingCosts[0];
         setCurrentLocalCost(costs.ShippingCostforLocal || 0);
         setCurrentShipmentCost(costs.ShipmentCostForShipment || 0);
-        setShipCost(costs)
+
+        setShipCost(costs);
       }
     } catch (err) {
       props.loader(false);
@@ -330,23 +332,37 @@ function Cart(props) {
     );
 
     let delivery = 0;
-
+    let fee = 0;
     if (pickupOption === "localDelivery") {
-      delivery = sumWithInitial <= shipcCost?.minShippingCostforLocal ? currentLocalCost : 0;
+      delivery =
+        sumWithInitial <= shipcCost?.minShippingCostforLocal
+          ? currentLocalCost
+          : 0;
+      fee =
+        sumWithInitial <= shipcCost?.minServiesCost
+          ? shipcCost?.serviesCost
+          : 0;
+      console.log("ander", fee);
     } else if (pickupOption === "ShipmentDelivery") {
-      delivery = sumWithInitial <= shipcCost?.minShipmentCostForShipment ? currentShipmentCost : 0;
+      delivery =
+        sumWithInitial <= shipcCost?.minShipmentCostForShipment
+          ? currentShipmentCost
+          : 0;
     } else {
       delivery = 0;
     }
 
     setBaseCartTotal(sumWithInitial);
+    setServiceFee(fee.toFixed(2));
+    console.log("fee", fee);
+
     setDeliveryCharge(delivery.toFixed(2));
 
     const cartAfterDiscount = sumWithInitial - discount;
     let finalTotal;
 
     if (pickupOption === "localDelivery") {
-      finalTotal = cartAfterDiscount + delivery + Number(deliverytip);
+      finalTotal = cartAfterDiscount + delivery + Number(deliverytip) + fee;
     } else {
       finalTotal = cartAfterDiscount + delivery;
     }
@@ -588,7 +604,7 @@ function Cart(props) {
       }
     }
     const deliveryTip = parseFloat(deliverytip || 0);
-
+    const servicefee = parseFloat(serviceFee || 0);
     let newData = {
       productDetail: data,
       total: mainTotal,
@@ -604,14 +620,20 @@ function Cart(props) {
       isShipmentDelivery,
       dateOfDelivery: date || localAddress.dateOfDelivery,
       Deliverytip: deliveryTip.toString(),
-      order_platform: 'web'
+      serviceFee: servicefee.toString(),
+      order_platform: "web",
     };
 
     localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
     console.log(newData);
     try {
-      const createRes = await Api("post", "createProductRquest", newData, router);
+      const createRes = await Api(
+        "post",
+        "createProductRquest",
+        newData,
+        router
+      );
       if (createRes.status) {
         const data = createRes.data.orders || [];
         console.log(data);
@@ -649,14 +671,24 @@ function Cart(props) {
         },
       },
     }));
-
+   
     const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
-    const deliveryCharge = parseFloat(pickupOption === "localDelivery" && CartTotal < shipcCost?.minShippingCostforLocal ? currentLocalCost : pickupOption === "ShipmentDelivery" && CartTotal < shipcCost?.minShipmentCostForShipment ? currentShipmentCost : 0 || 0);
+    const servicefee = parseFloat(serviceFee || 0);
+    const deliveryCharge = parseFloat(
+      pickupOption === "localDelivery" &&
+        CartTotal < shipcCost?.minShippingCostforLocal
+        ? currentLocalCost
+        : pickupOption === "ShipmentDelivery" &&
+          CartTotal < shipcCost?.minShipmentCostForShipment
+        ? currentShipmentCost
+        : 0 || 0
+    );
 
     const metadata = {
       userId: user?._id,
       deliveryTip: deliveryTip.toString(),
       deliveryCharge: deliveryCharge.toString(), // still passing to backend
+      serviceFee: servicefee.toString(),
       hasDiscount: "true",
       discountAmount: checkoutData?.discount?.toString() || "0",
       discountCode: checkoutData?.discountCode || "",
@@ -798,9 +830,11 @@ function Cart(props) {
     paymentChecked,
   ]);
 
-  const remainingLocal = Number(shipcCost?.minShippingCostforLocal) - Number(CartTotal);
+  const remainingLocal =
+    Number(shipcCost?.minShippingCostforLocal) - Number(CartTotal);
 
-  const remainingShipping = Number(shipcCost?.minShipmentCostForShipment) - Number(CartTotal);
+  const remainingShipping =
+    Number(shipcCost?.minShipmentCostForShipment) - Number(CartTotal);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 md:mt-5 mt-8 md:mb-0 mb-10">
@@ -872,10 +906,11 @@ function Cart(props) {
                       return (
                         <label
                           key={opt.id}
-                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg  ${selected
-                            ? "border-green-400 shadow-md border-3"
-                            : "border-gray-200 border"
-                            } cursor-pointer bg-white`}
+                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg  ${
+                            selected
+                              ? "border-green-400 shadow-md border-3"
+                              : "border-gray-200 border"
+                          } cursor-pointer bg-white`}
                         >
                           <div className="flex items-start justify-between w-full">
                             <div className="flex items-start gap-2">
@@ -900,14 +935,16 @@ function Cart(props) {
                             </div>
 
                             <div
-                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
-                                ? "border-green-600"
-                                : "border-gray-300"
-                                }`}
+                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                selected
+                                  ? "border-green-600"
+                                  : "border-gray-300"
+                              }`}
                             >
                               <div
-                                className={`w-2 h-2 rounded-full ${selected ? "bg-green-600" : "bg-white"
-                                  }`}
+                                className={`w-2 h-2 rounded-full ${
+                                  selected ? "bg-green-600" : "bg-white"
+                                }`}
                               />
                             </div>
                           </div>
@@ -978,8 +1015,8 @@ function Cart(props) {
                                       value={
                                         localAddress.dateOfDelivery
                                           ? formatDate(
-                                            localAddress.dateOfDelivery
-                                          )
+                                              localAddress.dateOfDelivery
+                                            )
                                           : t("Select date")
                                       }
                                       readOnly
@@ -1158,6 +1195,7 @@ function Cart(props) {
                         </p>
                       </div>
                     )}
+
                     {pickupOption === "localDelivery" && (
                       <div className="flex justify-between items-start">
                         <div>
@@ -1190,7 +1228,7 @@ function Cart(props) {
 
                       <div>
                         {pickupOption === "orderPickup" ||
-                          pickupOption === "driveUp" ? (
+                        pickupOption === "driveUp" ? (
                           <span className="text-base">{t("$0.00")}</span>
                         ) : pickupOption === "localDelivery" ? (
                           CartTotal < shipcCost?.minShippingCostforLocal ? (
@@ -1210,6 +1248,24 @@ function Cart(props) {
                           )
                         ) : null}
                       </div>
+                    </div>
+
+                    <div className="flex text-black justify-between items-center">
+                      {pickupOption === "localDelivery" && (
+                        <>
+                          <p className="text-base">{t("Serviecs Fee")}</p>
+
+                          <div>
+                            {CartTotal < shipcCost?.minServiesCost ? (
+                              <span className="text-base font-medium">
+                                {constant.currency} {serviceFee}
+                              </span>
+                            ) : (
+                              <span className="text-base">{t("$0.00")}</span>
+                            )}
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     {/* Total Payable */}
