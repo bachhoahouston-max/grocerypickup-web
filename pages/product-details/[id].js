@@ -134,6 +134,7 @@ function ProductDetails(props) {
         our_price: Number(ourPrice || 0),
         price: selectedPrice?.our_price || 0,
         price_slot: selectedPrice || {},
+        productSource: "NORMAL",
         percentageDifference: Number(percentageDifference || 0).toFixed(2),
       };
 

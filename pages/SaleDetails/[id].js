@@ -7,7 +7,7 @@ import {
   cartContext,
   userContext,
   favoriteProductContext,
-  languageContext
+  languageContext,
 } from "../_app";
 import { Api } from "@/services/service";
 import Carousel from "react-multi-carousel";
@@ -27,7 +27,7 @@ import Image from "next/image";
 function ProductDetails(props) {
   const { t } = useTranslation();
   const router = useRouter();
-  const { lang } = useContext(languageContext)
+  const { lang } = useContext(languageContext);
   const [saleData, setSaleData] = useState([]);
   const [user, setUser] = useContext(userContext);
   const [productsId, setProductsId] = useState({});
@@ -94,7 +94,6 @@ function ProductDetails(props) {
     }
   }, [cartData, productsId, selectedPrice]);
 
-
   useEffect(() => {
     let timer;
     if (saleEndTime && isSaleActive) {
@@ -109,9 +108,10 @@ function ProductDetails(props) {
           return;
         }
 
-
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
@@ -145,7 +145,8 @@ function ProductDetails(props) {
 
     const existingItem = cartData.find(
       (f) =>
-        f._id === productsId._id && f.price_slot?.our_price === selectedPrice.our_price
+        f._id === productsId._id &&
+        f.price_slot?.our_price === selectedPrice.our_price
     );
 
     const price = parseFloat(selectedPrice?.our_price);
@@ -157,8 +158,12 @@ function ProductDetails(props) {
     if (!existingItem) {
       const newProduct = {
         ...productsId,
-        selectedColor: productsId.selectedColor || productsId.varients?.[0] || {},
-        selectedImage: productsId.selectedImage || productsId.varients?.[0]?.image?.[0] || "",
+        selectedColor:
+          productsId.selectedColor || productsId.varients?.[0] || {},
+        selectedImage:
+          productsId.selectedImage ||
+          productsId.varients?.[0]?.image?.[0] ||
+          "",
         qty: 1,
         id: productsId._id,
         BarCode: productsId?.BarCode || "",
@@ -166,9 +171,10 @@ function ProductDetails(props) {
         our_price: ourPrice ?? 0,
         price: selectedPrice?.our_price ?? 0,
         price_slot: selectedPrice ?? {},
+        productSource: "SALE",
+        SaleID: saleData?._id,
         percentageDifference: percentageDifference?.toFixed(2) ?? "0.00",
       };
-
 
       const updatedCart = [...cartData, newProduct];
       setCartData(updatedCart);
@@ -180,6 +186,9 @@ function ProductDetails(props) {
     });
   };
 
+
+  console.log(saleData,"saledata");
+  
   const handleIncreaseQty = () => {
     const nextState = produce(cartData, (draft) => {
       const existingItem = draft.find(
@@ -328,7 +337,6 @@ function ProductDetails(props) {
         res.data.forEach((item) => {
           const product = item.product;
           if (product.slug === slug) {
-
             const now = new Date();
             const saleStart = new Date(item.startDateTime);
             const saleEnd = new Date(item.endDateTime);
@@ -385,30 +393,34 @@ function ProductDetails(props) {
       <div className="bg-white w-full">
         <section className="bg-white w-full md:pt-10 pt-14 md:pb-5 pb-5 ">
           <div className="max-w-7xl  mx-auto w-full md:px-4 px-5">
-
-
             {isSaleActive && saleEndTime && (
               <div className="bg-custom-green text-white p-3 rounded-md mb-5 flex justify-between items-center">
-                <div className="font-bold text-lg">
-                  🎉 SALE ENDS IN:
-                </div>
+                <div className="font-bold text-lg">🎉 SALE ENDS IN:</div>
                 <div className="flex space-x-4">
                   {timeRemaining.days > 0 && (
                     <div className="text-center">
-                      <div className="text-2xl font-bold">{timeRemaining.days}</div>
+                      <div className="text-2xl font-bold">
+                        {timeRemaining.days}
+                      </div>
                       <div className="text-sm">Days</div>
                     </div>
                   )}
                   <div className="text-center">
-                    <div className="text-2xl font-bold">{timeRemaining.hours}</div>
+                    <div className="text-2xl font-bold">
+                      {timeRemaining.hours}
+                    </div>
                     <div className="text-sm">Hours</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold">{timeRemaining.minutes}</div>
+                    <div className="text-2xl font-bold">
+                      {timeRemaining.minutes}
+                    </div>
                     <div className="text-sm">Minutes</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold">{timeRemaining.seconds}</div>
+                    <div className="text-2xl font-bold">
+                      {timeRemaining.seconds}
+                    </div>
                     <div className="text-sm">Seconds</div>
                   </div>
                 </div>
@@ -436,7 +448,10 @@ function ProductDetails(props) {
                   arrows={true}
                 >
                   {selectedImageList?.map((item, i) => (
-                    <div key={i} className="bg-white w-full md:h-full relative flex justify-center">
+                    <div
+                      key={i}
+                      className="bg-white w-full md:h-full relative flex justify-center"
+                    >
                       <TransformWrapper
                         initialScale={1}
                         minScale={1}
@@ -452,7 +467,10 @@ function ProductDetails(props) {
                                 height={400}
                                 className="h-[500px] w-full object-contain cursor-move"
                                 src={item}
-                                alt={productsId?.imageAltName || "bachahoustan image"}
+                                alt={
+                                  productsId?.imageAltName ||
+                                  "bachahoustan image"
+                                }
                               />
                             </TransformComponent>
                             <div className="absolute bottom-4 right-4 flex gap-2 z-10">
@@ -526,7 +544,9 @@ function ProductDetails(props) {
                 <div className="flex flex-col justify-start items-start w-full">
                   <div className=" flex justify-between items-center w-full">
                     <h1 className="text-black md:text-[32px] text-2xl font-semibold">
-                      {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
+                      {lang === "en"
+                        ? productsId?.name
+                        : productsId?.vietnamiesName}
                     </h1>
 
                     <div
@@ -540,7 +560,6 @@ function ProductDetails(props) {
                         <FaHeart className="text-red-700 w-[23px] h-[23px]" />
                       )}
                     </div>
-
                   </div>
 
                   <div className="md:pt-20 pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
@@ -615,23 +634,18 @@ function ProductDetails(props) {
                           </div>
                         </div>
                       </>
+                    ) : productsId.Quantity <= 0 ? (
+                      <button className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md w-[250px] md:mt-5 mt-4 cursor-not-allowed ">
+                        {t("Out of Stock")}
+                      </button>
                     ) : (
-                      productsId.Quantity <= 0 ? (
-                        <button
-                          className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md w-[250px] md:mt-5 mt-4 cursor-not-allowed "
-                        >
-                          {t("Out of Stock")}
-                        </button>
-                      ) : (
-                        <button
-                          className="bg-custom-green px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md md:mt-5 mt-4 cursor-pointer"
-                          onClick={handleAddToCart}
-                        >
-                          {t("Add to Cart")}
-                        </button>
-                      )
+                      <button
+                        className="bg-custom-green px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md md:mt-5 mt-4 cursor-pointer"
+                        onClick={handleAddToCart}
+                      >
+                        {t("Add to Cart")}
+                      </button>
                     )}
-
                   </div>
                   {productsId.isShipmentAvailable ? (
                     <p className="text-black font-normal text-[17px] mt-3 md:mt-7">
@@ -652,7 +666,6 @@ function ProductDetails(props) {
             </p>
 
             <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-
               <div className="md:col-span-2">
                 <p className="text-black text-base md:text-[18px] font-bold">
                   {t(" Description")}:
@@ -661,7 +674,6 @@ function ProductDetails(props) {
                   </span>
                 </p>
               </div>
-
 
               <div className="md:col-span-2">
                 <p className="text-black text-base md:text-[18px] font-semibold mb-1">
@@ -703,19 +715,22 @@ function ProductDetails(props) {
                   </p>
                   <div
                     className="text-black text-base md:text-[18px] font-normal leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
+                    dangerouslySetInnerHTML={{
+                      __html: productsId?.ReturnPolicy,
+                    }}
                   />
                 </div>
               )}
             </div>
           </div>
 
-          <ProductReviews productReviews={productReviews} slug={productsId.slug} />
+          <ProductReviews
+            productReviews={productReviews}
+            slug={productsId.slug}
+          />
         </section>
-
       </div>
     </>
-
   );
 }
 

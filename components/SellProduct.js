@@ -48,6 +48,8 @@ const SellProduct = ({ loader, toaster }) => {
           qty: 1,
           price: price ?? 0,
           price_slot: price_slot || {},
+          productSource: "SALE",
+          SaleID: item?._id,
           tax_code: item?.product.tax_code,
         });
       } else {

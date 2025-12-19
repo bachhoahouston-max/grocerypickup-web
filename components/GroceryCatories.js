@@ -6,7 +6,7 @@ import {
   cartContext,
   openCartContext,
   favoriteProductContext,
-  languageContext
+  languageContext,
 } from "@/pages/_app";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa6";
@@ -25,14 +25,14 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const [user] = useContext(userContext);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
 
-
   const handleAddToCart = () => {
     const itemQuantity = Number(item?.Quantity ?? 0);
 
     if (itemQuantity <= 0) {
       toaster({
         type: "error",
-        message: "This item is currently out of stock. Please choose a different item.",
+        message:
+          "This item is currently out of stock. Please choose a different item.",
       });
       return;
     }
@@ -55,6 +55,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       total: Number(item.price_slot?.[0]?.our_price ?? 0),
       price_slot: item.price_slot?.[0] || {},
       tax: item?.tax,
+      productSource: "NORMAL",
     };
 
     const updatedCart = [...cartData, newItem];
@@ -111,7 +112,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     }
   }, []);
 
-
   const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
   const itemQuantity = cartItem ? cartItem.qty : 0;
 
@@ -151,9 +151,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
       {/* Product Name */}
       <h3 className="text-black md:text-md text-sm font-semibold mb-3 min-h-[40px] line-clamp-2">
-        {lang === "en"
-          ? item.name
-          : item.vietnamiesName || item.name}
+        {lang === "en" ? item.name : item.vietnamiesName || item.name}
       </h3>
 
       {/* Price and Add to Cart */}
@@ -171,7 +169,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             </del>
           )}
         </div>
-
 
         {/* Add to Cart / Quantity Controls */}
         {item?.Quantity <= 0 ? (
@@ -232,7 +229,10 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                     return {
                       ...cartItem,
                       qty: cartItem.qty + 1,
-                      total: ((cartItem.price || 0) * (cartItem.qty + 1)).toFixed(2),
+                      total: (
+                        (cartItem.price || 0) *
+                        (cartItem.qty + 1)
+                      ).toFixed(2),
                     };
                   }
                   return cartItem;

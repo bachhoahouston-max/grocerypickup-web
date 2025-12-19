@@ -515,6 +515,8 @@ function Cart(props) {
         price: element.price,
         qty: element.qty,
         seller_id: element.userid,
+        saleID: element.SaleID || null,
+        productSource: element.productSource || "NORMAL",
         isShipmentAvailable: element.isShipmentAvailable,
         isNextDayDeliveryAvailable: element.isNextDayDeliveryAvailable,
         isCurbSidePickupAvailable: element.isCurbSidePickupAvailable,
@@ -605,6 +607,7 @@ function Cart(props) {
     }
     const deliveryTip = parseFloat(deliverytip || 0);
     const servicefee = parseFloat(serviceFee || 0);
+
     let newData = {
       productDetail: data,
       total: mainTotal,
@@ -625,7 +628,7 @@ function Cart(props) {
     };
 
     localStorage.setItem("checkoutData", JSON.stringify(newData));
-    props.loader && props.loader(true);
+    // props.loader && props.loader(true);
     console.log(newData);
     try {
       const createRes = await Api(
@@ -638,7 +641,7 @@ function Cart(props) {
         const data = createRes.data.orders || [];
         console.log(data);
         setOrderID(data.orderId);
-        createCheckoutSession(data.orderId);
+        // createCheckoutSession(data.orderId);
       } else {
         props.loader && props.loader(false);
         props.toaster({ type: "error", message: "Order save failed" });
@@ -671,7 +674,7 @@ function Cart(props) {
         },
       },
     }));
-   
+
     const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
     const servicefee = parseFloat(serviceFee || 0);
     const deliveryCharge = parseFloat(
