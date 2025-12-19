@@ -33,13 +33,27 @@ function MainHeader() {
 
   const chunkArray = (arr, size) => {
     const chunks = [];
+
     for (let i = 0; i < arr.length; i += size) {
-      chunks.push(arr.slice(i, i + size));
+      let chunk = arr.slice(i, i + size);
+
+      if (chunk.length < size) {
+        let fillIndex = 0;
+
+        while (chunk.length < size) {
+          chunk.push(arr[fillIndex]);
+          fillIndex++;
+        }
+      }
+
+      chunks.push(chunk);
     }
+
     return chunks;
   };
 
-  const groupedImages = chunkArray(carouselImg, 3);
+  const groupedImages = chunkArray(carouselImg, 2);
+
   const carouselData = isMobile ? carouselImg : groupedImages;
 
   const responsive = {
@@ -47,6 +61,15 @@ function MainHeader() {
     tablet: { breakpoint: { max: 1024, min: 768 }, items: 1 },
     mobile: { breakpoint: { max: 767, min: 0 }, items: 1 },
   };
+  const isAfter12PM = () => {
+    const now = new Date(); // local timezone
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    return hours > 12 || (hours === 12 && minutes > 0);
+  };
+
+  const isAfterNoon = isAfter12PM();
 
   const services = [
     {
@@ -57,22 +80,22 @@ function MainHeader() {
     {
       title: "Curbside Pickup",
       description: "We bring it out to your car",
-      image: "/image19.png",
+      image: "/image23.png",
     },
     {
-      title: "Next Day Local Delivery",
-      description: "Cut off time 8 pm",
-      image: "/image19.png",
+      title: isAfterNoon ? "Next Day Local Delivery" : "Same Day Local Delivery",
+      description: isAfterNoon ? "Cut off time 8 pm" : "Cut off time 12 pm",
+      image: "/image24.png",
     },
     {
       title: "Shipping",
       description: "Delivery in 3 to 5 business days",
-      image: "/image19.png",
+      image: "/image25.png",
     },
   ];
 
   return (
-    <div className="relative md:mt-7 ">
+    <div className="relative md:mt-0">
       <Carousel
         responsive={responsive}
         infinite
@@ -87,7 +110,7 @@ function MainHeader() {
                 className="relative w-full overflow-hidden"
                 style={{
                   position: "relative",
-                  aspectRatio: 2 / 1,
+                  aspectRatio: 1 / 1,
                 }}
               >
                 <Image
@@ -100,13 +123,13 @@ function MainHeader() {
             </div>
           ) : (
             <div key={idx} className="px-2">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-1">
                   <div
                     className="relative w-full overflow-hidden "
                     style={{
                       position: "relative",
-                      aspectRatio: 2 / 1,
+                      aspectRatio: 1 / 1,
                     }}
                   >
                     <Image
@@ -118,31 +141,16 @@ function MainHeader() {
                   </div>
                 </div>
 
-                <div className="col-span-1 flex flex-col gap-4">
+                <div className="col-span-1 ">
                   <div
-                    className="relative w-full h-1/2 overflow-hidden"
+                    className="relative w-full overflow-hidden"
                     style={{
                       position: "relative",
-                      aspectRatio: 2 / 1,
+                      aspectRatio: 1 / 1,
                     }}
                   >
                     <Image
                       src={item[1]?.image || "/fallback.jpg"}
-                      alt="Banner"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-
-                  <div
-                    className="relative w-full h-1/2 overflow-hidden"
-                    style={{
-                      position: "relative",
-                      aspectRatio: 2 / 1,
-                    }}
-                  >
-                    <Image
-                      src={item[2]?.image || "/fallback.jpg"}
                       alt="Banner"
                       fill
                       className="object-cover"
@@ -159,7 +167,7 @@ function MainHeader() {
         {services.map((service, index) => (
           <div
             key={index}
-            className="transition-all duration-300 rounded-2xl px-4 py-8 text-center flex flex-col items-center cursor-pointer hover:shadow-lg"
+            className="transition-all duration-300 rounded-2xl px-4 py-8 text-center flex flex-col items-center cursor-pointer"
           >
             <img src={service?.image} />
             <p className="text-[18px] md:text-[20px] font-semibold text-gray-900">

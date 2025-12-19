@@ -36,6 +36,7 @@
   "We bring it out to your car": "Chúng tôi mang nó ra xe của bạn",
   "Next Day Local Delivery": "Giao hàng tận nơi vào ngày hôm sau",
   "Cut off time 8 pm": "Đặt đơn hàng trước 8 giờ tối",
+  "Cut off time 12 pm":"Đặt đơn hàng trước 12 giờ tối",
   "Shipment Delivery": "Gửi Hàng Xuyên Bang",
   "Select Date of Delivery": "Chọn ngày giao hàng",
   "Select date": "Chọn ngày",
@@ -333,5 +334,6 @@
 
   "Product Recall Information": "Thông tin thu hồi sản phẩm",
   "Help Center": "Trung tâm trợ giúp",
-  "My cart":"Giỏ hàng của tôi"
+  "My cart":"Giỏ hàng của tôi",
+  "Same Day Local Delivery":"Giao Hàng Trong Ngày"
 }
