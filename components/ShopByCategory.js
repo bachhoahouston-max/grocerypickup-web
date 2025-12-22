@@ -98,6 +98,7 @@ function ShopByCategory() {
               {t("New Arrivals")}
             </p>
           </div>
+
           {/* <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
             onClick={() =>
@@ -141,7 +142,7 @@ function ShopByCategory() {
 
             {/* New Arrival */}
             <div
-              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px] flex-shrink-0"
+              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[60px] flex-shrink-0"
               onClick={() =>
                 router.push("/categories/all?category=all&sort_by=new")
               }
@@ -165,7 +166,7 @@ function ShopByCategory() {
             {categorys.map((category, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[80px] flex-shrink-0"
+                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[60px] flex-shrink-0"
                 onClick={() => router.push(`/categories/${category?.slug}`)}
               >
                 <div className="relative mb-3">

@@ -31,26 +31,26 @@ function MainHeader() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const chunkArray = (arr, size) => {
-    const chunks = [];
+const chunkArray = (arr = [], size) => {
+  if (!arr.length) return [];
 
-    for (let i = 0; i < arr.length; i += size) {
-      let chunk = arr.slice(i, i + size);
+  const chunks = [];
 
-      if (chunk.length < size) {
-        let fillIndex = 0;
+  for (let i = 0; i < arr.length; i += size) {
+    let chunk = arr.slice(i, i + size);
 
-        while (chunk.length < size) {
-          chunk.push(arr[fillIndex]);
-          fillIndex++;
-        }
-      }
-
-      chunks.push(chunk);
+    let fillIndex = 0;
+    while (chunk.length < size) {
+      chunk.push(arr[fillIndex % arr.length]);
+      fillIndex++;
     }
 
-    return chunks;
-  };
+    chunks.push(chunk);
+  }
+
+  return chunks;
+};
+
 
   const groupedImages = chunkArray(carouselImg, 2);
 
@@ -61,6 +61,7 @@ function MainHeader() {
     tablet: { breakpoint: { max: 1024, min: 768 }, items: 1 },
     mobile: { breakpoint: { max: 767, min: 0 }, items: 1 },
   };
+
   const isAfter12PM = () => {
     const now = new Date(); // local timezone
     const hours = now.getHours();
@@ -83,7 +84,9 @@ function MainHeader() {
       image: "/image23.png",
     },
     {
-      title: isAfterNoon ? "Next Day Local Delivery" : "Same Day Local Delivery",
+      title: isAfterNoon
+        ? "Next Day Local Delivery"
+        : "Same Day Local Delivery",
       description: isAfterNoon ? "Cut off time 8 pm" : "Cut off time 12 pm",
       image: "/image24.png",
     },
@@ -95,87 +98,93 @@ function MainHeader() {
   ];
 
   return (
-    <div className="relative md:mt-0">
-      <Carousel
-        responsive={responsive}
-        infinite
-        autoPlay
-        autoPlaySpeed={5000}
-        showDots
-      >
-        {carouselData.map((item, idx) =>
-          isMobile ? (
-            <div key={idx} className="md:px-2 pt-2 md:pt-0">
-              <div
-                className="relative w-full overflow-hidden"
-                style={{
-                  position: "relative",
-                  aspectRatio: 1 / 1,
-                }}
-              >
-                <Image
-                  src={item?.image || "/fallback.jpg"}
-                  alt="Banner"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          ) : (
-            <div key={idx} className="px-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="md:col-span-1">
-                  <div
-                    className="relative w-full overflow-hidden "
-                    style={{
-                      position: "relative",
-                      aspectRatio: 1 / 1,
-                    }}
-                  >
-                    <Image
-                      src={item[0]?.image || "/fallback.jpg"}
-                      alt="Banner"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-
-                <div className="col-span-1 ">
-                  <div
-                    className="relative w-full overflow-hidden"
-                    style={{
-                      position: "relative",
-                      aspectRatio: 1 / 1,
-                    }}
-                  >
-                    <Image
-                      src={item[1]?.image || "/fallback.jpg"}
-                      alt="Banner"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+    <div className="relative md:mt-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="md:col-span-2">
+        <Carousel
+          responsive={responsive}
+          infinite
+          autoPlay
+          autoPlaySpeed={5000}
+          showDots
+        >
+          {carouselData.map((item, idx) =>
+            isMobile ? (
+              <div key={idx} className="md:px-2 pt-2 md:pt-0">
+                <div
+                  className="relative w-full overflow-hidden"
+                  style={{
+                    position: "relative",
+                    aspectRatio: 1 / 1,
+                  }}
+                >
+                  <Image
+                    src={item?.image || "/fallback.jpg"}
+                    alt="Banner"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
               </div>
-            </div>
-          )
-        )}
-      </Carousel>
+            ) : (
+              <div key={idx} className="px-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-1">
+                    <div
+                      className="relative w-full overflow-hidden "
+                      style={{
+                        position: "relative",
+                        aspectRatio: 1 / 1,
+                      }}
+                    >
+                      <Image
+                        src={item[0]?.image || "/fallback.jpg"}
+                        alt="Banner"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
 
-      <div className="hidden md:grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 pb-8 pt-4">
+                  <div className="col-span-1 ">
+                    <div
+                      className="relative w-full overflow-hidden"
+                      style={{
+                        position: "relative",
+                        aspectRatio: 1 / 1,
+                      }}
+                    >
+                      <Image
+                        src={item[1]?.image || "/fallback.jpg"}
+                        alt="Banner"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+        </Carousel>
+      </div>
+      <div className="hidden md:hidden lg:grid grid-cols-1 gap-0 pb-8 pt-2">
         {services.map((service, index) => (
           <div
             key={index}
-            className="transition-all duration-300 rounded-2xl px-4 py-8 text-center flex flex-col items-center cursor-pointer"
+            className="transition-all duration-300 rounded-2xl px-3 py-4 min-h-[90px] text-center flex items-center max-w-[400px] cursor-pointer gap-4 hover:shadow-lg border border-gray-200 mb-4"
           >
-            <img src={service?.image} />
-            <p className="text-[18px] md:text-[20px] font-semibold text-gray-900">
-              {t(service.title)}
-            </p>
-            <p className="text-[14px] md:text-[15px] text-gray-700 mt-2">
-              {t(service.description)}
-            </p>
+            <div>
+              {" "}
+              <img src={service?.image} className="h-10"/>{" "}
+            </div>
+            <div className="text-left">
+              <p className="md:text-[17px] font-semibold text-gray-900">
+                {t(service.title)}
+              </p>
+              <p className="md:text-[13px] text-gray-700 mt-2">
+                {t(service.description)}
+              </p>
+            </div>
           </div>
         ))}
       </div>
