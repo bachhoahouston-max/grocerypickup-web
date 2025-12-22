@@ -628,7 +628,7 @@ function Cart(props) {
     };
 
     localStorage.setItem("checkoutData", JSON.stringify(newData));
-    // props.loader && props.loader(true);
+    props.loader && props.loader(true);
     console.log(newData);
     try {
       const createRes = await Api(
@@ -641,7 +641,7 @@ function Cart(props) {
         const data = createRes.data.orders || [];
         console.log(data);
         setOrderID(data.orderId);
-        // createCheckoutSession(data.orderId);
+        createCheckoutSession(data.orderId);
       } else {
         props.loader && props.loader(false);
         props.toaster({ type: "error", message: "Order save failed" });
