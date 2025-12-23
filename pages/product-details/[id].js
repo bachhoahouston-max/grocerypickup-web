@@ -257,7 +257,6 @@ function ProductDetails(props) {
     ).then(
       (res) => {
         props.loader(false);
-
         const sameItem = res?.data?.filter((f) => f._id !== router?.query?.id);
         SetProductList(sameItem);
       },

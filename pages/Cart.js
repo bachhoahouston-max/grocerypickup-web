@@ -288,23 +288,6 @@ function Cart(props) {
     };
   }, []);
 
-  const minDate1 = (() => {
-    const now = new Date();
-    const currentHour = now.getHours(); // 0–23
-
-    const tomorrow = new Date();
-    tomorrow.setDate(now.getDate() + 1);
-
-    const dayAfterTomorrow = new Date();
-    dayAfterTomorrow.setDate(now.getDate() + 2);
-
-    if (currentHour >= 20) {
-      return dayAfterTomorrow;
-    } else {
-      return tomorrow;
-    }
-  })();
-
   const minDate = (() => {
     const now = new Date();
     const currentHour = now.getHours();
@@ -839,6 +822,33 @@ function Cart(props) {
   const remainingShipping =
     Number(shipcCost?.minShipmentCostForShipment) - Number(CartTotal);
 
+  const isAfter12PM = () => {
+    const now = new Date(); // local timezone
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    return hours > 12 || (hours === 12 && minutes > 0);
+  };
+
+  const isAfterNoon = isAfter12PM();
+
+  const minDate1 = (() => {
+    const now = new Date();
+    const hours = now.getHours();
+
+    const today = new Date(now);
+    const tomorrow = new Date(now);
+    tomorrow.setDate(now.getDate() + 1);
+
+    // 👉 12 PM ke baad → kal
+    if (hours >= 12) {
+      return tomorrow;
+    }
+
+    // 👉 12 PM se pehle → aaj
+    return today;
+  })();
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-2 md:mt-5 mt-8 md:mb-0 mb-10">
       <div
@@ -893,8 +903,12 @@ function Cart(props) {
                       },
                       {
                         id: "localDelivery",
-                        title: t("Next Day Local Delivery"),
-                        subtitle: t("Cut off time 8 pm"),
+                        title: isAfterNoon
+                          ? t("Next Day Local Delivery")
+                          : t("Same Day Local Delivery"),
+                        subtitle: isAfterNoon
+                          ? t("Cut off time 8 pm")
+                          : t("Cut off time 12 pm"),
                         type: "delivery",
                       },
                       {
