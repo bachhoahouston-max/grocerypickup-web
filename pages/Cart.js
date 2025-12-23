@@ -1018,12 +1018,7 @@ function Cart(props) {
 
                           {selected && opt.type === "delivery" && (
                             <div className="bg-white w-full mt-4">
-                              <p className="text-black mb-2 font-semibold text-[16px] md:text-[15px]">
-                                {opt.id === "localDelivery"
-                                  ? t("Delivery is next day")
-                                  : t("Delivery in 3 to 5 business days")}
-                              </p>
-
+                             
                               <div className="flex flex-col gap-3">
                                 {opt.id === "localDelivery" && (
                                   <div className="relative w-full max-w-[640px]">
@@ -1081,7 +1076,7 @@ function Cart(props) {
                                 {opt.id === "localDelivery" && (
                                   <p className="text-[12px] text-gray-700 text-start">
                                     {t(
-                                      "Note: We currently deliver only to selected ZIP codes. Orders placed before 8 pm are eligible for next day delivery. Orders placed after 8pm will be available for delivery in 2 days"
+                                      "Note: We currently deliver only to selected ZIP codes. Orders placed before 12pm noon are eligible for same day delivery. Orders placed after 12pm will be available for delivery the next business day"
                                     )}
                                   </p>
                                 )}

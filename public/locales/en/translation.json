@@ -235,7 +235,7 @@
   "Order Cancelled": "Order Cancelled",
   "Cancel Order": "Cancel Order",
   "Message": "Message",
-  "Note: We currently deliver only to selected ZIP codes. Orders placed before 8 pm are eligible for next day delivery. Orders placed after 8pm will be available for delivery in 2 days": "Note: We currently deliver only to selected ZIP codes. Orders placed before 8 pm are eligible for next day delivery. Orders placed after 8pm will be available for delivery in 2 days",
+  "Note: We currently deliver only to selected ZIP codes. Orders placed before 12pm noon are eligible for same day delivery. Orders placed after 12pm will be available for delivery the next business day": "Note: We currently deliver only to selected ZIP codes. Orders placed before 12pm noon are eligible for same day delivery. Orders placed after 12pm will be available for delivery the next business day",
   "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time": "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time",
   "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.": "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.",
   "Car Color": "Car Color",
