@@ -243,7 +243,7 @@ const SellProduct = ({ loader, toaster }) => {
                       </span>
                     )}
                     {item.product?.price_slot?.[0]?.our_price && (
-                      <span className="md:flex hidden bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded">
+                      <span className=" bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded">
                         {Math.round(
                           ((item.price_slot?.our_price - item.price) /
                             item.price_slot?.our_price) *
