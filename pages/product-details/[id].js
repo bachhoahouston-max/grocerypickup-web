@@ -7,7 +7,7 @@ import {
   cartContext,
   userContext,
   favoriteProductContext,
-  languageContext
+  languageContext,
 } from "../_app";
 import { Api, ConstantsUrl } from "@/services/service";
 import Carousel from "react-multi-carousel";
@@ -24,27 +24,45 @@ import ProductReviews from "@/components/reviews";
 import Head from "next/head";
 import Image from "next/image";
 
-
 function ProductDetails(props) {
   const { t } = useTranslation();
   const router = useRouter();
-  const { lang } = useContext(languageContext)
+  const { lang } = useContext(languageContext);
   const [user, setUser] = useContext(userContext);
-  const [productsId, setProductsId] = useState(props?.product);
-  const [selectedColor, setSelectedColor] = useState(props?.product?.varients[0]);
-  const [selectedImageList, setSelectedImageList] = useState(props?.product?.varients[0].image);
+
+  const [productsId, setProductsId] = useState({});
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedImageList, setSelectedImageList] = useState([]);
   const [selectedImage, setSelectedImage] = useState("");
-  const [productReviews, setProductReviews] = useState(props?.product?.reviews);
-  const [productList, SetProductList] = useState(props?.relatedProducts);
-  const [cartData, setCartData] = useContext(cartContext);
-  const [priceSlot, setPriceSlote] = useState(props?.product?.price_slot);
+  const [productReviews, setProductReviews] = useState([]);
+  const [productList, setProductList] = useState([]);
+  const [priceSlot, setPriceSlote] = useState([]);
   const [priceIndex, setPriceIndex] = useState(0);
-  const [selectedPrice, setSelectedPrice] = useState(props?.product?.price_slot[0]);
+  const [selectedPrice, setSelectedPrice] = useState(null);
+  const [cartData, setCartData] = useContext(cartContext);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInCart, setIsInCart] = React.useState(false);
   const [availableQty, setAvailableQty] = React.useState(0);
-  console.log(props)
+
+  console.log(props);
+
+  useEffect(() => {
+    if (!props?.product) return;
+
+    setProductsId(props.product);
+
+    setSelectedColor(props.product.varients?.[0] || null);
+    setSelectedImageList(props.product.varients?.[0]?.image || []);
+    setSelectedImage("");
+
+    setProductReviews(props.product.reviews || []);
+    setProductList(props.relatedProducts || []);
+
+    setPriceSlote(props.product.price_slot || []);
+    setPriceIndex(0);
+    setSelectedPrice(props.product.price_slot?.[0] || null);
+  }, [props.product]);
 
   // useEffect(() => {
   //   if (router?.query?.id) {
@@ -70,6 +88,8 @@ function ProductDetails(props) {
       items: 1,
     },
   };
+
+  console.log("productIds", productsId);
 
   useEffect(() => {
     if (cartData.length > 0) {
@@ -113,7 +133,8 @@ function ProductDetails(props) {
 
     const existingItem = cartData.find(
       (f) =>
-        f._id === productsId._id && f.price_slot?.our_price === selectedPrice.our_price
+        f._id === productsId._id &&
+        f.price_slot?.our_price === selectedPrice.our_price
     );
 
     const price = parseFloat(selectedPrice?.our_price);
@@ -125,8 +146,12 @@ function ProductDetails(props) {
     if (!existingItem) {
       const newProduct = {
         ...productsId,
-        selectedColor: productsId.selectedColor || productsId.varients?.[0] || {},
-        selectedImage: productsId.selectedImage || productsId.varients?.[0]?.image?.[0] || "",
+        selectedColor:
+          productsId.selectedColor || productsId.varients?.[0] || {},
+        selectedImage:
+          productsId.selectedImage ||
+          productsId.varients?.[0]?.image?.[0] ||
+          "",
         qty: 1,
         id: productsId._id,
         BarCode: productsId?.BarCode || "",
@@ -137,7 +162,6 @@ function ProductDetails(props) {
         productSource: "NORMAL",
         percentageDifference: Number(percentageDifference || 0).toFixed(2),
       };
-
 
       const updatedCart = [...cartData, newProduct];
       setCartData(updatedCart);
@@ -244,7 +268,6 @@ function ProductDetails(props) {
         props.toaster({ type: "error", message: err?.message });
       }
     );
-
   };
 
   const getproductByCategory = async (category_id, product_id) => {
@@ -258,7 +281,7 @@ function ProductDetails(props) {
       (res) => {
         props.loader(false);
         const sameItem = res?.data?.filter((f) => f._id !== router?.query?.id);
-        SetProductList(sameItem);
+        setProductList(sameItem);
       },
       (err) => {
         props.loader(false);
@@ -316,7 +339,6 @@ function ProductDetails(props) {
     );
   };
 
-
   useEffect(() => {
     const storedFavorites = localStorage.getItem("favorites");
     if (storedFavorites) {
@@ -324,8 +346,8 @@ function ProductDetails(props) {
     }
   }, []);
 
-  const cartItem = productsId._id;
-  const itemQuantity = cartItem ? cartItem.qty : 0;
+  const cartItem = productsId?._id;
+  const itemQuantity = cartItem ? cartItem?.qty : 0;
 
   return (
     <>
@@ -362,7 +384,10 @@ function ProductDetails(props) {
                   arrows={true}
                 >
                   {selectedImageList?.map((item, i) => (
-                    <div key={i} className="bg-white w-full md:h-full relative flex justify-center">
+                    <div
+                      key={i}
+                      className="bg-white w-full md:h-full relative flex justify-center"
+                    >
                       <TransformWrapper
                         initialScale={1}
                         minScale={1}
@@ -378,7 +403,9 @@ function ProductDetails(props) {
                                 height={300}
                                 className="md:h-[500px] w-full object-contain cursor-move"
                                 src={item}
-                                alt={productsId?.imageAltName || "Product image"}
+                                alt={
+                                  productsId?.imageAltName || "Product image"
+                                }
                               />
                             </TransformComponent>
                             <div className="absolute bottom-4 right-4 flex gap-2 z-10">
@@ -452,7 +479,9 @@ function ProductDetails(props) {
                 <div className="flex flex-col justify-start items-start w-full">
                   <div className="flex justify-between items-center w-full">
                     <h1 className="text-black md:text-[32px] text-2xl font-medium">
-                      {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
+                      {lang === "en"
+                        ? productsId?.name
+                        : productsId?.vietnamiesName}
                     </h1>
 
                     <div
@@ -467,7 +496,6 @@ function ProductDetails(props) {
                       )}
                     </div>
                   </div>
-
 
                   <div className="pt-7 md:pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
                     {priceSlot &&
@@ -486,10 +514,11 @@ function ProductDetails(props) {
                                 setPriceIndex(i);
                               }}
                               className={`cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
-                                        ${priceIndex == i
-                                  ? "bg-[#2E7D321A]"
-                                  : "bg-white"
-                                }
+                                        ${
+                                          priceIndex == i
+                                            ? "bg-[#2E7D321A]"
+                                            : "bg-white"
+                                        }
                             `}
                             >
                               {data?.other_price && (
@@ -527,7 +556,6 @@ function ProductDetails(props) {
                       })}
                   </div>
 
-
                   {isInCart ? (
                     <>
                       <div className="p-1 flex justify-between mt-7 md:mt-20 w-[250px] bg-gray-100 rounded-2xl">
@@ -548,22 +576,17 @@ function ProductDetails(props) {
                         </div>
                       </div>
                     </>
+                  ) : productsId.Quantity <= 0 ? (
+                    <button className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed ">
+                      {t("Out of Stock")}
+                    </button>
                   ) : (
-                    productsId.Quantity <= 0 ? (
-                      <button
-                        className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed "
-                      >
-                        {t("Out of Stock")}
-                      </button>
-                    ) : (
-                      <button
-                        className="bg-custom-green md:mt-20 px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md  mt-4 cursor-pointer"
-                        onClick={handleAddToCart}
-                      >
-                        {t("Add to Cart")}
-                      </button>
-                    )
-
+                    <button
+                      className="bg-custom-green md:mt-20 px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md  mt-4 cursor-pointer"
+                      onClick={handleAddToCart}
+                    >
+                      {t("Add to Cart")}
+                    </button>
                   )}
                   {productsId.isShipmentAvailable ? (
                     <p className="text-black font-normal text-[17px] md:mt-5 mt-2">
@@ -634,13 +657,18 @@ function ProductDetails(props) {
                   </p>
                   <div
                     className="text-black text-base md:text-[18px] font-normal leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: productsId?.ReturnPolicy }}
+                    dangerouslySetInnerHTML={{
+                      __html: productsId?.ReturnPolicy,
+                    }}
                   />
                 </div>
               )}
             </div>
           </div>
-          <ProductReviews productReviews={productReviews} slug={productsId.slug} />
+          <ProductReviews
+            productReviews={productReviews}
+            slug={productsId.slug}
+          />
 
           <div className="bg-white max-w-7xl mx-auto">
             <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 ">
@@ -663,30 +691,33 @@ function ProductDetails(props) {
         </section>
       </div>
     </>
-
   );
 }
 
 export default ProductDetails;
 
-
-
 export async function getServerSideProps(context) {
   const { id } = context.params;
+  console.log("h",id);
 
   const baseUrl = ConstantsUrl; // example: https://api.bachhoahouston.com
 
   try {
     // const productRes = await fetch(`${baseUrl}getProductByslug/${id}`);
 
-    const productRes = await Api("get", `getProductByslug/${id}`, "", '');
+    const productRes = await Api("get", `getProductByslug/${id}`, "", "");
     const product = productRes.data;
 
     const relatedRes = await fetch(
       `${baseUrl}getProductBycategoryId?category=${product.category.slug}&product_id=${product._id}`
     );
+    console.log("product 123", product);
+
     const relatedProducts = await relatedRes.json();
-    const sameItem = relatedProducts?.data?.filter((f) => f._id !== product._id);
+    const sameItem = relatedProducts?.data?.filter(
+      (f) => f._id !== product._id
+    );
+    console.log("sameItem 123", sameItem);
 
     return {
       props: {
@@ -703,4 +734,3 @@ export async function getServerSideProps(context) {
     };
   }
 }
-
