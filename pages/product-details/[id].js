@@ -45,13 +45,20 @@ function ProductDetails(props) {
   const [isInCart, setIsInCart] = React.useState(false);
   const [availableQty, setAvailableQty] = React.useState(0);
 
-  console.log(props);
+  useEffect(() => {
+    if (props?.notFoundProduct) {
+      props?.toaster({
+        type: "error",
+        message: "Product not found or invalid slug",
+      });
+      router.push("/404")
+    }
+  }, [props?.notFoundProduct]);
 
+  
   useEffect(() => {
     if (!props?.product) return;
-
     setProductsId(props.product);
-
     setSelectedColor(props.product.varients?.[0] || null);
     setSelectedImageList(props.product.varients?.[0]?.image || []);
     setSelectedImage("");
@@ -698,7 +705,8 @@ export default ProductDetails;
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
-  console.log("h",id);
+
+  console.log("h", context.params);
 
   const baseUrl = ConstantsUrl; // example: https://api.bachhoahouston.com
 
@@ -711,7 +719,6 @@ export async function getServerSideProps(context) {
     const relatedRes = await fetch(
       `${baseUrl}getProductBycategoryId?category=${product.category.slug}&product_id=${product._id}`
     );
-    console.log("product 123", product);
 
     const relatedProducts = await relatedRes.json();
     const sameItem = relatedProducts?.data?.filter(
@@ -723,6 +730,7 @@ export async function getServerSideProps(context) {
       props: {
         product,
         relatedProducts: sameItem,
+        notFoundProduct: false,
       },
     };
   } catch (err) {
@@ -730,6 +738,7 @@ export async function getServerSideProps(context) {
       props: {
         product: null,
         relatedProducts: [],
+        notFoundProduct: true,
       },
     };
   }

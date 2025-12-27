@@ -186,8 +186,6 @@ function ProductDetails(props) {
     });
   };
 
-
-  console.log(saleData,"saledata");
   
   const handleIncreaseQty = () => {
     const nextState = produce(cartData, (draft) => {
