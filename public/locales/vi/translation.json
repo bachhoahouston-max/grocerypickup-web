@@ -36,7 +36,7 @@
   "We bring it out to your car": "Chúng tôi mang nó ra xe của bạn",
   "Next Day Local Delivery": "Giao hàng tận nơi vào ngày hôm sau",
   "Cut off time 8 pm": "Đặt đơn hàng trước 8 giờ tối",
-  "Cut off time 12 pm":"Đặt Trước 12 giờ trưa",
+  "Cut off time 12 pm": "Đặt Trước 12 giờ trưa",
   "Shipment Delivery": "Gửi Hàng Xuyên Bang",
   "Select Date of Delivery": "Chọn ngày giao hàng",
   "Select date": "Chọn ngày",
@@ -276,6 +276,8 @@
   "Product is Not available for In Store Pickup": "Sản phẩm không có sẵn để nhận tại cửa hàng",
   "Product is available for Next Day Delivery": "Sản phẩm có sẵn để giao vào ngày hôm sau",
   "Product is Not available for Next Day Delivery": "Sản phẩm không có sẵn để giao vào ngày hôm sau",
+  "Product is Not available for Same Day Delivery": "Sản phẩm không có sẵn để giao trong ngày",
+  "Product is available for Same Day Delivery": "Sản phẩm có sẵn để giao trong ngày",
 
   "Review this item": "Đánh giá sản phẩm này",
   "Add a review": "Thêm đánh giá",
@@ -334,6 +336,6 @@
 
   "Product Recall Information": "Thông tin thu hồi sản phẩm",
   "Help Center": "Trung tâm trợ giúp",
-  "My cart":"Giỏ hàng của tôi",
-  "Same Day Local Delivery":"Giao Hàng Trong Ngày"
+  "My cart": "Giỏ hàng của tôi",
+  "Same Day Local Delivery": "Giao Hàng Trong Ngày"
 }

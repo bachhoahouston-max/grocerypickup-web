@@ -6,16 +6,28 @@ import { useContext } from "react";
 import { cartContext, languageContext } from "@/pages/_app";
 import constant from "@/services/constant";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
 export default function CartDrawer({ pickupOption, toaster, cartClose }) {
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
   const { lang } = useContext(languageContext);
+  const router = useRouter();
 
   const formatPrice = (value) => {
     const num = Number(value);
     return isNaN(num) ? "0.00" : num.toFixed(2);
   };
+
+  const isAfter12PM = () => {
+    const now = new Date(); // local timezone
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    return hours > 12 || (hours === 12 && minutes > 0);
+  };
+
+  const isAfterNoon = isAfter12PM();
 
   const getPickupConfig = (item) => ({
     ShipmentDelivery: {
@@ -35,8 +47,12 @@ export default function CartDrawer({ pickupOption, toaster, cartClose }) {
     },
     localDelivery: {
       available: !!item.isNextDayDeliveryAvailable,
-      yes: t("Product is available for Next Day Delivery"),
-      no: t("Product is Not available for Next Day Delivery"),
+      yes: isAfterNoon
+        ? t("Product is available for Next Day Delivery")
+        : t("Product is available for Same Day Delivery"),
+      no: isAfterNoon
+        ? t("Product is Not available for Next Day Delivery")
+        : t("Product is Not available for Same Day Delivery"),
     },
   });
 
@@ -93,7 +109,12 @@ export default function CartDrawer({ pickupOption, toaster, cartClose }) {
                   className="w-full bg-white rounded-xl shadow-md p-3 "
                 >
                   <div className="flex flex-row items-start md:items-center justify-between gap-4">
-                    <div className="relative w-[80px] h-[80px] md:w-[120px] md:h-[120px] flex-shrink-0 rounded-lg overflow-hidden">
+                    <div
+                      className="relative w-[80px] h-[80px] md:w-[120px] md:h-[120px] flex-shrink-0 rounded-lg overflow-hidden"
+                      onClick={() =>
+                        router.push(`/product-details/${item?.slug}`)
+                      }
+                    >
                       <Image
                         src={
                           item?.selectedImage ||

@@ -26,7 +26,7 @@ function Cart(props) {
   const [cartData, setCartData] = useContext(cartContext);
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [mainTotal, setMainTotal] = useState(0);
-  const [pickupOption, setPickupOption] = useState("orderPickup");
+  const [pickupOption, setPickupOption] = useState("");
   const [baseCartTotal, setBaseCartTotal] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(false);
@@ -436,6 +436,13 @@ function Cart(props) {
   };
 
   const createProductRquest = async (e) => {
+    if (!pickupOption) {
+      return props.toaster({
+        type: "error",
+        message: "Please select a pickup option",
+      });
+    }
+
     if (pickupOption === "localDelivery") {
       if (!localAddress.dateOfDelivery) {
         return props.toaster({
@@ -923,7 +930,7 @@ function Cart(props) {
                       return (
                         <label
                           key={opt.id}
-                          className={`flex flex-col items-start md:p-4 p-2 rounded-lg  ${
+                          className={`flex flex-col border-gray-300 shadow-md border-2 items-start md:p-4 p-2 rounded-lg  ${
                             selected
                               ? "border-green-400 shadow-md border-3"
                               : "border-gray-200 border"
@@ -942,7 +949,7 @@ function Cart(props) {
                               />
 
                               <div>
-                                <div className="font-semibold text-base md:text-lg text-black">
+                                <div className="font-semibold text-base md:text-lg text-orange-600">
                                   {opt.title}
                                 </div>
                                 <div className="text-gray-500 text-sm ">
@@ -1018,7 +1025,6 @@ function Cart(props) {
 
                           {selected && opt.type === "delivery" && (
                             <div className="bg-white w-full mt-4">
-                             
                               <div className="flex flex-col gap-3">
                                 {opt.id === "localDelivery" && (
                                   <div className="relative w-full max-w-[640px]">
