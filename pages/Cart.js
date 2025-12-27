@@ -892,7 +892,7 @@ function Cart(props) {
           />
           <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
             {cartData.length > 0 && (
-              <div className="bg-white rounded-lg shadow-sm p-3">
+              <div className="bg-white rounded-lg shadow-sm border-2 p-3">
                 <div className="space-y-3">
                   <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
                     {[
@@ -987,7 +987,7 @@ function Cart(props) {
                                     }
                                     readOnly
                                     onClick={handleIconClick}
-                                    className="w-full border rounded-lg py-2 px-3 pr-5 text-gray-700 focus:outline-none focus:ring-2 "
+                                    className="w-full border-2 rounded-lg py-2 px-3 pr-5 text-gray-700 focus:outline-none focus:ring-2 "
                                   />
 
                                   <span
@@ -1039,7 +1039,7 @@ function Cart(props) {
                                       }
                                       readOnly
                                       onClick={handleIconClick}
-                                      className="border text-black rounded-lg py-2 px-3 pr-10 w-full"
+                                      className="border-2 text-black rounded-lg py-2 px-3 pr-10 w-full"
                                     />
 
                                     <span
@@ -1114,7 +1114,7 @@ function Cart(props) {
                         placeholder={t("Enter coupon code")}
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        className="w-full text-[15px] text-black border rounded-md py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                       {searchTerm && (
                         <X

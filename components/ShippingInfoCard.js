@@ -12,7 +12,7 @@ export default function ShippingInfoCard({
     localAddress?.name;
 
   return (
-    <div className="bg-white p-3 rounded-xl shadow-sm border ">
+    <div className="bg-white p-3 rounded-xl shadow-sm border-2">
       <h2 className="text-lg font-semibold text-gray-800 mb-3">
         Shipping Information
       </h2>

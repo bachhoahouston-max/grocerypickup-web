@@ -112,7 +112,7 @@ export default function CartDrawer({ pickupOption, toaster, cartClose }) {
                     <div
                       className="relative w-[80px] h-[80px] md:w-[120px] md:h-[120px] flex-shrink-0 rounded-lg overflow-hidden"
                       onClick={() =>
-                        router.push(`/product-details/${item?.slug}`)
+                        router.push(`/product-details/${item?.slug || item?.product?.slug}`)
                       }
                     >
                       <Image

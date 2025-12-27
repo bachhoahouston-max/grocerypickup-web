@@ -51,7 +51,7 @@ function ProductDetails(props) {
         type: "error",
         message: "Product not found or invalid slug",
       });
-      router.push("/404")
+      // router.push("/404")
     }
   }, [props?.notFoundProduct]);
 
