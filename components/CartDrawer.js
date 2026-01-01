@@ -129,7 +129,7 @@ export default function CartDrawer({ pickupOption, toaster, cartClose }) {
                     </div>
 
                     <div className="flex flex-col flex-1 p-1 min-w-0">
-                      <p className="text-black font-medium md:text-base text-sm truncate">
+                      <p className="text-black font-medium md:text-base text-sm ">
                         {lang === "en" ? item?.name : item?.vietnamiesName}
                       </p>
 
