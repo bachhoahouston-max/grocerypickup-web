@@ -915,7 +915,7 @@ function Cart(props) {
                           : t("Same Day Local Delivery"),
                         subtitle: isAfterNoon
                           ? t("Cut off time 8 pm")
-                          : t("Cut off time 12 pm"),
+                          : t("Cut off time 11:59 pm"),
                         type: "delivery",
                       },
                       {

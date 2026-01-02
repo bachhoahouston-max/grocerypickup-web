@@ -87,7 +87,7 @@ const chunkArray = (arr = [], size) => {
       title: isAfterNoon
         ? "Next Day Local Delivery"
         : "Same Day Local Delivery",
-      description: isAfterNoon ? "Cut off time 8 pm" : "Cut off time 12 pm",
+      description: isAfterNoon ? "Cut off time 8 pm" : "Cut off time 11:59 pm",
       image: "/image24.png",
     },
     {
