@@ -159,7 +159,6 @@ function Mybooking(props) {
       SecretCode: secretCode1,
     };
 
-
     props.loader(true);
 
     Api("post", "getSecrectCode", data, router)
@@ -233,7 +232,7 @@ function Mybooking(props) {
     const data = {
       orderId: orderId,
       id: id,
-      lang: lang
+      lang: lang,
     };
 
     ApiGetPdf("createinvoice", data, router)
@@ -245,7 +244,6 @@ function Mybooking(props) {
         console.error("Failed to fetch PDF", err);
       });
   };
-
 
   const isWithin24Hours = (updatedAt) => {
     if (!updatedAt) return false;
@@ -293,7 +291,9 @@ function Mybooking(props) {
                           {/* <Invoice order={booking} /> */}
                           <MdFileDownload
                             className="text-xl text-black"
-                            onClick={() => GeneratePDF(booking._id, booking.orderId)}
+                            onClick={() =>
+                              GeneratePDF(booking._id, booking.orderId)
+                            }
                           />
                           <button
                             onClick={() => toggleBooking(booking._id)}
@@ -457,7 +457,9 @@ function Mybooking(props) {
                           {/* <Invoice order={booking} /> */}
                           <MdFileDownload
                             className="text-xl text-black"
-                            onClick={() => GeneratePDF(booking._id, booking.orderId)}
+                            onClick={() =>
+                              GeneratePDF(booking._id, booking.orderId)
+                            }
                           />
                           <button
                             onClick={() => toggleBooking(booking._id)}
@@ -472,18 +474,25 @@ function Mybooking(props) {
                         </div>
                         <div className="ms-2">
                           {booking?.isShipmentDelivery ? (
-                            <p className="text-gray-700 font-medium">{t("Shipment Delivery")}</p>
+                            <p className="text-gray-700 font-medium">
+                              {t("Shipment Delivery")}
+                            </p>
                           ) : booking?.isLocalDelivery ? (
-                            <p className="text-gray-700 font-medium">{t("Local Delivery")}</p>
+                            <p className="text-gray-700 font-medium">
+                              {t("Local Delivery")}
+                            </p>
                           ) : booking?.isDriveUp ? (
-                            <p className="text-gray-700 font-medium">{t("Curbside Pickup")}</p>
+                            <p className="text-gray-700 font-medium">
+                              {t("Curbside Pickup")}
+                            </p>
                           ) : booking?.isOrderPickup ? (
-                            <p className="text-gray-700 font-medium">{t("In-store Pickup")}</p>
+                            <p className="text-gray-700 font-medium">
+                              {t("In-store Pickup")}
+                            </p>
                           ) : (
                             <p className="text-gray-500 italic">Not Found</p>
                           )}
                         </div>
-
                       </div>
                     </div>
                   </div>
@@ -492,109 +501,111 @@ function Mybooking(props) {
                 {(booking?.SecretCode ||
                   booking?.isShipmentDelivery ||
                   booking?.trackingNo) && (
-                    <div className="p-4 border-gray-200 bg-gray-50">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {booking?.SecretCode &&
-                          (booking?.status === "Pending" || booking?.status === "Preparing") && (
-                            <div className="flex items-center">
-                              <div className="p-2 bg-yellow-100 rounded-lg mr-3">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-5 w-5 text-yellow-600"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
-                                >
-                                  <path
-                                    fillRule="evenodd"
-                                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
-                                    clipRule="evenodd"
-                                  />
-                                </svg>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">{t("Secret Code")}</p>
-                                <p className="text-base font-medium text-gray-800">
-                                  {booking.SecretCode}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-
-
-                        {booking?.isShipmentDelivery &&
-                          (booking?.status === "Pending" ||
-                            booking?.status === "Shipped") && (
-                            <div className="flex items-center">
-                              <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-5 w-5 text-blue-600"
-                                  viewBox="0 0 20 20"
-                                  fill="currentColor"
-                                >
-                                  <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                                  <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h2a1 1 0 001-1v-4a1 1 0 00-.293-.707l-2-2A1 1 0 0012 6h-1V5a1 1 0 00-1-1H3z" />
-                                </svg>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">
-                                  {t("Delivery Expected")}
-                                </p>
-                                <p className="text-base font-medium text-gray-800">
-                                  {formatDate2(
-                                    new Date(
-                                      new Date(booking.createdAt).setDate(
-                                        new Date(booking.createdAt).getDate() + 7
-                                      )
-                                    )
-                                  )}{" "}
-                                  11 PM
-                                </p>
-                              </div>
-                            </div>
-                          )}
-
-                        {booking?.trackingNo && booking?.trackingLink && (
-                          <div className="flex items-center md:col-span-2">
-                            <div className="p-2 bg-indigo-100 rounded-lg mr-3">
+                  <div className="p-4 border-gray-200 bg-gray-50">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {booking?.SecretCode &&
+                        (booking?.status === "Pending" ||
+                          booking?.status === "Preparing") && (
+                          <div className="flex items-center">
+                            <div className="p-2 bg-yellow-100 rounded-lg mr-3">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5 text-indigo-600"
+                                className="h-5 w-5 text-yellow-600"
                                 viewBox="0 0 20 20"
                                 fill="currentColor"
                               >
                                 <path
                                   fillRule="evenodd"
-                                  d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                  d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
                                   clipRule="evenodd"
                                 />
                               </svg>
                             </div>
-                            <div className="flex-grow">
+                            <div>
                               <p className="text-sm text-gray-500">
-                                {t("Tracking Number")}
+                                {t("Secret Code")}
                               </p>
-                              <div className="flex items-center space-x-3">
-                                <p className="text-[13px] font-medium text-gray-800">
-                                  {booking.trackingNo}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex-grow">
-                              <p className="text-sm text-gray-500">
-                                {t("Company Name")}
+                              <p className="text-base font-medium text-gray-800">
+                                {booking.SecretCode}
                               </p>
-                              <div className="flex items-center space-x-3">
-                                <p className="text-[13px] font-medium text-gray-800">
-                                  {booking.trackingLink}
-                                </p>
-                              </div>
                             </div>
                           </div>
                         )}
-                      </div>
+
+                      {booking?.isShipmentDelivery &&
+                        (booking?.status === "Pending" ||
+                          booking?.status === "Shipped") && (
+                          <div className="flex items-center">
+                            <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5 text-blue-600"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+                                <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H11a1 1 0 001-1v-1h2a1 1 0 001-1v-4a1 1 0 00-.293-.707l-2-2A1 1 0 0012 6h-1V5a1 1 0 00-1-1H3z" />
+                              </svg>
+                            </div>
+                            <div>
+                              <p className="text-sm text-gray-500">
+                                {t("Delivery Expected")}
+                              </p>
+                              <p className="text-base font-medium text-gray-800">
+                                {formatDate2(
+                                  new Date(
+                                    new Date(booking.createdAt).setDate(
+                                      new Date(booking.createdAt).getDate() + 7
+                                    )
+                                  )
+                                )}{" "}
+                                11 PM
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                      {booking?.trackingNo && booking?.trackingLink && (
+                        <div className="flex items-center md:col-span-2">
+                          <div className="p-2 bg-indigo-100 rounded-lg mr-3">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 text-indigo-600"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </div>
+                          <div className="flex-grow">
+                            <p className="text-sm text-gray-500">
+                              {t("Tracking Number")}
+                            </p>
+                            <div className="flex items-center space-x-3">
+                              <p className="text-[13px] font-medium text-gray-800">
+                                {booking.trackingNo}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex-grow">
+                            <p className="text-sm text-gray-500">
+                              {t("Company Name")}
+                            </p>
+                            <div className="flex items-center space-x-3">
+                              <p className="text-[13px] font-medium text-gray-800">
+                                {booking.trackingLink}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                )}
                 <div className="px-4 py-3 bg-white border-b border-gray-200">
                   <div className="flex flex-wrap gap-2 justify-end">
                     {(() => {
@@ -606,15 +617,15 @@ function Mybooking(props) {
                         booking?.status === "Pending" && diffInMinutes <= 15
                       );
                     })() && (
-                        <div className="px-4 py-4 bg-white border-t border-gray-200 mt-4 flex justify-end">
-                          <button
-                            onClick={() => cancelOrder(booking._id)}
-                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
-                          >
-                            {t("Cancel Order")}
-                          </button>
-                        </div>
-                      )}
+                      <div className="px-4 py-4 bg-white border-t border-gray-200 mt-4 flex justify-end">
+                        <button
+                          onClick={() => cancelOrder(booking._id)}
+                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+                        >
+                          {t("Cancel Order")}
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {booking?.status === "Completed" &&
@@ -631,10 +642,12 @@ function Mybooking(props) {
                     )}
                 </div>
 
-                {((booking?.status === "Pending" || booking?.status === "Preparing") &&
+                {(booking?.status === "Pending" ||
+                  booking?.status === "Preparing") &&
                   (booking?.isDriveUp || booking?.isOrderPickup) &&
                   booking?.createdAt &&
-                  new Date() - new Date(booking.createdAt) >= 15 * 60 * 1000) && (
+                  new Date() - new Date(booking.createdAt) >=
+                    15 * 60 * 1000 && (
                     <div className="px-4 py-3 bg-white border-b border-gray-200">
                       <div className="flex flex-wrap gap-2 justify-end">
                         {booking?.isDriveUp && (
@@ -659,7 +672,6 @@ function Mybooking(props) {
                       </div>
                     </div>
                   )}
-
 
                 {isOpen && (
                   <div className="fixed inset-0  backdrop-blur-sm flex items-center justify-center z-50 px-4">
@@ -752,10 +764,11 @@ function Mybooking(props) {
                     {booking.productDetail.map((product, index) => (
                       <div
                         key={index}
-                        className={`flex items-center p-2 hover:bg-gray-50 cursor-pointer ${index !== booking.productDetail.length - 1
-                          ? "border-b border-gray-200"
-                          : ""
-                          }`}
+                        className={`flex items-center p-2 hover:bg-gray-50 cursor-pointer ${
+                          index !== booking.productDetail.length - 1
+                            ? "border-b border-gray-200"
+                            : ""
+                        }`}
                         onClick={() => {
                           router.push(
                             `/myorder/${booking._id}?product_id=${product._id}`
@@ -776,8 +789,13 @@ function Mybooking(props) {
                         <div className="ml-4 flex-grow">
                           <p className="text-gray-800 font-medium">
                             {(() => {
-                              const text = lang === "en" ? product.product?.name : product.product?.vietnamiesName;
-                              return text?.length > 95 ? text.slice(0, 95) + "..." : text;
+                              const text =
+                                lang === "en"
+                                  ? product.product?.name
+                                  : product.product?.vietnamiesName;
+                              return text?.length > 95
+                                ? text.slice(0, 95) + "..."
+                                : text;
                             })()}
                           </p>
                           <div className="flex flex-col items-start mt-1 text-[14px] text-gray-600">
@@ -805,7 +823,10 @@ function Mybooking(props) {
                         {t("Total")}
                       </p>
                       <p className="text-xl font-semibold text-gray-800">
-                        $ {booking.total || "0.00"}
+                        $
+                        {(
+                          (Number(booking.total || 0)) + Number(booking.totalTax || 0)
+                        )?.toFixed(2)}
                       </p>
                     </div>
                   </div>
