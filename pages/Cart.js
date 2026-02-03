@@ -330,10 +330,8 @@ function Cart(props) {
       const tomorrow = new Date();
       tomorrow.setDate(now.getDate() + 1);
       return checkAvailabilityAndAddToCart(tomorrow)
-      return tomorrow;
     }
-    return checkAvailabilityAndAddToCart(tomorrow)
-    return now;
+    return checkAvailabilityAndAddToCart(now)
   })();
 
 
