@@ -15,6 +15,7 @@ import Image from "next/image";
 import CartDrawer from "@/components/CartDrawer";
 import AddressForm from "@/components/AddressForm";
 import ShippingInfoCard from "@/components/ShippingInfoCard";
+import moment from "moment";
 
 function Cart(props) {
   const router = useRouter();
@@ -44,6 +45,7 @@ function Cart(props) {
   const [successPopup, setSuccessPopup] = useState(false);
   const [shipcCost, setShipCost] = useState({});
   const [serviceFee, setServiceFee] = useState(0);
+  const [closureDates, setClosureDates] = useState([]);
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -57,6 +59,7 @@ function Cart(props) {
       code: searchTerm,
       cartValue: CartTotal,
       userId: user._id,
+      option: pickupOption,
     };
     props.loader(true);
 
@@ -142,6 +145,7 @@ function Cart(props) {
   useEffect(() => {
     getAllPincodes();
     getShippingCost();
+    getClosureDate()
   }, []);
 
   const getAllPincodes = () => {
@@ -151,6 +155,24 @@ function Cart(props) {
           props.toaster({ type: "error", message: res?.error });
         } else {
           setPincodes(res.pincodes || []); // Make sure it's an array
+        }
+      })
+      .catch((err) => {
+        props.loader(false);
+        props.toaster({
+          type: "error",
+          message: err?.message || "Failed to fetch pincodes",
+        });
+      });
+  };
+
+  const getClosureDate = () => {
+    Api("get", "getClosureDates", null, router)
+      .then((res) => {
+        if (res?.error) {
+          props.toaster({ type: "error", message: res?.error });
+        } else {
+          setClosureDates(res.data.map(d => new Date(d.closureDate)));
         }
       })
       .catch((err) => {
@@ -288,6 +310,18 @@ function Cart(props) {
     };
   }, []);
 
+  const checkAvailabilityAndAddToCart = (mdate) => {
+    let cDate = moment(new Date(mdate)).format('YYYY-MM-DD');
+    const fdate = closureDates.find((e) => cDate.toString() === moment(new Date(e)).format('YYYY-MM-DD'))
+    if (fdate) {
+      const cdate = new Date(mdate);
+      cdate.setDate(mdate.getDate() + 1);
+      checkAvailabilityAndAddToCart(cdate)
+    } else {
+      return mdate;
+    }
+  }
+
   const minDate = (() => {
     const now = new Date();
     const currentHour = now.getHours();
@@ -295,11 +329,14 @@ function Cart(props) {
     if (currentHour >= 14) {
       const tomorrow = new Date();
       tomorrow.setDate(now.getDate() + 1);
+      return checkAvailabilityAndAddToCart(tomorrow)
       return tomorrow;
     }
-
+    return checkAvailabilityAndAddToCart(tomorrow)
     return now;
   })();
+
+
 
   useEffect(() => {
     const sumWithInitial = cartData?.reduce(
@@ -934,8 +971,8 @@ function Cart(props) {
                         <label
                           key={opt.id}
                           className={`flex flex-col border-gray-300 shadow-md border-2 items-start md:p-4 p-2 rounded-lg  ${selected
-                              ? "border-green-400 shadow-md border-3"
-                              : "border-gray-200 border"
+                            ? "border-green-400 shadow-md border-3"
+                            : "border-gray-200 border"
                             } cursor-pointer bg-white`}
                         >
                           <div className="flex items-start justify-between w-full">
@@ -962,8 +999,8 @@ function Cart(props) {
 
                             <div
                               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
-                                  ? "border-green-600"
-                                  : "border-gray-300"
+                                ? "border-green-600"
+                                : "border-gray-300"
                                 }`}
                             >
                               <div
@@ -1004,6 +1041,7 @@ function Cart(props) {
                                         onChange={handleDateChange}
                                         inline
                                         minDate={minDate}
+                                        excludeDates={closureDates}
                                       />
                                     </div>
                                   )}
@@ -1056,6 +1094,7 @@ function Cart(props) {
                                           onChange={handleDateChange1}
                                           inline
                                           minDate={minDate1}
+                                          excludeDates={closureDates}
                                         />
                                       </div>
                                     )}
@@ -1271,7 +1310,7 @@ function Cart(props) {
                     <div className="flex text-black justify-between items-center">
                       {pickupOption === "localDelivery" && (
                         <>
-                          <p className="text-base">{t("Serviecs Fee")}</p>
+                          <p className="text-base">{t("Service Fee")}</p>
 
                           <div>
                             {CartTotal < shipcCost?.minServiesCost ? (
