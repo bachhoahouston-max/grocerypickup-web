@@ -287,7 +287,72 @@ function Mybooking(props) {
                             {key + 1}
                           </div>
                         </div>
+
                         <div className="flex">
+                          <div className="flex justify-start">
+                            {(() => {
+                              switch (booking?.status) {
+
+                                case "Completed":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                      {t("Order Delivered")}
+                                    </span>
+                                  );
+                                case "Pending":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
+                                      {t("Order Pending")}
+                                    </span>
+                                  );
+                                case "Return Requested":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                                      {t("Order Return Requested")}
+                                    </span>
+                                  );
+
+                                case "Return":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                                      {t("Order Returned")}
+                                    </span>
+                                  );
+                                case "Cancel":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                                      {t("Order Cancelled")}
+                                    </span>
+                                  );
+                                case "Shipped":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                      {t("Order Shipped")}
+                                    </span>
+                                  );
+                                case "Preparing":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
+                                      {booking?.isReady ? t("Order Ready") : t("Order Preparing")}
+                                    </span>
+                                  );
+                                case "Driverassigned":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
+                                      {t("Driver Assigned")}
+                                    </span>
+                                  );
+                                case "Out for Delivery":
+                                  return (
+                                    <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                                      {t("Out for Delivery")}
+                                    </span>
+                                  );
+                                default:
+                                  return null;
+                              }
+                            })()}
+                          </div>
                           {/* <Invoice order={booking} /> */}
                           <MdFileDownload
                             className="text-xl text-black"
@@ -322,74 +387,26 @@ function Mybooking(props) {
                       </div>
 
                       {/* Status Badge */}
-                      <div className="flex justify-start">
-                        {(() => {
-                          switch (booking?.status) {
-                            case "Order Ready":
-                              return (
-                                <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                                  {t("Order Ready")}
-                                </span>
-                              );
-                            case "Completed":
-                              return (
-                                <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                                  {t("Order Delivered")}
-                                </span>
-                              );
-                            case "Pending":
-                              return (
-                                <span className="px-3 py-1.5 bg-amber-100 text-amber-700 rounded-full text-xs font-medium">
-                                  {t("Order Pending")}
-                                </span>
-                              );
-                            case "Return Requested":
-                              return (
-                                <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                                  {t("Order Return Requested")}
-                                </span>
-                              );
-
-                            case "Return":
-                              return (
-                                <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                                  {t("Order Returned")}
-                                </span>
-                              );
-                            case "Cancel":
-                              return (
-                                <span className="px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-                                  {t("Order Cancelled")}
-                                </span>
-                              );
-                            case "Shipped":
-                              return (
-                                <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                                  {t("Order Shipped")}
-                                </span>
-                              );
-                            case "Preparing":
-                              return (
-                                <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
-                                  {booking?.isReady ? t("Order Ready") : t("Order Preparing")}
-                                </span>
-                              );
-                            case "Driverassigned":
-                              return (
-                                <span className="px-3 py-1.5 bg-green-100 text-green-500 rounded-full text-sm font-medium whitespace-nowrap">
-                                  {t("Driver Assigned")}
-                                </span>
-                              );
-                            case "Out for Delivery":
-                              return (
-                                <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                                  {t("Out for Delivery")}
-                                </span>
-                              );
-                            default:
-                              return null;
-                          }
-                        })()}
+                      <div >
+                        {booking?.isShipmentDelivery ? (
+                          <p className="text-gray-700 font-medium">
+                            {t("Shipment Delivery")}
+                          </p>
+                        ) : booking?.isLocalDelivery ? (
+                          <p className="text-gray-700 font-medium">
+                            {t("Local Delivery")}
+                          </p>
+                        ) : booking?.isDriveUp ? (
+                          <p className="text-gray-700 font-medium">
+                            {t("Curbside Pickup")}
+                          </p>
+                        ) : booking?.isOrderPickup ? (
+                          <p className="text-gray-700 font-medium">
+                            {t("In-store Pickup")}
+                          </p>
+                        ) : (
+                          <p className="text-gray-500 italic">Not Found</p>
+                        )}
                       </div>
                     </div>
 
@@ -465,12 +482,7 @@ function Mybooking(props) {
                                     {t("Driver assigned")}
                                   </span>
                                 );
-                              case "Order Ready":
-                                return (
-                                  <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                                    {t("Order Ready")}
-                                  </span>
-                                );
+
                               case "Out for Delivery":
                                 return (
                                   <span className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">

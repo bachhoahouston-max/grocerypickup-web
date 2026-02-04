@@ -46,6 +46,8 @@ function Cart(props) {
   const [shipcCost, setShipCost] = useState({});
   const [serviceFee, setServiceFee] = useState(0);
   const [closureDates, setClosureDates] = useState([]);
+  const [extraFees, setExtrafees] = useState(0)
+  const [ExtraFeesObj, setExtraFeesObj] = useState({})
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -105,9 +107,21 @@ function Cart(props) {
   const [date, setDate] = useState(null);
   const [parkingNo, setParkingNo] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-
+  console.log(user)
   const handleOptionChange = (event) => {
     setPickupOption(event.target.value);
+    setDiscount(0);
+    setDiscountCode(0);
+    setAppliedCoupon(false);
+    setSearchTerm("");
+    console.log('pickup option', event.target.value)
+    if (user.zipcode) {
+      if (event.target.value === "localDelivery") {
+        checkawailability(user.zipcode)
+      } else {
+        setExtrafees(0)
+      }
+    }
   };
 
   const handleIconClick = () => {
@@ -139,6 +153,7 @@ function Cart(props) {
     if (userDetails) {
       setUser(JSON.parse(userDetails));
       getProfileData();
+
     }
   }, []);
 
@@ -155,6 +170,34 @@ function Cart(props) {
           props.toaster({ type: "error", message: res?.error });
         } else {
           setPincodes(res.pincodes || []); // Make sure it's an array
+        }
+      })
+      .catch((err) => {
+        props.loader(false);
+        props.toaster({
+          type: "error",
+          message: err?.message || "Failed to fetch pincodes",
+        });
+      });
+  };
+
+  const checkawailability = (pincode) => {
+    Api("post", "checkAvailable", { pincode }, router)
+      .then((res) => {
+        if (res?.error) {
+          props.toaster({ type: "error", message: res?.error });
+        } else {
+          setExtraFeesObj(res.data)
+          if (res?.data?.extendedCharge) {
+            if (CartTotal > res?.data.extendedCharge) {
+              setExtrafees(0)
+            } else {
+              setExtrafees(res.data.extendedCharge)
+            }
+          } else {
+            setExtrafees(0)
+          }
+          // setPincodes(res.pincodes || []); // Make sure it's an array
         }
       })
       .catch((err) => {
@@ -215,6 +258,13 @@ function Cart(props) {
         props.loader(false);
         if (res?.status) {
           setProfileData(res.data);
+          if (res.data.zipcode) {
+            if (pickupOption === "localDelivery") {
+              checkawailability(res.data.zipcode)
+            } else {
+              setExtrafees(0)
+            }
+          }
           setLocalAddress({
             dateOfDelivery: "",
             address: res.data.address || "",
@@ -265,6 +315,10 @@ function Cart(props) {
             const updatedUser = { ...userDetail, ...res.data };
             localStorage.setItem("userDetail", JSON.stringify(updatedUser));
             setUser(updatedUser);
+            if (pickupOption === "localDelivery") {
+              checkawailability(res.data.zipcode)
+            }
+
           }
         } else {
           setOpen(false);
@@ -380,14 +434,20 @@ function Cart(props) {
     let finalTotal;
 
     if (pickupOption === "localDelivery") {
-      finalTotal = cartAfterDiscount + delivery + Number(deliverytip) + fee;
+      if (sumWithInitial < ExtraFeesObj.extendedMinCharge) {
+        finalTotal = cartAfterDiscount + delivery + Number(deliverytip) + fee + ExtraFeesObj.extendedCharge;
+        setExtrafees(ExtraFeesObj.extendedCharge)
+      } else {
+        finalTotal = cartAfterDiscount + delivery + Number(deliverytip) + fee
+        setExtrafees(0)
+      }
     } else {
       finalTotal = cartAfterDiscount + delivery;
     }
 
     setCartTotal(sumWithInitial.toFixed(2)); // Now correct total
     setMainTotal(finalTotal.toFixed(2));
-  }, [cartData, pickupOption, deliverytip, discount]);
+  }, [cartData, pickupOption, deliverytip, discount, extraFees]);
 
   const emptyCart = async () => {
     setCartData([]);
@@ -649,6 +709,7 @@ function Cart(props) {
       dateOfDelivery: date || localAddress.dateOfDelivery,
       Deliverytip: deliveryTip.toString(),
       serviceFee: servicefee.toString(),
+      extraFees,
       order_platform: "web",
     };
 
@@ -721,6 +782,7 @@ function Cart(props) {
       deliveryCharge: deliveryCharge.toString(), // still passing to backend
       serviceFee: servicefee.toString(),
       hasDiscount: "true",
+      extraFees,
       discountAmount: checkoutData?.discount?.toString() || "0",
       discountCode: checkoutData?.discountCode || "",
       isOnce: checkoutData?.isOnce,
@@ -753,7 +815,7 @@ function Cart(props) {
             display_name: "Standard Delivery",
             type: "fixed_amount",
             fixed_amount: {
-              amount: Math.round(deliveryCharge * 100), // deliveryCharge used here
+              amount: Math.round((Number(deliveryCharge) + Number(extraFees)) * 100), // deliveryCharge used here
               currency: "usd",
             },
           },
@@ -1144,7 +1206,7 @@ function Cart(props) {
             {cartData.length > 0 && (
               <>
                 <div>
-                  <div className="bg-white rounded-lg  flex flex-row gap-2">
+                  {pickupOption && <div className="bg-white rounded-lg  flex flex-row gap-2">
                     <div className="relative flex-1 ">
                       <input
                         type="text"
@@ -1176,7 +1238,7 @@ function Cart(props) {
                     >
                       {t("Apply")}
                     </button>
-                  </div>
+                  </div>}
                   {appliedCoupon && (
                     <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
                       <span className="text-base">
@@ -1304,6 +1366,14 @@ function Cart(props) {
                         ) : null}
                       </div>
                     </div>
+
+                    {extraFees > 0 && <div className="flex text-black justify-between items-center">
+                      <p className="text-base">{t("Extra Charge")}</p>
+
+                      <div className="text-base font-medium">
+                        {constant.currency} {extraFees}
+                      </div>
+                    </div>}
 
                     <div className="flex text-black justify-between items-center">
                       {pickupOption === "localDelivery" && (
