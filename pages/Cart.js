@@ -1368,7 +1368,7 @@ function Cart(props) {
                     </div>
 
                     {extraFees > 0 && <div className="flex text-black justify-between items-center">
-                      <p className="text-base">{t("Extra Charge")}</p>
+                      <p className="text-base">{t("Extended Zone Delivery Fee")}</p>
 
                       <div className="text-base font-medium">
                         {constant.currency} {extraFees}
