@@ -118,7 +118,6 @@
   "Bringing Freshness & Convenience Together": "Bringing Freshness & Convenience Together",
   "We combine quality products with hassle-free shopping to make your daily grocery experience smoother and smarter": "We combine quality products with hassle-free shopping to make your daily grocery experience smoother and smarter",
   "We are a modern grocery pickup and delivery service committed to making your daily shopping easier, faster, and more reliable. With a wide range of fresh produce, pantry staples, and household essentials, we bring convenience to your doorstep. Trusted by hundreds of families, we continue to grow by focusing on quality, customer satisfaction, and a seamless shopping experience": "We are a modern grocery pickup and delivery service committed to making your daily shopping easier, faster, and more reliable. With a wide range of fresh produce, pantry staples, and household essentials, we bring convenience to your doorstep. Trusted by hundreds of families, we continue to grow by focusing on quality, customer satisfaction, and a seamless shopping experience",
-
   "Maintenance Request Management": "Maintenance Request Management",
   "Stakeholder Communication": "Stakeholder Communication",
   "Document Management": "Document Management",
@@ -256,7 +255,6 @@
   "Quick delivery in next day": "Quick delivery in next day",
   "Customer": "Customer",
   "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee": "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee",
-
   "Cart Summary": "Cart Summary",
   "Subtotal": "Subtotal",
   "Coupon Discount": "Coupon Discount",
@@ -265,13 +263,11 @@
   "Select a tip": "Select a tip",
   "Delivery Charges": "Delivery Charges",
   "Proceed To Checkout": "Proceed To Checkout",
-
   "Store Location": "Store Location",
   "Franchise Opportunity": "Franchise Opportunity",
   "Explore by Categories": "Explore by Categories",
   "New Arrivals": "New Arrivals",
   "Bulk Best Sellers": "Bulk Best Sellers",
-
   "Select a Pickup Date": "Select a Pickup Date",
   "Product is available for CurbSide Pickup": "Product is available for CurbSide Pickup",
   "Product is Not available for CurbSide Pickup": "Product is Not available for CurbSide Pickup",
@@ -279,7 +275,6 @@
   "Product is Not available for In Store Pickup": "Product is Not available for In Store Pickup",
   "Product is available for Next Day Delivery": "Product is available for Next Day Delivery",
   "Product is Not available for Next Day Delivery": "Product is Not available for Next Day Delivery",
-
   "Review this item": "Review this item",
   "Add a review": "Add a review",
   "At least 20 characters": "At least 20 characters",
@@ -293,12 +288,10 @@
   "Back": "Back",
   "In-store Pickup": "In-store Pickup",
   "Local Delivery": "Local Delivery",
-
   "7 Days A Week Support": "7 Days A Week Support",
   "Available during business hours": "Available during business hours",
   "By Clicking Sign up you agree with our": "By Clicking Sign up you agree with our",
   "and": "and",
-
   "Select Language": "Select Language",
   "All Products": "All Products",
   "Get in-touch": "Get in-touch",
@@ -324,7 +317,6 @@
   "Shop By Category": "Shop By Category",
   "Filter": "Filter",
   "Loading more": "Loading more",
-
   "No Products Found": "No Products Found",
   "Try searching with different keywords or explore other categories": "Try searching with different keywords or explore other categories",
   "Search": "Search",
@@ -332,11 +324,9 @@
   "Out of Stock": "Out of Stock",
   "Driver Assigned": "Driver Assigned",
   "Add to Cart": "Add to Cart",
-
   "You are not logged in. Please sign in to view your profile": "You are not logged in. Please sign in to view your profile",
   "Sign In": "Sign In",
   "Sign Out": "Sign Out",
-
   "Product Recall Information": "Product Recall Information",
   "Help Center": "Help Center",
   "My cart": "My cart",
@@ -344,12 +334,12 @@
   "Cut off time 11:59 pm": "Cut off time 11:59 pm",
   "Product is Not available for Same Day Delivery": "Product is Not available for Same Day Delivery",
   "Product is available for Same Day Delivery": "Product is available for Same Day Delivery",
-
   "Enter coupon code": "Enter coupon code",
   "Apply": "Apply",
   "Bill Summary": "Bill Summary",
   "more to get Free Shipping Delivery": "more to get Free Shipping Delivery",
   "Free Shipping available": "Free Shipping available",
   "Free Local Delivery available": "Free Local Delivery available",
-  "more to get Free Local Delivery": "more to get Free Local Delivery"
+  "more to get Free Local Delivery": "more to get Free Local Delivery",
+  "Extended Zone Delivery Fee": "Extended Zone Delivery Fee"
 }

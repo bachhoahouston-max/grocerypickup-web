@@ -15,6 +15,7 @@ import Image from "next/image";
 import CartDrawer from "@/components/CartDrawer";
 import AddressForm from "@/components/AddressForm";
 import ShippingInfoCard from "@/components/ShippingInfoCard";
+import moment from "moment";
 
 function Cart(props) {
   const router = useRouter();
@@ -44,6 +45,9 @@ function Cart(props) {
   const [successPopup, setSuccessPopup] = useState(false);
   const [shipcCost, setShipCost] = useState({});
   const [serviceFee, setServiceFee] = useState(0);
+  const [closureDates, setClosureDates] = useState([]);
+  const [extraFees, setExtrafees] = useState(0)
+  const [ExtraFeesObj, setExtraFeesObj] = useState({})
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -57,6 +61,7 @@ function Cart(props) {
       code: searchTerm,
       cartValue: CartTotal,
       userId: user._id,
+      option: pickupOption,
     };
     props.loader(true);
 
@@ -102,9 +107,21 @@ function Cart(props) {
   const [date, setDate] = useState(null);
   const [parkingNo, setParkingNo] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-
+  console.log(user)
   const handleOptionChange = (event) => {
     setPickupOption(event.target.value);
+    setDiscount(0);
+    setDiscountCode(0);
+    setAppliedCoupon(false);
+    setSearchTerm("");
+    console.log('pickup option', event.target.value)
+    if (user.zipcode) {
+      if (event.target.value === "localDelivery") {
+        checkawailability(user.zipcode)
+      } else {
+        setExtrafees(0)
+      }
+    }
   };
 
   const handleIconClick = () => {
@@ -136,12 +153,14 @@ function Cart(props) {
     if (userDetails) {
       setUser(JSON.parse(userDetails));
       getProfileData();
+
     }
   }, []);
 
   useEffect(() => {
     getAllPincodes();
     getShippingCost();
+    getClosureDate()
   }, []);
 
   const getAllPincodes = () => {
@@ -151,6 +170,52 @@ function Cart(props) {
           props.toaster({ type: "error", message: res?.error });
         } else {
           setPincodes(res.pincodes || []); // Make sure it's an array
+        }
+      })
+      .catch((err) => {
+        props.loader(false);
+        props.toaster({
+          type: "error",
+          message: err?.message || "Failed to fetch pincodes",
+        });
+      });
+  };
+
+  const checkawailability = (pincode) => {
+    Api("post", "checkAvailable", { pincode }, router)
+      .then((res) => {
+        if (res?.error) {
+          props.toaster({ type: "error", message: res?.error });
+        } else {
+          setExtraFeesObj(res.data)
+          if (res?.data?.extendedCharge) {
+            if (CartTotal > res?.data.extendedCharge) {
+              setExtrafees(0)
+            } else {
+              setExtrafees(res.data.extendedCharge)
+            }
+          } else {
+            setExtrafees(0)
+          }
+          // setPincodes(res.pincodes || []); // Make sure it's an array
+        }
+      })
+      .catch((err) => {
+        props.loader(false);
+        props.toaster({
+          type: "error",
+          message: err?.message || "Failed to fetch pincodes",
+        });
+      });
+  };
+
+  const getClosureDate = () => {
+    Api("get", "getClosureDates", null, router)
+      .then((res) => {
+        if (res?.error) {
+          props.toaster({ type: "error", message: res?.error });
+        } else {
+          setClosureDates(res.data.map(d => new Date(d.closureDate)));
         }
       })
       .catch((err) => {
@@ -193,6 +258,13 @@ function Cart(props) {
         props.loader(false);
         if (res?.status) {
           setProfileData(res.data);
+          if (res.data.zipcode) {
+            if (pickupOption === "localDelivery") {
+              checkawailability(res.data.zipcode)
+            } else {
+              setExtrafees(0)
+            }
+          }
           setLocalAddress({
             dateOfDelivery: "",
             address: res.data.address || "",
@@ -243,6 +315,10 @@ function Cart(props) {
             const updatedUser = { ...userDetail, ...res.data };
             localStorage.setItem("userDetail", JSON.stringify(updatedUser));
             setUser(updatedUser);
+            if (pickupOption === "localDelivery") {
+              checkawailability(res.data.zipcode)
+            }
+
           }
         } else {
           setOpen(false);
@@ -288,6 +364,18 @@ function Cart(props) {
     };
   }, []);
 
+  const checkAvailabilityAndAddToCart = (mdate) => {
+    let cDate = moment(new Date(mdate)).format('YYYY-MM-DD');
+    const fdate = closureDates.find((e) => cDate.toString() === moment(new Date(e)).format('YYYY-MM-DD'))
+    if (fdate) {
+      const cdate = new Date(mdate);
+      cdate.setDate(mdate.getDate() + 1);
+      checkAvailabilityAndAddToCart(cdate)
+    } else {
+      return mdate;
+    }
+  }
+
   const minDate = (() => {
     const now = new Date();
     const currentHour = now.getHours();
@@ -295,11 +383,12 @@ function Cart(props) {
     if (currentHour >= 14) {
       const tomorrow = new Date();
       tomorrow.setDate(now.getDate() + 1);
-      return tomorrow;
+      return checkAvailabilityAndAddToCart(tomorrow)
     }
-
-    return now;
+    return checkAvailabilityAndAddToCart(now)
   })();
+
+
 
   useEffect(() => {
     const sumWithInitial = cartData?.reduce(
@@ -345,14 +434,20 @@ function Cart(props) {
     let finalTotal;
 
     if (pickupOption === "localDelivery") {
-      finalTotal = cartAfterDiscount + delivery + Number(deliverytip) + fee;
+      if (sumWithInitial < ExtraFeesObj.extendedMinCharge) {
+        finalTotal = cartAfterDiscount + delivery + Number(deliverytip) + fee + ExtraFeesObj.extendedCharge;
+        setExtrafees(ExtraFeesObj.extendedCharge)
+      } else {
+        finalTotal = cartAfterDiscount + delivery + Number(deliverytip) + fee
+        setExtrafees(0)
+      }
     } else {
       finalTotal = cartAfterDiscount + delivery;
     }
 
     setCartTotal(sumWithInitial.toFixed(2)); // Now correct total
     setMainTotal(finalTotal.toFixed(2));
-  }, [cartData, pickupOption, deliverytip, discount]);
+  }, [cartData, pickupOption, deliverytip, discount, extraFees]);
 
   const emptyCart = async () => {
     setCartData([]);
@@ -614,6 +709,7 @@ function Cart(props) {
       dateOfDelivery: date || localAddress.dateOfDelivery,
       Deliverytip: deliveryTip.toString(),
       serviceFee: servicefee.toString(),
+      extraFees,
       order_platform: "web",
     };
 
@@ -661,6 +757,9 @@ function Cart(props) {
         product_data: {
           name: item.name,
           tax_code: item.tax_code || "txcd_10000000",
+          metadata: {
+            productId: item._id || "",
+          }
         },
       },
     }));
@@ -673,8 +772,8 @@ function Cart(props) {
         ? currentLocalCost
         : pickupOption === "ShipmentDelivery" &&
           CartTotal < shipcCost?.minShipmentCostForShipment
-        ? currentShipmentCost
-        : 0 || 0
+          ? currentShipmentCost
+          : 0 || 0
     );
 
     const metadata = {
@@ -683,6 +782,7 @@ function Cart(props) {
       deliveryCharge: deliveryCharge.toString(), // still passing to backend
       serviceFee: servicefee.toString(),
       hasDiscount: "true",
+      extraFees,
       discountAmount: checkoutData?.discount?.toString() || "0",
       discountCode: checkoutData?.discountCode || "",
       isOnce: checkoutData?.isOnce,
@@ -715,7 +815,7 @@ function Cart(props) {
             display_name: "Standard Delivery",
             type: "fixed_amount",
             fixed_amount: {
-              amount: Math.round(deliveryCharge * 100), // deliveryCharge used here
+              amount: Math.round((Number(deliveryCharge) + Number(extraFees)) * 100), // deliveryCharge used here
               currency: "usd",
             },
           },
@@ -930,11 +1030,10 @@ function Cart(props) {
                       return (
                         <label
                           key={opt.id}
-                          className={`flex flex-col border-gray-300 shadow-md border-2 items-start md:p-4 p-2 rounded-lg  ${
-                            selected
-                              ? "border-green-400 shadow-md border-3"
-                              : "border-gray-200 border"
-                          } cursor-pointer bg-white`}
+                          className={`flex flex-col border-gray-300 shadow-md border-2 items-start md:p-4 p-2 rounded-lg  ${selected
+                            ? "border-green-400 shadow-md border-3"
+                            : "border-gray-200 border"
+                            } cursor-pointer bg-white`}
                         >
                           <div className="flex items-start justify-between w-full">
                             <div className="flex items-start gap-2">
@@ -959,16 +1058,14 @@ function Cart(props) {
                             </div>
 
                             <div
-                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                selected
-                                  ? "border-green-600"
-                                  : "border-gray-300"
-                              }`}
+                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
+                                ? "border-green-600"
+                                : "border-gray-300"
+                                }`}
                             >
                               <div
-                                className={`w-2 h-2 rounded-full ${
-                                  selected ? "bg-green-600" : "bg-white"
-                                }`}
+                                className={`w-2 h-2 rounded-full ${selected ? "bg-green-600" : "bg-white"
+                                  }`}
                               />
                             </div>
                           </div>
@@ -1004,6 +1101,7 @@ function Cart(props) {
                                         onChange={handleDateChange}
                                         inline
                                         minDate={minDate}
+                                        excludeDates={closureDates}
                                       />
                                     </div>
                                   )}
@@ -1033,8 +1131,8 @@ function Cart(props) {
                                       value={
                                         localAddress.dateOfDelivery
                                           ? formatDate(
-                                              localAddress.dateOfDelivery
-                                            )
+                                            localAddress.dateOfDelivery
+                                          )
                                           : t("Select date")
                                       }
                                       readOnly
@@ -1056,6 +1154,7 @@ function Cart(props) {
                                           onChange={handleDateChange1}
                                           inline
                                           minDate={minDate1}
+                                          excludeDates={closureDates}
                                         />
                                       </div>
                                     )}
@@ -1107,7 +1206,7 @@ function Cart(props) {
             {cartData.length > 0 && (
               <>
                 <div>
-                  <div className="bg-white rounded-lg  flex flex-row gap-2">
+                  {pickupOption && <div className="bg-white rounded-lg  flex flex-row gap-2">
                     <div className="relative flex-1 ">
                       <input
                         type="text"
@@ -1139,7 +1238,7 @@ function Cart(props) {
                     >
                       {t("Apply")}
                     </button>
-                  </div>
+                  </div>}
                   {appliedCoupon && (
                     <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
                       <span className="text-base">
@@ -1246,7 +1345,7 @@ function Cart(props) {
 
                       <div>
                         {pickupOption === "orderPickup" ||
-                        pickupOption === "driveUp" ? (
+                          pickupOption === "driveUp" ? (
                           <span className="text-base">{t("$0.00")}</span>
                         ) : pickupOption === "localDelivery" ? (
                           CartTotal < shipcCost?.minShippingCostforLocal ? (
@@ -1268,10 +1367,18 @@ function Cart(props) {
                       </div>
                     </div>
 
+                    {extraFees > 0 && <div className="flex text-black justify-between items-center">
+                      <p className="text-base">{t("Extended Zone Delivery Fee")}</p>
+
+                      <div className="text-base font-medium">
+                        {constant.currency} {extraFees}
+                      </div>
+                    </div>}
+
                     <div className="flex text-black justify-between items-center">
                       {pickupOption === "localDelivery" && (
                         <>
-                          <p className="text-base">{t("Serviecs Fee")}</p>
+                          <p className="text-base">{t("Service Fee")}</p>
 
                           <div>
                             {CartTotal < shipcCost?.minServiesCost ? (

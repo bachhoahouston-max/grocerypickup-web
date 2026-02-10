@@ -119,7 +119,6 @@
   "Bringing Freshness & Convenience Together": "Mang lại sự tươi mới và tiện lợi",
   "We combine quality products with hassle-free shopping to make your daily grocery experience smoother and smarter": "Chúng tôi kết hợp các sản phẩm chất lượng với việc mua sắm dễ dàng để giúp trải nghiệm mua sắm hàng ngày của bạn trở nên dễ dàng và thông minh hơn",
   "We are a modern grocery pickup and delivery service committed to making your daily shopping easier, faster, and more reliable. With a wide range of fresh produce, pantry staples, and household essentials, we bring convenience to your doorstep. Trusted by hundreds of families, we continue to grow by focusing on quality, customer satisfaction, and a seamless shopping experience": "Chúng tôi là dịch vụ giao và nhận hàng tạp hóa hiện đại cam kết giúp việc mua sắm hàng ngày của bạn dễ dàng hơn, nhanh hơn và đáng tin cậy hơn. Với nhiều loại sản phẩm tươi sống, thực phẩm dự trữ và đồ dùng gia đình, chúng tôi mang sự tiện lợi đến tận nhà bạn. Được hàng trăm gia đình tin tưởng, chúng tôi tiếp tục phát triển bằng cách tập trung vào chất lượng, sự hài lòng của khách hàng và trải nghiệm mua sắm liền mạch",
-
   "Maintenance Request Management": "Quản lý yêu cầu bảo trì",
   "Stakeholder Communication": "Truyền thông các bên liên quan",
   "Document Management": "Quản lý tài liệu",
@@ -255,7 +254,6 @@
   "Quick delivery in next day": "Giao hàng nhanh trong ngày hôm sau",
   "Customer": "Khách hàng",
   "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee": "*Lưu ý: Bach Hoa Houston sẽ giữ đơn hàng của bạn cho đến khi đóng cửa ngày làm việc tiếp theo nếu đơn hàng của bạn không được nhận trong ngày nhận hàng đã lên lịch, sau đó đơn hàng của bạn sẽ bị hủy và được hoàn lại tiền trừ đi 5% phí hoàn kho",
-
   "Cart Summary": "Tóm tắt giỏ hàng",
   "Subtotal": "Tổng phụ",
   "Coupon Discount": "Giảm giá mã khuyến mãi",
@@ -278,7 +276,6 @@
   "Product is Not available for Next Day Delivery": "Sản phẩm không có sẵn để giao vào ngày hôm sau",
   "Product is Not available for Same Day Delivery": "Sản phẩm không có sẵn để giao trong ngày",
   "Product is available for Same Day Delivery": "Sản phẩm có sẵn để giao trong ngày",
-
   "Review this item": "Đánh giá sản phẩm này",
   "Add a review": "Thêm đánh giá",
   "At least 20 characters": "Ít nhất 20 ký tự",
@@ -296,7 +293,6 @@
   "Available during business hours": "Có sẵn trong giờ làm việc",
   "and": "và",
   "By Clicking Sign up you agree with our": "Bằng cách nhấp vào Đăng ký, bạn đồng ý với",
-
   "Select Language": "Chọn ngôn ngữ",
   "All Products": "Tất cả sản phẩm",
   "Get in-touch": "Liên hệ",
@@ -329,21 +325,19 @@
   "Out of Stock": "Hết hàng",
   "Driver Assigned": "Tài Xế đã nhận đơn",
   "Add to Cart": "Thêm vào giỏ hàng",
-
   "You are not logged in. Please sign in to view your profile": "Bạn chưa đăng nhập. Vui lòng đăng nhập để xem hồ sơ của bạn",
   "Sign In": "Đăng nhập",
   "Sign Out": "Đăng xuất",
-
   "Product Recall Information": "Thông tin thu hồi sản phẩm",
   "Help Center": "Trung tâm trợ giúp",
   "My cart": "Giỏ hàng của tôi",
   "Same Day Local Delivery": "Giao Hàng Trong Ngày",
-
   "Enter coupon code": "Nhập mã giảm giá",
   "Apply": "Áp dụng",
   "Bill Summary": "Tóm tắt hóa đơn",
   "more to get Free Shipping Delivery": "Mua thêm để được giao hàng miễn phí",
   "Free Shipping available": "Có giao hàng miễn phí",
   "Free Local Delivery available": "Có giao hàng nội địa miễn phí",
-  "more to get Free Local Delivery": "Mua thêm để được giao hàng nội địa miễn phí"
+  "more to get Free Local Delivery": "Mua thêm để được giao hàng nội địa miễn phí",
+  "Extended Zone Delivery Fee": "Phụ Phí Giao Zipcode Xa"
 }
