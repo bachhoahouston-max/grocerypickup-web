@@ -31,25 +31,25 @@ function MainHeader() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-const chunkArray = (arr = [], size) => {
-  if (!arr.length) return [];
+  const chunkArray = (arr = [], size) => {
+    if (!arr.length) return [];
 
-  const chunks = [];
+    const chunks = [];
 
-  for (let i = 0; i < arr.length; i += size) {
-    let chunk = arr.slice(i, i + size);
+    for (let i = 0; i < arr.length; i += size) {
+      let chunk = arr.slice(i, i + size);
 
-    let fillIndex = 0;
-    while (chunk.length < size) {
-      chunk.push(arr[fillIndex % arr.length]);
-      fillIndex++;
+      let fillIndex = 0;
+      while (chunk.length < size) {
+        chunk.push(arr[fillIndex % arr.length]);
+        fillIndex++;
+      }
+
+      chunks.push(chunk);
     }
 
-    chunks.push(chunk);
-  }
-
-  return chunks;
-};
+    return chunks;
+  };
 
 
   const groupedImages = chunkArray(carouselImg, 2);
@@ -109,12 +109,12 @@ const chunkArray = (arr = [], size) => {
         >
           {carouselData.map((item, idx) =>
             isMobile ? (
-              <div key={idx} className="md:px-2 pt-2 md:pt-0">
+              <div key={idx} className="md:px-2 pt-2 md:pt-0 " >
                 <div
-                  className="relative w-full overflow-hidden"
+                  className="relative w-full overflow-hidden "
                   style={{
                     position: "relative",
-                    aspectRatio: 1 / 1,
+                    aspectRatio: 1 / 0.8,
                   }}
                 >
                   <Image
@@ -175,7 +175,7 @@ const chunkArray = (arr = [], size) => {
           >
             <div>
               {" "}
-              <img src={service?.image} className="h-10"/>{" "}
+              <img src={service?.image} className="h-10" />{" "}
             </div>
             <div className="text-left">
               <p className="md:text-[17px] font-semibold text-gray-900">

@@ -181,6 +181,8 @@ function Cart(props) {
       });
   };
 
+  console.log("extraFees", extraFees)
+
   const checkawailability = (pincode) => {
     Api("post", "checkAvailable", { pincode }, router)
       .then((res) => {
@@ -189,7 +191,7 @@ function Cart(props) {
         } else {
           setExtraFeesObj(res.data)
           if (res?.data?.extendedCharge) {
-            if (CartTotal > res?.data.extendedCharge) {
+            if (CartTotal > res?.data.extendedMinCharge) {
               setExtrafees(0)
             } else {
               setExtrafees(res.data.extendedCharge)
