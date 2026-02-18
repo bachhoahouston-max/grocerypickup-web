@@ -290,7 +290,6 @@ const EditProfile = ({ loader, toaster }) => {
 
     return (
         <div className="mx-auto max-w-7xl px-4 py-6 md:py-12">
-            {/* Header */}
             <div className="flex flex-col justify-center items-center mb-8">
                 <h1 className="md:mt-0 mt-4 text-center text-3xl md:text-4xl font-semibold text-black">
                     {t("My")}  <span className="text-custom-green">{t("Profile")}</span>
@@ -300,9 +299,8 @@ const EditProfile = ({ loader, toaster }) => {
                 </p>
             </div>
 
-            {/* Profile Card */}
             <div className="bg-white rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden">
-                {/* Profile Header */}
+
                 <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
                     <div className="md:mr-8 md:mx-2 mx-auto mb-3 sm:mb-0 sm:mr-4">
                         <FaUserAlt className='text-black' size={55} />
@@ -319,7 +317,6 @@ const EditProfile = ({ loader, toaster }) => {
                     </button>
                 </div>
 
-                {/* Profile Form */}
                 <div className="p-4 md:p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                         <div className="mb-4">
