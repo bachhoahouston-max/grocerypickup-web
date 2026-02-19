@@ -109,28 +109,28 @@ function MainHeader() {
         >
           {carouselData.map((item, idx) =>
             isMobile ? (
-              <div key={idx} className="md:px-2 pt-2 md:pt-0 " >
+              <div key={idx} className="" >
                 <div
-                  className="relative w-full overflow-hidden "
+                  className="relative w-full overflow-hidden  rounded-[40px]"
                   style={{
                     position: "relative",
-                    aspectRatio: 1 / 0.8,
+                    aspectRatio: 1 / 0.7,
                   }}
                 >
                   <Image
                     src={item?.image || "/fallback.jpg"}
                     alt="Banner"
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                   />
                 </div>
               </div>
             ) : (
-              <div key={idx} className="px-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div key={idx} className="">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4  ">
                   <div className="md:col-span-1">
                     <div
-                      className="relative w-full overflow-hidden "
+                      className="relative w-full overflow-hidden bg-[#E8F5E9] rounded-[40px]"
                       style={{
                         position: "relative",
                         aspectRatio: 1 / 1,
@@ -147,7 +147,7 @@ function MainHeader() {
 
                   <div className="col-span-1 ">
                     <div
-                      className="relative w-full overflow-hidden"
+                      className="relative w-full overflow-hidden bg-[#E8F5E9] rounded-[40px]"
                       style={{
                         position: "relative",
                         aspectRatio: 1 / 1,

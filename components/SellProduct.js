@@ -158,14 +158,13 @@ const SellProduct = ({ loader, toaster }) => {
   }, [saleData]);
 
   return (
-    <div className="container  md:mt-10 lg:mt-14 mb-4 bg-white md:px-0 px-2 ">
+    <>
       {saleData.length > 0 && (
-        <>
+        <div className="container  md:mt-10 lg:mt-14 mb-4 bg-transparent md:px-0 px-2 ">
           <p className="text-black md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
             {t("Offer of the Week")}
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
-
           <div className="md:mt-4 mt-2 grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto">
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
@@ -180,48 +179,100 @@ const SellProduct = ({ loader, toaster }) => {
                   className="bg-white w-full rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 relative flex flex-col"
                 >
                   {/* Category Badge */}
-                  <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
+                  {/* <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
                     {item.product?.categoryName}
+                  </div> */}
+                  <div class="flex items-center justify-center absolute top-0 left-0 gap-1 z-10 ">
+                    <button
+                      class="flex items-center gap-2 px-2 py-1 rounded-full 
+                                bg-gradient-to-r from-red-600 to-orange-500 
+                                text-white font-semibold shadow-lg 
+                                hover:scale-105 transition-transform duration-200"
+                    >
+                      <span class="text-xl animate-vibrate">⏰</span>
+
+                      <span class="text-[12px] ">Ending in</span>
+
+                      <span
+                        class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup "
+                      >
+                        {/* 04d 22h 20m 15s */}
+                        {currentSale?.days}d:
+                        {currentSale?.hours}h:
+                        {currentSale?.minutes}m
+                        {/* {currentSale?.seconds}s */}
+                      </span>
+                    </button>
                   </div>
+                  <div className="relative">
+                    {/* Sale Timer */}
 
-                  {/* Sale Timer */}
-                  {currentSale?.status !== "expired" && (
-                    <div className="md:flex flex-col hidden  absolute md:top-3 md:right-3 bg-custom-lightGreen text-custom-green text-xs md:px-4 px-6 py-1 rounded-md z-10">
-                      <p className="font-semibold text-[12px]">
-                        {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
-                      </p>
-                      <div className="flex gap-1 text-[10px] font-bold">
-                        <div>{currentSale?.days}d</div>:
-                        <div>{currentSale?.hours}h</div>:
-                        <div>{currentSale?.minutes}m</div>:
-                        <div>{currentSale?.seconds}s</div>
+
+
+
+
+                    {/* {currentSale?.status !== "expired" && (
+                      <div className="md:hidden flex flex-col absolute bottom-38 bg-custom-lightGreen text-custom-green text-xs  px-6 py-1 rounded-md z-10">
+                        <p className="font-semibold text-[12px]">
+                          {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
+                        </p>
+                        <div className="flex gap-1 text-[10px] font-bold">
+                          <div>{currentSale?.days}d</div>:
+                          <div>{currentSale?.hours}h</div>:
+                          <div>{currentSale?.minutes}m</div>:
+                          <div>{currentSale?.seconds}s</div>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )} */}
 
-                  {currentSale?.status !== "expired" && (
-                    <div className="md:hidden flex flex-col absolute bottom-38 bg-custom-lightGreen text-custom-green text-xs  px-6 py-1 rounded-md z-10">
-                      <p className="font-semibold text-[12px]">
-                        {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
-                      </p>
-                      <div className="flex gap-1 text-[10px] font-bold">
-                        <div>{currentSale?.days}d</div>:
-                        <div>{currentSale?.hours}h</div>:
-                        <div>{currentSale?.minutes}m</div>:
-                        <div>{currentSale?.seconds}s</div>
-                      </div>
+                    {/* Product Image */}
+                    <div className="relative w-full h-48 mb-4">
+                      <Image
+                        src={item.product?.varients[0]?.image[0]}
+                        alt={item.product?.name || "Product Image"}
+                        fill
+                        className="object-contain rounded-xl cursor-pointer"
+                        onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
+                      />
                     </div>
-                  )}
-
-                  {/* Product Image */}
-                  <div className="relative w-full h-48 mb-4">
-                    <Image
-                      src={item.product?.varients[0]?.image[0]}
-                      alt={item.product?.name || "Product Image"}
-                      fill
-                      className="object-contain rounded-xl cursor-pointer"
-                      onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
-                    />
+                    <div className="absolute bottom-0 right-0">
+                      {item?.product?.Quantity <= 0 ? (
+                        <button
+                          className="w-full py-2 bg-gray-400 text-white font-semibold rounded-full cursor-not-allowed"
+                        >
+                          {t("Out of Stock")}
+                        </button>
+                      ) : itemQuantity > 0 ? (
+                        <div className="flex justify-center items-center">
+                          <div className="flex justify-between items-center gap-2 md:w-[200px] w-[150px] bg-gray-100 p-1 rounded-2xl">
+                            <div
+                              className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
+                              onClick={() => itemQuantity > 1 && handleRemoveFromCart(item)}
+                            >
+                              <IoRemoveSharp className="text-white w-5 h-5" />
+                            </div>
+                            <p className="text-center font-medium text-black">{itemQuantity}</p>
+                            <div
+                              className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
+                              onClick={() => handleAddToCart(item)}
+                            >
+                              <IoAddSharp className="text-white w-5 h-5" />
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="mx-auto">
+                          <button
+                            className="bg-custom-green bg-custom-green text-white font-semibold px-2 py-2 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
+                            onClick={() => handleAddToCart(item)}
+                          >
+                            {/* <FiShoppingCart className="w-5 h-5" />
+                            {t("Add")} */}
+                            <IoAddSharp className="text-white w-6 h-6" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div className="flex justify-center items-center">
@@ -255,48 +306,14 @@ const SellProduct = ({ loader, toaster }) => {
                   </div>
 
                   {/* Add to Cart / Quantity Controls */}
-                  {item?.product?.Quantity <= 0 ? (
-                    <button
-                      className="w-full py-2 bg-gray-400 text-white font-semibold rounded-full cursor-not-allowed"
-                    >
-                      {t("Out of Stock")}
-                    </button>
-                  ) : itemQuantity > 0 ? (
-                    <div className="flex justify-center items-center">
-                      <div className="flex justify-between items-center gap-2 md:w-[200px] w-[150px] bg-gray-100 p-1 rounded-2xl">
-                        <div
-                          className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
-                          onClick={() => itemQuantity > 1 && handleRemoveFromCart(item)}
-                        >
-                          <IoRemoveSharp className="text-white w-5 h-5" />
-                        </div>
-                        <p className="text-center font-medium text-black">{itemQuantity}</p>
-                        <div
-                          className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
-                          onClick={() => handleAddToCart(item)}
-                        >
-                          <IoAddSharp className="text-white w-5 h-5" />
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="mx-auto">
-                      <button
-                        className="w-[150px] py-2 bg-custom-green text-white md:w-[200px] font-semibold rounded-full flex justify-center items-center gap-2 hover:bg-green-700 transition"
-                        onClick={() => handleAddToCart(item)}
-                      >
-                        <FiShoppingCart className="w-5 h-5" />
-                        {t("Add")}
-                      </button>
-                    </div>
-                  )}
+
                 </div>
               );
             })}
           </div>
-        </>
+        </div>
       )}
-    </div>
+    </>
 
   );
 };

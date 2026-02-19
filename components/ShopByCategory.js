@@ -71,7 +71,7 @@ function ShopByCategory() {
   }, [router]);
 
   return (
-    <div className="bg-white px-4 my-4 mb-0 md:mb-10">
+    <div className="bg-transparent px-4 my-4 mb-0 md:mb-10">
       <div className="hidden md:block md:max-w-7xl mx-auto" >
         <h1 className="text-xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 hidden md:flex">
           {t("Shop By Category")}

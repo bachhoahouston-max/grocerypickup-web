@@ -50,37 +50,40 @@ export default function Home(props) {
         />
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
-      <div className="mx-auto md:max-w-7xl mt-7">
-        <Suspense fallback={<div>Loading.....</div>}>
-          <MainHeader />
-        </Suspense>
-        <div className="md:flex hidden">
+      <div className="bg-[#E8F5E9]">
+        <div className="mx-auto md:max-w-7xl mt-5">
           <Suspense fallback={<div>Loading.....</div>}>
-            <ShopByCategory loader={props.loader} toaster={props.toaster} />
+            <MainHeader />
           </Suspense>
-        </div>
-        <div className="flex md:hidden ">
+          <div className="md:flex hidden">
+            <Suspense fallback={<div>Loading.....</div>}>
+              <ShopByCategory loader={props.loader} toaster={props.toaster} />
+            </Suspense>
+          </div>
+          <div className="flex md:hidden ">
+            <Suspense fallback={<div>Loading.....</div>}>
+              <ShopByCategory loader={props.loader} toaster={props.toaster} />
+            </Suspense>
+          </div>
           <Suspense fallback={<div>Loading.....</div>}>
-            <ShopByCategory loader={props.loader} toaster={props.toaster} />
+            <SellProduct loader={props.loader} toaster={props.toaster} />
           </Suspense>
-        </div>
-        <Suspense fallback={<div>Loading.....</div>}>
-          <SellProduct loader={props.loader} toaster={props.toaster} />
-        </Suspense>
 
-        <div className="bg-white w-full ">
-          <section className="bg-white w-full relative flex flex-col justify-center items-center">
-            <div className="container mx-auto px-2 md:px-0">
-              <h1 className="hidden md:block text-[20px] md:text-2xl font-bold md:mb-10 mb-5 md:mt-10 text-black">
-                {t("All Products")}
-              </h1>
-              <Suspense fallback={<div>Loading.....</div>}>
-                <BestSeller loader={props.loader} toaster={props.toaster} />
-              </Suspense>
-            </div>
-          </section>
+          <div className="bg-transparent w-full ">
+            <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
+              <div className="container mx-auto px-2 md:px-0">
+                <h1 className="hidden md:block text-[20px] md:text-2xl font-bold md:mb-10 mb-5 md:mt-10 text-black">
+                  {t("All Products")}
+                </h1>
+                <Suspense fallback={<div>Loading.....</div>}>
+                  <BestSeller loader={props.loader} toaster={props.toaster} />
+                </Suspense>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
+
     </>
   );
 }
@@ -212,7 +215,7 @@ function BestSeller(props) {
     };
 
     return (
-      <div className="relative w-full md:w-[380px] mb-4">
+      <div className="relative w-full md:w-[380px] mb-4 bg-transparent">
         <button
           onClick={() => setOpen(!open)}
           className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg shadow-sm transition font-semibold text-gray-800"
@@ -232,8 +235,8 @@ function BestSeller(props) {
             <li
               onClick={() => handleSelect("all")}
               className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === "all"
-                  ? "text-custom-green bg-gray-50"
-                  : "text-gray-800"
+                ? "text-custom-green bg-gray-50"
+                : "text-gray-800"
                 }`}
             >
               <FaTag />
@@ -244,8 +247,8 @@ function BestSeller(props) {
                 key={cat._id}
                 onClick={() => handleSelect(cat._id)}
                 className={`flex items-center gap-3 px-4 py-2 cursor-pointer text-sm font-semibold hover:bg-gray-100 transition ${selectedCategory === cat._id
-                    ? "text-custom-green bg-gray-50"
-                    : "text-gray-800"
+                  ? "text-custom-green bg-gray-50"
+                  : "text-gray-800"
                   }`}
               >
                 <FaTag />

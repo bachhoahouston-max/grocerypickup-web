@@ -78,7 +78,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     try {
       const data = { product: item?._id };
       const res = await Api("post", "addremovefavourite", data, router);
-
+      loader(false);
       if (res.status) {
         if (isFavorite) {
           // Remove
@@ -87,7 +87,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
           );
           setFavorite(updated);
           localStorage.setItem("Favorite", JSON.stringify(updated));
-          toaster({ type: "error", message: "Item Removed From Favorite" });
+          toaster({ type: "success", message: "Item Removed From Favorite" });
         } else {
           // Add
           const updated = [...Favorite, item];
@@ -120,36 +120,136 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       key={i}
       className="bg-white w-full rounded-[12px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-4 p-2.5 relative"
     >
-      {/* Category Badge */}
-      <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
-        {item.categoryName}
+      <div className="relative">
+
+
+        {/* Category Badge */}
+        <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
+          {item.categoryName}
+        </div>
+
+        {/* Favorite Button */}
+        <div
+          className="absolute top-6 right-6 border-[3px] border-black rounded-full bg-white md:w-11 md:h-11 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer  z-10"
+          onClick={toggleFavorite}
+        >
+          {isFavorite ? (
+            <FaHeart className="text-red-600 md:w-6 md:h-6 h-5 w-5" />
+          ) : (
+            <FaRegHeart className="text-black md:w-6 md:h-6 h-5 w-5" />
+          )}
+        </div>
+
+        {/* Product Image */}
+        <div className="relative w-full h-56 flex items-center justify-center mb-4 z-0">
+          <Image
+            src={item.varients[0].image[0]}
+            alt={item?.imageAltName || "Product Image"}
+            className="object-contain cursor-pointer"
+            onClick={() => router.push(url)}
+            fill
+            priority
+          />
+        </div>
+
+        {/* Product Name */}
+
+        <div className="absolute bottom-0 right-0">
+          {item?.Quantity <= 0 ? (
+            <div className=" rounded-full flex items-center justify-end  ">
+              <button
+                className="  bg-gray-400 text-white font-semibold px-4 py-2 rounded-full text-sm cursor-not-allowed flex items-center gap-2"
+                disabled
+              >
+                {t("Out of Stock")}
+              </button>
+            </div>
+          ) : itemQuantity > 0 ? (
+            <div className="bg-gray-100 rounded-full flex items-center justify-end px-2 py-1">
+              <div
+                className="bg-custom-green  cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
+                onClick={() => {
+                  const updatedCart = cartData.map((cartItem) => {
+                    if (cartItem._id === item._id) {
+                      if (cartItem.qty > 1) {
+                        const newQty = cartItem.qty - 1;
+                        return {
+                          ...cartItem,
+                          qty: newQty,
+                          total: (newQty * (cartItem.price || 0)).toFixed(2),
+                        };
+                      } else {
+                        return cartItem;
+                      }
+                    }
+                    return cartItem;
+                  });
+
+                  setCartData(updatedCart);
+                  localStorage.setItem(
+                    "addCartDetail",
+                    JSON.stringify(updatedCart)
+                  );
+                }}
+              >
+                <IoRemoveSharp className="text-white w-5 h-5" />
+              </div>
+
+              <p className="text-black text-lg font-semibold md:mx-4 mx-2 min-w-[10px] text-center">
+                {itemQuantity}
+              </p>
+
+              <div
+                className="bg-custom-green cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
+                onClick={() => {
+                  const updatedCart = cartData.map((cartItem) => {
+                    if (cartItem._id === item._id) {
+                      if (cartItem.qty + 1 > item.Quantity) {
+                        toaster({
+                          type: "error",
+                          message:
+                            "Item is not available in this quantity in stock. Please choose a different item.",
+                        });
+                        return cartItem;
+                      }
+                      return {
+                        ...cartItem,
+                        qty: cartItem.qty + 1,
+                        total: (
+                          (cartItem.price || 0) *
+                          (cartItem.qty + 1)
+                        ).toFixed(2),
+                      };
+                    }
+                    return cartItem;
+                  });
+
+                  setCartData(updatedCart);
+                  localStorage.setItem(
+                    "addCartDetail",
+                    JSON.stringify(updatedCart)
+                  );
+                }}
+              >
+                <IoAddSharp className="text-white w-5 h-5" />
+              </div>
+            </div>
+          ) : (
+            <div className=" rounded-full flex items-center justify-end  ">
+              <button
+                className="bg-custom-green bg-custom-green text-white font-semibold px-2 py-2 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
+                onClick={handleAddToCart}
+              >
+                {/* {t("Add")}
+                <FiShoppingCart className="w-5 h-5" /> */}
+                <IoAddSharp className="text-white w-6 h-6" />
+              </button>
+            </div>
+          )}
+        </div>
+
       </div>
 
-      {/* Favorite Button */}
-      <div
-        className="absolute top-6 right-6 border-[3px] border-black rounded-full bg-white md:w-11 md:h-11 h-9 w-9 flex justify-center items-center shadow-md cursor-pointer  z-10"
-        onClick={toggleFavorite}
-      >
-        {isFavorite ? (
-          <FaHeart className="text-red-600 md:w-6 md:h-6 h-5 w-5" />
-        ) : (
-          <FaRegHeart className="text-black md:w-6 md:h-6 h-5 w-5" />
-        )}
-      </div>
-
-      {/* Product Image */}
-      <div className="relative w-full h-48 flex items-center justify-center mb-4 z-0">
-        <Image
-          src={item.varients[0].image[0]}
-          alt={item?.imageAltName || "Product Image"}
-          className="object-contain cursor-pointer"
-          onClick={() => router.push(url)}
-          fill
-          priority
-        />
-      </div>
-
-      {/* Product Name */}
       <h3 className="text-black md:text-md text-sm font-semibold mb-3 min-h-[40px] line-clamp-2">
         {lang === "en" ? item.name : item.vietnamiesName || item.name}
       </h3>
@@ -158,7 +258,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <div className="md:flex justify-between items-center gap-3">
         {/* Price */}
         <div className="flex flex-col">
-          <p className="text-custom-green md:text-xl text-[17px] font-bold">
+          <p className="text-[#B20F1E] md:text-xl text-[17px] font-bold">
             {constant.currency}{" "}
             {Number(item?.price_slot[0]?.our_price || 0).toFixed(2)}
           </p>
@@ -171,96 +271,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
         {/* Add to Cart / Quantity Controls */}
-        {item?.Quantity <= 0 ? (
-          <div className=" rounded-full flex items-center justify-end  ">
-            <button
-              className="  bg-gray-400 text-white font-semibold px-4 py-2 rounded-full text-sm cursor-not-allowed flex items-center gap-2"
-              disabled
-            >
-              {t("Out of Stock")}
-            </button>
-          </div>
-        ) : itemQuantity > 0 ? (
-          <div className="bg-gray-100 rounded-full flex items-center justify-end px-2 py-1">
-            <div
-              className="bg-custom-green  cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
-              onClick={() => {
-                const updatedCart = cartData.map((cartItem) => {
-                  if (cartItem._id === item._id) {
-                    if (cartItem.qty > 1) {
-                      const newQty = cartItem.qty - 1;
-                      return {
-                        ...cartItem,
-                        qty: newQty,
-                        total: (newQty * (cartItem.price || 0)).toFixed(2),
-                      };
-                    } else {
-                      return cartItem;
-                    }
-                  }
-                  return cartItem;
-                });
 
-                setCartData(updatedCart);
-                localStorage.setItem(
-                  "addCartDetail",
-                  JSON.stringify(updatedCart)
-                );
-              }}
-            >
-              <IoRemoveSharp className="text-white w-5 h-5" />
-            </div>
-
-            <p className="text-black text-lg font-semibold md:mx-4 mx-2 min-w-[10px] text-center">
-              {itemQuantity}
-            </p>
-
-            <div
-              className="bg-custom-green cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
-              onClick={() => {
-                const updatedCart = cartData.map((cartItem) => {
-                  if (cartItem._id === item._id) {
-                    if (cartItem.qty + 1 > item.Quantity) {
-                      toaster({
-                        type: "error",
-                        message:
-                          "Item is not available in this quantity in stock. Please choose a different item.",
-                      });
-                      return cartItem;
-                    }
-                    return {
-                      ...cartItem,
-                      qty: cartItem.qty + 1,
-                      total: (
-                        (cartItem.price || 0) *
-                        (cartItem.qty + 1)
-                      ).toFixed(2),
-                    };
-                  }
-                  return cartItem;
-                });
-
-                setCartData(updatedCart);
-                localStorage.setItem(
-                  "addCartDetail",
-                  JSON.stringify(updatedCart)
-                );
-              }}
-            >
-              <IoAddSharp className="text-white w-5 h-5" />
-            </div>
-          </div>
-        ) : (
-          <div className=" rounded-full flex items-center justify-end  ">
-            <button
-              className="bg-custom-green bg-custom-green text-white font-semibold px-4 py-2 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
-              onClick={handleAddToCart}
-            >
-              {t("Add")}
-              <FiShoppingCart className="w-5 h-5" />
-            </button>
-          </div>
-        )}
       </div>
     </div>
   );
