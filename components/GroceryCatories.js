@@ -250,10 +250,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
       </div>
 
-      <h3 className="text-black md:text-md text-sm font-semibold mb-3 min-h-[40px] line-clamp-2">
-        {lang === "en" ? item.name : item.vietnamiesName || item.name}
-      </h3>
-
       {/* Price and Add to Cart */}
       <div className="md:flex justify-between items-center gap-3">
         {/* Price */}
@@ -273,6 +269,12 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         {/* Add to Cart / Quantity Controls */}
 
       </div>
+
+      <h3 className="text-black md:text-md text-sm font-semibold mb-3 min-h-[40px] line-clamp-2">
+        {lang === "en" ? item.name : item.vietnamiesName || item.name}
+      </h3>
+
+
     </div>
   );
 };

@@ -176,7 +176,7 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className="bg-white w-full rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 relative flex flex-col"
+                  className={`bg-white w-full rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 relative flex flex-col ${saleData.length === 1 ? "md:col-span-1 col-span-2" : "col-span-1"}`}
                 >
                   {/* Category Badge */}
                   {/* <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
@@ -191,7 +191,7 @@ const SellProduct = ({ loader, toaster }) => {
                     >
                       <span class="text-xl animate-vibrate">⏰</span>
 
-                      <span class="text-[12px] ">Ending in</span>
+                      <span class="text-[12px] hidden md:flex">Ending in</span>
 
                       <span
                         class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup "
@@ -275,15 +275,6 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                   </div>
 
-                  <div className="flex justify-center items-center">
-                    <h3 className="text-black font-semibold text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
-                      {lang === "en"
-                        ? item.product?.name
-                        : item.product?.vietnamiesName || item.product?.name}
-                    </h3>
-                  </div>
-
-                  {/* Price Section */}
                   <div className="flex items-center md:justify-center justify-start md:gap-3 gap-1 mb-3">
                     <span className="text-red-500 font-semibold text-[17px] md:text-xl">
                       ${item.price}
@@ -304,6 +295,17 @@ const SellProduct = ({ loader, toaster }) => {
                       </span>
                     )}
                   </div>
+
+                  <div className="flex md:justify-center md:items-center">
+                    <h3 className="text-black font-semibold text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
+                      {lang === "en"
+                        ? item.product?.name
+                        : item.product?.vietnamiesName || item.product?.name}
+                    </h3>
+                  </div>
+
+                  {/* Price Section */}
+
 
                   {/* Add to Cart / Quantity Controls */}
 
