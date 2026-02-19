@@ -254,7 +254,7 @@ function Mybooking(props) {
   };
 
   return (
-    <>
+    <div className="bg-[#E8F5E9]">
       <div className="mx-auto max-w-7xl md:py-5 py-12 min-h-screen md:mt-2">
         <div className="flex flex-col justify-center items-center">
           <h1 className="text-center text-[35px] md:text-[45px] font-semibold text-black mb-2">
@@ -880,7 +880,7 @@ function Mybooking(props) {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

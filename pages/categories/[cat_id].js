@@ -205,8 +205,8 @@ function Categories(props) {
           href={`https://www.bachhoahouston.com/categories/${categoryData?.slug}`}
         />
       </Head>
-      <div className="bg-white w-full min-h-screen" ref={topRef}>
-        <section className="bg-white w-full relative flex flex-col justify-center items-center">
+      <div className="bg-[#E8F5E9] w-full min-h-screen" ref={topRef}>
+        <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
           <div className="md:max-w-7xl mx-auto w-full md:px-0 px-2 md:pt-10 pt-8 md:pb-10 pb-0">
 
             <div className="md:flex hidden flex-col w-full mb-4 mt-4">

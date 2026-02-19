@@ -276,7 +276,7 @@ const SellProduct = ({ loader, toaster }) => {
                   </div>
 
                   <div className="flex items-center md:justify-center justify-start md:gap-3 gap-1 mb-3">
-                    <span className="text-red-500 font-semibold text-[17px] md:text-xl">
+                    <span className="text-[#E53935]  text-[17px] md:text-xl font-bold">
                       ${item.price}
                     </span>
                     {item?.price_slot?.our_price && (
@@ -285,7 +285,7 @@ const SellProduct = ({ loader, toaster }) => {
                       </span>
                     )}
                     {item.product?.price_slot?.[0]?.our_price && (
-                      <span className=" bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded">
+                      <span className=" bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded font-bold">
                         {Math.round(
                           ((item.price_slot?.our_price - item.price) /
                             item.price_slot?.our_price) *

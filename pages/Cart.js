@@ -959,266 +959,296 @@ function Cart(props) {
   })();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-2 md:mt-5 mt-8 md:mb-0 mb-10">
-      <div
-        className={`py-4 w-full relative  ${!cartData.length ? "h-full " : ""} 
+    <div className="bg-[#E8F5E9]">
+      <div className="max-w-7xl mx-auto px-4 py-2 md:mt-5 mt-8 md:mb-0 mb-10">
+        <div
+          className={`py-4 w-full relative  ${!cartData.length ? "h-full " : ""} 
               ${cartData.length > 1 ? "pb-8" : "pb-40"} `}
-      >
-        <div className="bg-white w-full rounded-[5px] flex justify-between items-center">
-          <div
-            className="flex justify-start items-center gap-1 cursor-pointer"
-            onClick={() => {
-              router.back();
-            }}
-          >
-            <IoIosArrowBack className="md:w-[32px] w-[28px] md:h-[28px] h-[21px] text-black" />
-            <p className="text-black md:text-[18px] text-[18px] font-bold">
-              {t("My cart")}
-            </p>
-          </div>
-          {cartData.length > 0 && (
-            <button
-              className="text-black flex justify-center items-center gap-2 font-medium bg-white border-2 border-red-400 cursor-pointer text-[15px] rounded-[12px] md:px-4 px-3 py-2 "
-              onClick={() => createConfirmEmptyCart(t, emptyCart)}
+        >
+          <div className="bg-transparent w-full rounded-[5px] flex justify-between items-center">
+            <div
+              className="flex justify-start items-center gap-1 cursor-pointer"
+              onClick={() => {
+                router.back();
+              }}
             >
-              {t("Empty Cart")}
-              <Trash size={20} />
-            </button>
-          )}
-        </div>
-        <div className="w-full flex flex-col md:flex-row gap-2 justify-center items-start mt-4">
-          <CartDrawer
-            toaster={props.toaster}
-            pickupOption={pickupOption}
-            cartClose={cartClose}
-          />
-          <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
+              <IoIosArrowBack className="md:w-[32px] w-[28px] md:h-[28px] h-[21px] text-black" />
+              <p className="text-black md:text-[18px] text-[18px] font-bold">
+                {t("My cart")}
+              </p>
+            </div>
             {cartData.length > 0 && (
-              <div className="bg-white rounded-lg shadow-sm border-2 p-3">
-                <div className="space-y-3">
-                  <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
-                    {[
-                      {
-                        id: "orderPickup",
-                        title: t("In Store Pickup"),
-                        subtitle: t("Pick it up inside the store"),
-                        type: "pickup",
-                      },
-                      {
-                        id: "driveUp",
-                        title: t("Curbside Pickup"),
-                        subtitle: t("We bring it out to your car"),
-                        type: "pickup",
-                      },
-                      {
-                        id: "localDelivery",
-                        title: isAfterNoon
-                          ? t("Next Day Local Delivery")
-                          : t("Same Day Local Delivery"),
-                        subtitle: isAfterNoon
-                          ? t("Cut off time 11:59 pm")
-                          : t("Cut off time 12 pm"),
-                        type: "delivery",
-                      },
-                      {
-                        id: "ShipmentDelivery",
-                        title: t("Shipping"),
-                        subtitle: t("Delivery in 3 to 5 business days"),
-                        type: "delivery",
-                      },
-                    ].map((opt) => {
-                      const selected = pickupOption === opt.id;
+              <button
+                className="text-black flex justify-center items-center gap-2 font-medium bg-white border-2 border-red-400 cursor-pointer text-[15px] rounded-[12px] md:px-4 px-3 py-2 "
+                onClick={() => createConfirmEmptyCart(t, emptyCart)}
+              >
+                {t("Empty Cart")}
+                <Trash size={20} />
+              </button>
+            )}
+          </div>
+          <div className="w-full flex flex-col md:flex-row gap-2 justify-center items-start mt-4">
+            <CartDrawer
+              toaster={props.toaster}
+              pickupOption={pickupOption}
+              cartClose={cartClose}
+            />
+            <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
+              {cartData.length > 0 && (
+                <div className="bg-white rounded-lg shadow-sm border-2 p-3">
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
+                      {[
+                        {
+                          id: "orderPickup",
+                          title: t("In Store Pickup"),
+                          subtitle: t("Pick it up inside the store"),
+                          type: "pickup",
+                        },
+                        {
+                          id: "driveUp",
+                          title: t("Curbside Pickup"),
+                          subtitle: t("We bring it out to your car"),
+                          type: "pickup",
+                        },
+                        {
+                          id: "localDelivery",
+                          title: isAfterNoon
+                            ? t("Next Day Local Delivery")
+                            : t("Same Day Local Delivery"),
+                          subtitle: isAfterNoon
+                            ? t("Cut off time 11:59 pm")
+                            : t("Cut off time 12 pm"),
+                          type: "delivery",
+                        },
+                        {
+                          id: "ShipmentDelivery",
+                          title: t("Shipping"),
+                          subtitle: t("Delivery in 3 to 5 business days"),
+                          type: "delivery",
+                        },
+                      ].map((opt) => {
+                        const selected = pickupOption === opt.id;
 
-                      return (
-                        <label
-                          key={opt.id}
-                          className={`flex flex-col border-gray-300 shadow-md border-2 items-start md:p-4 p-2 rounded-lg  ${selected
-                            ? "border-green-400 shadow-md border-3"
-                            : "border-gray-200 border"
-                            } cursor-pointer bg-white`}
-                        >
-                          <div className="flex items-start justify-between w-full">
-                            <div className="flex items-start gap-2">
-                              <input
-                                type="radio"
-                                id={opt.id}
-                                name="pickupOption"
-                                value={opt.id}
-                                checked={selected}
-                                onChange={handleOptionChange}
-                                className="hidden mt-1 form-radio h-4 w-4 text-green-600"
-                              />
+                        return (
+                          <label
+                            key={opt.id}
+                            className={`flex flex-col border-gray-300 shadow-md border-2 items-start md:p-4 p-2 rounded-lg  ${selected
+                              ? "border-green-400 shadow-md border-3"
+                              : "border-gray-200 border"
+                              } cursor-pointer bg-white`}
+                          >
+                            <div className="flex items-start justify-between w-full">
+                              <div className="flex items-start gap-2">
+                                <input
+                                  type="radio"
+                                  id={opt.id}
+                                  name="pickupOption"
+                                  value={opt.id}
+                                  checked={selected}
+                                  onChange={handleOptionChange}
+                                  className="hidden mt-1 form-radio h-4 w-4 text-green-600"
+                                />
 
-                              <div>
-                                <div className="font-semibold text-base md:text-lg text-orange-600">
-                                  {opt.title}
-                                </div>
-                                <div className="text-gray-500 text-sm ">
-                                  {opt.subtitle}
+                                <div>
+                                  <div className="font-semibold text-base md:text-lg text-orange-600">
+                                    {opt.title}
+                                  </div>
+                                  <div className="text-gray-500 text-sm ">
+                                    {opt.subtitle}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
 
-                            <div
-                              className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
-                                ? "border-green-600"
-                                : "border-gray-300"
-                                }`}
-                            >
                               <div
-                                className={`w-2 h-2 rounded-full ${selected ? "bg-green-600" : "bg-white"
+                                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
+                                  ? "border-green-600"
+                                  : "border-gray-300"
                                   }`}
-                              />
-                            </div>
-                          </div>
-
-                          {selected && opt.type === "pickup" && (
-                            <div className="bg-white pt-3">
-                              <p className=" mb-1 text-[13px] text-gray-700 text-start max-w-[430px md:text-[14px] font-semibold">
-                                {t("Pick up in 2 Hours")}
-                              </p>
-                              <div className="flex flex-col items-center gap-2">
-                                <div className="w-full max-w-[420px] relative">
-                                  <input
-                                    type="text"
-                                    value={
-                                      date ? formatDate(date) : t("Select date")
-                                    }
-                                    readOnly
-                                    onClick={handleIconClick}
-                                    className="w-full border-2 rounded-lg py-2 px-3 pr-5 text-gray-700 focus:outline-none focus:ring-2 "
-                                  />
-
-                                  <span
-                                    onClick={handleIconClick}
-                                    className="absolute right-3 top-2 text-custom-green cursor-pointer"
-                                  >
-                                    <FaRegCalendarAlt size={18} />
-                                  </span>
-
-                                  {isOpen && DatePicker && (
-                                    <div className="absolute z-40 mt-2">
-                                      <DatePicker
-                                        selected={date}
-                                        onChange={handleDateChange}
-                                        inline
-                                        minDate={minDate}
-                                        excludeDates={closureDates}
-                                      />
-                                    </div>
-                                  )}
-                                </div>
-
-                                <p className="text-[12px] text-gray-700 text-start max-w-[430px]">
-                                  {t(
-                                    "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee"
-                                  )}
-                                </p>
-                                <p className="text-[12px] text-gray-700 text-start max-w-[430px]">
-                                  {t(
-                                    "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day."
-                                  )}
-                                </p>
+                              >
+                                <div
+                                  className={`w-2 h-2 rounded-full ${selected ? "bg-green-600" : "bg-white"
+                                    }`}
+                                />
                               </div>
                             </div>
-                          )}
 
-                          {selected && opt.type === "delivery" && (
-                            <div className="bg-white w-full mt-4">
-                              <div className="flex flex-col gap-3">
-                                {opt.id === "localDelivery" && (
-                                  <div className="relative w-full max-w-[640px]">
+                            {selected && opt.type === "pickup" && (
+                              <div className="bg-white pt-3">
+                                <p className=" mb-1 text-[13px] text-gray-700 text-start max-w-[430px md:text-[14px] font-semibold">
+                                  {t("Pick up in 2 Hours")}
+                                </p>
+                                <div className="flex flex-col items-center gap-2">
+                                  <div className="w-full max-w-[420px] relative">
                                     <input
                                       type="text"
                                       value={
-                                        localAddress.dateOfDelivery
-                                          ? formatDate(
-                                            localAddress.dateOfDelivery
-                                          )
-                                          : t("Select date")
+                                        date ? formatDate(date) : t("Select date")
                                       }
                                       readOnly
                                       onClick={handleIconClick}
-                                      className="border-2 text-black rounded-lg py-2 px-3 pr-10 w-full"
+                                      className="w-full border-2 rounded-lg py-2 px-3 pr-5 text-gray-700 focus:outline-none focus:ring-2 "
                                     />
 
                                     <span
                                       onClick={handleIconClick}
-                                      className="absolute right-3 top-2 text-gray-400 cursor-pointer"
+                                      className="absolute right-3 top-2 text-custom-green cursor-pointer"
                                     >
-                                      <FaRegCalendarAlt />
+                                      <FaRegCalendarAlt size={18} />
                                     </span>
 
                                     {isOpen && DatePicker && (
-                                      <div className="absolute z-40 mt-1">
+                                      <div className="absolute z-40 mt-2">
                                         <DatePicker
-                                          selected={localAddress.dateOfDelivery}
-                                          onChange={handleDateChange1}
+                                          selected={date}
+                                          onChange={handleDateChange}
                                           inline
-                                          minDate={minDate1}
+                                          minDate={minDate}
                                           excludeDates={closureDates}
                                         />
                                       </div>
                                     )}
                                   </div>
-                                )}
 
-                                <ShippingInfoCard
-                                  localAddress={localAddress}
-                                  setOpen={setOpen}
-                                  getProfileData={getProfileData}
-                                />
-
-                                {open && (
-                                  <AddressForm
-                                    profileData={localAddress}
-                                    setProfileData={setLocalAddress}
-                                    onclose={() => setOpen(false)}
-                                    onSubmit={updateProfile}
-                                    pincodes={pincodes}
-                                    optionType={opt.id}
-                                  />
-                                )}
-
-                                {opt.id === "localDelivery" && (
-                                  <p className="text-[12px] text-gray-700 text-start">
+                                  <p className="text-[12px] text-gray-700 text-start max-w-[430px]">
                                     {t(
-                                      "Note: We currently deliver only to selected ZIP codes. Orders placed before 12pm noon are eligible for same day delivery. Orders placed after 12pm will be available for delivery the next business day"
+                                      "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee"
                                     )}
                                   </p>
-                                )}
-                                {opt.id === "ShipmentDelivery" && (
-                                  <p className="text-[12px] text-gray-700 text-start">
+                                  <p className="text-[12px] text-gray-700 text-start max-w-[430px]">
                                     {t(
-                                      "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time"
+                                      "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day."
                                     )}
                                   </p>
-                                )}
+                                </div>
                               </div>
-                            </div>
-                          )}
-                        </label>
-                      );
-                    })}
+                            )}
+
+                            {selected && opt.type === "delivery" && (
+                              <div className="bg-white w-full mt-4">
+                                <div className="flex flex-col gap-3">
+                                  {opt.id === "localDelivery" && (
+                                    <div className="relative w-full max-w-[640px]">
+                                      <input
+                                        type="text"
+                                        value={
+                                          localAddress.dateOfDelivery
+                                            ? formatDate(
+                                              localAddress.dateOfDelivery
+                                            )
+                                            : t("Select date")
+                                        }
+                                        readOnly
+                                        onClick={handleIconClick}
+                                        className="border-2 text-black rounded-lg py-2 px-3 pr-10 w-full"
+                                      />
+
+                                      <span
+                                        onClick={handleIconClick}
+                                        className="absolute right-3 top-2 text-gray-400 cursor-pointer"
+                                      >
+                                        <FaRegCalendarAlt />
+                                      </span>
+
+                                      {isOpen && DatePicker && (
+                                        <div className="absolute z-40 mt-1">
+                                          <DatePicker
+                                            selected={localAddress.dateOfDelivery}
+                                            onChange={handleDateChange1}
+                                            inline
+                                            minDate={minDate1}
+                                            excludeDates={closureDates}
+                                          />
+                                        </div>
+                                      )}
+                                    </div>
+                                  )}
+
+                                  <ShippingInfoCard
+                                    localAddress={localAddress}
+                                    setOpen={setOpen}
+                                    getProfileData={getProfileData}
+                                  />
+
+                                  {open && (
+                                    <AddressForm
+                                      profileData={localAddress}
+                                      setProfileData={setLocalAddress}
+                                      onclose={() => setOpen(false)}
+                                      onSubmit={updateProfile}
+                                      pincodes={pincodes}
+                                      optionType={opt.id}
+                                    />
+                                  )}
+
+                                  {opt.id === "localDelivery" && (
+                                    <p className="text-[12px] text-gray-700 text-start">
+                                      {t(
+                                        "Note: We currently deliver only to selected ZIP codes. Orders placed before 12pm noon are eligible for same day delivery. Orders placed after 12pm will be available for delivery the next business day"
+                                      )}
+                                    </p>
+                                  )}
+                                  {opt.id === "ShipmentDelivery" && (
+                                    <p className="text-[12px] text-gray-700 text-start">
+                                      {t(
+                                        "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time"
+                                      )}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {cartData.length > 0 && (
-              <>
-                <div>
-                  {pickupOption && <div className="bg-white rounded-lg  flex flex-row gap-2">
-                    <div className="relative flex-1 ">
-                      <input
-                        type="text"
-                        placeholder={t("Enter coupon code")}
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                        className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                      {searchTerm && (
-                        <X
+              {cartData.length > 0 && (
+                <>
+                  <div>
+                    {pickupOption && <div className="bg-white rounded-lg  flex flex-row gap-2">
+                      <div className="relative flex-1 ">
+                        <input
+                          type="text"
+                          placeholder={t("Enter coupon code")}
+                          value={searchTerm}
+                          onChange={handleSearchChange}
+                          className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        {searchTerm && (
+                          <X
+                            onClick={() => {
+                              setAppliedCoupon(false);
+                              setSearchTerm("");
+                              setDiscountCode("");
+                              setDiscount(0);
+                              props.toaster({
+                                type: "success",
+                                message: "Coupon removed successfully",
+                              });
+                            }}
+                            size={22}
+                            className=" cursor-pointer absolute text-custom-green top-2.5 right-2"
+                          />
+                        )}
+                      </div>
+                      <button
+                        className="bg-custom-green text-white md:px-8 px-4 py-2.5 cursor-pointer text-sm rounded-md"
+                        onClick={handleApplyCoupon}
+                      >
+                        {t("Apply")}
+                      </button>
+                    </div>}
+                    {appliedCoupon && (
+                      <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
+                        <span className="text-base">
+                          {t("Coupon")} {t("applied!")}
+                        </span>
+
+                        <button
                           onClick={() => {
                             setAppliedCoupon(false);
                             setSearchTerm("");
@@ -1229,330 +1259,303 @@ function Cart(props) {
                               message: "Coupon removed successfully",
                             });
                           }}
-                          size={22}
-                          className=" cursor-pointer absolute text-custom-green top-2.5 right-2"
-                        />
-                      )}
-                    </div>
-                    <button
-                      className="bg-custom-green text-white md:px-8 px-4 py-2.5 cursor-pointer text-sm rounded-md"
-                      onClick={handleApplyCoupon}
-                    >
-                      {t("Apply")}
-                    </button>
-                  </div>}
-                  {appliedCoupon && (
-                    <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
-                      <span className="text-base">
-                        {t("Coupon")} {t("applied!")}
-                      </span>
+                          className="text-custom-green cursor-pointer text-sm ml-4"
+                        >
+                          <X size={22} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
 
-                      <button
-                        onClick={() => {
-                          setAppliedCoupon(false);
-                          setSearchTerm("");
-                          setDiscountCode("");
-                          setDiscount(0);
-                          props.toaster({
-                            type: "success",
-                            message: "Coupon removed successfully",
-                          });
-                        }}
-                        className="text-custom-green cursor-pointer text-sm ml-4"
-                      >
-                        <X size={22} />
-                      </button>
-                    </div>
-                  )}
-                </div>
+                  <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
+                    {pickupOption === "localDelivery" &&
+                      (remainingLocal > 0 ? (
+                        <h2 className="text-md text-orange-500 mb-2 font-bold">
+                          {t("Add")} {constant.currency}
+                          {remainingLocal.toFixed(2)}{" "}
+                          {t("more to get Free Local Delivery")}
+                        </h2>
+                      ) : (
+                        <h2 className="text-md text-green-600 mb-2 font-semibold">
+                          🎉 {t("Free Local Delivery available")}
+                        </h2>
+                      ))}
 
-                <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
-                  {pickupOption === "localDelivery" &&
-                    (remainingLocal > 0 ? (
-                      <h2 className="text-md text-orange-500 mb-2 font-bold">
-                        {t("Add")} {constant.currency}
-                        {remainingLocal.toFixed(2)}{" "}
-                        {t("more to get Free Local Delivery")}
-                      </h2>
-                    ) : (
-                      <h2 className="text-md text-green-600 mb-2 font-semibold">
-                        🎉 {t("Free Local Delivery available")}
-                      </h2>
-                    ))}
+                    {pickupOption === "ShipmentDelivery" &&
+                      (remainingShipping > 0 ? (
+                        <h2 className="text-md text-orange-500 mb-2 font-bold">
+                          {t("Add")} {constant.currency}
+                          {remainingShipping.toFixed(0)}{" "}
+                          {t("more to get Free Shipping Delivery")}
+                        </h2>
+                      ) : (
+                        <h2 className="text-md text-green-600 mb-2 font-semibold">
+                          {t("Free Shipping available")}
+                        </h2>
+                      ))}
 
-                  {pickupOption === "ShipmentDelivery" &&
-                    (remainingShipping > 0 ? (
-                      <h2 className="text-md text-orange-500 mb-2 font-bold">
-                        {t("Add")} {constant.currency}
-                        {remainingShipping.toFixed(0)}{" "}
-                        {t("more to get Free Shipping Delivery")}
-                      </h2>
-                    ) : (
-                      <h2 className="text-md text-green-600 mb-2 font-semibold">
-                        {t("Free Shipping available")}
-                      </h2>
-                    ))}
+                    <h4 className="text-xl font-bold text-gray-800 mb-4">
+                      {t("Bill Summary")}
+                    </h4>
 
-                  <h4 className="text-xl font-bold text-gray-800 mb-4">
-                    {t("Bill Summary")}
-                  </h4>
-
-                  <div className="space-y-3">
-                    {/* Subtotal */}
-                    <div className="flex justify-between items-center text-black">
-                      <p className="text-base">{t("Subtotal")}</p>
-                      <p className="text-base font-medium">
-                        {constant.currency} {CartTotal}
-                      </p>
-                    </div>
-
-                    {appliedCoupon && (
+                    <div className="space-y-3">
+                      {/* Subtotal */}
                       <div className="flex justify-between items-center text-black">
-                        <p className="text-base">{t("Discount amount")}</p>
+                        <p className="text-base">{t("Subtotal")}</p>
                         <p className="text-base font-medium">
-                          - {constant.currency} {discount}
+                          {constant.currency} {CartTotal}
                         </p>
                       </div>
-                    )}
 
-                    {pickupOption === "localDelivery" && (
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="text-base text-black">
-                            {t("Delivery Tip (optional)")}
-                          </p>
-                          <p className="text-xs text-black">
-                            {t("100% of tip goes directly to your driver")}
+                      {appliedCoupon && (
+                        <div className="flex justify-between items-center text-black">
+                          <p className="text-base">{t("Discount amount")}</p>
+                          <p className="text-base font-medium">
+                            - {constant.currency} {discount}
                           </p>
                         </div>
+                      )}
 
-                        <select
-                          className="p-2 border rounded-sm text-black"
-                          value={deliverytip}
-                          onChange={(e) => setdeliverytip(e.target.value)}
-                        >
-                          <option value="" className="text-black">
-                            {t("Select a tip")}
-                          </option>
-                          <option value="0">$0</option>
-                          <option value="2">$2</option>
-                          <option value="5">$5</option>
-                          <option value="8">$8</option>
-                        </select>
-                      </div>
-                    )}
-
-                    <div className="flex text-black justify-between items-center">
-                      <p className="text-base">{t("Delivery Charges")}</p>
-
-                      <div>
-                        {pickupOption === "orderPickup" ||
-                          pickupOption === "driveUp" ? (
-                          <span className="text-base">{t("$0.00")}</span>
-                        ) : pickupOption === "localDelivery" ? (
-                          CartTotal < shipcCost?.minShippingCostforLocal ? (
-                            <span className="text-base font-medium">
-                              {constant.currency} {currentLocalCost}
-                            </span>
-                          ) : (
-                            <span className="text-base">{t("$0.00")}</span>
-                          )
-                        ) : pickupOption === "ShipmentDelivery" ? (
-                          CartTotal < shipcCost?.minShipmentCostForShipment ? (
-                            <span className="text-base font-medium">
-                              {constant.currency} {currentShipmentCost}
-                            </span>
-                          ) : (
-                            <span className="text-base">{t("$0.00")}</span>
-                          )
-                        ) : null}
-                      </div>
-                    </div>
-
-                    {extraFees > 0 && <div className="flex text-black justify-between items-center">
-                      <p className="text-base">{t("Extended Zone Delivery Fee")}</p>
-
-                      <div className="text-base font-medium">
-                        {constant.currency} {extraFees}
-                      </div>
-                    </div>}
-
-                    <div className="flex text-black justify-between items-center">
                       {pickupOption === "localDelivery" && (
-                        <>
-                          <p className="text-base">{t("Service Fee")}</p>
-
+                        <div className="flex justify-between items-start">
                           <div>
-                            {CartTotal < shipcCost?.minServiesCost ? (
+                            <p className="text-base text-black">
+                              {t("Delivery Tip (optional)")}
+                            </p>
+                            <p className="text-xs text-black">
+                              {t("100% of tip goes directly to your driver")}
+                            </p>
+                          </div>
+
+                          <select
+                            className="p-2 border rounded-sm text-black"
+                            value={deliverytip}
+                            onChange={(e) => setdeliverytip(e.target.value)}
+                          >
+                            <option value="" className="text-black">
+                              {t("Select a tip")}
+                            </option>
+                            <option value="0">$0</option>
+                            <option value="2">$2</option>
+                            <option value="5">$5</option>
+                            <option value="8">$8</option>
+                          </select>
+                        </div>
+                      )}
+
+                      <div className="flex text-black justify-between items-center">
+                        <p className="text-base">{t("Delivery Charges")}</p>
+
+                        <div>
+                          {pickupOption === "orderPickup" ||
+                            pickupOption === "driveUp" ? (
+                            <span className="text-base">{t("$0.00")}</span>
+                          ) : pickupOption === "localDelivery" ? (
+                            CartTotal < shipcCost?.minShippingCostforLocal ? (
                               <span className="text-base font-medium">
-                                {constant.currency} {serviceFee}
+                                {constant.currency} {currentLocalCost}
                               </span>
                             ) : (
                               <span className="text-base">{t("$0.00")}</span>
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
+                            )
+                          ) : pickupOption === "ShipmentDelivery" ? (
+                            CartTotal < shipcCost?.minShipmentCostForShipment ? (
+                              <span className="text-base font-medium">
+                                {constant.currency} {currentShipmentCost}
+                              </span>
+                            ) : (
+                              <span className="text-base">{t("$0.00")}</span>
+                            )
+                          ) : null}
+                        </div>
+                      </div>
 
-                    {/* Total Payable */}
-                    <div className="flex justify-between items-center pt-3 border-t border-gray-100">
-                      <p className="text-lg font-bold text-black">
-                        {t("Total Payable")}
-                      </p>
-                      <p className="text-lg font-bold text-black">
-                        {constant.currency} {mainTotal}
-                      </p>
-                    </div>
+                      {extraFees > 0 && <div className="flex text-black justify-between items-center">
+                        <p className="text-base">{t("Extended Zone Delivery Fee")}</p>
 
-                    <div className="mt-4">
-                      {isLoggedIn ? (
-                        <button
-                          className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
-                          onClick={() => {
-                            if (cartData?.length === 0) {
-                              toaster?.({
-                                type: "warning",
-                                message: "Your cart is empty",
-                              });
-                            } else {
-                              createProductRquest && createProductRquest();
-                            }
-                          }}
-                        >
-                          {t("Proceed To Checkout")}
-                        </button>
-                      ) : (
-                        <button
-                          className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
-                          onClick={() => {
-                            router.push("/signIn");
-                          }}
-                        >
-                          {t("Login to Checkout")}
-                        </button>
-                      )}
+                        <div className="text-base font-medium">
+                          {constant.currency} {extraFees}
+                        </div>
+                      </div>}
+
+                      <div className="flex text-black justify-between items-center">
+                        {pickupOption === "localDelivery" && (
+                          <>
+                            <p className="text-base">{t("Service Fee")}</p>
+
+                            <div>
+                              {CartTotal < shipcCost?.minServiesCost ? (
+                                <span className="text-base font-medium">
+                                  {constant.currency} {serviceFee}
+                                </span>
+                              ) : (
+                                <span className="text-base">{t("$0.00")}</span>
+                              )}
+                            </div>
+                          </>
+                        )}
+                      </div>
+
+                      {/* Total Payable */}
+                      <div className="flex justify-between items-center pt-3 border-t border-gray-100">
+                        <p className="text-lg font-bold text-black">
+                          {t("Total Payable")}
+                        </p>
+                        <p className="text-lg font-bold text-black">
+                          {constant.currency} {mainTotal}
+                        </p>
+                      </div>
+
+                      <div className="mt-4">
+                        {isLoggedIn ? (
+                          <button
+                            className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
+                            onClick={() => {
+                              if (cartData?.length === 0) {
+                                toaster?.({
+                                  type: "warning",
+                                  message: "Your cart is empty",
+                                });
+                              } else {
+                                createProductRquest && createProductRquest();
+                              }
+                            }}
+                          >
+                            {t("Proceed To Checkout")}
+                          </button>
+                        ) : (
+                          <button
+                            className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
+                            onClick={() => {
+                              router.push("/signIn");
+                            }}
+                          >
+                            {t("Login to Checkout")}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
+          {cartData && cartData.length === 0 && (
+            <div className="bg-white w-full rounded-[5px] md:p-5 p-4 mt-5 flex flex-col justify-center items-center min-h-[280px]">
+              <div className="relative w-28 h-28 mb-4">
+                <Image
+                  src="/cart2.jpg"
+                  alt="cart"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <p className="text-black text-[18px] mb-2">
+                {t("Your cart is empty")}
+              </p>
+              <button
+                className="text-custom-green border-2 border-custom-green text-[16px] font-medium rounded-[18px] cursor-pointer w-[200px] mt-2 py-2 px-4"
+                onClick={() => {
+                  router.push("/categories/all");
+                }}
+              >
+                {t("Browse Products")}
+              </button>
+            </div>
+          )}
+          {cancelPopup && (
+            <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex justify-center items-center z-[9999] px-4">
+              <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 relative animate-fadeIn">
+                <div className="flex justify-center mb-4">
+                  <div className="bg-orange-100 text-orange-600 w-16 h-16 flex justify-center items-center rounded-full text-4xl">
+                    ⚠️
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h2 className="text-center text-2xl font-semibold text-gray-800">
+                  Order Cancelled
+                </h2>
+
+                {/* Message */}
+                <p className="text-center text-gray-600 mt-2 text-sm">
+                  You were redirected back from Stripe. Your order has been
+                  cancelled successfully.
+                </p>
+
+                {/* Buttons */}
+                <div className="flex justify-between gap-4 mt-6">
+                  <button
+                    onClick={() => {
+                      setCancelPopup(false);
+                      router.push("/");
+                    }}
+                    className="w-1/2 bg-gray-200 cursor-pointer hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-medium"
+                  >
+                    Home
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setCancelPopup(false);
+                      router.push("/Cart");
+                    }}
+                    className="w-1/2 bg-custom-green cursor-pointer text-white py-2 rounded-lg font-medium shadow"
+                  >
+                    Move to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {successPopup && (
+            <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex justify-center items-center z-[9999] px-4">
+              <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 relative animate-fadeIn">
+                {/* Icon */}
+                <div className="flex justify-center mb-4">
+                  <div className="bg-green-100 text-green-600 w-16 h-16 flex justify-center items-center rounded-full">
+                    <CheckCircle className="w-10 h-10" />
+                  </div>
+                </div>
+
+                <h2 className="text-center text-2xl font-semibold text-gray-800">
+                  Payment Successful
+                </h2>
+
+                <p className="text-center text-gray-600 mt-2 text-sm">
+                  Your payment has been completed successfully. Your order is now
+                  placed and being processed.
+                </p>
+
+                {/* Buttons */}
+                <div className="flex justify-between gap-4 mt-6">
+                  <button
+                    onClick={() => {
+                      setSuccessPopup(false);
+                      router.push("/");
+                    }}
+                    className="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-medium cursor-pointer"
+                  >
+                    Home
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setSuccessPopup(false);
+                      router.push("/Mybooking");
+                    }}
+                    className="w-1/2 bg-custom-green text-white py-2 rounded-lg font-medium shadow cursor-pointer"
+                  >
+                    My Orders
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-        {cartData && cartData.length === 0 && (
-          <div className="bg-white w-full rounded-[5px] md:p-5 p-4 mt-5 flex flex-col justify-center items-center min-h-[280px]">
-            <div className="relative w-28 h-28 mb-4">
-              <Image
-                src="/cart2.jpg"
-                alt="cart"
-                fill
-                className="object-contain"
-              />
-            </div>
-            <p className="text-black text-[18px] mb-2">
-              {t("Your cart is empty")}
-            </p>
-            <button
-              className="text-custom-green border-2 border-custom-green text-[16px] font-medium rounded-[18px] cursor-pointer w-[200px] mt-2 py-2 px-4"
-              onClick={() => {
-                router.push("/categories/all");
-              }}
-            >
-              {t("Browse Products")}
-            </button>
-          </div>
-        )}
-        {cancelPopup && (
-          <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex justify-center items-center z-[9999] px-4">
-            <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 relative animate-fadeIn">
-              <div className="flex justify-center mb-4">
-                <div className="bg-orange-100 text-orange-600 w-16 h-16 flex justify-center items-center rounded-full text-4xl">
-                  ⚠️
-                </div>
-              </div>
-
-              {/* Title */}
-              <h2 className="text-center text-2xl font-semibold text-gray-800">
-                Order Cancelled
-              </h2>
-
-              {/* Message */}
-              <p className="text-center text-gray-600 mt-2 text-sm">
-                You were redirected back from Stripe. Your order has been
-                cancelled successfully.
-              </p>
-
-              {/* Buttons */}
-              <div className="flex justify-between gap-4 mt-6">
-                <button
-                  onClick={() => {
-                    setCancelPopup(false);
-                    router.push("/");
-                  }}
-                  className="w-1/2 bg-gray-200 cursor-pointer hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-medium"
-                >
-                  Home
-                </button>
-
-                <button
-                  onClick={() => {
-                    setCancelPopup(false);
-                    router.push("/Cart");
-                  }}
-                  className="w-1/2 bg-custom-green cursor-pointer text-white py-2 rounded-lg font-medium shadow"
-                >
-                  Move to Cart
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        {successPopup && (
-          <div className="fixed inset-0 bg-black/80 bg-opacity-50 flex justify-center items-center z-[9999] px-4">
-            <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-6 relative animate-fadeIn">
-              {/* Icon */}
-              <div className="flex justify-center mb-4">
-                <div className="bg-green-100 text-green-600 w-16 h-16 flex justify-center items-center rounded-full">
-                  <CheckCircle className="w-10 h-10" />
-                </div>
-              </div>
-
-              <h2 className="text-center text-2xl font-semibold text-gray-800">
-                Payment Successful
-              </h2>
-
-              <p className="text-center text-gray-600 mt-2 text-sm">
-                Your payment has been completed successfully. Your order is now
-                placed and being processed.
-              </p>
-
-              {/* Buttons */}
-              <div className="flex justify-between gap-4 mt-6">
-                <button
-                  onClick={() => {
-                    setSuccessPopup(false);
-                    router.push("/");
-                  }}
-                  className="w-1/2 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-lg font-medium cursor-pointer"
-                >
-                  Home
-                </button>
-
-                <button
-                  onClick={() => {
-                    setSuccessPopup(false);
-                    router.push("/Mybooking");
-                  }}
-                  className="w-1/2 bg-custom-green text-white py-2 rounded-lg font-medium shadow cursor-pointer"
-                >
-                  My Orders
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
+
   );
 }
 

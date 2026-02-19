@@ -42,7 +42,7 @@ const EditProfile = ({ loader, toaster }) => {
             setUser(JSON.parse(userDetails));
             getProfileData();
         }
-        
+
     }, []);
 
     const validateField = (name, value) => {
@@ -289,210 +289,213 @@ const EditProfile = ({ loader, toaster }) => {
     };
 
     return (
-        <div className="mx-auto max-w-7xl px-4 py-6 md:py-12">
-            <div className="flex flex-col justify-center items-center mb-8">
-                <h1 className="md:mt-0 mt-4 text-center text-3xl md:text-4xl font-semibold text-black">
-                    {t("My")}  <span className="text-custom-green">{t("Profile")}</span>
-                </h1>
-                <p className="text-center text-base mt-2 max-w-xl text-black">
-                    {t("Manage your account details, addresses all in one place")}.
-                </p>
-            </div>
-
-            <div className="bg-white rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden">
-
-                <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
-                    <div className="md:mr-8 md:mx-2 mx-auto mb-3 sm:mb-0 sm:mr-4">
-                        <FaUserAlt className='text-black' size={55} />
-                    </div>
-                    <div className="text-center sm:text-left">
-                        <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User Name"}</h2>
-                        <p className="text-gray-600">{user?.email || profileData.email || "user@example.com"}</p>
-                    </div>
-                    <button
-                        className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-custom-green text-white hover:bg-gray-800 cursor-pointer transition"
-                        onClick={toggleEditMode}
-                    >
-                        {isEditing ? t('Save') : t('Edit')}
-                    </button>
+        <div className='bg-[#E8F5E9]'>
+            <div className="mx-auto max-w-7xl px-4 py-6 md:py-12">
+                <div className="flex flex-col justify-center items-center mb-8">
+                    <h1 className="md:mt-0 mt-4 text-center text-3xl md:text-4xl font-semibold text-black">
+                        {t("My")}  <span className="text-custom-green">{t("Profile")}</span>
+                    </h1>
+                    <p className="text-center text-base mt-2 max-w-xl text-black">
+                        {t("Manage your account details, addresses all in one place")}.
+                    </p>
                 </div>
 
-                <div className="p-4 md:p-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">{t("First Name")}</label>
-                            {isEditing ? (
-                                <>
-                                    <input
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.username ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        value={profileData.username}
-                                        type='text'
-                                        name="username"
-                                        placeholder={t("Your Name")}
-                                        onChange={(e) => handleInputChange("username", e.target.value)}
-                                        onBlur={(e) => handleBlur("username", e.target.value)}
-                                    />
-                                    {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
-                                </>
-                            ) : (
-                                <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.username || t('Not provided')}
-                                </div>
-                            )}
-                        </div>
+                <div className="bg-white rounded-lg border-2 border-gray-200 shadow-lg overflow-hidden">
 
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">{t("Last Name")}</label>
-                            {isEditing ? (
-                                <>
-                                    <input
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.lastname ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        value={profileData.lastname}
-                                        type='text'
-                                        name="lastname"
-                                        placeholder={t("Your Last Name")}
-                                        onChange={(e) => handleInputChange("lastname", e.target.value)}
-                                        onBlur={(e) => handleBlur("lastname", e.target.value)}
-                                    />
-                                    {errors.lastname && <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>}
-                                </>
-                            ) : (
-                                <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.lastname || t('Not provided')}
-                                </div>
-                            )}
+                    <div className="p-4 md:p-6 flex flex-col sm:flex-row items-center sm:items-start">
+                        <div className="md:mr-8 md:mx-2 mx-auto mb-3 sm:mb-0 sm:mr-4">
+                            <FaUserAlt className='text-black' size={55} />
                         </div>
-
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">{t("Email")}</label>
-                            {isEditing ? (
-                                <>
-                                    <input
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.email ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        value={profileData.email}
-                                        type='email'
-                                        name="email"
-                                        placeholder={t("Your Email")}
-                                        onChange={(e) => handleInputChange("email", e.target.value)}
-                                        onBlur={(e) => handleBlur("email", e.target.value)}
-                                    />
-                                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                                </>
-                            ) : (
-                                <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.email || t('Not provided')}
-                                </div>
-                            )}
+                        <div className="text-center sm:text-left">
+                            <h2 className="text-xl font-semibold text-black">{user?.fullName || profileData.username || "User Name"}</h2>
+                            <p className="text-gray-600">{user?.email || profileData.email || "user@example.com"}</p>
                         </div>
-
-
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">{t("Country")}</label>
-                            {isEditing ? (
-                                <>
-                                    <CountryDropdown
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.country ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        value={profileData.country}
-                                        onChange={(val) => handleInputChange('country', val)}
-                                        onBlur={() => handleBlur('country', profileData.country)}
-                                    />
-                                    {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
-                                </>
-                            ) : (
-                                <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.country || t('Not provided')}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">{t("Shipping Address")}</label>
-                            {isEditing ? (
-                                <>
-                                    <AddressInput
-                                        setProfileData={setProfileData}
-                                        profileData={profileData}
-                                        value={profileData?.address}
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.address ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        onBlur={() => handleBlur('address', profileData.address)}
-                                    />
-                                    {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-                                </>
-                            ) : (
-                                <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.address || t('Not provided')}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="mb-4">
-                            <label className="block text-gray-700 mb-1">{t("Mobile")}</label>
-                            {isEditing ? (
-                                <>
-                                    <input
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.number ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        value={profileData.number}
-                                        type='tel'
-                                        name="number"
-                                        placeholder={t("Your Mobile Number")}
-                                        onChange={(e) => handleInputChange("number", e.target.value)}
-                                        onBlur={(e) => handleBlur("number", e.target.value)}
-                                        maxLength={10}
-                                    />
-                                    {errors.number && <p className="text-red-500 text-sm mt-1">{errors.number}</p>}
-                                </>
-                            ) : (
-                                <div className="text-black w-full p-2 border rounded bg-gray-50">
-                                    {profileData.number || t('Not provided')}
-                                </div>
-                            )}
-                        </div>
+                        <button
+                            className="mt-3 sm:mt-0 sm:ml-auto px-4 py-2 rounded bg-custom-green text-white hover:bg-gray-800 cursor-pointer transition"
+                            onClick={toggleEditMode}
+                        >
+                            {isEditing ? t('Save') : t('Edit')}
+                        </button>
                     </div>
 
-                    {!isEditing && (
-                        <div className="mt-8">
-                            <h3 className="text-lg font-semibold mb-4 text-black">{t("Change Password")}</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                                <div className="mb-4">
-                                    <label className="block text-gray-700 mb-1">{t("New Password")}</label>
-                                    <input
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.password ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        placeholder={t("Enter New Password")}
-                                        type="password"
-                                        name="password"
-                                        value={profilePassword.password}
-                                        onChange={(e) => handlePasswordChange('password', e.target.value)}
-                                        onBlur={(e) => handleBlur('password', e.target.value)}
-                                    />
-                                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-                                </div>
-                                <div className="mb-4">
-                                    <label className="block text-gray-700 mb-1">{t("Confirm Password")}</label>
-                                    <input
-                                        className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
-                                        placeholder={t("Confirm New Password")}
-                                        type="password"
-                                        name="confirmPassword"
-                                        value={profilePassword.confirmPassword}
-                                        onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
-                                        onBlur={(e) => handleBlur('confirmPassword', e.target.value)}
-                                    />
-                                    {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
-                                </div>
+                    <div className="p-4 md:p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">{t("First Name")}</label>
+                                {isEditing ? (
+                                    <>
+                                        <input
+                                            className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.username ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                            value={profileData.username}
+                                            type='text'
+                                            name="username"
+                                            placeholder={t("Your Name")}
+                                            onChange={(e) => handleInputChange("username", e.target.value)}
+                                            onBlur={(e) => handleBlur("username", e.target.value)}
+                                        />
+                                        {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
+                                    </>
+                                ) : (
+                                    <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                        {profileData.username || t('Not provided')}
+                                    </div>
+                                )}
                             </div>
-                            <div className="flex justify-end">
-                                <button
-                                    className="bg-custom-green rounded-lg text-white px-4 py-2.5 hover:bg-gray-800 transition mt-4"
-                                    onClick={changePassword}
-                                >
-                                    {t("Change Password")}
-                                </button>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">{t("Last Name")}</label>
+                                {isEditing ? (
+                                    <>
+                                        <input
+                                            className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.lastname ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                            value={profileData.lastname}
+                                            type='text'
+                                            name="lastname"
+                                            placeholder={t("Your Last Name")}
+                                            onChange={(e) => handleInputChange("lastname", e.target.value)}
+                                            onBlur={(e) => handleBlur("lastname", e.target.value)}
+                                        />
+                                        {errors.lastname && <p className="text-red-500 text-sm mt-1">{errors.lastname}</p>}
+                                    </>
+                                ) : (
+                                    <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                        {profileData.lastname || t('Not provided')}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">{t("Email")}</label>
+                                {isEditing ? (
+                                    <>
+                                        <input
+                                            className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.email ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                            value={profileData.email}
+                                            type='email'
+                                            name="email"
+                                            placeholder={t("Your Email")}
+                                            onChange={(e) => handleInputChange("email", e.target.value)}
+                                            onBlur={(e) => handleBlur("email", e.target.value)}
+                                        />
+                                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                                    </>
+                                ) : (
+                                    <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                        {profileData.email || t('Not provided')}
+                                    </div>
+                                )}
+                            </div>
+
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">{t("Country")}</label>
+                                {isEditing ? (
+                                    <>
+                                        <CountryDropdown
+                                            className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.country ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                            value={profileData.country}
+                                            onChange={(val) => handleInputChange('country', val)}
+                                            onBlur={() => handleBlur('country', profileData.country)}
+                                        />
+                                        {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
+                                    </>
+                                ) : (
+                                    <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                        {profileData.country || t('Not provided')}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">{t("Shipping Address")}</label>
+                                {isEditing ? (
+                                    <>
+                                        <AddressInput
+                                            setProfileData={setProfileData}
+                                            profileData={profileData}
+                                            value={profileData?.address}
+                                            className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.address ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                            onBlur={() => handleBlur('address', profileData.address)}
+                                        />
+                                        {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+                                    </>
+                                ) : (
+                                    <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                        {profileData.address || t('Not provided')}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 mb-1">{t("Mobile")}</label>
+                                {isEditing ? (
+                                    <>
+                                        <input
+                                            className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.number ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                            value={profileData.number}
+                                            type='tel'
+                                            name="number"
+                                            placeholder={t("Your Mobile Number")}
+                                            onChange={(e) => handleInputChange("number", e.target.value)}
+                                            onBlur={(e) => handleBlur("number", e.target.value)}
+                                            maxLength={10}
+                                        />
+                                        {errors.number && <p className="text-red-500 text-sm mt-1">{errors.number}</p>}
+                                    </>
+                                ) : (
+                                    <div className="text-black w-full p-2 border rounded bg-gray-50">
+                                        {profileData.number || t('Not provided')}
+                                    </div>
+                                )}
                             </div>
                         </div>
-                    )}
+
+                        {!isEditing && (
+                            <div className="mt-8">
+                                <h3 className="text-lg font-semibold mb-4 text-black">{t("Change Password")}</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 mb-1">{t("New Password")}</label>
+                                        <input
+                                            className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.password ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                            placeholder={t("Enter New Password")}
+                                            type="password"
+                                            name="password"
+                                            value={profilePassword.password}
+                                            onChange={(e) => handlePasswordChange('password', e.target.value)}
+                                            onBlur={(e) => handleBlur('password', e.target.value)}
+                                        />
+                                        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 mb-1">{t("Confirm Password")}</label>
+                                        <input
+                                            className={`w-full p-2 border rounded text-black focus:outline-none focus:ring-1 ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : 'focus:ring-black'}`}
+                                            placeholder={t("Confirm New Password")}
+                                            type="password"
+                                            name="confirmPassword"
+                                            value={profilePassword.confirmPassword}
+                                            onChange={(e) => handlePasswordChange('confirmPassword', e.target.value)}
+                                            onBlur={(e) => handleBlur('confirmPassword', e.target.value)}
+                                        />
+                                        {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
+                                    </div>
+                                </div>
+                                <div className="flex justify-end">
+                                    <button
+                                        className="bg-custom-green rounded-lg text-white px-4 py-2.5 hover:bg-gray-800 transition mt-4"
+                                        onClick={changePassword}
+                                    >
+                                        {t("Change Password")}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
+
     );
 };
 

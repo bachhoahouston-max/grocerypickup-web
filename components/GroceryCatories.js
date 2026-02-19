@@ -254,7 +254,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       <div className="md:flex justify-between items-center gap-3">
         {/* Price */}
         <div className="flex flex-col">
-          <p className="text-[#B20F1E] md:text-xl text-[17px] font-bold">
+          <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
             {constant.currency}{" "}
             {Number(item?.price_slot[0]?.our_price || 0).toFixed(2)}
           </p>

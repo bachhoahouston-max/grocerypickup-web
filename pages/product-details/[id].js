@@ -55,7 +55,7 @@ function ProductDetails(props) {
     }
   }, [props?.notFoundProduct]);
 
-  
+
   useEffect(() => {
     if (!props?.product) return;
     setProductsId(props.product);
@@ -366,337 +366,339 @@ function ProductDetails(props) {
           href={`https://www.bachhoahouston.com/product-details/${productsId?.slug}`}
         />
       </Head>
-      <div className="bg-white w-full max-w-7xl mx-auto md:pt-10 pt-14 md:pb-10 pb-5 md:px-0 px-3">
-        <section className="bg-white w-full ">
-          <div className="flex flex-wrap items-center text-gray-500 text-xs md:text-sm mt-2 mb-2 gap-1 md:ps-4">
-            <p className="font-medium">{t("Home")}</p>
-            <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
+      <div className="bg-[#E8F5E9]">
+        <div className="bg-[#E8F5E9] w-full max-w-7xl mx-auto md:pt-10 pt-14 md:pb-10 pb-5 md:px-0 px-3">
+          <section className="bg-transparent w-full ">
+            <div className="flex flex-wrap items-center text-gray-500 text-xs md:text-sm mt-2 mb-2 gap-1 md:ps-4">
+              <p className="font-medium">{t("Home")}</p>
+              <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
 
-            <p className="font-medium">{productsId?.categoryName}</p>
-            <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
+              <p className="font-medium">{productsId?.categoryName}</p>
+              <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
 
-            <p className="font-semibold truncate max-w-xs md:max-w-sm">
-              {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
-            </p>
-          </div>
+              <p className="font-semibold truncate max-w-xs md:max-w-sm">
+                {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
+              </p>
+            </div>
 
-          <div className="w-full ">
-            <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
-              <div className="p-[10px] rounded-[15px]">
-                <Carousel
-                  className="h-full w-full"
-                  responsive={responsive}
-                  autoPlay={false}
-                  infinite={true}
-                  arrows={true}
-                >
-                  {selectedImageList?.map((item, i) => (
-                    <div
-                      key={i}
-                      className="bg-white w-full md:h-full relative flex justify-center"
-                    >
-                      <TransformWrapper
-                        initialScale={1}
-                        minScale={1}
-                        maxScale={8}
-                        wheel={{ step: 0.1 }}
-                        doubleClick={{ disabled: true }}
+            <div className="w-full ">
+              <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
+                <div className="p-[10px] rounded-[15px]">
+                  <Carousel
+                    className="h-full w-full"
+                    responsive={responsive}
+                    autoPlay={false}
+                    infinite={true}
+                    arrows={true}
+                  >
+                    {selectedImageList?.map((item, i) => (
+                      <div
+                        key={i}
+                        className="bg-white w-full md:h-full relative flex justify-center"
                       >
-                        {({ zoomIn, zoomOut, resetTransform }) => (
-                          <>
-                            <TransformComponent>
-                              <Image
-                                width={500}
-                                height={300}
-                                className="md:h-[500px] w-full object-contain cursor-move"
-                                src={item}
-                                alt={
-                                  productsId?.imageAltName || "Product image"
-                                }
-                              />
-                            </TransformComponent>
-                            <div className="absolute bottom-4 right-4 flex gap-2 z-10">
-                              <button
-                                onClick={() => zoomIn()}
-                                className="bg-white p-2 rounded-full shadow-lg text-black"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                              </button>
-                              <button
-                                onClick={() => zoomOut()}
-                                className="bg-white p-2 rounded-full shadow-lg text-black"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                              </button>
-                              <button
-                                onClick={() => resetTransform()}
-                                className="bg-white p-2 rounded-full shadow-lg text-black"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                                  <path d="M21 3v5h-5"></path>
-                                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                                  <path d="M8 16H3v5"></path>
-                                </svg>
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </TransformWrapper>
-                    </div>
-                  ))}
-                </Carousel>
-              </div>
-              <div className="flex justify-start items-start w-full">
-                <div className="flex flex-col justify-start items-start w-full">
-                  <div className="flex justify-between items-center w-full">
-                    <h1 className="text-black md:text-[32px] text-2xl font-medium">
-                      {lang === "en"
-                        ? productsId?.name
-                        : productsId?.vietnamiesName}
-                    </h1>
-
-                    <div
-                      className="p-2 border-[3px] border-black rounded-full flex justify-center items-center cursor-pointer"
-                      onClick={addremovefavourite}
-                    >
-                      {!productsId?.favourite && (
-                        <FaRegHeart className="text-black w-[23px] h-[23px]" />
-                      )}
-                      {productsId?.favourite && (
-                        <FaHeart className="text-red-700 w-[23px] h-[23px]" />
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="pt-7 md:pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
-                    {priceSlot &&
-                      priceSlot.map((data, i) => {
-                        const otherprice = parseFloat(data?.other_price);
-                        const ourPrice = parseFloat(data?.our_price);
-                        const percentageDifference =
-                          otherprice && ourPrice
-                            ? ((otherprice - ourPrice) / otherprice) * 100
-                            : 0;
-                        return (
-                          <div key={i}>
-                            <div
-                              onClick={() => {
-                                setSelectedPrice(data);
-                                setPriceIndex(i);
-                              }}
-                              className={`cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
-                                        ${
-                                          priceIndex == i
-                                            ? "bg-[#2E7D321A]"
-                                            : "bg-white"
-                                        }
-                            `}
-                            >
-                              {data?.other_price && (
-                                <>
-                                  <Image
-                                    width={60}
-                                    height={60}
-                                    className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
-                                    src="/star.png"
-                                  />
-                                  <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
-                                    {percentageDifference?.toFixed(2)}%<br />
-                                    {t("off")}
-                                  </p>
-                                </>
-                              )}
-                              <p className="text-black font-normal text-base pt-1">
-                                {data.value} {data.unit}
-                              </p>
-                              <p className="text-black font-normal text-base pt-1">
-                                {constant.currency}
-                                {data?.our_price}
-                              </p>
-                              <p className="text-custom-black font-semibold text-sm pt-2">
-                                {data?.other_price && (
-                                  <span className="text-black font-normal line-through">
-                                    {constant.currency}
-                                    {data?.other_price}
-                                  </span>
-                                )}
-                              </p>
-                            </div>
-                          </div>
-                        );
-                      })}
-                  </div>
-
-                  {isInCart ? (
-                    <>
-                      <div className="p-1 flex justify-between mt-7 md:mt-20 w-[250px] bg-gray-100 rounded-2xl">
-                        <div
-                          className="px-2.5 py-2 bg-custom-green cursor-pointer  rounded-full flex justify-center items-center"
-                          onClick={handleDecreaseQty}
+                        <TransformWrapper
+                          initialScale={1}
+                          minScale={1}
+                          maxScale={8}
+                          wheel={{ step: 0.1 }}
+                          doubleClick={{ disabled: true }}
                         >
-                          <IoRemoveSharp className="text-white text-lg" />
-                        </div>
-                        <p className="text-black md:text-xl text-lg font-medium text-center px-3  py-1">
-                          {availableQty}
-                        </p>
-                        <div
-                          className="rounded-full bg-custom-green cursor-pointer px-2.5 py-2 flex justify-center items-center"
-                          onClick={handleIncreaseQty}
-                        >
-                          <IoAddSharp className=" text-white text-lg" />
-                        </div>
+                          {({ zoomIn, zoomOut, resetTransform }) => (
+                            <>
+                              <TransformComponent>
+                                <Image
+                                  width={500}
+                                  height={300}
+                                  className="md:h-[500px] w-full object-contain cursor-move"
+                                  src={item}
+                                  alt={
+                                    productsId?.imageAltName || "Product image"
+                                  }
+                                />
+                              </TransformComponent>
+                              <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+                                <button
+                                  onClick={() => zoomIn()}
+                                  className="bg-white p-2 rounded-full shadow-lg text-black"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                  </svg>
+                                </button>
+                                <button
+                                  onClick={() => zoomOut()}
+                                  className="bg-white p-2 rounded-full shadow-lg text-black"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                  </svg>
+                                </button>
+                                <button
+                                  onClick={() => resetTransform()}
+                                  className="bg-white p-2 rounded-full shadow-lg text-black"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                    <path d="M21 3v5h-5"></path>
+                                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                    <path d="M8 16H3v5"></path>
+                                  </svg>
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </TransformWrapper>
                       </div>
-                    </>
-                  ) : productsId.Quantity <= 0 ? (
-                    <button className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed ">
-                      {t("Out of Stock")}
-                    </button>
-                  ) : (
-                    <button
-                      className="bg-custom-green md:mt-20 px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md  mt-4 cursor-pointer"
-                      onClick={handleAddToCart}
-                    >
-                      {t("Add to Cart")}
-                    </button>
-                  )}
-                  {productsId.isShipmentAvailable ? (
-                    <p className="text-black font-normal text-[17px] md:mt-5 mt-2">
-                      {t("Shipment Delivery is available")}
+                    ))}
+                  </Carousel>
+                </div>
+                <div className="flex justify-start items-start w-full">
+                  <div className="flex flex-col justify-start items-start w-full">
+                    <div className="flex justify-between items-center w-full">
+                      <h1 className="text-black md:text-[32px] text-2xl font-medium">
+                        {lang === "en"
+                          ? productsId?.name
+                          : productsId?.vietnamiesName}
+                      </h1>
+
+                      <div
+                        className="p-2 border-[3px] border-black rounded-full flex justify-center items-center cursor-pointer"
+                        onClick={addremovefavourite}
+                      >
+                        {!productsId?.favourite && (
+                          <FaRegHeart className="text-black w-[23px] h-[23px]" />
+                        )}
+                        {productsId?.favourite && (
+                          <FaHeart className="text-red-700 w-[23px] h-[23px]" />
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="pt-7 md:pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
+                      {priceSlot &&
+                        priceSlot.map((data, i) => {
+                          const otherprice = parseFloat(data?.other_price);
+                          const ourPrice = parseFloat(data?.our_price);
+                          const percentageDifference =
+                            otherprice && ourPrice
+                              ? ((otherprice - ourPrice) / otherprice) * 100
+                              : 0;
+                          return (
+                            <div key={i}>
+                              <div
+                                onClick={() => {
+                                  setSelectedPrice(data);
+                                  setPriceIndex(i);
+                                }}
+                                className={`cursor-pointer w-full rounded-[8px] border border-custom-darkPurple p-[10px] relative
+                                        ${priceIndex == i
+                                    ? "bg-[#2E7D321A]"
+                                    : "bg-white"
+                                  }
+                            `}
+                              >
+                                {data?.other_price && (
+                                  <>
+                                    <Image
+                                      width={60}
+                                      height={60}
+                                      className="w-[70px] h-[60px] object-contain absolute -top-[20px] -right-[18px] "
+                                      src="/star.png"
+                                    />
+                                    <p className="text-white text-center text-[9px] font-medium absolute -top-[2px] right-[2px]">
+                                      {percentageDifference?.toFixed(2)}%<br />
+                                      {t("off")}
+                                    </p>
+                                  </>
+                                )}
+                                <p className="text-black font-normal text-base pt-1">
+                                  {data.value} {data.unit}
+                                </p>
+                                <p className="text-black font-normal text-base pt-1">
+                                  {constant.currency}
+                                  {data?.our_price}
+                                </p>
+                                <p className="text-custom-black font-semibold text-sm pt-2">
+                                  {data?.other_price && (
+                                    <span className="text-black font-normal line-through">
+                                      {constant.currency}
+                                      {data?.other_price}
+                                    </span>
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+
+                    {isInCart ? (
+                      <>
+                        <div className="p-1 flex justify-between mt-7 md:mt-20 w-[250px] bg-gray-100 rounded-2xl">
+                          <div
+                            className="px-2.5 py-2 bg-custom-green cursor-pointer  rounded-full flex justify-center items-center"
+                            onClick={handleDecreaseQty}
+                          >
+                            <IoRemoveSharp className="text-white text-lg" />
+                          </div>
+                          <p className="text-black md:text-xl text-lg font-medium text-center px-3  py-1">
+                            {availableQty}
+                          </p>
+                          <div
+                            className="rounded-full bg-custom-green cursor-pointer px-2.5 py-2 flex justify-center items-center"
+                            onClick={handleIncreaseQty}
+                          >
+                            <IoAddSharp className=" text-white text-lg" />
+                          </div>
+                        </div>
+                      </>
+                    ) : productsId.Quantity <= 0 ? (
+                      <button className="bg-[#5CB447]/80 px-4 py-2 rounded-[8px] text-gray-200 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed ">
+                        {t("Out of Stock")}
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-custom-green md:mt-20 px-4 py-2 w-[250px] rounded-[8px] text-white font-medium text-md  mt-4 cursor-pointer"
+                        onClick={handleAddToCart}
+                      >
+                        {t("Add to Cart")}
+                      </button>
+                    )}
+                    {productsId.isShipmentAvailable ? (
+                      <p className="text-black font-normal text-[17px] md:mt-5 mt-2">
+                        {t("Shipment Delivery is available")}
+                      </p>
+                    ) : (
+                      <p className="text-black font-normal text-[17px] md:mt-5 mt-2">
+                        {t("Shipment Delivery is not available")}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="md:my-6 my-3 py-4 ">
+              <p className="text-black text-xl md:text-2xl font-bold mb-3">
+                {t("About Product")}
+              </p>
+
+              <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
+                <div className="md:col-span-2">
+                  <p className="text-black text-base md:text-[18px] font-bold">
+                    {t(" Description")}:
+                    <span className="text-custom-newGray font-normal ml-1">
+                      {productsId?.short_description}
+                    </span>
+                  </p>
+                </div>
+
+                {/* Long Description */}
+                <div className="md:col-span-2">
+                  <p className="text-black text-base md:text-[18px] font-semibold mb-1">
+                    {t("Long Description")}:{" "}
+                    <span className="text-black text-base md:text-[18px] font-normal leading-relaxed">
+                      {productsId?.long_description}
+                    </span>
+                  </p>
+                </div>
+
+                {productsId?.disclaimer && (
+                  <div className="md:col-span-2">
+                    <p className="text-black text-base md:text-[18px] font-semibold mb-1">
+                      {t("Disclaimer")}:
                     </p>
-                  ) : (
-                    <p className="text-black font-normal text-[17px] md:mt-5 mt-2">
-                      {t("Shipment Delivery is not available")}
+                    <div
+                      className="text-black text-base md:text-[18px] font-normal leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
+                    />
+                  </div>
+                )}
+
+                {productsId?.Warning && (
+                  <div className="md:col-span-2">
+                    <p className="text-black text-base md:text-[18px] font-semibold mb-1">
+                      {t("Warning")}:
                     </p>
-                  )}
-                </div>
+                    <div
+                      className="text-black text-base md:text-[18px] font-normal leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
+                    />
+                  </div>
+                )}
+
+                {productsId?.ReturnPolicy && (
+                  <div className="md:col-span-2">
+                    <p className="text-black text-base md:text-[18px] font-semibold mb-1">
+                      {t("Return Policy")}:
+                    </p>
+                    <div
+                      className="text-black text-base md:text-[18px] font-normal leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: productsId?.ReturnPolicy,
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-          <div className="md:my-6 my-3 py-4 ">
-            <p className="text-black text-xl md:text-2xl font-bold mb-3">
-              {t("About Product")}
-            </p>
+            <ProductReviews
+              productReviews={productReviews}
+              slug={productsId.slug}
+            />
 
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-2">
-              <div className="md:col-span-2">
-                <p className="text-black text-base md:text-[18px] font-bold">
-                  {t(" Description")}:
-                  <span className="text-custom-newGray font-normal ml-1">
-                    {productsId?.short_description}
-                  </span>
-                </p>
+            <div className="bg-transparent max-w-7xl mx-auto">
+              <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 ">
+                {t("You might also like")}
+              </p>
+              <div className="grid lg:grid-cols-4 grid-cols-2 md:gap-2 gap-3  ">
+                {productList.map((item, i) => (
+                  <div key={i} className="w-full md:mb-5">
+                    <GroceryCategories
+                      loader={props.loader}
+                      toaster={props.toaster}
+                      item={item}
+                      i={i}
+                      url={`/product-details/${item?.slug}`}
+                    />
+                  </div>
+                ))}
               </div>
-
-              {/* Long Description */}
-              <div className="md:col-span-2">
-                <p className="text-black text-base md:text-[18px] font-semibold mb-1">
-                  {t("Long Description")}:{" "}
-                  <span className="text-black text-base md:text-[18px] font-normal leading-relaxed">
-                    {productsId?.long_description}
-                  </span>
-                </p>
-              </div>
-
-              {productsId?.disclaimer && (
-                <div className="md:col-span-2">
-                  <p className="text-black text-base md:text-[18px] font-semibold mb-1">
-                    {t("Disclaimer")}:
-                  </p>
-                  <div
-                    className="text-black text-base md:text-[18px] font-normal leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: productsId?.disclaimer }}
-                  />
-                </div>
-              )}
-
-              {productsId?.Warning && (
-                <div className="md:col-span-2">
-                  <p className="text-black text-base md:text-[18px] font-semibold mb-1">
-                    {t("Warning")}:
-                  </p>
-                  <div
-                    className="text-black text-base md:text-[18px] font-normal leading-relaxed"
-                    dangerouslySetInnerHTML={{ __html: productsId?.Warning }}
-                  />
-                </div>
-              )}
-
-              {productsId?.ReturnPolicy && (
-                <div className="md:col-span-2">
-                  <p className="text-black text-base md:text-[18px] font-semibold mb-1">
-                    {t("Return Policy")}:
-                  </p>
-                  <div
-                    className="text-black text-base md:text-[18px] font-normal leading-relaxed"
-                    dangerouslySetInnerHTML={{
-                      __html: productsId?.ReturnPolicy,
-                    }}
-                  />
-                </div>
-              )}
             </div>
-          </div>
-          <ProductReviews
-            productReviews={productReviews}
-            slug={productsId.slug}
-          />
-
-          <div className="bg-white max-w-7xl mx-auto">
-            <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 ">
-              {t("You might also like")}
-            </p>
-            <div className="grid lg:grid-cols-4 grid-cols-2 md:gap-2 gap-3  ">
-              {productList.map((item, i) => (
-                <div key={i} className="w-full md:mb-5">
-                  <GroceryCategories
-                    loader={props.loader}
-                    toaster={props.toaster}
-                    item={item}
-                    i={i}
-                    url={`/product-details/${item?.slug}`}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
+
     </>
   );
 }

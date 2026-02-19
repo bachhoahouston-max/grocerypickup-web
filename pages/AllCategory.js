@@ -42,44 +42,45 @@ const Category = (props) => {
           href="https://www.bachhoahouston.com/AllCategory"
         />
       </Head>
-      <div className="max-w-7xl md:mt-12 mt-12 md:px-4 px-4 mx-auto bg-white">
-        <div className="flex justify-between">
-          <h1 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
-            {t("All Categories")}
-          </h1>
-          <p className="md:text-2xl cursor-pointer text-lg font-semibold text-gray-800 md:mb-8 mb-4"
-            onClick={() =>
-              router.push("/categories/all?category=all&sort_by=new")
-            }
-          >
-            {t("View All")}
-          </p>
-        </div>
-        <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-6 mb-4">
-          {category.map((cat, index) => (
-            <div
-              key={index}
-              className="bg-white  hover:shadow-lg transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center md:py-4"
-              onClick={() => router.push(`/categories/${cat?.slug}`)}
+      <div className="bg-[#E8F5E9]">
+        <div className="max-w-7xl md:pt-12 pt-12 md:px-4 px-4 mx-auto bg-transparent">
+          <div className="flex justify-between">
+            <h1 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
+              {t("All Categories")}
+            </h1>
+            <p className="md:text-2xl cursor-pointer text-lg font-semibold text-gray-800 md:mb-8 mb-4"
+              onClick={() =>
+                router.push("/categories/all?category=all&sort_by=new")
+              }
             >
-              <div className="relative w-full h-64 rounded-lg overflow-hidden mb-3">
-                <Image
-                  src={cat.image}
-                  alt={cat.label}
-                  fill
-                  className="object-contain"
-                />
-              </div>
+              {t("View All")}
+            </p>
+          </div>
+          <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-6 mb-4">
+            {category.map((cat, index) => (
+              <div
+                key={index}
+                className="bg-white  hover:shadow-lg transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center md:py-4"
+                onClick={() => router.push(`/categories/${cat?.slug}`)}
+              >
+                <div className="relative w-full h-64 rounded-lg overflow-hidden mb-3">
+                  <Image
+                    src={cat.image}
+                    alt={cat.label}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
 
-              <p className="text-center text-black text-lg md:text-xl font-medium md:mb-0 mb-4">
-                {cat.name}
-              </p>
-            </div>
-          ))}
+                <p className="text-center text-black text-lg md:text-xl font-medium md:mb-0 mb-4">
+                  {cat.name}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-    
     </>
   );
 };

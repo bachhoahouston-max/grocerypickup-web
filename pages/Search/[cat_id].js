@@ -74,8 +74,8 @@ function Search(props) {
     };
 
     return (
-        <div className="bg-white w-full min-h-screen">
-            <section className="bg-white w-full flex flex-col justify-center items-center">
+        <div className="bg-[#E8F5E9] w-full min-h-screen">
+            <section className="bg-transparent w-full flex flex-col justify-center items-center">
                 <div className="md:px-16 mx-auto w-full px-2 md:mt-10 mt-10 md:pb-10 pb-5">
                     <p className='text-black font-bold text-[20px] md:text-[24px] mb-5 md:mt-0 mt-2'>{t("Search Result")} </p>
                     <div className='grid sm:grid-cols-3 lg:grid-cols-4 grid-cols-2 w-full md:gap-2 gap-2'>
@@ -88,7 +88,7 @@ function Search(props) {
                                     url={`/product-details/${item?.slug}`} />
                             </div>))}
                     </div>
-           
+
                     {productList?.length === 0 && (
                         <div className="flex flex-col justify-center items-center h-[500px] space-y-4 text-center">
                             <div className="bg-gray-100 p-6 rounded-full flex items-center justify-center">
