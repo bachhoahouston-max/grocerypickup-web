@@ -71,9 +71,12 @@ function AnnouncementBar({ announcementBar, setAnnouncementBar, loader, toaster 
 
         </div> */}
 
-        <div className="w-full py-2 bg-custom-green text-white text-center h-12 ">
-          {shipmentCostMessage && <marquee scrollamount="2" >{shipmentCostMessage}</marquee>}
+        <div className="w-full py-2 bg-custom-green text-white text-center min-h-12 ">
+          {shipmentCostMessage && <marquee scrollamount="15" ><p className="pt-1">{shipmentCostMessage}</p></marquee>}
         </div>
+
+
+
       </div>
 
     </>

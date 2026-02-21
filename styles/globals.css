@@ -307,3 +307,54 @@ body {
   animation: vibrate 0.6s ease-in-out infinite;
   transform-origin: top center;
 }
+
+@keyframes gradientWave {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes letterWave {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    color: #ffffff;
+    /* blue */
+  }
+
+  25% {
+    color: #eab308;
+    /* green */
+  }
+
+  50% {
+    transform: translateY(-10px);
+    color: #ffffff;
+    /* red */
+  }
+
+  75% {
+    color: #eab308;
+    /* yellow */
+  }
+}
+
+@keyframes statusWave {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    color: #ffffff;
+  }
+
+  50% {
+    transform: translateY(-4px);
+    color: #F67E24;
+    /* green highlight */
+  }
+}
