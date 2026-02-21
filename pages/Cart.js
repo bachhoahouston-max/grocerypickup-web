@@ -995,7 +995,7 @@ function Cart(props) {
             />
             <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
               {cartData.length > 0 && (
-                <div className="bg-white rounded-lg shadow-sm border-2 p-3">
+                <div className="bg-transparent rounded-lg shadow-sm ">
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
                       {[
@@ -1063,7 +1063,7 @@ function Cart(props) {
                               <div
                                 className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected
                                   ? "border-green-600"
-                                  : "border-gray-300"
+                                  : "border-black"
                                   }`}
                               >
                                 <div

@@ -59,9 +59,10 @@ const SellProduct = ({ loader, toaster }) => {
         ).toFixed(2);
       }
     });
+    const updatedCartData = updatedCart.filter(f => f !== null);
 
-    setCartData(updatedCart);
-    localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+    setCartData(updatedCartData);
+    localStorage.setItem("addCartDetail", JSON.stringify(updatedCartData));
     toaster({ type: "success", message: "Product added to cart" });
   };
 
@@ -69,7 +70,7 @@ const SellProduct = ({ loader, toaster }) => {
     const updatedCart = produce(cartData, (draft) => {
       const existingItemIndex = draft.findIndex((f) => f._id === item._id);
       const price = parseFloat(item.price);
-
+      console.log("Removing item:", item, "Existing index:", existingItemIndex, "Current cart:", cartData);
       if (existingItemIndex !== -1) {
         if (draft[existingItemIndex].qty > 1) {
           draft[existingItemIndex].qty -= 1;
@@ -79,11 +80,13 @@ const SellProduct = ({ loader, toaster }) => {
         } else {
           draft.splice(existingItemIndex, 1);
         }
+      } else {
+        draft[existingItemIndex] = null;
       }
     });
-
-    setCartData(updatedCart);
-    localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+    const updatedCartData = updatedCart.filter(f => f !== null);
+    setCartData(updatedCartData);
+    localStorage.setItem("addCartDetail", JSON.stringify(updatedCartData));
   };
 
   const getSale = async () => {
@@ -247,7 +250,7 @@ const SellProduct = ({ loader, toaster }) => {
                           <div className="flex justify-between items-center gap-2 md:w-[200px] w-[150px] bg-gray-100 p-1 rounded-2xl">
                             <div
                               className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
-                              onClick={() => itemQuantity > 1 && handleRemoveFromCart(item)}
+                              onClick={() => handleRemoveFromCart(item)}
                             >
                               <IoRemoveSharp className="text-white w-5 h-5" />
                             </div>

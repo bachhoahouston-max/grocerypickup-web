@@ -54,6 +54,8 @@ function ProductDetails(props) {
     }
   }, [router?.query?.id]);
 
+  console.log('productsId ==============>', productsId)
+
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -186,7 +188,7 @@ function ProductDetails(props) {
     });
   };
 
-  
+
   const handleIncreaseQty = () => {
     const nextState = produce(cartData, (draft) => {
       const existingItem = draft.find(
@@ -425,11 +427,11 @@ function ProductDetails(props) {
               </div>
             )}
             <div className="flex flex-wrap items-center text-gray-500 text-xs md:text-sm mt-2 mb-2 gap-1 md:ps-4">
-              <p className="font-medium">{t("Home")}</p>
-              <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
+              <p className="font-medium cursor-pointer" onClick={() => router.push('/')}>{t("Home")}</p>
+              <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4 cursor-pointer" onClick={() => router.push('/')} />
 
-              <p className="font-medium">{productsId?.categoryName}</p>
-              <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4" />
+              <p className="font-medium cursor-pointer" onClick={() => router.push(`/categories/${productsId?.category?.slug}`)}>{productsId?.category?.name}</p>
+              <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4 cursor-pointer" onClick={() => router.push(`/categories/${productsId?.category?.slug}`)} />
 
               <p className="font-semibold truncate max-w-xs md:max-w-sm">
                 {lang === "en" ? productsId?.name : productsId?.vietnamiesName}
@@ -444,96 +446,108 @@ function ProductDetails(props) {
                   autoPlay={false}
                   infinite={true}
                   arrows={true}
+                  showDots={true}
                 >
                   {selectedImageList?.map((item, i) => (
                     <div
                       key={i}
                       className="bg-white w-full md:h-full relative flex justify-center"
                     >
-                      <TransformWrapper
-                        initialScale={1}
-                        minScale={1}
-                        maxScale={8}
-                        wheel={{ step: 0.1 }}
-                        doubleClick={{ disabled: true }}
-                      >
-                        {({ zoomIn, zoomOut, resetTransform }) => (
-                          <>
-                            <TransformComponent>
-                              <Image
-                                width={500}
-                                height={400}
-                                className="h-[500px] w-full object-contain cursor-move"
-                                src={item}
-                                alt={
-                                  productsId?.imageAltName ||
-                                  "bachahoustan image"
-                                }
-                              />
-                            </TransformComponent>
-                            <div className="absolute bottom-4 right-4 flex gap-2 z-10">
-                              <button
-                                onClick={() => zoomIn()}
-                                className="bg-white p-2 rounded-full shadow-lg text-black"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
+                      <div className="md:flex hidden">
+                        <TransformWrapper
+                          initialScale={1}
+                          minScale={1}
+                          maxScale={8}
+                          wheel={{ step: 0.1 }}
+                          doubleClick={{ disabled: true }}
+                        >
+                          {({ zoomIn, zoomOut, resetTransform }) => (
+                            <>
+                              <TransformComponent>
+                                <Image
+                                  width={500}
+                                  height={400}
+                                  className="h-[500px] w-full object-contain cursor-move"
+                                  src={item}
+                                  alt={
+                                    productsId?.imageAltName ||
+                                    "bachahoustan image"
+                                  }
+                                />
+                              </TransformComponent>
+                              <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+                                <button
+                                  onClick={() => zoomIn()}
+                                  className="bg-white p-2 rounded-full shadow-lg text-black"
                                 >
-                                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                              </button>
-                              <button
-                                onClick={() => zoomOut()}
-                                className="bg-white p-2 rounded-full shadow-lg text-black"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                  </svg>
+                                </button>
+                                <button
+                                  onClick={() => zoomOut()}
+                                  className="bg-white p-2 rounded-full shadow-lg text-black"
                                 >
-                                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                                </svg>
-                              </button>
-                              <button
-                                onClick={() => resetTransform()}
-                                className="bg-white p-2 rounded-full shadow-lg text-black"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                  </svg>
+                                </button>
+                                <button
+                                  onClick={() => resetTransform()}
+                                  className="bg-white p-2 rounded-full shadow-lg text-black"
                                 >
-                                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                                  <path d="M21 3v5h-5"></path>
-                                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                                  <path d="M8 16H3v5"></path>
-                                </svg>
-                              </button>
-                            </div>
-                          </>
-                        )}
-                      </TransformWrapper>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                    <path d="M21 3v5h-5"></path>
+                                    <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                    <path d="M8 16H3v5"></path>
+                                  </svg>
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </TransformWrapper>
+                      </div>
+                      <Image
+                        width={500}
+                        height={300}
+                        className="md:h-[500px] w-full object-contain cursor-move bg-transparent md:hidden block"
+                        src={item}
+                        alt={
+                          productsId?.imageAltName || "Product image"
+                        }
+                      />
                     </div>
                   ))}
                 </Carousel>

@@ -153,11 +153,10 @@ export default function CartDrawer({ pickupOption, toaster, cartClose }) {
                       <div className="mt-2">
                         {pickupConfig[pickupOption] && (
                           <p
-                            className={`${
-                              pickupConfig[pickupOption].available
+                            className={`${pickupConfig[pickupOption].available
                                 ? "text-green-500"
                                 : "text-red-500"
-                            } text-xs md:text-sm`}
+                              } text-xs md:text-sm`}
                           >
                             {pickupConfig[pickupOption].available
                               ? pickupConfig[pickupOption].yes
@@ -170,14 +169,14 @@ export default function CartDrawer({ pickupOption, toaster, cartClose }) {
                     <div className="md:flex hidden flex-col items-end md:flex-row md:items-center gap-3 mt-2 md:mt-0">
                       <div className="flex items-center justify-center bg-custom-green rounded-full px-3 py-1 w-28">
                         <button onClick={() => decreaseQty(i, item)}>
-                          <IoRemoveSharp className="text-white text-xl" />
+                          <IoRemoveSharp className="!text-white text-xl" />
                         </button>
                         <span className="mx-4 text-white font-medium text-base">
                           {item?.qty}
                         </span>
 
                         <button onClick={() => increaseQty(i, item)}>
-                          <IoAddSharp className="text-white text-xl" />
+                          <IoAddSharp className="!text-white text-xl" />
                         </button>
                       </div>
 

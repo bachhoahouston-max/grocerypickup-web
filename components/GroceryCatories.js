@@ -115,6 +115,8 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
   const itemQuantity = cartItem ? cartItem.qty : 0;
 
+  console.log(cartData)
+
   return (
     <div
       key={i}
@@ -179,16 +181,16 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                           total: (newQty * (cartItem.price || 0)).toFixed(2),
                         };
                       } else {
-                        return cartItem;
+                        return null;
                       }
                     }
                     return cartItem;
                   });
-
-                  setCartData(updatedCart);
+                  const updatedCartData = updatedCart.filter(f => f !== null)
+                  setCartData(updatedCartData);
                   localStorage.setItem(
                     "addCartDetail",
-                    JSON.stringify(updatedCart)
+                    JSON.stringify(updatedCartData)
                   );
                 }}
               >

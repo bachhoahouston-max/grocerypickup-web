@@ -171,7 +171,7 @@ function MainHeader() {
         {services.map((service, index) => (
           <div
             key={index}
-            className="transition-all duration-300 rounded-2xl px-3 py-4 min-h-[90px] text-center flex items-center max-w-[400px] cursor-pointer gap-4 hover:shadow-lg border border-gray-200 mb-4"
+            className="transition-all duration-300 rounded-2xl px-3 py-4 min-h-[90px] text-center flex items-center max-w-[400px] cursor-pointer gap-4 hover:shadow-lg border-2 border-gray-300 mb-4"
           >
             <div>
               {" "}
