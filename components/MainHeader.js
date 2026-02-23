@@ -114,7 +114,7 @@ function MainHeader() {
                   className="relative w-full overflow-hidden  rounded-[40px]"
                   style={{
                     position: "relative",
-                    aspectRatio: 1 / 0.7,
+                    aspectRatio: 1 / 0.6,
                   }}
                 >
                   <Image
@@ -133,7 +133,7 @@ function MainHeader() {
                       className="relative w-full overflow-hidden bg-[#E8F5E9] rounded-[40px]"
                       style={{
                         position: "relative",
-                        aspectRatio: 1 / 1,
+                        aspectRatio: 1 / 0.6,
                       }}
                     >
                       <Image
@@ -150,7 +150,7 @@ function MainHeader() {
                       className="relative w-full overflow-hidden bg-[#E8F5E9] rounded-[40px]"
                       style={{
                         position: "relative",
-                        aspectRatio: 1 / 1,
+                        aspectRatio: 1 / 0.6,
                       }}
                     >
                       <Image
@@ -171,7 +171,7 @@ function MainHeader() {
         {services.map((service, index) => (
           <div
             key={index}
-            className="transition-all duration-300 rounded-2xl px-3 py-4 min-h-[90px] text-center flex items-center cursor-pointer gap-4 hover:shadow-lg border-2 border-gray-300 mb-4"
+            className="transition-all duration-300 rounded-2xl px-3 py-1 min-h-[65px] text-center flex items-center cursor-pointer gap-4 hover:shadow-lg border-2 border-gray-300 mb-2"
           >
             <div>
               {" "}
@@ -181,7 +181,7 @@ function MainHeader() {
               <p className="md:text-[17px] font-semibold text-gray-900">
                 {t(service.title)}
               </p>
-              <p className="md:text-[13px] text-gray-700 mt-2">
+              <p className="md:text-[13px] text-gray-700 mt-0">
                 {t(service.description)}
               </p>
             </div>
