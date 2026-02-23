@@ -72,11 +72,11 @@ function ProductDetails(props) {
     setSelectedPrice(props.product.price_slot?.[0] || null);
   }, [props.product]);
 
-  // useEffect(() => {
-  //   if (router?.query?.id) {
-  //     getProductById();
-  //   }
-  // }, [router?.query?.id]);
+  useEffect(() => {
+    if (router?.query?.id) {
+      getProductById();
+    }
+  }, [router?.query?.id]);
 
   const responsive = {
     superLargeDesktop: {
@@ -255,21 +255,21 @@ function ProductDetails(props) {
     Api("get", url, "", router).then(
       (res) => {
         props.loader(false);
-        res.data.qty = 1;
-        res.data.total = (res.data?.our_price * res.data.qty).toFixed(2);
-        setProductsId(res.data);
-        setSelectedColor(res.data?.varients[0]);
-        setSelectedImageList(res.data?.varients[0].image);
-        setSelectedImage(res.data?.varients[0].image[0]);
-        getproductByCategory(res.data.category?.slug, res.data._id);
-        setProductReviews(res.data?.reviews);
-        if (router.query.clientSecret) {
-          setShowPayment(false);
-          createProductRquest();
-        }
+        // res.data.qty = 1;
+        // res.data.total = (res.data?.our_price * res.data.qty).toFixed(2);
+        // setProductsId(res.data);
+        // setSelectedColor(res.data?.varients[0]);
+        // setSelectedImageList(res.data?.varients[0].image);
+        // setSelectedImage(res.data?.varients[0].image[0]);
+        // getproductByCategory(res.data.category?.slug, res.data._id);
+        // setProductReviews(res.data?.reviews);
+        // if (router.query.clientSecret) {
+        //   setShowPayment(false);
+        //   createProductRquest();
+        // }
 
-        setPriceSlote(res?.data?.price_slot);
-        setSelectedPrice(res?.data?.price_slot[0]);
+        // setPriceSlote(res?.data?.price_slot);
+        // setSelectedPrice(res?.data?.price_slot[0]);
       },
       (err) => {
         props.loader(false);

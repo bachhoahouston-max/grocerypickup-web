@@ -51,7 +51,7 @@ export default function Home(props) {
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
       <div className="bg-[#E8F5E9]">
-        <div className="mx-auto md:max-w-7xl mt-5">
+        <div className="mx-auto md:w-full md:px-10 mt-5">
           <Suspense fallback={<div>Loading.....</div>}>
             <MainHeader />
           </Suspense>
@@ -71,7 +71,7 @@ export default function Home(props) {
 
           <div className="bg-transparent w-full ">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
-              <div className="container mx-auto px-2 md:px-0">
+              <div className=" mx-auto px-2 md:px-0">
                 <h1 className="hidden md:block text-[20px] md:text-2xl font-bold md:mb-10 mb-5 md:mt-10 text-black">
                   {t("All Products")}
                 </h1>
@@ -215,7 +215,7 @@ function BestSeller(props) {
     };
 
     return (
-      <div className="relative w-full md:w-[380px] mb-4 bg-transparent">
+      <div className="relative w-full md:w-full mb-4 bg-transparent">
         <button
           onClick={() => setOpen(!open)}
           className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg shadow-sm transition font-semibold text-gray-800"
@@ -271,7 +271,7 @@ function BestSeller(props) {
         <CategoryDropdown />
       </div>
 
-      <div className="grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto w-full">
+      <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto w-full">
         {productList.length > 0 ? (
           productList.map((item, i) => (
             <GroceryCatories

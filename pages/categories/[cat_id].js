@@ -207,7 +207,7 @@ function Categories(props) {
       </Head>
       <div className="bg-[#E8F5E9] w-full min-h-screen" ref={topRef}>
         <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
-          <div className="md:max-w-7xl mx-auto w-full md:px-0 px-2 md:pt-10 pt-8 md:pb-10 pb-0">
+          <div className="md:w-full md:px-10 mx-auto w-full  px-2 md:pt-10 pt-8 md:pb-10 pb-0">
 
             <div className="md:flex hidden flex-col w-full mb-4 mt-4">
               <div className="flex justify-between items-center flex-wrap gap-4 bg-white border border-gray-200 shadow-md px-6 py-4 rounded-xl">
@@ -330,7 +330,7 @@ function Categories(props) {
             </div>
 
             <div className="md:mt-0 mt-2">
-              <div className="grid lg:grid-cols-4 xl:grid-cols-4 md:grid-cols-4 grid-cols-2 mb-6 space-x-2 justify-between">
+              <div className="grid lg:grid-cols-5 xl:grid-cols-5 md:grid-cols-4 grid-cols-2 mb-6 space-x-2 justify-between">
                 {productList.length > 0 ? (
                   productList.map((item, i) => (
                     <div key={`${item?.id || item?.slug}-${i}`} className="p-1 w-full md:mb-5 mb-2">

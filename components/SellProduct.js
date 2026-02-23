@@ -163,7 +163,7 @@ const SellProduct = ({ loader, toaster }) => {
   return (
     <>
       {saleData.length > 0 && (
-        <div className="container  md:mt-10 lg:mt-14 mb-4 bg-transparent md:px-0 px-2 ">
+        <div className="  md:mt-10 lg:mt-14 mb-4 bg-transparent md:px-0 px-2 ">
           <p className="text-black md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
             {t("Offer of the Week")}
             <Zap className="text-custom-green" fill="#2e7d32" />

@@ -43,7 +43,7 @@ const Category = (props) => {
         />
       </Head>
       <div className="bg-[#E8F5E9]">
-        <div className="max-w-7xl md:pt-12 pt-12 md:px-4 px-4 mx-auto bg-transparent">
+        <div className="w-full md:px-10 md:pt-12 pt-12  px-4 mx-auto bg-transparent">
           <div className="flex justify-between">
             <h1 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">
               {t("All Categories")}
@@ -56,7 +56,7 @@ const Category = (props) => {
               {t("View All")}
             </p>
           </div>
-          <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 gap-6 mb-4">
+          <div className="grid md:grid-cols-4 lg:grid-cols-5 sm:grid-cols-3 grid-cols-2 gap-6 mb-4">
             {category.map((cat, index) => (
               <div
                 key={index}

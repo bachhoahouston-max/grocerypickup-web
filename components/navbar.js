@@ -744,8 +744,8 @@ const Navbar = (props) => {
   return (
     <>
       <header className="md:shadow-none shadow-md bg-white w-full sticky top-0 z-100">
-        <div className="max-w-7xl mx-auto flex items-center md:justify-between justify-center md:gap-0 gap-2 md:ps-0 ps-4 py-2">
-          <div className="relative md:w-40 w-32 h-14  flex items-center ">
+        <div className="w-full md:px-10 mx-auto flex items-center md:justify-between justify-center md:gap-0 gap-2 md:ps-0 ps-4 py-2">
+          <div className="relative md:w-40 ml-10 w-32 h-14  flex items-center ">
             <Image
               src="/Logo2.png"
               alt="bachhoustan logo"
