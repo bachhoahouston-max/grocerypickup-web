@@ -124,8 +124,9 @@ const BestSeller = (props) => {
         <div className="flex flex-col relative">
 
             <div className="flex justify-between md:mt-10 ">
-                <h1 className="text-[20px] md:text-2xl font-bold mb-4  text-black">
-                    {t("Best Sellers")}
+                <h1 className="text-[20px] md:text-2xl font-bold mb-4  text-[#2E7D32]">
+                    {/* {t("Best Sellers")} */}
+                    ⭐ {t("Customer Favorites")}
                 </h1>
 
             </div>
