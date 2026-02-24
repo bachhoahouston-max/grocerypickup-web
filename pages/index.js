@@ -11,8 +11,10 @@ import Head from "next/head";
 import { useContext } from "react";
 import { favoriteProductContext, userContext } from "./_app";
 import ShopByCategory from "@/components/ShopByCategory";
+import BestSeller from "@/components/BestSellers";
 import { FaTag } from "react-icons/fa";
 import { Loader2 } from "lucide-react";
+import NewArrival from "@/components/NewArrival";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -51,7 +53,7 @@ export default function Home(props) {
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
       <div className="bg-[#E8F5E9]">
-        <div className="mx-auto md:w-full md:px-10 mt-5">
+        <div className="mx-auto md:w-full md:px-10 mt-1">
           <Suspense fallback={<div>Loading.....</div>}>
             <MainHeader />
           </Suspense>
@@ -72,11 +74,31 @@ export default function Home(props) {
           <div className="bg-transparent w-full ">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
               <div className=" mx-auto px-2 md:px-0">
-                <h1 className="hidden md:block text-[20px] md:text-2xl font-bold md:mb-10 mb-5 md:mt-10 text-black">
-                  {t("All Products")}
-                </h1>
+
                 <Suspense fallback={<div>Loading.....</div>}>
                   <BestSeller loader={props.loader} toaster={props.toaster} />
+                </Suspense>
+              </div>
+            </section>
+          </div>
+
+          <div className="bg-transparent w-full ">
+            <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
+              <div className=" mx-auto px-2 md:px-0">
+
+                <Suspense fallback={<div>Loading.....</div>}>
+                  <NewArrival loader={props.loader} toaster={props.toaster} />
+                </Suspense>
+              </div>
+            </section>
+          </div>
+
+          <div className="bg-transparent w-full ">
+            <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
+              <div className=" mx-auto px-2 md:px-0">
+
+                <Suspense fallback={<div>Loading.....</div>}>
+                  <AllProducts loader={props.loader} toaster={props.toaster} />
                 </Suspense>
               </div>
             </section>
@@ -88,7 +110,8 @@ export default function Home(props) {
   );
 }
 
-function BestSeller(props) {
+
+function AllProducts(props) {
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -218,7 +241,7 @@ function BestSeller(props) {
       <div className="relative w-full md:w-full mb-4 bg-transparent">
         <button
           onClick={() => setOpen(!open)}
-          className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg shadow-sm transition font-semibold text-gray-800"
+          className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg shadow-sm transition font-semibold text-gray-800 min-w-80"
         >
           <span className="flex items-center gap-2">
             <FaTag className="text-custom-green" />
@@ -266,10 +289,15 @@ function BestSeller(props) {
       {/* <div className="md:hidden sticky top-0 z-40 bg-white px-2 py-2 shadow-sm">
         <CategoryDropdown />
       </div> */}
-
-      <div className="hidden md:block">
-        <CategoryDropdown />
+      <div className="flex justify-between  md:mt-5 ">
+        <h1 className=" text-[20px] md:text-2xl font-bold pt-5 text-black">
+          {t("All Products")}
+        </h1>
+        <div className="hidden md:block">
+          <CategoryDropdown />
+        </div>
       </div>
+
 
       <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto w-full">
         {productList.length > 0 ? (

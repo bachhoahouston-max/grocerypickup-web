@@ -80,7 +80,7 @@ const Layout = ({ children, loader, toaster }) => {
 
         </div>
 
-        <div className="pt-[88px] md:pt-[170px] max-w-screen overflow-x-hidden z-0">
+        <div className="pt-[88px] md:pt-[170px] max-w-screen overflow-x-hidden z-0 bg-[#E8F5E9]">
           <main className="flex-1">{children}</main>
         </div>
 

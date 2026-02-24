@@ -72,11 +72,11 @@ function ProductDetails(props) {
     setSelectedPrice(props.product.price_slot?.[0] || null);
   }, [props.product]);
 
-  useEffect(() => {
-    if (router?.query?.id) {
-      getProductById();
-    }
-  }, [router?.query?.id]);
+  // useEffect(() => {
+  //   if (router?.query?.id) {
+  //     getProductById();
+  //   }
+  // }, [router?.query?.id]);
 
   const responsive = {
     superLargeDesktop: {
@@ -181,31 +181,55 @@ function ProductDetails(props) {
     });
   };
 
-  const handleIncreaseQty = () => {
+  const handleQuantity = async () => {
+    try {
+      props.loader(true);
+
+      const res = await Api(
+        "get",
+        `checkQuantity/${productsId?._id}`,
+        "",
+        router
+      );
+
+      props.loader(false);
+
+      return res.status ? res.data.qty : 0;
+    } catch (err) {
+      props.loader(false);
+      props.toaster({ type: "error", message: err?.message });
+      return 0;
+    }
+  };
+
+  const handleIncreaseQty = async () => {
+    const availableQuantity = await handleQuantity();
+
     const nextState = produce(cartData, (draft) => {
-      const existingItem = draft.find(
+      let existingItem = draft.find(
         (item) =>
           item._id === productsId._id &&
           item.price_slot.value === selectedPrice.value
       );
 
       if (!existingItem) {
-        console.error("Item not found in cart for increasing quantity.");
+        console.error("Item not found in cart.");
         return;
       }
 
-      if (existingItem.qty + 1 > productsId.Quantity) {
+      if (existingItem.qty + 1 > availableQuantity) {
         props.toaster({
           type: "error",
           message:
-            "Item is not available in this quantity in stock. Please choose a different item.",
+            "Item is not available in this quantity in stock.",
         });
         return;
       }
 
       existingItem.qty += 1;
       existingItem.total = (
-        parseFloat(existingItem.price_slot?.our_price || 0) * existingItem.qty
+        parseFloat(existingItem.price_slot?.our_price || 0) *
+        existingItem.qty
       ).toFixed(2);
     });
 
@@ -241,42 +265,42 @@ function ProductDetails(props) {
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
   };
 
-  const getProductById = async () => {
-    // const productRes = await fetch(`${ConstantsUrl}getProductByslug/${router?.query?.id}`);
-    // const product = await productRes.json();
+  // const getProductById = async () => {
+  //   // const productRes = await fetch(`${ConstantsUrl}getProductByslug/${router?.query?.id}`);
+  //   // const product = await productRes.json();
 
-    // const data = await Api("get", `getProductByslug/${router?.query?.id}`, "", '');
-    // console.log("Product data:", data);
-    let url = `getProductByslug/${router?.query?.id}`;
-    if (user?.token) {
-      url = `getProductByslug/${router?.query?.id}?user=${user?._id}`;
-    }
-    props.loader(true);
-    Api("get", url, "", router).then(
-      (res) => {
-        props.loader(false);
-        // res.data.qty = 1;
-        // res.data.total = (res.data?.our_price * res.data.qty).toFixed(2);
-        // setProductsId(res.data);
-        // setSelectedColor(res.data?.varients[0]);
-        // setSelectedImageList(res.data?.varients[0].image);
-        // setSelectedImage(res.data?.varients[0].image[0]);
-        // getproductByCategory(res.data.category?.slug, res.data._id);
-        // setProductReviews(res.data?.reviews);
-        // if (router.query.clientSecret) {
-        //   setShowPayment(false);
-        //   createProductRquest();
-        // }
+  //   // const data = await Api("get", `getProductByslug/${router?.query?.id}`, "", '');
+  //   // console.log("Product data:", data);
+  //   let url = `getProductByslug/${router?.query?.id}`;
+  //   if (user?.token) {
+  //     url = `getProductByslug/${router?.query?.id}?user=${user?._id}`;
+  //   }
+  //   props.loader(true);
+  //   Api("get", url, "", router).then(
+  //     (res) => {
+  //       props.loader(false);
+  //       // res.data.qty = 1;
+  //       // res.data.total = (res.data?.our_price * res.data.qty).toFixed(2);
+  //       // setProductsId(res.data);
+  //       // setSelectedColor(res.data?.varients[0]);
+  //       // setSelectedImageList(res.data?.varients[0].image);
+  //       // setSelectedImage(res.data?.varients[0].image[0]);
+  //       // getproductByCategory(res.data.category?.slug, res.data._id);
+  //       // setProductReviews(res.data?.reviews);
+  //       // if (router.query.clientSecret) {
+  //       //   setShowPayment(false);
+  //       //   createProductRquest();
+  //       // }
 
-        // setPriceSlote(res?.data?.price_slot);
-        // setSelectedPrice(res?.data?.price_slot[0]);
-      },
-      (err) => {
-        props.loader(false);
-        props.toaster({ type: "error", message: err?.message });
-      }
-    );
-  };
+  //       // setPriceSlote(res?.data?.price_slot);
+  //       // setSelectedPrice(res?.data?.price_slot[0]);
+  //     },
+  //     (err) => {
+  //       props.loader(false);
+  //       props.toaster({ type: "error", message: err?.message });
+  //     }
+  //   );
+  // };
 
   const getproductByCategory = async (category_id, product_id) => {
     props.loader(true);

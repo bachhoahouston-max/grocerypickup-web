@@ -25,8 +25,31 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const [user] = useContext(userContext);
   const [Favorite, setFavorite] = useContext(favoriteProductContext);
 
-  const handleAddToCart = () => {
-    const itemQuantity = Number(item?.Quantity ?? 0);
+  const handleQuantity = async (items) => {
+    try {
+      loader(true);
+
+      const res = await Api(
+        "get",
+        `checkQuantity/${items?._id}`,
+        "",
+        router
+      );
+
+      loader(false);
+
+      return res.status ? res.data.qty : 0;
+    } catch (err) {
+      loader(false);
+      toaster({ type: "error", message: err?.message });
+      return 0;
+    }
+  };
+
+  const handleAddToCart = async () => {
+    const itemQuantity = await handleQuantity(item);
+
+    // const itemQuantity = Number(item?.Quantity ?? 0);
 
     if (itemQuantity <= 0) {
       toaster({
@@ -115,7 +138,6 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
   const itemQuantity = cartItem ? cartItem.qty : 0;
 
-  console.log(cartData)
 
   return (
     <div
@@ -203,33 +225,32 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
               <div
                 className="bg-custom-green cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
-                onClick={() => {
-                  const updatedCart = cartData.map((cartItem) => {
-                    if (cartItem._id === item._id) {
-                      if (cartItem.qty + 1 > item.Quantity) {
-                        toaster({
-                          type: "error",
-                          message:
-                            "Item is not available in this quantity in stock. Please choose a different item.",
-                        });
-                        return cartItem;
-                      }
-                      return {
-                        ...cartItem,
-                        qty: cartItem.qty + 1,
-                        total: (
-                          (cartItem.price || 0) *
-                          (cartItem.qty + 1)
-                        ).toFixed(2),
-                      };
+                onClick={async () => {
+                  const existingCartItem = cartData.find((cartItem) => cartItem._id === item._id);
+                  if (existingCartItem) {
+                    const availableQuantity = await handleQuantity(item);
+                    if (existingCartItem.qty + 1 > availableQuantity) {
+                      toaster({
+                        type: "error",
+                        message:
+                          "Item is not available in this quantity in stock. Please choose a different item.",
+                      });
+                      return
                     }
-                    return cartItem;
-                  });
-
-                  setCartData(updatedCart);
+                    cartData.forEach(async (cartItem) => {
+                      if (cartItem._id === item._id) {
+                        cartItem.qty = cartItem.qty + 1;
+                        cartItem.total = (
+                          (cartItem.price || 0) *
+                          cartItem.qty
+                        ).toFixed(2);
+                      }
+                    });
+                  }
+                  setCartData([...cartData]);
                   localStorage.setItem(
                     "addCartDetail",
-                    JSON.stringify(updatedCart)
+                    JSON.stringify([...cartData])
                   );
                 }}
               >

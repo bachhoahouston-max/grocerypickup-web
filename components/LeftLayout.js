@@ -41,7 +41,7 @@ const LeftLayout = (props) => {
 
     return (
 
-        <div className="bg-white p-3 shadow-md w-full hidden md:flex">
+        <div className="bg-white pb-2 shadow-md w-full hidden md:flex">
             <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
 
                 <div className="flex flex-1 justify-center ps-52">
@@ -57,7 +57,7 @@ const LeftLayout = (props) => {
                             />
                         </form>
 
-              
+
                         {searchData && (
                             <button
                                 type="button"
@@ -70,15 +70,15 @@ const LeftLayout = (props) => {
                     </div>
                 </div>
 
-              
+
                 <div className="flex items-center gap-3 pl-6">
                     <span className="text-md text-gray-600"> {t("Select Language")}:</span>
                     <div className="flex bg-gray-200 rounded-full overflow-hidden border border-gray-300 gap-2">
-                         <button
+                        <button
                             onClick={() => handleClick("vi")}
                             className={`px-3 py-2 text-[14px] cursor-pointer font-semibold transition ${lang === "vi"
-                                    ? "bg-custom-green text-white rounded-full"
-                                    : "text-gray-700 "
+                                ? "bg-custom-green text-white rounded-full"
+                                : "text-gray-700 "
                                 }`}
                         >
                             VI
@@ -86,13 +86,13 @@ const LeftLayout = (props) => {
                         <button
                             onClick={() => handleClick("en")}
                             className={`px-3 py-2 cursor-pointer text-[14px] font-semibold transition ${lang === "en"
-                                    ? "bg-custom-green text-white rounded-full"
-                                    : "text-gray-700"
+                                ? "bg-custom-green text-white rounded-full"
+                                : "text-gray-700"
                                 }`}
                         >
                             EN
                         </button>
-                       
+
                     </div>
                 </div>
 

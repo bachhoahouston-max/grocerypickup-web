@@ -111,7 +111,7 @@ function MainHeader() {
             isMobile ? (
               <div key={idx} className="" >
                 <div
-                  className="relative w-full overflow-hidden  rounded-[40px]"
+                  className="relative w-full overflow-hidden mt-6 rounded-[40px]"
                   style={{
                     position: "relative",
                     aspectRatio: 1 / 0.6,

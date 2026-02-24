@@ -207,7 +207,7 @@ function Categories(props) {
       </Head>
       <div className="bg-[#E8F5E9] w-full min-h-screen" ref={topRef}>
         <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
-          <div className="md:w-full md:px-10 mx-auto w-full  px-2 md:pt-10 pt-8 md:pb-10 pb-0">
+          <div className="md:w-full md:px-10 mx-auto w-full  px-2 md:pt-0 pt-8 md:pb-10 pb-0">
 
             <div className="md:flex hidden flex-col w-full mb-4 mt-4">
               <div className="flex justify-between items-center flex-wrap gap-4 bg-white border border-gray-200 shadow-md px-6 py-4 rounded-xl">

@@ -7,8 +7,10 @@ import { cartContext, languageContext } from "@/pages/_app";
 import constant from "@/services/constant";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
+import { Api } from "@/services/service";
 
-export default function CartDrawer({ pickupOption, toaster, cartClose }) {
+
+export default function CartDrawer({ pickupOption, toaster, cartClose, loader }) {
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
   const { lang } = useContext(languageContext);
@@ -75,9 +77,32 @@ export default function CartDrawer({ pickupOption, toaster, cartClose }) {
     }
   };
 
-  const increaseQty = (index, item) => {
+  const handleQuantity = async (items) => {
+    try {
+      loader(true);
+
+      const res = await Api(
+        "get",
+        `checkQuantity/${items?._id}`,
+        "",
+        router
+      );
+
+      loader(false);
+
+      return res.status ? res.data.qty : 0;
+    } catch (err) {
+      loader(false);
+      toaster({ type: "error", message: err?.message });
+      return 0;
+    }
+  };
+
+  const increaseQty = async (index, item) => {
+    const itemQuantity = await handleQuantity(item);
+
     const nextState = produce(cartData, (draft) => {
-      const maxQty = item?.Quantity ?? Infinity;
+      const maxQty = itemQuantity ?? Infinity;
 
       if (draft[index].qty + 1 > maxQty) {
         toaster?.({

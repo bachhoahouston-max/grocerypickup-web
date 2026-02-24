@@ -992,6 +992,7 @@ function Cart(props) {
               toaster={props.toaster}
               pickupOption={pickupOption}
               cartClose={cartClose}
+              loader={props.loader}
             />
             <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
               {cartData.length > 0 && (

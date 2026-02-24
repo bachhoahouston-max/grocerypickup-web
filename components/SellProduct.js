@@ -17,7 +17,39 @@ const SellProduct = ({ loader, toaster }) => {
   const [countdown, setCountdown] = useState({});
   const { lang } = useContext(languageContext)
 
-  const handleAddToCart = (item) => {
+  const handleQuantity = async (item) => {
+    try {
+      loader(true);
+
+      const res = await Api(
+        "get",
+        `checkQuantity/${item?._id}`,
+        "",
+        router
+      );
+
+      loader(false);
+
+      return res.status ? res.data.qty : 0;
+    } catch (err) {
+      loader(false);
+      toaster({ type: "error", message: err?.message });
+      return 0;
+    }
+  };
+
+
+  const handleAddToCart = async (item) => {
+    const itemQuantity = await handleQuantity(item?.product);
+    if (itemQuantity <= 0) {
+      toaster({
+        type: "error",
+        message:
+          "This item is currently out of stock. Please choose a different item.",
+      });
+      return;
+    }
+
     const updatedCart = produce(cartData, (draft) => {
       const existingItemIndex = draft.findIndex((f) => f.id === item?.product?._id);
       const price = parseFloat(item.price);

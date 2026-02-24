@@ -188,8 +188,31 @@ function ProductDetails(props) {
     });
   };
 
+  const handleQuantity = async () => {
+    try {
+      props.loader(true);
 
-  const handleIncreaseQty = () => {
+      const res = await Api(
+        "get",
+        `checkQuantity/${productsId?._id}`,
+        "",
+        router
+      );
+
+      props.loader(false);
+
+      return res.status ? res.data.qty : 0;
+    } catch (err) {
+      props.loader(false);
+      props.toaster({ type: "error", message: err?.message });
+      return 0;
+    }
+  };
+
+
+  const handleIncreaseQty = async () => {
+    const availableQuantity = await handleQuantity();
+
     const nextState = produce(cartData, (draft) => {
       const existingItem = draft.find(
         (item) =>
@@ -202,7 +225,7 @@ function ProductDetails(props) {
         return;
       }
 
-      if (existingItem.qty + 1 > productsId.Quantity) {
+      if (existingItem.qty + 1 > availableQuantity) {
         props.toaster({
           type: "error",
           message:
