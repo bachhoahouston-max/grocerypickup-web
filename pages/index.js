@@ -71,7 +71,7 @@ export default function Home(props) {
             <SellProduct loader={props.loader} toaster={props.toaster} />
           </Suspense>
 
-          <div className="bg-transparent w-full ">
+          <div className="bg-transparent w-full md:block hidden">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
               <div className=" mx-auto px-2 md:px-0">
 
@@ -82,7 +82,7 @@ export default function Home(props) {
             </section>
           </div>
 
-          <div className="bg-transparent w-full ">
+          <div className="bg-transparent w-full md:block hidden">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
               <div className=" mx-auto px-2 md:px-0">
 
@@ -290,7 +290,7 @@ function AllProducts(props) {
         <CategoryDropdown />
       </div> */}
       <div className="flex justify-between  md:mt-5 ">
-        <h1 className=" text-[20px] md:text-2xl font-bold pt-5 text-black">
+        <h1 className=" text-[20px] md:text-2xl font-bold pt-5 text-[#2E7D32]">
           {t("All Products")}
         </h1>
         <div className="hidden md:block">

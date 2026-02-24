@@ -73,8 +73,9 @@ function ShopByCategory() {
   return (
     <div className="bg-transparent px-4 mt-4 mb-0  ">
       <div className="hidden md:block md:w-full mx-auto" >
-        <h1 className="text-xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 hidden md:flex">
-          {t("Shop By Category")}
+        <h1 className="text-xl md:text-[28px] text-[#2E7D32] font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 hidden md:flex">
+          {/* {t("Shop By Category")} */}
+          🛒 {t('Categories Browse')}
         </h1>
         <div className="overflow-x-scroll scrollbar-hide" style={{ maxWidth: width - 80 }}>
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-6 md:gap-8 ">
@@ -94,8 +95,9 @@ function ShopByCategory() {
                   />
                 </div>
               </div>
-              <p className="text-black text-[14px] sm:text-[16px] font-semibold text-center">
+              <p className="text-[#2E7D32] text-[14px] sm:text-[16px] font-semibold text-center">
                 {t("New Arrivals")}
+
               </p>
             </div>
 

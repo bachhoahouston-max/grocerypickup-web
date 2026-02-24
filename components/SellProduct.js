@@ -196,8 +196,9 @@ const SellProduct = ({ loader, toaster }) => {
     <>
       {saleData.length > 0 && (
         <div className="  md:mt-10 lg:mt-14 mb-4 bg-transparent md:px-0 px-2 ">
-          <p className="text-black md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
-            {t("Offer of the Week")}
+          <p className="text-[#2E7D32] md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
+            {/* {t("Offer of the Week")} */}
+            🔥  {t('Weekly Deals')}
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
           <div className="md:mt-4 mt-2 grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto">
