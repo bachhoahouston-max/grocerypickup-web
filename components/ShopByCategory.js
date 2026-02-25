@@ -75,7 +75,8 @@ function ShopByCategory() {
       <div className="hidden md:block md:w-full mx-auto" >
         <h1 className="text-xl md:text-[28px] text-[#2E7D32] font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 hidden md:flex">
           {/* {t("Shop By Category")} */}
-          🛒 {t('Categories Browse')}
+          🛒 BHH {t('Recommends')}
+
         </h1>
         <div className="overflow-x-scroll scrollbar-hide" style={{ maxWidth: width - 80 }}>
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-6 md:gap-8 ">

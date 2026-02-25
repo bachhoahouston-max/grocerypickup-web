@@ -30,8 +30,11 @@ const ProductReviews = ({ productReviews, slug }) => {
             navigation
             modules={[Pagination, Navigation]}
             breakpoints={{
+              320: {
+                slidesPerView: 2.5,
+              },
               640: {
-                slidesPerView: 1,
+                slidesPerView: 2,
               },
               768: {
                 slidesPerView: 2,
@@ -43,16 +46,16 @@ const ProductReviews = ({ productReviews, slug }) => {
           >
             {productReviews?.map((item, i) => (
               <SwiperSlide key={i}>
-                <div className="border-2 black-border p-3 rounded-lg shadow-lg">
-                  <div className="pt-2 flex justify-start items-center">
-                    <div className="w-[40px] h-[40px] bg-custom-gold rounded-full flex justify-center items-center">
-                      <p className="text-white text-[18px] font-bold">
+                <div className="border-2 black-border p-3  rounded-lg shadow-lg">
+                  <div className="md:pt-2 flex justify-start items-center">
+                    <div className="md:w-[40px] md:h-[40px] w-7 h-7 bg-custom-gold rounded-full flex justify-center items-center">
+                      <p className="text-white md:text-[18px] text-base font-bold">
                         {item?.posted_by?.username?.charAt(0).toUpperCase()}
                       </p>
                     </div>
-                    <div className="ml-5">
+                    <div className="md:ml-5 ml-2">
                       <div className="flex">
-                        <p className="text-black font-normal text-[16px]">
+                        <p className="text-black font-normal md:text-[16px] text-[14px]">
                           {item?.posted_by?.username}
                         </p>
                       </div>
@@ -62,14 +65,14 @@ const ProductReviews = ({ productReviews, slug }) => {
                     </div>
                   </div>
 
-                  <p className="text-black font-normal text-base pt-5">
+                  <p className="text-black font-normal md:text-base text-sm pt-5">
                     {item?.description}
                   </p>
 
                   {item?.images && item?.images?.length > 0 && (
                     <div className="pt-3">
                       {item?.images?.length === 1 ? (
-                        <div className="w-64 h-78 relative">
+                        <div className="md:w-64 md:h-76 w-36 h-44  relative">
                           <Image
                             fill
                             src={item?.images[0]}

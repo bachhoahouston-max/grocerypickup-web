@@ -64,7 +64,7 @@ function ProductDetails(props) {
     setSelectedImageList(props.product.varients?.[0]?.image || []);
     setSelectedImage("");
 
-    setProductReviews(props.product.reviews || []);
+    setProductReviews([...props.product.reviews] || []);
     setProductList(props.relatedProducts || []);
 
     setPriceSlote(props.product.price_slot || []);
