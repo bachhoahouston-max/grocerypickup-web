@@ -75,7 +75,7 @@ function ShopByCategory() {
       <div className="hidden md:block md:w-full mx-auto" >
         <h1 className="text-xl md:text-[28px] text-[#2E7D32] font-semibold  leading-[36px] tracking-[0]  md:mb-12 mb-4 hidden md:flex">
           {/* {t("Shop By Category")} */}
-          🛒 BHH {t('Recommends')}
+          🛒 {t('Browse by Category')}
 
         </h1>
         <div className="overflow-x-scroll scrollbar-hide" style={{ maxWidth: width - 80 }}>
@@ -143,11 +143,11 @@ function ShopByCategory() {
       {/* Mobile Category Row */}
       <div className="md:hidden" style={{ maxWidth: width - 32 }}>
         <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
-          <div className="flex gap-6 w-full min-w-0">
+          <div className="flex gap-2 w-full min-w-0">
 
             {/* New Arrival */}
             <div
-              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[60px] flex-shrink-0"
+              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
               onClick={() =>
                 router.push("/categories/all?category=all&sort_by=new")
               }
@@ -162,7 +162,7 @@ function ShopByCategory() {
                   />
                 </div>
               </div>
-              <p className="text-black text-[13px] font-semibold text-center max-w-[70px] break-words">
+              <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
                 {t("New Arrivals")}
               </p>
             </div>
@@ -171,7 +171,7 @@ function ShopByCategory() {
             {categorys.map((category, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[60px] flex-shrink-0"
+                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
                 onClick={() => router.push(`/categories/${category?.slug}`)}
               >
                 <div className="relative mb-3">
@@ -185,7 +185,7 @@ function ShopByCategory() {
                   </div>
                 </div>
 
-                <p className="text-black text-[13px] font-semibold text-center max-w-[70px] break-words">
+                <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
                   {category?.name}
                 </p>
               </div>

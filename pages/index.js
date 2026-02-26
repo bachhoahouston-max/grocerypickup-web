@@ -122,6 +122,7 @@ function AllProducts(props) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true); // ✅ New state
   const observerRef = useRef(null);
+  const dataLimit = 20;
 
   useEffect(() => {
     async function fetchData() {
@@ -137,13 +138,13 @@ function AllProducts(props) {
       setLoadingMore(true);
       const res = await Api(
         "get",
-        `getTopSoldProduct?page=${pageNum}&limit=16`,
+        `getTopSoldProduct?page=${pageNum}&limit=${dataLimit}`,
         null,
         router
       );
 
       if (res?.data) {
-        if (res.data.length === 0 || res.data.length < 16) {
+        if (res.data.length === 0 || res.data.length < dataLimit) {
           setHasMore(false);
         }
         setPage(pageNum);
@@ -159,7 +160,7 @@ function AllProducts(props) {
   const fetchProductsByCategory = async (
     categoryId,
     pageNum = 1,
-    limit = 16
+    limit = dataLimit
   ) => {
     try {
       setLoadingMore(true);

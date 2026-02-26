@@ -40,8 +40,9 @@ const SellProduct = ({ loader, toaster }) => {
 
 
   const handleAddToCart = async (item) => {
-    const itemQuantity = await handleQuantity(item?.product);
-    if (itemQuantity <= 0) {
+    const availableQuantity = await handleQuantity(item?.product);
+
+    if (availableQuantity <= 0) {
       toaster({
         type: "error",
         message:
@@ -50,52 +51,65 @@ const SellProduct = ({ loader, toaster }) => {
       return;
     }
 
+
     const updatedCart = produce(cartData, (draft) => {
       const existingItemIndex = draft.findIndex((f) => f.id === item?.product?._id);
-      const price = parseFloat(item.price);
 
-      let price_slot = {
-        value: item?.price_slot?.value,
-        unit: item?.price_slot?.unit,
-        other_price: item?.price_slot?.our_price,
-        our_price: item?.price,
-      };
-
-      if (existingItemIndex === -1) {
-        console.log(item)
-        draft.push({
-          ...item,
-          name: item?.product.name,
-          vietnamiesName: item?.product.vietnamiesName,
-          id: item?.product?._id,
-          selectedColor: item?.product.varients?.[0] || {},
-          selectedImage: item.product?.varients[0]?.image[0] || "",
-          BarCode: item?.product.DateBarCode || "",
-          total: price,
-          isCurbSidePickupAvailable: item?.product?.isCurbSidePickupAvailable,
-          isInStoreAvailable: item?.product?.isInStoreAvailable,
-          isNextDayDeliveryAvailable: item?.product?.isNextDayDeliveryAvailable,
-          isReturnAvailable: item?.product?.isReturnAvailable,
-          isShipmentAvailable: item?.product?.isShipmentAvailable,
-          qty: 1,
-          price: price ?? 0,
-          price_slot: price_slot || {},
-          productSource: "SALE",
-          SaleID: item?._id,
-          tax_code: item?.product.tax_code,
+      if (draft[existingItemIndex].qty + 1 > availableQuantity) {
+        console.log(draft[existingItemIndex]?.qty + 1 > availableQuantity)
+        toaster({
+          type: "error",
+          message:
+            "Item is not available in this quantity in stock. Please choose a different item.",
         });
+        return
       } else {
-        draft[existingItemIndex].qty += 1;
-        draft[existingItemIndex].total = (
-          price * draft[existingItemIndex].qty
-        ).toFixed(2);
+        const price = parseFloat(item.price);
+
+        let price_slot = {
+          value: item?.price_slot?.value,
+          unit: item?.price_slot?.unit,
+          other_price: item?.price_slot?.our_price,
+          our_price: item?.price,
+        };
+
+        if (existingItemIndex === -1) {
+          console.log(item)
+          draft.push({
+            ...item,
+            name: item?.product.name,
+            vietnamiesName: item?.product.vietnamiesName,
+            id: item?.product?._id,
+            selectedColor: item?.product.varients?.[0] || {},
+            selectedImage: item.product?.varients[0]?.image[0] || "",
+            BarCode: item?.product.DateBarCode || "",
+            total: price,
+            isCurbSidePickupAvailable: item?.product?.isCurbSidePickupAvailable,
+            isInStoreAvailable: item?.product?.isInStoreAvailable,
+            isNextDayDeliveryAvailable: item?.product?.isNextDayDeliveryAvailable,
+            isReturnAvailable: item?.product?.isReturnAvailable,
+            isShipmentAvailable: item?.product?.isShipmentAvailable,
+            qty: 1,
+            price: price ?? 0,
+            price_slot: price_slot || {},
+            productSource: "SALE",
+            SaleID: item?._id,
+            tax_code: item?.product.tax_code,
+          });
+        } else {
+          draft[existingItemIndex].qty += 1;
+          draft[existingItemIndex].total = (
+            price * draft[existingItemIndex].qty
+          ).toFixed(2);
+        }
       }
+      toaster({ type: "success", message: "Product added to cart" });
     });
     const updatedCartData = updatedCart.filter(f => f !== null);
 
     setCartData(updatedCartData);
     localStorage.setItem("addCartDetail", JSON.stringify(updatedCartData));
-    toaster({ type: "success", message: "Product added to cart" });
+
   };
 
   const handleRemoveFromCart = (item) => {
@@ -198,7 +212,7 @@ const SellProduct = ({ loader, toaster }) => {
         <div className="  md:mt-10 lg:mt-14 mb-4 bg-transparent md:px-0 px-2 ">
           <p className="text-[#2E7D32] md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
             {/* {t("Offer of the Week")} */}
-            🔥  BHH {t('Weekly Deals')}
+            🔥 {t('BHH Weekly Deals')}
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
           <div className="md:mt-4 mt-2 grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto">

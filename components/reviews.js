@@ -16,9 +16,9 @@ const ProductReviews = ({ productReviews, slug }) => {
   return (
     <>
       {productReviews.length > 0 && (
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto mt-5">
           <div className="flex justify-between">
-            <p className="text-black text-xl font-bold mb-5">{t("Reviews")}</p>
+            <p className="text-[#2E7D32] text-xl font-bold mb-5">{t("Reviews")}</p>
             <p className="text-black text-lg font-bold mb-5 cursor-pointer"
               onClick={() => router.push(`/Reviews/${slug}`)}
             > View All</p>
@@ -40,7 +40,7 @@ const ProductReviews = ({ productReviews, slug }) => {
                 slidesPerView: 2,
               },
               1024: {
-                slidesPerView: 3,
+                slidesPerView: 2.5,
               },
             }}
           >
@@ -72,7 +72,7 @@ const ProductReviews = ({ productReviews, slug }) => {
                   {item?.images && item?.images?.length > 0 && (
                     <div className="pt-3">
                       {item?.images?.length === 1 ? (
-                        <div className="md:w-64 md:h-76 w-36 h-44  relative">
+                        <div className="w-36 h-44  relative">
                           <Image
                             fill
                             src={item?.images[0]}
@@ -83,7 +83,7 @@ const ProductReviews = ({ productReviews, slug }) => {
                       ) : (
                         <div className="grid grid-cols-2 gap-2">
                           {item?.images?.slice(0, 2).map((image, index) => (
-                            <div key={index} className="w-64 h-78 relative">
+                            <div key={index} className=" w-36 h-44  relative">
                               <Image
                                 fill
                                 src={image}

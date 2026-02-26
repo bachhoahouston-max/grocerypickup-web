@@ -64,7 +64,7 @@ function ProductDetails(props) {
     setSelectedImageList(props.product.varients?.[0]?.image || []);
     setSelectedImage("");
 
-    setProductReviews([...props.product.reviews] || []);
+    setProductReviews([...props.product.reviews, ...props.product.reviews, ...props.product.reviews] || []);
     setProductList(props.relatedProducts || []);
 
     setPriceSlote(props.product.price_slot || []);
@@ -408,22 +408,21 @@ function ProductDetails(props) {
 
             <div className="w-full ">
               <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
-                <div className="p-[10px] rounded-[15px]">
+                <div className="p-[10px] rounded-[15px] md:max-h-[700px] max-h-[400px]">
                   <Carousel
-                    className="h-full w-full"
+                    className="h-full w-full max-h-[400px]"
                     responsive={responsive}
                     autoPlay={false}
                     infinite={true}
                     arrows={true}
                     showDots={true}
-
                   >
                     {selectedImageList?.map((item, i) => (
                       <div
                         key={i}
-                        className="bg-transparent w-full md:h-full relative flex justify-center"
+                        className="bg-transparent w-full md:h-full max-h-[400px] relative flex justify-center"
                       >
-                        <div className="md:flex hidden">
+                        <div className="">
                           <TransformWrapper
 
                             initialScale={1}
@@ -509,15 +508,16 @@ function ProductDetails(props) {
                             )}
                           </TransformWrapper>
                         </div>
-                        <Image
-                          width={500}
-                          height={300}
+                        {/* <Image
+                          // width={500}
+                          // height={300}
                           className="md:h-[500px] w-full object-contain cursor-move bg-transparent md:hidden block"
                           src={item}
+                          fill
                           alt={
                             productsId?.imageAltName || "Product image"
                           }
-                        />
+                        /> */}
                       </div>
                     ))}
                   </Carousel>
@@ -643,7 +643,15 @@ function ProductDetails(props) {
                         {t("Shipment Delivery is not available")}
                       </p>
                     )}
+                    <div className="w-full">
+                      <ProductReviews
+                        productReviews={productReviews}
+                        slug={productsId.slug}
+                      />
+                    </div>
+
                   </div>
+
                 </div>
               </div>
             </div>
@@ -711,10 +719,10 @@ function ProductDetails(props) {
                 )}
               </div>
             </div>
-            <ProductReviews
+            {/* <ProductReviews
               productReviews={productReviews}
               slug={productsId.slug}
-            />
+            /> */}
 
             <div className="bg-transparent max-w-7xl mx-auto">
               <p className="text-black text-xl font-bold md:mb-10 mb-5 md:mt-4 mt-4 ">

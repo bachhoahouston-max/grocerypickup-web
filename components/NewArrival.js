@@ -126,7 +126,7 @@ const NewArrival = (props) => {
             <div className="flex justify-between w-full md:mt-10 mt-2">
                 <h1 className="text-[20px] md:text-2xl font-bold mb-4  text-[#2E7D32]">
                     {/* {t("New Arrivals")} */}
-                    ✨ {t('Fresh In Today')}
+                    ✨ {t('Fresh in Today')}
                 </h1>
                 <h1 className=" text-[16px] md:text-lg font-bold mb-4  text-custom-green cursor-pointer" onClick={() => {
                     router.push('/categories/all?category=all&sort_by=new')
