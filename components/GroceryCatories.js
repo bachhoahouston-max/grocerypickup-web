@@ -16,6 +16,7 @@ import { IoAddSharp } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import constant from "@/services/constant";
 import Image from "next/image";
+import Link from "next/link";
 
 const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   const router = useRouter();
@@ -165,16 +166,20 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
         {/* Product Image */}
-        <div className="relative w-full h-56 flex items-center justify-center mb-4 z-0">
+        <Link href={url} className="relative w-full h-56 flex items-center justify-center mb-4 z-0" >
+          {/* <div className="relative w-full h-56 flex items-center justify-center mb-4 z-0"> */}
+
           <Image
             src={item.varients[0].image[0]}
             alt={item?.imageAltName || "Product Image"}
             className="object-contain cursor-pointer"
-            onClick={() => router.push(url)}
+            // onClick={() => router.push(url)}
             fill
             priority
           />
-        </div>
+
+          {/* </div> */}
+        </Link>
 
         {/* Product Name */}
 

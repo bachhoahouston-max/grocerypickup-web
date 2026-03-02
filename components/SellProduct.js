@@ -8,6 +8,7 @@ import { Api } from "@/services/service";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
 import { Zap } from "lucide-react";
+import Link from "next/link";
 
 const SellProduct = ({ loader, toaster }) => {
   const router = useRouter();
@@ -55,7 +56,7 @@ const SellProduct = ({ loader, toaster }) => {
     const updatedCart = produce(cartData, (draft) => {
       const existingItemIndex = draft.findIndex((f) => f.id === item?.product?._id);
 
-      if (draft[existingItemIndex].qty + 1 > availableQuantity) {
+      if (existingItemIndex !== -1 && draft[existingItemIndex].qty + 1 > availableQuantity) {
         console.log(draft[existingItemIndex]?.qty + 1 > availableQuantity)
         toaster({
           type: "error",
@@ -277,13 +278,16 @@ const SellProduct = ({ loader, toaster }) => {
 
                     {/* Product Image */}
                     <div className="relative w-full h-48 mb-4">
-                      <Image
-                        src={item.product?.varients[0]?.image[0]}
-                        alt={item.product?.name || "Product Image"}
-                        fill
-                        className="object-contain rounded-xl cursor-pointer"
-                        onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
-                      />
+                      <Link href={`/SaleDetails/${item?.product?.slug}`} >
+                        <Image
+                          src={item.product?.varients[0]?.image[0]}
+                          alt={item.product?.name || "Product Image"}
+                          fill
+                          className="object-contain rounded-xl cursor-pointer"
+                        // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
+                        />
+                      </Link>
+
                     </div>
                     <div className="absolute bottom-0 right-0">
                       {item?.product?.Quantity <= 0 ? (
