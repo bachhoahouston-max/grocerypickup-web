@@ -358,3 +358,16 @@ body {
     /* green highlight */
   }
 }
+
+/* Hide scrollbar but allow scrolling */
+.scrollbar-hides {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.scrollbar-hides::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari */
+}

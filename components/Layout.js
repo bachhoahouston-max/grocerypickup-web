@@ -75,7 +75,9 @@ const Layout = ({ children, loader, toaster }) => {
 
           <Suspense fallback={<div>Loading.....</div>}>
             <LeftLayout loader={loader}
-              toaster={toaster} />
+              toaster={toaster}
+              showAnnouncement={showAnnouncement}
+            />
           </Suspense>
 
         </div>

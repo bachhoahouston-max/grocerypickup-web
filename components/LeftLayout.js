@@ -3,6 +3,7 @@ import { Search, X } from "lucide-react";
 import { useRouter } from "next/router";
 import { languageContext } from "@/pages/_app";
 import { useTranslation } from "react-i18next";
+import ShopByCategoryHeader from "./ShopByCategoryHeader";
 
 const LeftLayout = (props) => {
     const [isLanguage, setIsLanguage] = useState(false);
@@ -10,6 +11,7 @@ const LeftLayout = (props) => {
     const { lang, changeLang } = useContext(languageContext);
     const { i18n, t } = useTranslation();
     const router = useRouter();
+    const [shipmentCostMessage, setShipmentCostMessage] = useState("");
 
     useEffect(() => {
         i18n.changeLanguage(lang);
@@ -41,62 +43,66 @@ const LeftLayout = (props) => {
 
     return (
 
-        <div className="bg-white pb-2 shadow-md w-full hidden md:flex">
-            <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
+        <div className="pb-2 shadow-md w-full">
+            <div className={`bg-white  w-full hidden md:flex`}>
+                <div className="flex items-center justify-between w-full max-w-7xl mx-auto">
 
-                <div className="flex flex-1 justify-center ps-52">
-                    <div className="flex items-center w-full max-w-lg bg-gray-50 rounded-full px-4 py-2 border-2 relative">
-                        <Search size={20} className="text-gray-400" />
-                        <form onSubmit={handleSearchSubmit} className="flex-1">
-                            <input
-                                type="text"
-                                value={searchData}
-                                onChange={(e) => setSearchData(e.target.value)}
-                                placeholder={t("Search")}
-                                className="w-full bg-transparent text-black text-sm px-3 outline-none placeholder:text-gray-400"
-                            />
-                        </form>
+                    <div className="flex flex-1 justify-center ps-52">
+                        <div className="flex items-center w-full max-w-lg bg-gray-50 rounded-full px-4 py-2 border-2 relative">
+                            <Search size={20} className="text-gray-400" />
+                            <form onSubmit={handleSearchSubmit} className="flex-1">
+                                <input
+                                    type="text"
+                                    value={searchData}
+                                    onChange={(e) => setSearchData(e.target.value)}
+                                    placeholder={t("Search")}
+                                    className="w-full bg-transparent text-black text-sm px-3 outline-none placeholder:text-gray-400"
+                                />
+                            </form>
 
 
-                        {searchData && (
+                            {searchData && (
+                                <button
+                                    type="button"
+                                    onClick={() => setSearchData("")}
+                                    className="absolute cursor-pointer right-3 text-gray-400 hover:text-gray-600 transition"
+                                >
+                                    <X size={18} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
+
+
+                    <div className="flex items-center gap-3 pl-6">
+                        <span className="text-md text-gray-600"> {t("Select Language")}:</span>
+                        <div className="flex bg-gray-200 rounded-full overflow-hidden border border-gray-300 gap-2">
                             <button
-                                type="button"
-                                onClick={() => setSearchData("")}
-                                className="absolute cursor-pointer right-3 text-gray-400 hover:text-gray-600 transition"
+                                onClick={() => handleClick("vi")}
+                                className={`px-3 py-2 text-[14px] cursor-pointer font-semibold transition ${lang === "vi"
+                                    ? "bg-custom-green text-white rounded-full"
+                                    : "text-gray-700 "
+                                    }`}
                             >
-                                <X size={18} />
+                                VI
                             </button>
-                        )}
+                            <button
+                                onClick={() => handleClick("en")}
+                                className={`px-3 py-2 cursor-pointer text-[14px] font-semibold transition ${lang === "en"
+                                    ? "bg-custom-green text-white rounded-full"
+                                    : "text-gray-700"
+                                    }`}
+                            >
+                                EN
+                            </button>
+
+                        </div>
                     </div>
+
                 </div>
-
-
-                <div className="flex items-center gap-3 pl-6">
-                    <span className="text-md text-gray-600"> {t("Select Language")}:</span>
-                    <div className="flex bg-gray-200 rounded-full overflow-hidden border border-gray-300 gap-2">
-                        <button
-                            onClick={() => handleClick("vi")}
-                            className={`px-3 py-2 text-[14px] cursor-pointer font-semibold transition ${lang === "vi"
-                                ? "bg-custom-green text-white rounded-full"
-                                : "text-gray-700 "
-                                }`}
-                        >
-                            VI
-                        </button>
-                        <button
-                            onClick={() => handleClick("en")}
-                            className={`px-3 py-2 cursor-pointer text-[14px] font-semibold transition ${lang === "en"
-                                ? "bg-custom-green text-white rounded-full"
-                                : "text-gray-700"
-                                }`}
-                        >
-                            EN
-                        </button>
-
-                    </div>
-                </div>
-
             </div>
+
+            {!props?.showAnnouncement && <ShopByCategoryHeader {...props} />}
         </div>
 
 

@@ -10,13 +10,13 @@ import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-const ProductReviews = ({ productReviews, slug }) => {
+const ProductReviews = ({ productReviews, slug, setImages, setVisible }) => {
   const { t } = useTranslation()
   const router = useRouter()
   return (
     <>
       {productReviews.length > 0 && (
-        <div className="max-w-7xl mx-auto mt-5">
+        <div className="max-w-7xl mx-auto mt-5 z-0">
           <div className="flex justify-between">
             <p className="text-[#2E7D32] text-xl font-bold mb-5">{t("Reviews")}</p>
             <p className="text-black text-lg font-bold mb-5 cursor-pointer"
@@ -46,7 +46,7 @@ const ProductReviews = ({ productReviews, slug }) => {
           >
             {productReviews?.map((item, i) => (
               <SwiperSlide key={i}>
-                <div className="border-2 black-border p-3  rounded-lg shadow-lg">
+                <div className="border-2 black-border p-3  rounded-lg shadow-lg overflow-hidden">
                   <div className="md:pt-2 flex justify-start items-center">
                     <div className="md:w-[40px] md:h-[40px] w-7 h-7 bg-custom-gold rounded-full flex justify-center items-center">
                       <p className="text-white md:text-[18px] text-base font-bold">
@@ -70,7 +70,10 @@ const ProductReviews = ({ productReviews, slug }) => {
                   </p>
 
                   {item?.images && item?.images?.length > 0 && (
-                    <div className="pt-3">
+                    <div className="pt-3" onClick={() => {
+                      setImages(item?.images);
+                      setVisible(true);
+                    }}>
                       {item?.images?.length === 1 ? (
                         <div className="w-36 h-44  relative">
                           <Image

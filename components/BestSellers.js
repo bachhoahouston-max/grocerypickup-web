@@ -21,7 +21,7 @@ const BestSeller = (props) => {
         async function fetchData() {
             const cat = await Api("get", "getCategory", null, router);
             setCategory(cat.data || []);
-            fetchProducts(1, true);
+            fetchProductsByCategory(1, true);
         }
         fetchData();
     }, []);
@@ -53,7 +53,7 @@ const BestSeller = (props) => {
     const fetchProductsByCategory = async (
         categoryId,
         pageNum = 1,
-        limit = 5
+        limit = 7
     ) => {
         try {
             setLoadingMore(true);
@@ -94,15 +94,15 @@ const BestSeller = (props) => {
         return () => observer.disconnect();
     }, [hasMore, loadingMore]);
 
-    useEffect(() => {
-        if (page > 1) {
-            if (selectedCategory === "all") {
-                fetchProducts(page);
-            } else {
-                fetchProductsByCategory(selectedCategory, page);
-            }
-        }
-    }, [page]);
+    // useEffect(() => {
+    //     if (page > 1) {
+    //         if (selectedCategory === "all") {
+    //             fetchProducts(page);
+    //         } else {
+    //             fetchProductsByCategory(selectedCategory, page);
+    //         }
+    //     }
+    // }, [page]);
 
     const handleCategoryClickAll = () => {
         setSelectedCategory("all");
@@ -132,7 +132,7 @@ const BestSeller = (props) => {
             </div>
 
 
-            <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto w-full">
+            <div className="grid md:grid-cols-7 lg:grid-cols-7 grid-cols-2 gap-2 mx-auto w-full">
                 {productList.length > 0 ? (
                     productList.map((item, i) => (
                         <GroceryCatories

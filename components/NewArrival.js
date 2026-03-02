@@ -16,6 +16,7 @@ const NewArrival = (props) => {
     const [page, setPage] = useState(1);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true); // ✅ New state
+    let dataLength = 7
 
     useEffect(() => {
         async function fetchData() {
@@ -31,13 +32,13 @@ const NewArrival = (props) => {
             setLoadingMore(true);
             const res = await Api(
                 "get",
-                `getProductBycategoryId?&page=${pageNum}&limit=${5}&sort_by=new`,
+                `getProductBycategoryId?&page=${pageNum}&limit=${dataLength}&sort_by=new`,
                 null,
                 router
             );
 
             if (res?.data) {
-                if (res.data.length === 0 || res.data.length < 16) {
+                if (res.data.length === 0 || res.data.length < dataLength) {
                     setHasMore(false);
                 }
                 setPage(pageNum);
@@ -53,7 +54,7 @@ const NewArrival = (props) => {
     const fetchProductsByCategory = async (
         categoryId,
         pageNum = 1,
-        limit = 5
+        limit = dataLength
     ) => {
         try {
             setLoadingMore(true);
@@ -136,7 +137,7 @@ const NewArrival = (props) => {
             </div>
 
 
-            <div className="grid md:grid-cols-4 lg:grid-cols-5 grid-cols-2 gap-4 mx-auto w-full">
+            <div className="grid md:grid-cols-7 lg:grid-cols-7 grid-cols-2 gap-2 mx-auto w-full">
                 {productList.length > 0 ? (
                     productList.map((item, i) => (
                         <GroceryCatories

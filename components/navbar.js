@@ -24,6 +24,8 @@ import { useTranslation } from "react-i18next";
 import { languageContext } from "@/pages/_app";
 import Image from "next/image";
 import HeaderFirst from "./HeaderFirst";
+import ShopByCategory from "./ShopByCategory";
+import ShopByCategoryHeader from "./ShopByCategoryHeader";
 
 const Navbar = (props) => {
   const router = useRouter();
@@ -883,7 +885,6 @@ const Navbar = (props) => {
               )}
             </div>
           </div>
-
           <div className="md:hidden flex items-center  bg-gray-50 rounded-full px-4 py-2 border-2 relative">
             <Search size={17} className="text-gray-400" />
             <form onSubmit={handleSearchSubmit} className="flex-1">
@@ -929,9 +930,17 @@ const Navbar = (props) => {
             </div>
           </div>
 
+
+
+
+
+
+
           <div></div>
         </div>
+
       </header>
+
     </>
   );
 };

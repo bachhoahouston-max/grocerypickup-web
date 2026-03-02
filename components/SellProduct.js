@@ -210,13 +210,13 @@ const SellProduct = ({ loader, toaster }) => {
   return (
     <>
       {saleData.length > 0 && (
-        <div className="  md:mt-10 lg:mt-14 mb-4 bg-transparent md:px-0 px-2 ">
+        <div className="  md:mt-10 lg:mt-8 mb-4 bg-transparent md:px-0 px-2 ">
           <p className="text-[#2E7D32] md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
             {/* {t("Offer of the Week")} */}
             🔥 {t('BHH Weekly Deals')}
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
-          <div className="md:mt-4 mt-2 grid md:grid-cols-4 lg:grid-cols-4 grid-cols-2 gap-4 mx-auto">
+          <div className="md:mt-4 mt-2 grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto">
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
                 (cartItem) => cartItem.id === item?.product?._id
@@ -351,7 +351,7 @@ const SellProduct = ({ loader, toaster }) => {
                   </div>
 
                   <div className="flex md:justify-center md:items-center">
-                    <h3 className="text-black font-semibold text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
+                    <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
                       {lang === "en"
                         ? item.product?.name
                         : item.product?.vietnamiesName || item.product?.name}

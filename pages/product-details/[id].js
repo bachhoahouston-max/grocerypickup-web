@@ -23,6 +23,7 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import ProductReviews from "@/components/reviews";
 import Head from "next/head";
 import Image from "next/image";
+import ImageViewer from 'react-simple-image-viewer';
 
 function ProductDetails(props) {
   console.log(props, "deviceType");
@@ -45,6 +46,10 @@ function ProductDetails(props) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isInCart, setIsInCart] = React.useState(false);
   const [availableQty, setAvailableQty] = React.useState(0);
+
+  const [visible, setVisible] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [images, setImages] = useState([]);
 
   useEffect(() => {
     if (props?.notFoundProduct) {
@@ -380,9 +385,21 @@ function ProductDetails(props) {
 
   const cartItem = productsId?._id;
   const itemQuantity = cartItem ? cartItem?.qty : 0;
-
+  console.log(images)
   return (
     <>
+      {/* {visible && (
+        <div className="z-50">
+          <ImageViewer
+
+            src={images}
+            currentIndex={index}
+            disableScroll={false}
+            closeOnClickOutside={true}
+            onClose={() => { setVisible(false); setImages([]) }}
+          />
+        </div>
+      )} */}
       <Head>
         <title>{productsId?.metatitle}</title>
         <meta name="description" content={productsId?.metadescription} />
@@ -391,7 +408,7 @@ function ProductDetails(props) {
           href={`https://www.bachhoahouston.com/product-details/${productsId?.slug}`}
         />
       </Head>
-      <div className="bg-white">
+      <div className="bg-white z-0">
         <div className="bg-white w-full max-w-7xl mx-auto md:pt-10 pt-14 md:pb-10 pb-5 md:px-0 px-3">
           <section className="bg-transparent w-full ">
             <div className="flex flex-wrap items-center text-gray-500 text-xs md:text-sm mt-2 mb-2 gap-1 md:ps-4">
@@ -420,7 +437,7 @@ function ProductDetails(props) {
                     {selectedImageList?.map((item, i) => (
                       <div
                         key={i}
-                        className="bg-transparent w-full md:h-full max-h-[400px] relative flex justify-center"
+                        className="bg-transparent w-full md:h-full  relative flex justify-center"
                       >
                         <div className="">
                           <TransformWrapper
@@ -439,6 +456,7 @@ function ProductDetails(props) {
                                     height={300}
                                     className="md:h-[500px] w-full object-contain cursor-move"
                                     src={item}
+                                    objectFit="contain"
                                     alt={
                                       productsId?.imageAltName || "Product image"
                                     }
@@ -647,6 +665,9 @@ function ProductDetails(props) {
                       <ProductReviews
                         productReviews={productReviews}
                         slug={productsId.slug}
+                        setVisible={setVisible}
+                        setIndex={setIndex}
+                        setImages={setImages}
                       />
                     </div>
 

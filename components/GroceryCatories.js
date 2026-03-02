@@ -149,7 +149,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
 
         {/* Category Badge */}
-        <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
+        <div className="absolute -top-2 -left-2 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
           {item.categoryName}
         </div>
 
@@ -298,7 +298,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
       </div>
 
-      <h3 className="text-black md:text-md text-sm font-semibold mb-3 min-h-[40px] line-clamp-2">
+      <h3 className="text-black md:text-md text-sm font-medium mb-3 min-h-[40px] line-clamp-2">
         {lang === "en" ? item.name : item.vietnamiesName || item.name}
       </h3>
 
