@@ -14,7 +14,7 @@ const CategoryCard = ({ item, url, router }) => {
       className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 "
       onClick={() => router.push(url)}
     >
-      <div className="relative">
+      <div className="relative md:block hidden">
         <div className="relative w-14 h-14 md:w-14 md:h-14 rounded-full group-hover:shadow-xl group-hover:scale-105 shadow-md transition-all duration-300">
           <Image
             src={item?.image}
@@ -83,7 +83,7 @@ function ShopByCategoryHeader() {
                 router.push("/categories/all?category=all&sort_by=new")
               }
             >
-              <div className="relative ">
+              <div className="relative hidden md:flex">
                 <div className="relative w-14 h-14  rounded-full  group-hover:scale-105 transition-all duration-300">
                   <Image
                     src="/NewArrival.png"
@@ -149,7 +149,7 @@ function ShopByCategoryHeader() {
                 router.push("/categories/all?category=all&sort_by=new")
               }
             >
-              <div className="relative mb-3">
+              {/* <div className="relative mb-3 hidden">
                 <div className="relative w-16 h-16 rounded-full group-hover:scale-105 transition-all duration-300">
                   <Image
                     src="/NewArrival.png"
@@ -158,7 +158,7 @@ function ShopByCategoryHeader() {
                     className="object-contain"
                   />
                 </div>
-              </div>
+              </div> */}
               <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
                 {t("New Arrivals")}
               </p>
@@ -171,7 +171,7 @@ function ShopByCategoryHeader() {
                 className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
                 onClick={() => router.push(`/categories/${category?.slug}`)}
               >
-                <div className="relative mb-3">
+                {/* <div className="relative mb-3 hidden">
                   <div className="relative w-16 h-16 rounded-full shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
                     <Image
                       src={category?.image}
@@ -180,7 +180,7 @@ function ShopByCategoryHeader() {
                       className="object-cover rounded-full"
                     />
                   </div>
-                </div>
+                </div> */}
 
                 <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
                   {category?.name}
