@@ -74,12 +74,12 @@ function ShopByCategory() {
   return (
     <div className="bg-transparent px-4 mt-4 mb-0  ">
       <div className="hidden md:block md:w-full mx-auto" >
-        <h1 className="text-xl md:text-[28px] text-black font-semibold  leading-[36px] tracking-[0]  md:mb-5 mb-2 py-2 hidden md:flex">
+        <h1 className="text-xl md:text-[28px] text-[#2E7D32] font-semibold  leading-[36px] tracking-[0]  md:mb-5 mb-2 py-2 hidden md:flex">
           {/* {t("Shop By Category")} */}
-          <ShoppingCart className="text-black h-8 w-8 mr-2" /> {t('Browse by Category')}
+          <ShoppingCart className="text-[#2E7D32] h-8 w-8 mr-2" /> {t('Browse by Category')}
 
         </h1>
-        <div className="overflow-x-auto scrollbar-hides" style={{ maxWidth: width - 80 }}>
+        <div className="overflow-x-auto scrollbar-hide" style={{ maxWidth: width - 80 }}>
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-6 md:gap-8 ">
             <div
               className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"

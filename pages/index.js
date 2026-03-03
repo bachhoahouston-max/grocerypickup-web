@@ -52,12 +52,12 @@ export default function Home(props) {
         />
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
-      <div className="bg-[#E8F5E9]">
+      <div className="bg-[var(--theme-var)]">
         <div className="mx-auto md:w-full md:px-10 mt-1">
           <Suspense fallback={<div>Loading.....</div>}>
             <MainHeader />
           </Suspense>
-          <div className="bg-[url('/cat_bag.png')] md:-px-10 bg-center rounded-2xl">
+          <div className="">
             <Suspense fallback={<div>Loading.....</div>}>
               <ShopByCategory loader={props.loader} toaster={props.toaster} />
             </Suspense>
@@ -404,7 +404,7 @@ function AllProducts(props) {
 //         />
 //         <link rel="canonical" href="https://www.bachhoahouston.com/" />
 //       </Head>
-//       <div className="bg-[#E8F5E9]">
+//       <div className="bg-[var(--theme-var)]">
 //         <div className="mx-auto md:w-full md:px-10 mt-1">
 //           <Suspense fallback={<div>Loading.....</div>}>
 //             <MainHeader />

@@ -130,7 +130,7 @@ function MainHeader() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4  ">
                   <div className="md:col-span-1">
                     <div
-                      className="relative w-full overflow-hidden bg-[#E8F5E9] rounded-[40px]"
+                      className="relative w-full overflow-hidden bg-[var(--theme-var)] rounded-[40px]"
                       style={{
                         position: "relative",
                         aspectRatio: 1 / 0.6,
@@ -147,7 +147,7 @@ function MainHeader() {
 
                   <div className="col-span-1 ">
                     <div
-                      className="relative w-full overflow-hidden bg-[#E8F5E9] rounded-[40px]"
+                      className="relative w-full overflow-hidden bg-[var(--theme-var)] rounded-[40px]"
                       style={{
                         position: "relative",
                         aspectRatio: 1 / 0.6,
@@ -167,7 +167,7 @@ function MainHeader() {
           )}
         </Carousel>
       </div>
-      <div className="hidden md:hidden lg:grid grid-cols-1 gap-0 pb-8 pt-2">
+      <div className="hidden md:hidden lg:grid grid-cols-1 gap-0 pt-2">
         {services.map((service, index) => (
           <div
             key={index}

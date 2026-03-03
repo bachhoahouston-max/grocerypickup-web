@@ -141,15 +141,17 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
 
   return (
+    // className="bg-transparent w-full rounded-[12px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-4 p-2.5 relative"
+
     <div
       key={i}
-      className="bg-white w-full rounded-[12px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-4 p-2.5 relative"
+      className="md:bg-transparent bg-white w-full rounded-[12px] transition-all duration-300 relative md:shadow-none shaddow-lg"
     >
-      <div className="relative">
+      <div className="relative bg-white py-2 rounded-2xl overflow-hidden md:shadow-lg  hover:shadow-xl">
 
 
         {/* Category Badge */}
-        <div className="absolute -top-2 -left-2 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
+        <div className="absolute top-0 left-0 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
           {item.categoryName}
         </div>
 
@@ -166,7 +168,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
         {/* Product Image */}
-        <Link href={url} className="relative w-full h-56 flex items-center justify-center mb-4 z-0" >
+        <Link href={url} className="relative w-full   h-40 flex items-center justify-center mb-4 z-0 " >
           {/* <div className="relative w-full h-56 flex items-center justify-center mb-4 z-0"> */}
 
           <Image
@@ -175,6 +177,9 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             className="object-contain cursor-pointer"
             // onClick={() => router.push(url)}
             fill
+            // width={160}
+            // height={160}
+            // objectFit="contain"
             priority
           />
 
@@ -279,7 +284,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       </div>
 
       {/* Price and Add to Cart */}
-      <div className="md:flex justify-between items-center gap-3">
+      <div className="md:flex justify-between items-center gap-3 ml-1">
         {/* Price */}
         <div className="flex flex-col">
           <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
@@ -298,7 +303,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
       </div>
 
-      <h3 className="text-black md:text-md text-sm font-medium mb-3 min-h-[40px] line-clamp-2">
+      <h3 className="text-black md:text-md text-sm font-medium mb-3 min-h-[40px] line-clamp-2 px-2">
         {lang === "en" ? item.name : item.vietnamiesName || item.name}
       </h3>
 
