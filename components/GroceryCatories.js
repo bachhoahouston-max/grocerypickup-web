@@ -145,7 +145,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
     <div
       key={i}
-      className="md:bg-transparent bg-white w-full rounded-[12px] transition-all duration-300 relative md:shadow-none shaddow-lg"
+      className="md:bg-transparent bg-white w-full rounded-[12px] transition-all duration-300 relative md:shadow-none shaddow-lg md:p-0 p-2.5"
     >
       <div className="relative bg-white py-2 rounded-2xl overflow-hidden md:shadow-lg  hover:shadow-xl">
 
@@ -168,13 +168,13 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
         {/* Product Image */}
-        <Link href={url} className="relative w-full   h-40 flex items-center justify-center mb-4 z-0 " >
+        <Link href={url} className="relative w-full md:h-40 h-3/4 flex items-center justify-center mb-4 z-0 " >
           {/* <div className="relative w-full h-56 flex items-center justify-center mb-4 z-0"> */}
 
           <Image
             src={item.varients[0].image[0]}
             alt={item?.imageAltName || "Product Image"}
-            className="object-contain cursor-pointer"
+            className="object-contain rounded-xl cursor-pointer"
             // onClick={() => router.push(url)}
             fill
             // width={160}
