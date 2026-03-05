@@ -959,7 +959,7 @@ function Cart(props) {
   })();
 
   return (
-    <div className="bg-[var(--theme-var)]">
+    <div className="bg-[var(--theme-var)] md:bg-[var(--theme-dek)]">
       <div className="max-w-7xl mx-auto px-4 py-2 md:mt-5 mt-8 md:mb-0 mb-10">
         <div
           className={`py-4 w-full relative  ${!cartData.length ? "h-full " : ""} 

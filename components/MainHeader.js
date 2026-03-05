@@ -130,7 +130,7 @@ function MainHeader() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4  ">
                   <div className="md:col-span-1">
                     <div
-                      className="relative w-full overflow-hidden bg-[var(--theme-var)] rounded-[40px]"
+                      className="relative w-full overflow-hidden bg-[var(--theme-var)] md:bg-[var(--theme-dek)] rounded-[40px]"
                       style={{
                         position: "relative",
                         aspectRatio: 1 / 0.6,
@@ -147,7 +147,7 @@ function MainHeader() {
 
                   <div className="col-span-1 ">
                     <div
-                      className="relative w-full overflow-hidden bg-[var(--theme-var)] rounded-[40px]"
+                      className="relative w-full overflow-hidden bg-[var(--theme-var)] md:bg-[var(--theme-dek)] rounded-[40px]"
                       style={{
                         position: "relative",
                         aspectRatio: 1 / 0.6,

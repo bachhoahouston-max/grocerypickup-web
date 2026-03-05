@@ -227,13 +227,13 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className="md:bg-transparent bg-white w-full rounded-[12px] transition-all duration-300 relative md:shadow-none shaddow-lg md:p-0 p-2.5"
+                  className=" bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5"
                 >
                   {/* Category Badge */}
                   {/* <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
                     {item.product?.categoryName}
                   </div> */}
-                  <div className="relative bg-white py-2 rounded-2xl overflow-hidden md:shadow-lg  hover:shadow-xl">
+                  <div className="relative bg-white py-2 rounded-2xl overflow-hidden ">
 
                     <div class="flex items-center justify-center absolute top-0 left-0 gap-1 z-10 ">
                       <button
@@ -354,7 +354,7 @@ const SellProduct = ({ loader, toaster }) => {
                   </div>
 
                   <div className="flex md:justify-start md:items-center md:px-1">
-                    <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
+                    <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 ">
                       {lang === "en"
                         ? item.product?.name
                         : item.product?.vietnamiesName || item.product?.name}

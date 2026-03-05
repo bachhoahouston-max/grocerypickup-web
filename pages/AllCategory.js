@@ -42,7 +42,7 @@ const Category = (props) => {
           href="https://www.bachhoahouston.com/AllCategory"
         />
       </Head>
-      <div className="bg-[var(--theme-var)]">
+      <div className="bg-[var(--theme-var)] md:bg-[var(--theme-dek)]">
         <div className="w-full md:px-10 md:pt-12 pt-12  px-4 mx-auto bg-transparent">
           <div className="flex justify-between">
             <h1 className="md:text-3xl text-xl font-semibold text-gray-800 md:mb-8 mb-4">

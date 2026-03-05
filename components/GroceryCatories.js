@@ -145,9 +145,9 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
     <div
       key={i}
-      className="md:bg-transparent bg-white w-full rounded-[12px] transition-all duration-300 relative md:shadow-none shaddow-lg md:p-0 p-2.5"
+      className=" bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5"
     >
-      <div className="relative bg-white py-2 rounded-2xl overflow-hidden md:shadow-lg  hover:shadow-xl">
+      <div className="relative bg-[#FAFAFA]  py-2 rounded-2xl overflow-hidden">
 
 
         {/* Category Badge */}
@@ -303,7 +303,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
       </div>
 
-      <h3 className="text-black md:text-md text-sm font-medium mb-3 min-h-[40px] line-clamp-2 px-2">
+      <h3 className="text-black md:text-md text-sm font-medium min-h-[40px] line-clamp-2 px-2">
         {lang === "en" ? item.name : item.vietnamiesName || item.name}
       </h3>
 

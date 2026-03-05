@@ -60,7 +60,7 @@ export default function Home(props) {
         />
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
-      <div className="bg-[var(--theme-var)]">
+      <div className="bg-[var(--theme-var)] md:bg-[var(--theme-dek)]">
         <div className="mx-auto md:w-full md:px-10 mt-1">
           <Suspense fallback={<div>Loading.....</div>}>
             <MainHeader />
@@ -409,7 +409,7 @@ function AllProducts(props) {
 //         />
 //         <link rel="canonical" href="https://www.bachhoahouston.com/" />
 //       </Head>
-//       <div className="bg-[var(--theme-var)]">
+//       <div className="bg-[var(--theme-var)] md:bg-[var(--theme-dek)]">
 //         <div className="mx-auto md:w-full md:px-10 mt-1">
 //           <Suspense fallback={<div>Loading.....</div>}>
 //             <MainHeader />

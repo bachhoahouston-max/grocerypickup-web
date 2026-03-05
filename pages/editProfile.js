@@ -289,7 +289,7 @@ const EditProfile = ({ loader, toaster }) => {
     };
 
     return (
-        <div className='bg-[var(--theme-var)]'>
+        <div className='bg-[var(--theme-var)] md:bg-[var(--theme-dek)]'>
             <div className="mx-auto max-w-7xl px-4 py-6 md:py-12">
                 <div className="flex flex-col justify-center items-center mb-8">
                     <h1 className="md:mt-0 mt-4 text-center text-3xl md:text-4xl font-semibold text-black">
