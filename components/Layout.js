@@ -7,6 +7,7 @@ import { useRouter } from "next/router.js";
 import { userContext } from "@/pages/_app.js";
 import AnnouncementBar from "./announcementBar.js";
 import LeftLayout from "./LeftLayout.js";
+import ScrollToTop from "./ScrollToTo.js";
 
 const Layout = ({ children, loader, toaster }) => {
   const [user, setUser] = useContext(userContext);
@@ -43,6 +44,7 @@ const Layout = ({ children, loader, toaster }) => {
 
   return (
     <>
+
       <div className="flex-1 flex-col bg-white relative">
         <div className="fixed w-full top-0 z-50 bg-white transition-all duration-300">
 
@@ -82,7 +84,8 @@ const Layout = ({ children, loader, toaster }) => {
 
         </div>
 
-        <div className="pt-[88px] md:pt-[170px] max-w-screen overflow-x-hidden z-0 bg-[var(--theme-var)]">
+        <div id="layout-scroll" className="pt-[88px] md:pt-[170px] max-w-screen overflow-x-hidden z-0 bg-[var(--theme-var)]">
+          {/* <ScrollToTop /> */}
           <main className="flex-1">{children}</main>
         </div>
 

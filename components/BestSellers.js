@@ -16,14 +16,16 @@ const BestSeller = (props) => {
     const [page, setPage] = useState(1);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true); // ✅ New state
+    const dataLenght = 6
 
     useEffect(() => {
-        async function fetchData() {
-            const cat = await Api("get", "getCategory", null, router);
-            setCategory(cat.data || []);
-            fetchProductsByCategory(1, true);
-        }
-        fetchData();
+        // async function fetchData() {
+        //     const cat = await Api("get", "getCategory", null, router);
+        //     setCategory(cat.data || []);
+        //     fetchProductsByCategory(1, true);
+        // }
+        // fetchData();
+        fetchProductsByCategory()
     }, []);
 
     const fetchProducts = async (pageNum, reset = false) => {
@@ -37,7 +39,7 @@ const BestSeller = (props) => {
             );
 
             if (res?.data) {
-                if (res.data.length === 0 || res.data.length < 16) {
+                if (res.data.length === 0 || res.data.length < dataLenght) {
                     setHasMore(false);
                 }
                 setPage(pageNum);
@@ -59,13 +61,13 @@ const BestSeller = (props) => {
             setLoadingMore(true);
             const res = await Api(
                 "get",
-                `getBestSoldProduct?page=${pageNum}&limit=${limit}`,
+                `getBestSoldProduct?page=${pageNum}&limit=${dataLenght}`,
                 "",
                 router
             );
 
             if (res?.data && Array.isArray(res.data)) {
-                if (res.data.length === 0 || res.data.length < limit) {
+                if (res.data.length === 0 || res.data.length < dataLenght) {
                     setHasMore(false);
                 }
 
@@ -132,7 +134,7 @@ const BestSeller = (props) => {
             </div>
 
 
-            <div className="grid md:grid-cols-7 lg:grid-cols-7 grid-cols-2 gap-2 mx-auto w-full">
+            <div className="grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto w-full">
                 {productList.length > 0 ? (
                     productList.map((item, i) => (
                         <GroceryCatories

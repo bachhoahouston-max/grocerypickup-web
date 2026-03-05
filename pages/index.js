@@ -15,18 +15,26 @@ import BestSeller from "@/components/BestSellers";
 import { FaTag } from "react-icons/fa";
 import { Loader2 } from "lucide-react";
 import NewArrival from "@/components/NewArrival";
+import { usePathname } from "next/navigation";
 
 export default function Home(props) {
   const { t } = useTranslation();
   const [user] = useContext(userContext);
   const router = useRouter();
   const [setFavorite] = useContext(favoriteProductContext);
+  const pathname = usePathname();
+
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const token = localStorage.getItem("token");
     if (!token) return;
     fetchFavorite();
   }, []);
+
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, [pathname]);
 
   const fetchFavorite = async () => {
     // props.loader(true);
@@ -74,7 +82,6 @@ export default function Home(props) {
           <div className="bg-transparent w-full md:block hidden">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
               <div className=" mx-auto px-2 md:px-0">
-
                 <Suspense fallback={<div>Loading.....</div>}>
                   <BestSeller loader={props.loader} toaster={props.toaster} />
                 </Suspense>
@@ -85,7 +92,6 @@ export default function Home(props) {
           <div className="bg-transparent w-full md:block hidden">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
               <div className=" mx-auto px-2 md:px-0">
-
                 <Suspense fallback={<div>Loading.....</div>}>
                   <NewArrival loader={props.loader} toaster={props.toaster} />
                 </Suspense>
@@ -96,7 +102,6 @@ export default function Home(props) {
           <div className="bg-transparent w-full ">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
               <div className=" mx-auto px-2 md:px-0">
-
                 <Suspense fallback={<div>Loading.....</div>}>
                   <AllProducts loader={props.loader} toaster={props.toaster} />
                 </Suspense>
@@ -122,7 +127,7 @@ function AllProducts(props) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true); // ✅ New state
   const observerRef = useRef(null);
-  const dataLimit = 21;
+  const dataLimit = 18;
 
   useEffect(() => {
     async function fetchData() {
@@ -300,7 +305,7 @@ function AllProducts(props) {
       </div>
 
 
-      <div className="grid md:grid-cols-7 lg:grid-cols-7 grid-cols-2 gap-2 mx-auto w-full">
+      <div className="grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto w-full">
         {productList.length > 0 ? (
           productList.map((item, i) => (
             <GroceryCatories

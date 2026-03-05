@@ -16,7 +16,7 @@ const NewArrival = (props) => {
     const [page, setPage] = useState(1);
     const [loadingMore, setLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true); // ✅ New state
-    let dataLength = 7
+    let dataLength = 6
 
     useEffect(() => {
         async function fetchData() {
@@ -137,7 +137,7 @@ const NewArrival = (props) => {
             </div>
 
 
-            <div className="grid md:grid-cols-7 lg:grid-cols-7 grid-cols-2 gap-2 mx-auto w-full">
+            <div className="grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto w-full">
                 {productList.length > 0 ? (
                     productList.map((item, i) => (
                         <GroceryCatories

@@ -8,6 +8,7 @@ import { appWithI18Next } from "ni18n";
 import { ni18nConfig } from "../ni18n.config";
 import { Toaster as SonnerToaster, toast } from "sonner";
 import Script from "next/script";
+import ScrollToTop from "@/components/ScrollToTo";
 
 export const userContext = createContext();
 export const openCartContext = createContext();
@@ -84,6 +85,7 @@ function App({ Component, pageProps }) {
           <openCartContext.Provider value={[openCart, setOpenCart]}>
             <cartContext.Provider value={[cartData, setCartData]}>
               <favoriteProductContext.Provider value={[Favorite, setFavorite]}>
+                <ScrollToTop />
                 <Layout
                   loader={setOpen}
                   constant={data}
@@ -94,6 +96,8 @@ function App({ Component, pageProps }) {
                   }}
                 >
                   {open && <Loader open={open} />}
+
+
                   <Component
                     toaster={(t) => {
                       if (t.type === "error") toast.error(t.message);

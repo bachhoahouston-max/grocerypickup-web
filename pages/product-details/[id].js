@@ -425,9 +425,9 @@ function ProductDetails(props) {
 
             <div className="w-full ">
               <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
-                <div className="p-[10px] rounded-[15px] md:max-h-[700px] max-h-[400px]">
+                <div className="p-[10px] rounded-[15px] md:max-h-[700px] max-h-[500px]">
                   <Carousel
-                    className="h-full w-full max-h-[400px]"
+                    className="h-full w-full max-h-[650px]"
                     responsive={responsive}
                     autoPlay={false}
                     infinite={true}

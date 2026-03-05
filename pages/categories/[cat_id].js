@@ -83,6 +83,9 @@ function Categories(props) {
     }
   };
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
 
   useEffect(() => {
@@ -134,7 +137,7 @@ function Categories(props) {
   };
 
 
-  const getproductByCategory = async (cat, page = 1, pageLimit = 25, reset = false) => {
+  const getproductByCategory = async (cat, page = 1, pageLimit = 24, reset = false) => {
     if (page === 1) props.loader(true);
 
     let url = `getProductBycategoryId?page=${page}&limit=${pageLimit}`;
@@ -330,7 +333,7 @@ function Categories(props) {
             </div>
 
             <div className="md:mt-0 mt-2">
-              <div className="grid lg:grid-cols-5 xl:grid-cols-5 md:grid-cols-4 grid-cols-2 mb-6 space-x-2 justify-between">
+              <div className="grid lg:grid-cols-5 xl:grid-cols-6 md:grid-cols-6 grid-cols-2 mb-6 space-x-2 justify-between">
                 {productList.length > 0 ? (
                   productList.map((item, i) => (
                     <div key={`${item?.id || item?.slug}-${i}`} className="p-1 w-full md:mb-5 mb-2">

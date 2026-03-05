@@ -168,7 +168,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
         {/* Product Image */}
-        <Link href={url} className="relative w-full md:h-40 h-48 flex items-center justify-center mb-4 z-0 " >
+        <Link href={url} className="relative w-full h-48 flex items-center justify-center mb-4 z-0 " scroll={true}>
           {/* <div className="relative w-full h-56 flex items-center justify-center mb-4 z-0"> */}
 
           <Image

@@ -227,42 +227,44 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className={`bg-white w-full rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 p-4 relative flex flex-col ${saleData.length === 1 ? "md:col-span-1 col-span-2" : "col-span-1"}`}
+                  className="md:bg-transparent bg-white w-full rounded-[12px] transition-all duration-300 relative md:shadow-none shaddow-lg md:p-0 p-2.5"
                 >
                   {/* Category Badge */}
                   {/* <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
                     {item.product?.categoryName}
                   </div> */}
-                  <div class="flex items-center justify-center absolute top-0 left-0 gap-1 z-10 ">
-                    <button
-                      class="flex items-center gap-2 px-2 py-1 rounded-full 
+                  <div className="relative bg-white py-2 rounded-2xl overflow-hidden md:shadow-lg  hover:shadow-xl">
+
+                    <div class="flex items-center justify-center absolute top-0 left-0 gap-1 z-10 ">
+                      <button
+                        class="flex items-center gap-2 px-2 py-1 rounded-full 
                                 bg-gradient-to-r from-red-600 to-orange-500 
                                 text-white font-semibold shadow-lg 
                                 hover:scale-105 transition-transform duration-200"
-                    >
-                      <span class="text-xl animate-vibrate">⏰</span>
-
-                      <span class="text-[12px] hidden md:flex">Ending in</span>
-
-                      <span
-                        class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup "
                       >
-                        {/* 04d 22h 20m 15s */}
-                        {currentSale?.days}d:
-                        {currentSale?.hours}h:
-                        {currentSale?.minutes}m
-                        {/* {currentSale?.seconds}s */}
-                      </span>
-                    </button>
-                  </div>
-                  <div className="relative">
-                    {/* Sale Timer */}
+                        <span class="text-xl animate-vibrate">⏰</span>
+
+                        <span class="text-[12px] hidden md:flex">Ending in</span>
+
+                        <span
+                          class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup "
+                        >
+                          {/* 04d 22h 20m 15s */}
+                          {currentSale?.days}d:
+                          {currentSale?.hours}h:
+                          {currentSale?.minutes}m
+                          {/* {currentSale?.seconds}s */}
+                        </span>
+                      </button>
+                    </div>
+                    <div className="relative">
+                      {/* Sale Timer */}
 
 
 
 
 
-                    {/* {currentSale?.status !== "expired" && (
+                      {/* {currentSale?.status !== "expired" && (
                       <div className="md:hidden flex flex-col absolute bottom-38 bg-custom-lightGreen text-custom-green text-xs  px-6 py-1 rounded-md z-10">
                         <p className="font-semibold text-[12px]">
                           {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
@@ -276,60 +278,61 @@ const SellProduct = ({ loader, toaster }) => {
                       </div>
                     )} */}
 
-                    {/* Product Image */}
-                    <div className="relative w-full h-48 mb-4">
-                      <Link href={`/SaleDetails/${item?.product?.slug}`} >
-                        <Image
-                          src={item.product?.varients[0]?.image[0]}
-                          alt={item.product?.name || "Product Image"}
-                          fill
-                          className="object-contain rounded-xl cursor-pointer"
-                        // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
-                        />
-                      </Link>
+                      {/* Product Image */}
+                      <div className="relative w-full h-48 mb-4">
+                        <Link href={`/SaleDetails/${item?.product?.slug}`} >
+                          <Image
+                            src={item.product?.varients[0]?.image[0]}
+                            alt={item.product?.name || "Product Image"}
+                            fill
+                            className="object-contain rounded-xl cursor-pointer"
+                          // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
+                          />
+                        </Link>
 
-                    </div>
-                    <div className="absolute bottom-0 right-0">
-                      {item?.product?.Quantity <= 0 ? (
-                        <button
-                          className="w-full py-2 bg-gray-400 text-white font-semibold rounded-full cursor-not-allowed"
-                        >
-                          {t("Out of Stock")}
-                        </button>
-                      ) : itemQuantity > 0 ? (
-                        <div className="flex justify-center items-center">
-                          <div className="flex justify-between items-center gap-2 md:w-[200px] w-[150px] bg-gray-100 p-1 rounded-2xl">
-                            <div
-                              className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
-                              onClick={() => handleRemoveFromCart(item)}
-                            >
-                              <IoRemoveSharp className="text-white w-5 h-5" />
-                            </div>
-                            <p className="text-center font-medium text-black">{itemQuantity}</p>
-                            <div
-                              className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
-                              onClick={() => handleAddToCart(item)}
-                            >
-                              <IoAddSharp className="text-white w-5 h-5" />
+                      </div>
+                      <div className="absolute bottom-0 right-0">
+                        {item?.product?.Quantity <= 0 ? (
+                          <button
+                            className="w-full py-2 bg-gray-400 text-white font-semibold rounded-full cursor-not-allowed"
+                          >
+                            {t("Out of Stock")}
+                          </button>
+                        ) : itemQuantity > 0 ? (
+                          <div className="flex justify-center items-center">
+                            <div className="flex justify-between items-center gap-2 md:w-[200px] w-[150px] bg-gray-100 p-1 rounded-2xl">
+                              <div
+                                className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
+                                onClick={() => handleRemoveFromCart(item)}
+                              >
+                                <IoRemoveSharp className="text-white w-5 h-5" />
+                              </div>
+                              <p className="text-center font-medium text-black">{itemQuantity}</p>
+                              <div
+                                className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
+                                onClick={() => handleAddToCart(item)}
+                              >
+                                <IoAddSharp className="text-white w-5 h-5" />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ) : (
-                        <div className="mx-auto">
-                          <button
-                            className="bg-custom-green bg-custom-green text-white font-semibold px-2 py-2 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
-                            onClick={() => handleAddToCart(item)}
-                          >
-                            {/* <FiShoppingCart className="w-5 h-5" />
+                        ) : (
+                          <div className="mx-auto">
+                            <button
+                              className="bg-custom-green bg-custom-green text-white font-semibold px-2 py-2 rounded-full text-sm cursor-pointer flex items-center gap-2 transition-colors"
+                              onClick={() => handleAddToCart(item)}
+                            >
+                              {/* <FiShoppingCart className="w-5 h-5" />
                             {t("Add")} */}
-                            <IoAddSharp className="text-white w-6 h-6" />
-                          </button>
-                        </div>
-                      )}
+                              <IoAddSharp className="text-white w-6 h-6" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center md:justify-center justify-start md:gap-3 gap-1 mb-3">
+                  <div className="flex items-center md:justify-start justify-start md:gap-3 gap-1 mb-1 md:px-1">
                     <span className="text-[#E53935]  text-[17px] md:text-xl font-bold">
                       ${item.price}
                     </span>
@@ -350,7 +353,7 @@ const SellProduct = ({ loader, toaster }) => {
                     )}
                   </div>
 
-                  <div className="flex md:justify-center md:items-center">
+                  <div className="flex md:justify-start md:items-center md:px-1">
                     <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 mb-2">
                       {lang === "en"
                         ? item.product?.name
