@@ -147,7 +147,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       key={i}
       className=" bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5"
     >
-      <div className="relative bg-[#FAFAFA]  py-2 rounded-2xl overflow-hidden">
+      <div className="relative bg-white  py-2 rounded-2xl overflow-hidden">
 
 
         {/* Category Badge */}

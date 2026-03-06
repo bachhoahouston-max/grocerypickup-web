@@ -343,12 +343,13 @@ const SellProduct = ({ loader, toaster }) => {
                     )}
                     {item.product?.price_slot?.[0]?.our_price && (
                       <span className=" bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded font-bold">
-                        {Math.round(
+                        {/* {Math.round(
                           ((item.price_slot?.our_price - item.price) /
                             item.price_slot?.our_price) *
                           100
                         )}
-                        % OFF
+                        % OFF */}
+                        Save ${(item.price_slot?.our_price - item.price).toFixed(2)}
                       </span>
                     )}
                   </div>
