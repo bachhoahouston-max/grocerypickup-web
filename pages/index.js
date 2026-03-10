@@ -16,6 +16,7 @@ import { FaTag } from "react-icons/fa";
 import { Loader2 } from "lucide-react";
 import NewArrival from "@/components/NewArrival";
 import { usePathname } from "next/navigation";
+import ComboOfferCards from "@/components/ComboOffer";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -68,6 +69,11 @@ export default function Home(props) {
           <div className="">
             <Suspense fallback={<div>Loading.....</div>}>
               <ShopByCategory loader={props.loader} toaster={props.toaster} />
+            </Suspense>
+          </div>
+          <div className="">
+            <Suspense fallback={<div>Loading.....</div>}>
+              <ComboOfferCards loader={props.loader} toaster={props.toaster} />
             </Suspense>
           </div>
           {/* <div className="flex md:hidden ">

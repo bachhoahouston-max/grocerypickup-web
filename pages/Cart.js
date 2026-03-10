@@ -602,12 +602,14 @@ function Cart(props) {
         price: element.price,
         qty: element.qty,
         seller_id: element.userid,
-        saleID: element.SaleID || null,
+        saleID: element?.SaleID || null,
         productSource: element.productSource || "NORMAL",
         isShipmentAvailable: element.isShipmentAvailable,
         isNextDayDeliveryAvailable: element.isNextDayDeliveryAvailable,
         isCurbSidePickupAvailable: element.isCurbSidePickupAvailable,
         isInStoreAvailable: element.isInStoreAvailable,
+        free_product: element?.free_product?._id,
+        combo_id: element?._id
       });
     });
 

@@ -379,3 +379,6 @@ const SellProduct = ({ loader, toaster }) => {
 };
 
 export default SellProduct;
+
+
+
