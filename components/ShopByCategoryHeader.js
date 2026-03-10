@@ -4,15 +4,17 @@ import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { ShoppingCart } from "lucide-react";
+import Link from "next/link";
 
 
 const CategoryCard = ({ item, url, router }) => {
 
 
   return (
-    <div
+    <Link
       className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 "
-      onClick={() => router.push(url)}
+      // onClick={() => router.push(url)}
+      href={url}
     >
       <div className="relative md:block hidden">
         <div className="relative w-14 h-14 md:w-14 md:h-14 rounded-full group-hover:shadow-xl group-hover:scale-105 shadow-md transition-all duration-300">
@@ -28,7 +30,7 @@ const CategoryCard = ({ item, url, router }) => {
       <p className="text-black text-[8px] md:text-[10px] font-medium text-center">
         {item?.name}
       </p>
-    </div>
+    </Link>
   )
 };
 
@@ -77,11 +79,12 @@ function ShopByCategoryHeader() {
 
         <div className="overflow-x-auto scrollbar-hides" style={{ maxWidth: width - 80 }}>
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-4 md:gap-4 justify-center">
-            <div
+            <Link
               className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
-              onClick={() =>
-                router.push("/categories/all?category=all&sort_by=new")
-              }
+              // onClick={() =>
+              //   router.push("/categories/all?category=all&sort_by=new")
+              // }
+              href={"/categories/all?category=all&sort_by=new"}
             >
               <div className="relative hidden md:flex">
                 <div className="relative w-14 h-14  rounded-full  group-hover:scale-105 transition-all duration-300">
@@ -97,7 +100,7 @@ function ShopByCategoryHeader() {
                 {t("New Arrivals")}
 
               </p>
-            </div>
+            </Link>
 
             {/* <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
