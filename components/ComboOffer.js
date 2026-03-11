@@ -8,129 +8,7 @@ import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
 import AddToCartButton from "./Addtocartbutton";
 import { produce } from "immer";
 
-// ─── Mock Data ────────────────────────────────────────────────────────────────
-const seedOffers = [
-    {
-        id: "o1",
-        promo_text: "Buy Oolong Tea 6-pack, get Fish Sauce FREE!",
-        status: "ACTIVE",
-        price: 39.99,
-        endDateTime: "2026-03-09T15:30:00",
-        limit_per_user: 2,
-        accept_coupon: false,
-        main_product: {
-            _id: "p1",
-            name: "Pack of 6 Oolong Tea Plus Drink",
-            categoryName: "Beverages",
-            long_description: "Tea Plus Oolong Tea is a refreshing bottled oolong tea with a smooth, lightly roasted flavor. Perfect for everyday drinking, meals, or on-the-go refreshment. Enjoy chilled or at room temperature.",
-            Quantity: 14,
-            varients: [{ image: ["https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=300&h=300&fit=crop"] }],
-        },
-        main_price_slot: { unit: "Pack of 6", our_price: 36.99 },
-        free_product: [
-            {
-                product: {
-                    _id: "p4",
-                    name: "Vietnamese Fish Sauce 750ml",
-                    categoryName: "Condiments",
-                    Quantity: 35,
-                    varients: [{ image: [] }],
-                },
-                slot: { unit: "Bottle", our_price: 4.99 },
-            },
-        ],
-    },
-    {
-        id: "o2",
-        promo_text: "Bánh Mì Bread + Pho Broth — The Perfect Pair",
-        status: "ACTIVE",
-        price: 11.99,
-        endDateTime: "2026-03-08T16:00:00",
-        limit_per_user: 1,
-        accept_coupon: true,
-        main_product: {
-            _id: "p2",
-            name: "Bánh Mì Sandwich Bread Loaf",
-            categoryName: "Bakery",
-            long_description: "Classic Vietnamese bánh mì bread with a crispy crust and soft, airy interior. Baked fresh daily for the best taste and texture.",
-            Quantity: 8,
-            varients: [{ image: ["https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=300&fit=crop"] }],
-        },
-        main_price_slot: { unit: "Each", our_price: 3.49 },
-        free_product: [
-            {
-                product: {
-                    _id: "p3",
-                    name: "Pho Broth Concentrate 500ml",
-                    categoryName: "Pantry",
-                    Quantity: 20,
-                    varients: [{ image: [] }],
-                },
-                slot: { unit: "Bottle", our_price: 8.99 },
-            },
-        ],
-    },
-    {
-        id: "o3",
-        promo_text: "Jasmine Rice 5lb + Fish Sauce Bundle Deal",
-        status: "ACTIVE",
-        price: 13.49,
-        endDateTime: "2026-03-10T10:00:00",
-        limit_per_user: 3,
-        accept_coupon: false,
-        main_product: {
-            _id: "p5",
-            name: "Jasmine Rice 5lb Bag",
-            categoryName: "Pantry",
-            long_description: "Premium long-grain jasmine rice from Thailand. Fragrant, fluffy, and perfect for any Asian dish. Non-GMO and naturally gluten-free.",
-            Quantity: 50,
-            varients: [{ image: ["https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop"] }],
-        },
-        main_price_slot: { unit: "Bag (5lb)", our_price: 9.99 },
-        free_product: [
-            {
-                product: {
-                    _id: "p4b",
-                    name: "Vietnamese Fish Sauce 750ml",
-                    categoryName: "Condiments",
-                    Quantity: 35,
-                    varients: [{ image: [] }],
-                },
-                slot: { unit: "Bottle", our_price: 4.99 },
-            },
-        ],
-    },
-    {
-        id: "o4",
-        promo_text: "Vinacafe Coffee Mix + Bánh Mì Bread Combo",
-        status: "ACTIVE",
-        price: 7.49,
-        endDateTime: "2026-03-11T09:00:00",
-        limit_per_user: 2,
-        accept_coupon: true,
-        main_product: {
-            _id: "p6",
-            name: "Vinacafe Instant Coffee Mix 3in1",
-            categoryName: "Beverages",
-            long_description: "Classic Vietnamese 3-in-1 instant coffee with the perfect balance of bold coffee, sugar, and creamer. Individually wrapped sachets.",
-            Quantity: 30,
-            varients: [{ image: ["https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=300&h=300&fit=crop"] }],
-        },
-        main_price_slot: { unit: "Pack (20 sachets)", our_price: 5.99 },
-        free_product: [
-            {
-                product: {
-                    _id: "p2b",
-                    name: "Bánh Mì Sandwich Bread",
-                    categoryName: "Bakery",
-                    Quantity: 8,
-                    varients: [{ image: ["https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=300&fit=crop"] }],
-                },
-                slot: { unit: "Each", our_price: 3.49 },
-            },
-        ],
-    },
-];
+
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const getRetailValue = (o) =>
@@ -173,7 +51,7 @@ const ProductAvatar = ({ product, className = "" }) => {
         <img
             src={img}
             alt={product.name}
-            className={`object-cover ${className}`}
+            className={`object-contain ${className}`}
             onError={(e) => { e.currentTarget.style.display = "none"; }}
         />
     ) : (
@@ -499,7 +377,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
             className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
 
             {/* Image area */}
-            <div className="relative bg-gray-50 px-4 pt-10 pb-2 flex items-center justify-center gap-3 min-h-[160px]">
+            <div className="relative  px-4 pt-10 pb-2 flex items-center justify-center gap-3 min-h-[160px]">
 
                 {/* Countdown badge top-left */}
                 <div className="absolute top-2.5 left-2.5 z-10">
@@ -517,27 +395,28 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
                 >
                     <ProductAvatar
                         product={offer.main_product}
-                        className="w-24 h-24 rounded-2xl shadow-md"
+                        className="w-32 h-32 "
                     />
                 </div>
 
                 {/* Plus + FREE divider */}
-                <div className="flex flex-col items-center gap-1.5 flex-shrink-0"
-                    onClick={() => onOpen(offer)}
-                >
-                    <span className="text-gray-300 font-bold text-xl">+</span>
-                    <span className="bg-green-700 text-white text-xs font-black px-2.5 py-0.5 rounded-full shadow">FREE</span>
-                </div>
+
 
                 {/* Free product images */}
                 <div className="flex gap-2"
                     onClick={() => onOpen(offer)}
                 >
                     {offer.free_product.map((fp, i) => (
-                        <div key={i} className="group-hover:scale-105 transition-transform duration-200 delay-75">
+                        <div key={i} className="group-hover:scale-105 transition-transform duration-200 delay-75 relative">
+                            <div className="flex flex-col items-center gap-1.5 flex-shrink-0 absolute "
+                                onClick={() => onOpen(offer)}
+                            >
+                                {/* <span className="text-gray-300 font-bold text-xl">+</span> */}
+                                <span className="bg-green-700 text-white text-xs font-black px-2.5 py-0.5 rounded-full shadow">FREE</span>
+                            </div>
                             <ProductAvatar
                                 product={fp.product}
-                                className="w-16 h-16 rounded-xl shadow-md"
+                                className="w-32 h-32"
                             />
                         </div>
                     ))}
@@ -599,11 +478,6 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
                     {offer.main_product.categoryName} Combo
                 </p> */}
 
-                {/* Title */}
-                <p className="text-sm font-normal text-gray-800 leading-snug line-clamp-2  min-h-[40px]">
-                    {offer.promo_text}
-                </p>
-
                 <div className="flex items-center justify-between">
                     <div>
                         <div className="flex items-baseline gap-1.5">
@@ -620,8 +494,15 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
 
                 </div>
 
+                {/* Title */}
+                <p className="text-sm font-normal text-gray-800 leading-snug line-clamp-2  min-h-[40px]">
+                    {offer.promo_text}
+                </p>
+
+
+
                 {/* Product tags */}
-                <div className="flex flex-wrap gap-1.5 mb-3 mt-1">
+                {/* <div className="flex flex-wrap gap-1.5 mb-3 mt-1">
                     <span className="inline-flex items-center gap-1 bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full">
                         📦 {offer.main_product.name.length > 20 ? offer.main_product.name.slice(0, 20) + "…" : offer.main_product.name}
                     </span>
@@ -630,7 +511,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
                             🎁 {fp.product.name.length > 18 ? fp.product.name.slice(0, 18) + "…" : fp.product.name}
                         </span>
                     ))}
-                </div>
+                </div> */}
 
                 {/* Price row */}
 
@@ -676,7 +557,7 @@ export default function ComboOfferCards(props) {
     const inCart = (id) => !!cart.find((c) => c.id === id);
 
     return (
-        <div className=" bg-gray-50 p-6">
+        <div className=" p-6">
 
             {/* Section header */}
             <div className="flex items-center justify-between mb-6">
