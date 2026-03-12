@@ -37,7 +37,7 @@ const Layout = ({ children, loader, toaster }) => {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      router.events.off("routeChangeStart", handleRouteStart);
+      // router.events.off("routeChangeStart", handleRouteStart);
       router.events.off("routeChangeComplete", handleRouteComplete);
     };
   }, []);

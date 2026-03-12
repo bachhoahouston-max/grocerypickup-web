@@ -9,7 +9,6 @@
 // import { useRouter } from "next/router";
 // import { Api } from "@/services/service";
 
-
 // export default function CartDrawer({ pickupOption, toaster, cartClose, loader }) {
 //   const { t } = useTranslation();
 //   const [cartData, setCartData] = useContext(cartContext);
@@ -269,7 +268,17 @@ const isSaleItem = (item) => item?.productSource === "SALE";
 const isComboItem = (item) => item?.productSource === "COMBO";
 
 // ─── Normal / Sale Cart Row ───────────────────────────────────────────────────
-const NormalCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty, increaseQty, cartClose, formatPrice }) => (
+const NormalCartRow = ({
+  item,
+  i,
+  lang,
+  pickupOption,
+  pickupConfig,
+  decreaseQty,
+  increaseQty,
+  cartClose,
+  formatPrice,
+}) => (
   <div className="w-full bg-white rounded-xl shadow-md p-3">
     <div className="flex flex-row items-start md:items-center justify-between gap-4">
       {/* Image */}
@@ -285,11 +294,13 @@ const NormalCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
             {item?.price_slot?.value ?? 1} {item?.price_slot?.unit ?? "unit"}
           </span>
           <span className="font-medium">
-            {constant.currency}{item?.price}
+            {constant.currency}
+            {item?.price}
           </span>
           {item?.price_slot?.other_price && (
             <span className="line-through text-xs text-gray-400">
-              {constant.currency}{item?.price_slot?.other_price}
+              {constant.currency}
+              {item?.price_slot?.other_price}
             </span>
           )}
           {isSaleItem(item) && (
@@ -298,29 +309,51 @@ const NormalCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
             </span>
           )}
         </div>
-        <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
+        <PickupAvailability
+          pickupConfig={pickupConfig}
+          pickupOption={pickupOption}
+        />
       </div>
 
       {/* Desktop controls */}
       <CartControls
-        item={item} i={i}
-        decreaseQty={decreaseQty} increaseQty={increaseQty} cartClose={cartClose}
-        formatPrice={formatPrice} device="desktop"
+        item={item}
+        i={i}
+        decreaseQty={decreaseQty}
+        increaseQty={increaseQty}
+        cartClose={cartClose}
+        formatPrice={formatPrice}
+        device="desktop"
       />
     </div>
 
     {/* Mobile controls */}
     <CartControls
-      item={item} i={i}
-      decreaseQty={decreaseQty} increaseQty={increaseQty} cartClose={cartClose}
-      formatPrice={formatPrice} device="mobile"
+      item={item}
+      i={i}
+      decreaseQty={decreaseQty}
+      increaseQty={increaseQty}
+      cartClose={cartClose}
+      formatPrice={formatPrice}
+      device="mobile"
     />
   </div>
 );
 
 // ─── Combo Cart Row ───────────────────────────────────────────────────────────
-const ComboCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty, increaseQty, cartClose, formatPrice }) => {
+const ComboCartRow = ({
+  item,
+  i,
+  lang,
+  pickupOption,
+  pickupConfig,
+  decreaseQty,
+  increaseQty,
+  cartClose,
+  formatPrice,
+}) => {
   const { t } = useTranslation();
+  console.log("pickupconfig", pickupConfig);
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md overflow-hidden">
@@ -353,34 +386,49 @@ const ComboCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty, 
             </p>
             <div className="text-sm text-black mt-1 flex gap-3 items-center flex-wrap">
               <span className="text-xs md:text-sm">
-                {item?.price_slot?.value ?? 1} {item?.price_slot?.unit ?? "unit"}
+                {item?.price_slot?.value ?? 1}{" "}
+                {item?.price_slot?.unit ?? "unit"}
               </span>
               <span className="font-semibold text-green-700">
-                {constant.currency}{formatPrice(item?.price)}
+                {constant.currency}
+                {formatPrice(item?.price)}
               </span>
               {/* Show original price if we have it */}
-              {item?.main_price_slot?.our_price && item.main_price_slot.our_price !== item.price && (
-                <span className="line-through text-xs text-gray-400">
-                  {constant.currency}{item.main_price_slot.our_price}
-                </span>
-              )}
+              {item?.main_price_slot?.our_price &&
+                item.main_price_slot.our_price !== item.price && (
+                  <span className="line-through text-xs text-gray-400">
+                    {constant.currency}
+                    {item.main_price_slot.our_price}
+                  </span>
+                )}
             </div>
-            <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
+            <PickupAvailability
+              pickupConfig={pickupConfig}
+              pickupOption={pickupOption}
+            />
           </div>
 
           {/* Desktop controls */}
           <CartControls
-            item={item} i={i}
-            decreaseQty={decreaseQty} increaseQty={increaseQty} cartClose={cartClose}
-            formatPrice={formatPrice} device="desktop"
+            item={item}
+            i={i}
+            decreaseQty={decreaseQty}
+            increaseQty={increaseQty}
+            cartClose={cartClose}
+            formatPrice={formatPrice}
+            device="desktop"
           />
         </div>
 
         {/* Mobile controls */}
         <CartControls
-          item={item} i={i}
-          decreaseQty={decreaseQty} increaseQty={increaseQty} cartClose={cartClose}
-          formatPrice={formatPrice} device="mobile"
+          item={item}
+          i={i}
+          decreaseQty={decreaseQty}
+          increaseQty={increaseQty}
+          cartClose={cartClose}
+          formatPrice={formatPrice}
+          device="mobile"
         />
 
         {/* ── Free product row ── */}
@@ -422,19 +470,23 @@ const FreeGiftRow = ({ item, lang, t }) => {
         const prod = fp?.product;
         const slot = fp?.slot;
         const image = prod?.varients?.[0]?.image?.[0];
-        const name = lang === "en"
-          ? prod?.name
-          : (prod?.vietnamiesName || prod?.name);
+        const name =
+          lang === "en" ? prod?.name : prod?.vietnamiesName || prod?.name;
 
         return (
-          <div key={idx} className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2">
+          <div
+            key={idx}
+            className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2"
+          >
             {/* Image */}
-            <div className="flex-shrink-0 w-12 h-12 rounded-md border border-green-100 bg-white overflow-hidden cursor-pointer "
+            <div
+              className="flex-shrink-0 w-12 h-12 rounded-md border border-green-100 bg-white overflow-hidden cursor-pointer "
               onClick={() => router.push(`/product-details/${prod.slug}`)}
             >
               {image ? (
                 <Image
-                  width={48} height={48}
+                  width={48}
+                  height={48}
                   src={image}
                   alt={name || "Free item"}
                   className="w-full h-full object-contain"
@@ -451,7 +503,9 @@ const FreeGiftRow = ({ item, lang, t }) => {
               <span className="text-[10px] font-bold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
                 🎁 FREE
               </span>
-              <p className="text-xs text-gray-700 font-medium mt-0.5 truncate">{name}</p>
+              <p className="text-xs text-gray-700 font-medium mt-0.5 truncate">
+                {name}
+              </p>
               {slot && (
                 <p className="text-[10px] text-gray-400">
                   {slot.value} {slot.unit}
@@ -463,7 +517,8 @@ const FreeGiftRow = ({ item, lang, t }) => {
             <div className="text-right flex-shrink-0">
               {slot?.our_price && (
                 <p className="text-[10px] text-gray-400 line-through">
-                  {constant.currency}{parseFloat(slot.our_price).toFixed(2)}
+                  {constant.currency}
+                  {parseFloat(slot.our_price).toFixed(2)}
                 </p>
               )}
               <p className="text-xs font-black text-green-700">FREE</p>
@@ -477,7 +532,7 @@ const FreeGiftRow = ({ item, lang, t }) => {
 
 // ─── Shared sub-components ────────────────────────────────────────────────────
 const CartImage = ({ item }) => {
-  console.log(item)
+  console.log(item);
   const router = useRouter();
   let slug = item?.slug || item?.product?.slug;
   // if(item. productSource === 'COMBO'){
@@ -505,29 +560,46 @@ const PickupAvailability = ({ pickupConfig, pickupOption }) => {
   const cfg = pickupConfig[pickupOption];
   return (
     <div className="mt-2">
-      <p className={`${cfg.available ? "text-green-500" : "text-red-500"} text-xs md:text-sm`}>
+      <p
+        className={`${cfg.available ? "text-green-500" : "text-red-500"} text-xs md:text-sm`}
+      >
         {cfg.available ? cfg.yes : cfg.no}
       </p>
     </div>
   );
 };
 
-const CartControls = ({ item, i, decreaseQty, increaseQty, cartClose, formatPrice, device }) => {
+const CartControls = ({
+  item,
+  i,
+  decreaseQty,
+  increaseQty,
+  cartClose,
+  formatPrice,
+  device,
+}) => {
   const isDesktop = device === "desktop";
   return (
-    <div className={`${isDesktop ? "md:flex hidden" : "md:hidden flex"} flex-row items-center ${isDesktop ? "flex-col md:flex-row" : ""} justify-center gap-3 mt-2 md:mt-0`}>
+    <div
+      className={`${isDesktop ? "md:flex hidden" : "md:hidden flex"} flex-row items-center ${isDesktop ? "flex-col md:flex-row" : ""} justify-center gap-3 mt-2 md:mt-0`}
+    >
       <div className="flex items-center justify-center bg-custom-green rounded-full px-3 py-1 w-28">
         <button onClick={() => decreaseQty(i, item)}>
-          <IoRemoveSharp className={`!text-white ${isDesktop ? "text-xl" : ""}`} />
+          <IoRemoveSharp
+            className={`!text-white ${isDesktop ? "text-xl" : ""}`}
+          />
         </button>
-        <span className="mx-4 text-white font-medium text-base">{item?.qty}</span>
+        <span className="mx-4 text-white font-medium text-base">
+          {item?.qty}
+        </span>
         <button onClick={() => increaseQty(i, item)}>
           <IoAddSharp className={`!text-white ${isDesktop ? "text-xl" : ""}`} />
         </button>
       </div>
       <div className="flex items-center justify-center gap-3 w-30">
         <p className="text-black font-semibold text-base">
-          {constant.currency}{formatPrice(item?.total)}
+          {constant.currency}
+          {formatPrice(item?.total)}
         </p>
         <IoMdClose
           className="w-5 h-5 text-black cursor-pointer"
@@ -539,7 +611,12 @@ const CartControls = ({ item, i, decreaseQty, increaseQty, cartClose, formatPric
 };
 
 // ─── Main CartDrawer ──────────────────────────────────────────────────────────
-export default function CartDrawer({ pickupOption, toaster, cartClose, loader }) {
+export default function CartDrawer({
+  pickupOption,
+  toaster,
+  cartClose,
+  loader,
+}) {
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
   const { lang } = useContext(languageContext);
@@ -552,7 +629,9 @@ export default function CartDrawer({ pickupOption, toaster, cartClose, loader })
 
   const isAfter12PM = () => {
     const now = new Date();
-    return now.getHours() > 12 || (now.getHours() === 12 && now.getMinutes() > 0);
+    return (
+      now.getHours() > 12 || (now.getHours() === 12 && now.getMinutes() > 0)
+    );
   };
 
   const isAfterNoon = isAfter12PM();
@@ -618,30 +697,31 @@ export default function CartDrawer({ pickupOption, toaster, cartClose, loader })
   };
 
   const increaseQty = async (index, item) => {
-    console.log(item)
+    console.log(item);
     const itemQuantity = await handleQuantity(item.id);
-    let itemFreeQuantity = 0
-    if (item.productSource === 'COMBO') {
+    let itemFreeQuantity = 0;
+    if (item.productSource === "COMBO") {
       itemFreeQuantity = await handleQuantity(item.free_product[0].product._id);
     }
 
     const nextState = produce(cartData, (draft) => {
       const maxQty = itemQuantity ?? Infinity;
 
-
       if (draft[index].qty + 1 > maxQty) {
         toaster?.({
           type: "error",
-          message: "Item is not available in this quantity in stock. Please choose a different item.",
+          message:
+            "Item is not available in this quantity in stock. Please choose a different item.",
         });
         return;
       }
-      if (item.productSource === 'COMBO') {
+      if (item.productSource === "COMBO") {
         const maxFreeQty = itemFreeQuantity ?? Infinity;
         if (draft[index].qty + 1 > maxFreeQty) {
           toaster?.({
             type: "error",
-            message: "Free Item is not available in this quantity in stock. Please choose a different item.",
+            message:
+              "Free Item is not available in this quantity in stock. Please choose a different item.",
           });
           return;
         }
@@ -659,9 +739,18 @@ export default function CartDrawer({ pickupOption, toaster, cartClose, loader })
         <div className="mt-3 space-y-3">
           {cartData.map((item, i) => {
             const pickupConfig = getPickupConfig(item);
+            console.log("item",item);
+            
             const sharedProps = {
-              item, i, lang, pickupOption, pickupConfig,
-              decreaseQty, increaseQty, cartClose, formatPrice,
+              item,
+              i,
+              lang,
+              pickupOption,
+              pickupConfig,
+              decreaseQty,
+              increaseQty,
+              cartClose,
+              formatPrice,
             };
 
             if (isComboItem(item)) {
