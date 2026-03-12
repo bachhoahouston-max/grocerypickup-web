@@ -73,13 +73,29 @@ const ProductAvatar = ({ product, className = "" }) => {
 const CountdownBadge = ({ endDateTime }) => {
     const time = useCountdown(endDateTime);
     return (
-        <div className="flex items-center gap-1.5 bg-white rounded-full px-3 py-1.5 shadow-md">
-            <span className="text-xs">⏰</span>
-            <span className="text-xs text-gray-500 font-medium">Ending in</span>
-            <span className="text-xs font-bold text-red-500 tabular-nums">
+        // <div className="flex items-center gap-1.5 bg-white rounded-full px-3 py-1.5 shadow-md">
+        //     <span className="text-xs">⏰</span>
+        //     <span className="text-xs text-gray-500 font-medium">Ending in</span>
+        //     <span className="text-xs font-bold text-red-500 tabular-nums">
+        //         {time}
+        //     </span>
+        // </div>
+        <button
+            class="flex items-center gap-2 px-2 py-1 rounded-full 
+                                bg-gradient-to-r from-red-600 to-orange-500 
+                                text-white font-semibold shadow-lg 
+                                hover:scale-105 transition-transform duration-200"
+        >
+            <span class="text-xl animate-vibrate">⏰</span>
+
+            <span class="text-[12px] hidden md:flex">Ending in</span>
+
+            <span
+                class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup "
+            >
                 {time}
             </span>
-        </div>
+        </button>
     );
 };
 
