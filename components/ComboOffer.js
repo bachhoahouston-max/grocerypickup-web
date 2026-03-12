@@ -577,7 +577,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
                     ) : (
                         <div className="mx-auto">
                             <button
-                                className=" my-1.5 bg-custom-green text-white font-semibold w-full px-2 py-2 rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors"
+                                className=" my-1.5 bg-gradient-to-t to-[#34A853] from-custom-green bg-custom-green text-white font-semibold w-full px-2 py-2 rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors"
                                 onClick={() => handleAddToCart(offer)}
                             >
                                 <IoAddSharp className="text-white w-6 h-6" />
