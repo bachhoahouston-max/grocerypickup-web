@@ -472,7 +472,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
                     onClick={() => onOpen(offer)}
                 >
                     <ProductAvatar product={offer.main_product} className="w-32 h-32 " />
-                    <span className="bg-[#F6E27A] absolute -bottom-1 left-1/4 text-[#1F6B3A] text-sm font-black px-2.5 py-1 rounded-full shadow">
+                    <span className="bg-[#F6E27A] absolute -bottom-3 left-1/4 text-[#1F6B3A] text-sm font-black px-2.5 py-1 rounded-full shadow">
                         BUY
                     </span>
                 </div>
@@ -490,7 +490,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
                                 onClick={() => onOpen(offer)}
                             ></div>
                             <ProductAvatar product={fp.product} className="w-32 h-32" />
-                            <span className="bg-green-700 absolute -bottom-1 left-1/4 text-white text-sm font-black px-2.5 py-1 rounded-full shadow">
+                            <span className="bg-green-700 absolute -bottom-3 left-1/4 text-white text-sm font-black px-2.5 py-1 rounded-full shadow">
                                 FREE
                             </span>
                         </div>
@@ -516,7 +516,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
                             <span className="text-xl font-black text-[#E53935]">
                                 ${parseFloat(offer.price).toFixed(2)}
                             </span>
-                            <span className="text-xs text-gray-300 line-through">
+                            <span className="text-xs text-gray-500 line-through">
                                 ${retail.toFixed(2)}
                             </span>
                             <span className="inline-block bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded mt-0.5">
