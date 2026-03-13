@@ -9,6 +9,7 @@ import AddToCartButton from "./Addtocartbutton";
 import { produce } from "immer";
 import { FiShoppingCart } from "react-icons/fi";
 import { ArrowBigRight, ArrowRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const getRetailValue = (o) =>
@@ -106,6 +107,7 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
     const savings = retail - parseFloat(offer.price);
     const savingsPct = Math.round((savings / retail) * 100);
     const time = useCountdown(offer.endDateTime);
+    const { t } = useTranslation();
 
     useEffect(() => {
         document.body.style.overflow = "hidden";
@@ -331,6 +333,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
     const [cartData, setCartData] = useContext(cartContext);
     const savingsPct = Math.round((savings / retail) * 100);
     const router = useRouter();
+    const { t } = useTranslation();
 
     const cartItem = cartData.find(
         (cartItem) => cartItem.combo_id === offer?._id,
@@ -611,7 +614,7 @@ export default function ComboOfferCards(props) {
     const [selected, setSelected] = useState(null);
     const [cart, setCart] = useState([]);
     const [offers, setOffers] = useState([]);
-
+    const { t } = useTranslation();
     useEffect(() => {
         getOffer();
     }, []);
