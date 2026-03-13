@@ -250,7 +250,6 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
                         </div>
                     </div>
 
-                    {/* Price breakdown */}
                     <div className="bg-orange-50 border border-orange-100 rounded-2xl px-4 py-3 space-y-2">
                         <div className="flex justify-between text-sm">
                             <span className="text-gray-500">Total retail value</span>
@@ -274,7 +273,7 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
                         </div>
                     </div>
 
-                    {/* Meta chips */}
+                    
                     <div className="grid grid-cols-3 gap-2">
                         {[
                             {
@@ -307,8 +306,7 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
                     </div>
                 </div>
 
-                {/* CTA */}
-                <div className="px-5 py-4 border-t border-gray-100 bg-white flex-shrink-0">
+                <div className="md:mb-0 mb-12 px-5 py-4 border-t border-gray-100 bg-white flex-shrink-0">
                     <button
                         onClick={handleAdd}
                         className={`w-full py-3.5 rounded-2xl font-black text-sm text-white transition-all duration-200 ${added
@@ -356,97 +354,104 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
         }
     };
 
+
+
     const handleAddToCart = async (item) => {
-        console.log();
-        const availableQuantity = await handleQuantity(item?.main_product);
+    const mainId = item?.main_product?._id;
+    const freeId = item?.free_product?.[0]?.product?._id;
+
+    const availableQuantity = await handleQuantity(item?.main_product);
+
+    let maxComboQty = availableQuantity;
+
+    if (mainId === freeId) {
+        maxComboQty = Math.floor(availableQuantity / 2);
+    } else {
         const availableFreeQuantity = await handleQuantity(
-            item?.free_product[0].product,
+            item?.free_product?.[0]?.product
+        );
+        maxComboQty = Math.min(availableQuantity, availableFreeQuantity);
+    }
+
+    if (maxComboQty <= 0) {
+        toaster({
+            type: "error",
+            message: "Combo Product or Free Product is currently out of stock.",
+        });
+        return;
+    }
+
+    const updatedCart = produce(cartData, (draft) => {
+        const existingItemIndex = draft.findIndex(
+            (f) => f.combo_id === item?._id,
         );
 
-        if (availableQuantity <= 0) {
+        if (
+            existingItemIndex !== -1 &&
+            draft[existingItemIndex].qty + 1 > maxComboQty
+        ) {
             toaster({
                 type: "error",
                 message:
-                    "Main product is currently out of stock. Please choose a different item.",
+                    "Item is not available in this quantity in stock. Please choose a different item.",
             });
             return;
         }
 
-        if (availableFreeQuantity <= 0) {
-            toaster({
-                type: "error",
-                message:
-                    "Free product is currently out of stock. Please choose a different item.",
+        const price = parseFloat(item.price);
+
+        const price_slot = {
+            value: item?.price_slot?.value,
+            unit: item?.price_slot?.unit,
+            other_price: item?.price_slot?.our_price,
+            our_price: item?.price,
+        };
+
+        if (existingItemIndex === -1) {
+            const product = item.main_product;
+
+            draft.push({
+                ...item,
+                product: product,
+                name: product?.name,
+                vietnamiesName: product?.vietnamiesName,
+                id: product?._id,
+                selectedColor: product?.varients?.[0] || {},
+                selectedImage: product?.varients?.[0]?.image?.[0] || "",
+                BarCode: product?.DateBarCode || "",
+                total: price,
+                isCurbSidePickupAvailable: product?.isCurbSidePickupAvailable,
+                isInStoreAvailable: product?.isInStoreAvailable,
+                isNextDayDeliveryAvailable: product?.isNextDayDeliveryAvailable,
+                isReturnAvailable: product?.isReturnAvailable,
+                isShipmentAvailable: product?.isShipmentAvailable,
+                qty: 1,
+                price: price ?? 0,
+                price_slot: price_slot || {},
+                productSource: "COMBO",
+                tax_code: product?.tax_code,
+                free_product: item?.free_product,
+                combo_id: item?._id,
             });
-            return;
-        }
 
-        const updatedCart = produce(cartData, (draft) => {
-            const existingItemIndex = draft.findIndex(
-                (f) => f.combo_id === item?._id,
-            );
-
-            if (
-                existingItemIndex !== -1 &&
-                draft[existingItemIndex].qty + 1 > availableQuantity
-            ) {
-                console.log(draft[existingItemIndex]?.qty + 1 > availableQuantity);
-                toaster({
-                    type: "error",
-                    message:
-                        "Item is not available in this quantity in stock. Please choose a different item.",
-                });
-                return;
-            } else {
-                const price = parseFloat(item.price);
-                item.product = item.main_product;
-                let price_slot = {
-                    value: item?.price_slot?.value,
-                    unit: item?.price_slot?.unit,
-                    other_price: item?.price_slot?.our_price,
-                    our_price: item?.price,
-                };
-
-                if (existingItemIndex === -1) {
-                    console.log("item?.product", item?.product);
-                    draft.push({
-                        ...item,
-                        name: item?.product.name,
-                        vietnamiesName: item?.product.vietnamiesName,
-                        id: item?.product?._id,
-                        selectedColor: item?.product.varients?.[0] || {},
-                        selectedImage: item.product?.varients[0]?.image[0] || "",
-                        BarCode: item?.product.DateBarCode || "",
-                        total: price,
-                        isCurbSidePickupAvailable: item?.product?.isCurbSidePickupAvailable,
-                        isInStoreAvailable: item?.product?.isInStoreAvailable,
-                        isNextDayDeliveryAvailable:
-                            item?.product?.isNextDayDeliveryAvailable,
-                        isReturnAvailable: item?.product?.isReturnAvailable,
-                        isShipmentAvailable: item?.product?.isShipmentAvailable,
-                        qty: 1,
-                        price: price ?? 0,
-                        price_slot: price_slot || {},
-                        productSource: "COMBO",
-                        // SaleID: item?._id,
-                        tax_code: item?.product.tax_code,
-                        free_product: item?.free_product,
-                        combo_id: item?._id,
-                    });
-                } else {
-                    draft[existingItemIndex].qty += 1;
-                    draft[existingItemIndex].total = (
-                        price * draft[existingItemIndex].qty
-                    ).toFixed(2);
-                }
-            }
             toaster({ type: "success", message: "Product added to cart" });
-        });
-        const updatedCartData = updatedCart.filter((f) => f !== null);
 
-        setCartData(updatedCartData);
-        localStorage.setItem("addCartDetail", JSON.stringify(updatedCartData));
-    };
+        } else {
+            draft[existingItemIndex].qty += 1;
+            draft[existingItemIndex].total = (
+                price * draft[existingItemIndex].qty
+            ).toFixed(2);
+
+            toaster({ type: "success", message: "Product added to cart" });
+        }
+    });
+
+    const updatedCartData = updatedCart.filter((f) => f !== null);
+
+    setCartData(updatedCartData);
+    localStorage.setItem("addCartDetail", JSON.stringify(updatedCartData));
+};
+
 
     const handleRemoveFromCart = (item) => {
         const updatedCart = produce(cartData, (draft) => {
@@ -480,7 +485,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
 
     return (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
-            {/* Image area */}
+           
             <div className="relative  px-4 pt-10 pb-2 flex items-center justify-center gap-3 min-h-[160px]">
                 <div className="absolute top-2.5 left-2.5 z-10">
                     <CountdownBadge endDateTime={offer.endDateTime} />
@@ -516,11 +521,7 @@ const OfferCard = ({ offer, onOpen, inCart, onAddToCart, loader, toaster }) => {
                     ))}
                 </div>
 
-                {inCart && (
-                    <div className="absolute bottom-2.5 right-2.5 bg-green-700 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">
-                        ✓ In Cart
-                    </div>
-                )}
+               
             </div>
 
             <div className="px-4 pt-0 pb-0">

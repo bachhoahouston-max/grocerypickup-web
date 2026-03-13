@@ -734,10 +734,10 @@ function Cart(props) {
       extraFees,
       order_platform: "web",
     };
-
+    console.log(newData);
     localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
-    console.log(newData);
+
     try {
       const createRes = await Api(
         "post",
