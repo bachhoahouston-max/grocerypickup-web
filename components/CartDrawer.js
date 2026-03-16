@@ -262,12 +262,10 @@ import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { Api } from "@/services/service";
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 const isNormalItem = (item) => item?.productSource === "NORMAL";
 const isSaleItem = (item) => item?.productSource === "SALE";
 const isComboItem = (item) => item?.productSource === "COMBO";
 
-// ─── Normal / Sale Cart Row ───────────────────────────────────────────────────
 const NormalCartRow = ({
   item,
   i,
@@ -278,6 +276,7 @@ const NormalCartRow = ({
   increaseQty,
   cartClose,
   formatPrice,
+  saleExpired,
 }) => (
   <div className="w-full bg-white rounded-xl shadow-md p-3">
     <div className="flex flex-row items-start md:items-center justify-between gap-4">
@@ -295,7 +294,7 @@ const NormalCartRow = ({
           </span>
           <span className="font-medium">
             {constant.currency}
-            {item?.price}
+            {saleExpired ? item?.price_slot?.other_price : item?.price}
           </span>
           {item?.price_slot?.other_price && (
             <span className="line-through text-xs text-gray-400">
@@ -303,11 +302,17 @@ const NormalCartRow = ({
               {item?.price_slot?.other_price}
             </span>
           )}
-          {isSaleItem(item) && (
-            <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-orange-200">
-              🔥 SALE
-            </span>
-          )}
+          {isSaleItem(item) ? (
+            new Date(item.endDateTime) < new Date() ? (
+              <span className="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">
+                Sale Ended – Price changed to regular price
+              </span>
+            ) : (
+              <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-orange-200">
+                🔥 SALE
+              </span>
+            )
+          ) : null}
         </div>
         <PickupAvailability
           pickupConfig={pickupConfig}
@@ -323,6 +328,7 @@ const NormalCartRow = ({
         increaseQty={increaseQty}
         cartClose={cartClose}
         formatPrice={formatPrice}
+        saleExpired={saleExpired}
         device="desktop"
       />
     </div>
@@ -335,6 +341,7 @@ const NormalCartRow = ({
       increaseQty={increaseQty}
       cartClose={cartClose}
       formatPrice={formatPrice}
+      saleExpired={saleExpired}
       device="mobile"
     />
   </div>
@@ -513,7 +520,6 @@ const FreeGiftRow = ({ item, lang, t }) => {
               )}
             </div>
 
-            {/* Price */}
             <div className="text-right flex-shrink-0">
               {slot?.our_price && (
                 <p className="text-[10px] text-gray-400 line-through">
@@ -577,8 +583,12 @@ const CartControls = ({
   cartClose,
   formatPrice,
   device,
+  saleExpired,
 }) => {
   const isDesktop = device === "desktop";
+
+  const Total = item.qty * item.regularPrice;
+
   return (
     <div
       className={`${isDesktop ? "md:flex hidden" : "md:hidden flex"} flex-row items-center ${isDesktop ? "flex-col md:flex-row" : ""} justify-center gap-3 mt-2 md:mt-0`}
@@ -599,7 +609,7 @@ const CartControls = ({
       <div className="flex items-center justify-center gap-3 w-30">
         <p className="text-black font-semibold text-base">
           {constant.currency}
-          {formatPrice(item?.total)}
+          {saleExpired ? formatPrice(Total) : formatPrice(item?.total)}
         </p>
         <IoMdClose
           className="w-5 h-5 text-black cursor-pointer"
@@ -635,6 +645,15 @@ export default function CartDrawer({
   };
 
   const isAfterNoon = isAfter12PM();
+  const isSaleExpired = (item) => {
+    const now = new Date();
+
+    return (
+      item?.productSource === "SALE" &&
+      item?.endDateTime &&
+      new Date(item.endDateTime) < now
+    );
+  };
 
   const getPickupConfig = (item) => ({
     ShipmentDelivery: {
@@ -739,8 +758,10 @@ export default function CartDrawer({
         <div className="mt-3 space-y-3">
           {cartData.map((item, i) => {
             const pickupConfig = getPickupConfig(item);
-            console.log("item",item);
-            
+            const saleExpired = isSaleExpired(item);
+            console.log("item", item);
+            console.log("saleExpired", saleExpired);
+
             const sharedProps = {
               item,
               i,
@@ -751,6 +772,7 @@ export default function CartDrawer({
               increaseQty,
               cartClose,
               formatPrice,
+              saleExpired,
             };
 
             if (isComboItem(item)) {

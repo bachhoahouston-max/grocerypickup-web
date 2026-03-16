@@ -623,7 +623,7 @@ export default function ComboOfferCards(props) {
     const getOffer = async () => {
         props.loader(true);
 
-        Api("get", "getComboOffers", router).then(
+        Api("get", "getActiveComboOffers", router).then(
             (res) => {
                 props.loader(false);
                 if (res?.status) {

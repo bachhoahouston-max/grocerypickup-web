@@ -405,12 +405,23 @@ function Cart(props) {
     return checkAvailabilityAndAddToCart(now);
   })();
 
+  
   useEffect(() => {
-    const sumWithInitial = cartData?.reduce(
-      (accumulator, currentValue) =>
-        accumulator + Number(currentValue?.total || 0),
-      0,
-    );
+    const now = new Date();
+
+    const sumWithInitial = cartData?.reduce((accumulator, currentValue) => {
+      const isSaleExpired =
+        currentValue?.productSource === "SALE" &&
+        currentValue?.endDateTime &&
+        new Date(currentValue.endDateTime) < now;
+
+      const itemTotal = isSaleExpired
+        ? Number(currentValue?.regularPrice || 0) *
+          Number(currentValue?.qty || 0)
+        : Number(currentValue?.total || 0);
+
+      return accumulator + itemTotal;
+    }, 0);
 
     const sumWithInitial1 = cartData?.reduce(
       (accumulator, currentValue) =>

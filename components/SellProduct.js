@@ -16,18 +16,13 @@ const SellProduct = ({ loader, toaster }) => {
   const [cartData, setCartData] = useContext(cartContext);
   const [saleData, setSaleData] = useState([]);
   const [countdown, setCountdown] = useState({});
-  const { lang } = useContext(languageContext)
+  const { lang } = useContext(languageContext);
 
   const handleQuantity = async (item) => {
     try {
       loader(true);
 
-      const res = await Api(
-        "get",
-        `checkQuantity/${item?._id}`,
-        "",
-        router
-      );
+      const res = await Api("get", `checkQuantity/${item?._id}`, "", router);
 
       loader(false);
 
@@ -38,7 +33,6 @@ const SellProduct = ({ loader, toaster }) => {
       return 0;
     }
   };
-
 
   const handleAddToCart = async (item) => {
     const availableQuantity = await handleQuantity(item?.product);
@@ -52,18 +46,22 @@ const SellProduct = ({ loader, toaster }) => {
       return;
     }
 
-
     const updatedCart = produce(cartData, (draft) => {
-      const existingItemIndex = draft.findIndex((f) => f.id === item?.product?._id);
+      const existingItemIndex = draft.findIndex(
+        (f) => f.id === item?.product?._id,
+      );
 
-      if (existingItemIndex !== -1 && draft[existingItemIndex].qty + 1 > availableQuantity) {
-        console.log(draft[existingItemIndex]?.qty + 1 > availableQuantity)
+      if (
+        existingItemIndex !== -1 &&
+        draft[existingItemIndex].qty + 1 > availableQuantity
+      ) {
+        console.log(draft[existingItemIndex]?.qty + 1 > availableQuantity);
         toaster({
           type: "error",
           message:
             "Item is not available in this quantity in stock. Please choose a different item.",
         });
-        return
+        return;
       } else {
         const price = parseFloat(item.price);
 
@@ -75,7 +73,7 @@ const SellProduct = ({ loader, toaster }) => {
         };
 
         if (existingItemIndex === -1) {
-          console.log(item)
+          console.log(item);
           draft.push({
             ...item,
             name: item?.product.name,
@@ -87,11 +85,14 @@ const SellProduct = ({ loader, toaster }) => {
             total: price,
             isCurbSidePickupAvailable: item?.product?.isCurbSidePickupAvailable,
             isInStoreAvailable: item?.product?.isInStoreAvailable,
-            isNextDayDeliveryAvailable: item?.product?.isNextDayDeliveryAvailable,
+            isNextDayDeliveryAvailable:
+              item?.product?.isNextDayDeliveryAvailable,
             isReturnAvailable: item?.product?.isReturnAvailable,
             isShipmentAvailable: item?.product?.isShipmentAvailable,
             qty: 1,
             price: price ?? 0,
+            regularPrice: price_slot.other_price,
+            endDateTime: item?.endDateTime,
             price_slot: price_slot || {},
             productSource: "SALE",
             SaleID: item?._id,
@@ -106,18 +107,24 @@ const SellProduct = ({ loader, toaster }) => {
       }
       toaster({ type: "success", message: "Product added to cart" });
     });
-    const updatedCartData = updatedCart.filter(f => f !== null);
+    const updatedCartData = updatedCart.filter((f) => f !== null);
 
     setCartData(updatedCartData);
     localStorage.setItem("addCartDetail", JSON.stringify(updatedCartData));
-
   };
 
   const handleRemoveFromCart = (item) => {
     const updatedCart = produce(cartData, (draft) => {
       const existingItemIndex = draft.findIndex((f) => f._id === item._id);
       const price = parseFloat(item.price);
-      console.log("Removing item:", item, "Existing index:", existingItemIndex, "Current cart:", cartData);
+      console.log(
+        "Removing item:",
+        item,
+        "Existing index:",
+        existingItemIndex,
+        "Current cart:",
+        cartData,
+      );
       if (existingItemIndex !== -1) {
         if (draft[existingItemIndex].qty > 1) {
           draft[existingItemIndex].qty -= 1;
@@ -131,7 +138,7 @@ const SellProduct = ({ loader, toaster }) => {
         draft[existingItemIndex] = null;
       }
     });
-    const updatedCartData = updatedCart.filter(f => f !== null);
+    const updatedCartData = updatedCart.filter((f) => f !== null);
     setCartData(updatedCartData);
     localStorage.setItem("addCartDetail", JSON.stringify(updatedCartData));
   };
@@ -192,7 +199,7 @@ const SellProduct = ({ loader, toaster }) => {
     const calculateTimeLeft = (distance) => {
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
       );
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
@@ -213,13 +220,13 @@ const SellProduct = ({ loader, toaster }) => {
         <div className="  md:mt-10 lg:mt-8 mb-4 bg-transparent md:px-0 px-2 ">
           <p className="text-[#2E7D32] md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
             {/* {t("Offer of the Week")} */}
-            🔥 {t('BHH Weekly Deals')}
+            🔥 {t("BHH Weekly Deals")}
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
           <div className="md:mt-4 mt-2 grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto">
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
-                (cartItem) => cartItem.id === item?.product?._id
+                (cartItem) => cartItem.id === item?.product?._id,
               );
               const itemQuantity = cartItem ? cartItem.qty : 0;
               const currentSale = countdown[item._id];
@@ -234,7 +241,6 @@ const SellProduct = ({ loader, toaster }) => {
                     {item.product?.categoryName}
                   </div> */}
                   <div className="relative bg-white py-2 rounded-2xl overflow-hidden ">
-
                     <div class="flex items-center justify-center absolute top-0 left-0 gap-1 z-10 ">
                       <button
                         class="flex items-center gap-2 px-2 py-1 rounded-full 
@@ -244,58 +250,35 @@ const SellProduct = ({ loader, toaster }) => {
                       >
                         <span class="text-xl animate-vibrate">⏰</span>
 
-                        <span class="text-[12px] hidden md:flex">Ending in</span>
+                        <span class="text-[12px] hidden md:flex">
+                          Ending in
+                        </span>
 
-                        <span
-                          class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup "
-                        >
+                        <span class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup ">
                           {/* 04d 22h 20m 15s */}
                           {currentSale?.days}d:
                           {currentSale?.hours}h:
-                          {currentSale?.minutes}m
-                          {/* {currentSale?.seconds}s */}
+                          {currentSale?.minutes}m{/* {currentSale?.seconds}s */}
                         </span>
                       </button>
                     </div>
                     <div className="relative">
                       {/* Sale Timer */}
 
-
-
-
-
-                      {/* {currentSale?.status !== "expired" && (
-                      <div className="md:hidden flex flex-col absolute bottom-38 bg-custom-lightGreen text-custom-green text-xs  px-6 py-1 rounded-md z-10">
-                        <p className="font-semibold text-[12px]">
-                          {currentSale?.status === "active" ? "Sale ends in" : "Sale starts soon"}
-                        </p>
-                        <div className="flex gap-1 text-[10px] font-bold">
-                          <div>{currentSale?.days}d</div>:
-                          <div>{currentSale?.hours}h</div>:
-                          <div>{currentSale?.minutes}m</div>:
-                          <div>{currentSale?.seconds}s</div>
-                        </div>
-                      </div>
-                    )} */}
-
-                      {/* Product Image */}
                       <div className="relative w-full h-48 mb-4">
-                        <Link href={`/SaleDetails/${item?.product?.slug}`} >
+                        <Link href={`/SaleDetails/${item?.product?.slug}`}>
                           <Image
                             src={item.product?.varients[0]?.image[0]}
                             alt={item.product?.name || "Product Image"}
                             fill
                             className="object-contain rounded-xl cursor-pointer"
-                          // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
+                            // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                           />
                         </Link>
-
                       </div>
                       <div className="absolute bottom-0 right-0">
                         {item?.product?.Quantity <= 0 ? (
-                          <button
-                            className="w-full py-2 bg-gray-400 text-white font-semibold rounded-full cursor-not-allowed"
-                          >
+                          <button className="w-full py-2 bg-gray-400 text-white font-semibold rounded-full cursor-not-allowed">
                             {t("Out of Stock")}
                           </button>
                         ) : itemQuantity > 0 ? (
@@ -307,7 +290,9 @@ const SellProduct = ({ loader, toaster }) => {
                               >
                                 <IoRemoveSharp className="text-white w-5 h-5" />
                               </div>
-                              <p className="text-center font-medium text-black">{itemQuantity}</p>
+                              <p className="text-center font-medium text-black">
+                                {itemQuantity}
+                              </p>
                               <div
                                 className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
                                 onClick={() => handleAddToCart(item)}
@@ -349,7 +334,8 @@ const SellProduct = ({ loader, toaster }) => {
                           100
                         )}
                         % OFF */}
-                        Save ${(item.price_slot?.our_price - item.price).toFixed(2)}
+                        Save $
+                        {(item.price_slot?.our_price - item.price).toFixed(2)}
                       </span>
                     )}
                   </div>
@@ -364,9 +350,7 @@ const SellProduct = ({ loader, toaster }) => {
 
                   {/* Price Section */}
 
-
                   {/* Add to Cart / Quantity Controls */}
-
                 </div>
               );
             })}
@@ -374,11 +358,7 @@ const SellProduct = ({ loader, toaster }) => {
         </div>
       )}
     </>
-
   );
 };
 
 export default SellProduct;
-
-
-
