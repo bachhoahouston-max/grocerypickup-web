@@ -754,7 +754,7 @@ function Cart(props) {
       extraFees,
       order_platform: "web",
     };
-    return console.log(newData);
+   console.log(newData);
     localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
 
