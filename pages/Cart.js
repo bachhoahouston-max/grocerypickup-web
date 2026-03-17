@@ -405,7 +405,6 @@ function Cart(props) {
     return checkAvailabilityAndAddToCart(now);
   })();
 
-  
   useEffect(() => {
     const now = new Date();
 
@@ -621,22 +620,32 @@ function Cart(props) {
     let cart = localStorage.getItem("addCartDetail");
 
     let d = JSON.parse(cart);
+    const now = new Date();
 
     d.forEach((element) => {
+      const isSaleExpired =
+        element?.productSource === "SALE" &&
+        element?.endDateTime &&
+        new Date(element.endDateTime) < now;
+
+      const finalPrice = isSaleExpired ? element?.regularPrice : element?.price;
+
       data.push({
         product: element?.id,
-        image: element.selectedColor?.image,
-        BarCode: element.BarCode,
-        total: element.total,
-        price: element.price,
-        qty: element.qty,
-        seller_id: element.userid,
-        saleID: element?.SaleID || null,
-        productSource: element.productSource || "NORMAL",
-        isShipmentAvailable: element.isShipmentAvailable,
-        isNextDayDeliveryAvailable: element.isNextDayDeliveryAvailable,
-        isCurbSidePickupAvailable: element.isCurbSidePickupAvailable,
-        isInStoreAvailable: element.isInStoreAvailable,
+        image: element?.selectedColor?.image,
+        BarCode: element?.BarCode,
+        qty: element?.qty,
+        price: finalPrice,
+        total: isSaleExpired ? finalPrice * element?.qty : element?.total,
+        seller_id: element?.userid,
+        saleID: isSaleExpired ? null : element?.SaleID || null,
+        productSource: isSaleExpired
+          ? "NORMAL"
+          : element?.productSource || "NORMAL",
+        isShipmentAvailable: element?.isShipmentAvailable,
+        isNextDayDeliveryAvailable: element?.isNextDayDeliveryAvailable,
+        isCurbSidePickupAvailable: element?.isCurbSidePickupAvailable,
+        isInStoreAvailable: element?.isInStoreAvailable,
         free_product: element?.free_product?._id,
         combo_id: element?._id,
       });
@@ -745,7 +754,7 @@ function Cart(props) {
       extraFees,
       order_platform: "web",
     };
-    console.log(newData);
+    return console.log(newData);
     localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
 
