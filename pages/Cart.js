@@ -152,13 +152,13 @@ function Cart(props) {
 
       updatedItem.productSource = match.productSource;
 
-      if (match.productSource === "COMBO" && match.freeProducts?.length > 0) {
-        updatedItem.free_product = match.freeProducts.map((fp) => ({
-          product: { _id: fp.productId },
-        }));
-      } else {
-        updatedItem.free_product = [];
-      }
+      // if (match.productSource === "COMBO" && match.freeProducts?.length > 0) {
+      //   updatedItem.free_product = match.freeProducts.map((fp) => ({
+      //     product: { ...fp, _id: fp.productId },
+      //   }));
+      // } else {
+      //   updatedItem.free_product = [];
+      // }
 
       return updatedItem;
     });
