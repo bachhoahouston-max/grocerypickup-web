@@ -339,6 +339,11 @@ const SellProduct = ({ loader, toaster }) => {
                       </span>
                     )}
                   </div>
+                  {item.product?.Quantity < 5 && (
+                    <p className="text-red-600 font-bold text-[12px]">
+                      Only {item.product?.Quantity} left in stock
+                    </p>
+                  )}
 
                   <div className="flex md:justify-start md:items-center md:px-1">
                     <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 ">
