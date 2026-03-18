@@ -255,7 +255,7 @@ import Image from "next/image";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { produce } from "immer";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { cartContext, languageContext } from "@/pages/_app";
 import constant from "@/services/constant";
 import { useTranslation } from "react-i18next";
@@ -302,8 +302,9 @@ const NormalCartRow = ({
               {item?.price_slot?.other_price}
             </span>
           )}
-          {isSaleItem(item) ? (
-            new Date(item.endDateTime) < new Date() ? (
+          {item?.endDateTime &&
+            (new Date(item.endDateTime) < new Date() ||
+            item.productSource === "NORMAL" ? (
               <span className="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">
                 Sale Ended – Price changed to regular price
               </span>
@@ -311,8 +312,7 @@ const NormalCartRow = ({
               <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-orange-200">
                 🔥 SALE
               </span>
-            )
-          ) : null}
+            ))}
         </div>
         <PickupAvailability
           pickupConfig={pickupConfig}
@@ -360,7 +360,6 @@ const ComboCartRow = ({
   formatPrice,
 }) => {
   const { t } = useTranslation();
-  console.log("pickupconfig", pickupConfig);
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md overflow-hidden">
@@ -448,10 +447,9 @@ const ComboCartRow = ({
 // ─── Free Gift Row (shown inside combo card) ──────────────────────────────────
 const FreeGiftRow = ({ item, lang, t }) => {
   const router = useRouter();
-  // free_product lives in combo_id or directly on item depending on cart shape
+
   const freeProducts = item?.free_product || item?.combo_id?.free_product || [];
 
-  // If no populated free_product array, fall back to promo_text only
   if (!freeProducts.length) {
     return (
       <div className="mt-2 flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2">
@@ -538,7 +536,6 @@ const FreeGiftRow = ({ item, lang, t }) => {
 
 // ─── Shared sub-components ────────────────────────────────────────────────────
 const CartImage = ({ item }) => {
-  console.log(item);
   const router = useRouter();
   let slug = item?.slug || item?.product?.slug;
   // if(item. productSource === 'COMBO'){
@@ -620,7 +617,6 @@ const CartControls = ({
   );
 };
 
-// ─── Main CartDrawer ──────────────────────────────────────────────────────────
 export default function CartDrawer({
   pickupOption,
   toaster,
@@ -630,6 +626,7 @@ export default function CartDrawer({
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
   const { lang } = useContext(languageContext);
+  const [data, setData] = useState([]);
   const router = useRouter();
 
   const formatPrice = (value) => {
@@ -648,11 +645,7 @@ export default function CartDrawer({
   const isSaleExpired = (item) => {
     const now = new Date();
 
-    return (
-      item?.productSource === "SALE" &&
-      item?.endDateTime &&
-      new Date(item.endDateTime) < now
-    );
+    return item?.endDateTime && new Date(item.endDateTime) < now;
   };
 
   const getPickupConfig = (item) => ({
@@ -716,7 +709,6 @@ export default function CartDrawer({
   };
 
   const increaseQty = async (index, item) => {
-    console.log(item);
     const itemQuantity = await handleQuantity(item.id);
     let itemFreeQuantity = 0;
     if (item.productSource === "COMBO") {
@@ -759,8 +751,6 @@ export default function CartDrawer({
           {cartData.map((item, i) => {
             const pickupConfig = getPickupConfig(item);
             const saleExpired = isSaleExpired(item);
-            console.log("item", item);
-            console.log("saleExpired", saleExpired);
 
             const sharedProps = {
               item,

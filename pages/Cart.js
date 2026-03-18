@@ -102,6 +102,107 @@ function Cart(props) {
       });
   };
 
+  const extractProductObjects = (cartData) => {
+    let result = [];
+
+    cartData.forEach((item) => {
+      const source = item?.productSource || "NORMAL";
+
+      const mainId = item?.product?._id || item?._id;
+
+      let obj = {
+        productSource: source,
+        productId: mainId,
+      };
+
+      if (source === "COMBO" && item?.free_product?.length > 0) {
+        obj.freeProducts = item.free_product
+          .map((freeItem) => freeItem?.product?._id)
+          .filter(Boolean);
+      }
+
+      if (mainId) {
+        result.push(obj);
+      }
+    });
+
+    return result;
+  };
+
+  const updateCartWithLatestData = (cartData, latestData) => {
+    const updatedCart = cartData.map((item) => {
+      const match = latestData.find(
+        (p) => String(p.productId) === String(item?.id || item?.product?._id),
+      );
+
+      if (!match) return item;
+
+      let updatedItem = { ...item };
+
+      if (item.price !== match.price) {
+        props.toaster({
+          type: "error",
+          message:
+            "Some sale items have expired. Prices have been updated. Please review your cart",
+        });
+      }
+
+      updatedItem.price = match.price;
+      updatedItem.total = match.price * (item.qty || 1);
+
+      updatedItem.productSource = match.productSource;
+
+      if (match.productSource === "COMBO" && match.freeProducts?.length > 0) {
+        updatedItem.free_product = match.freeProducts.map((fp) => ({
+          product: { _id: fp.productId },
+        }));
+      } else {
+        updatedItem.free_product = [];
+      }
+
+      return updatedItem;
+    });
+
+    return updatedCart;
+  };
+
+  useEffect(() => {
+    if (cartData?.length) {
+      checkPRiceOFPRoduct(cartData);
+    }
+  }, []);
+
+  const checkPRiceOFPRoduct = async (cartData) => {
+    try {
+      props.loader(true);
+
+      const res = await Api(
+        "post",
+        `checkPRiceOFPRoduct`,
+        extractProductObjects(cartData),
+        router,
+      );
+
+      props.loader(false);
+
+      const latestData = res.data || [];
+
+      const updatedCart = updateCartWithLatestData(cartData, latestData);
+      console.log(updatedCart);
+
+      const isChanged =
+        JSON.stringify(cartData) !== JSON.stringify(updatedCart);
+
+      if (isChanged) {
+        setCartData(updatedCart);
+        localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+      }
+    } catch (err) {
+      props.loader(false);
+      props.toaster({ type: "error", message: err?.message });
+    }
+  };
+
   useEffect(() => {
     if (
       appliedCoupon &&
@@ -123,6 +224,7 @@ function Cart(props) {
   const [parkingNo, setParkingNo] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   console.log(user);
+
   const handleOptionChange = (event) => {
     setPickupOption(event.target.value);
     setDiscount(0);
@@ -408,51 +510,62 @@ function Cart(props) {
   useEffect(() => {
     const now = new Date();
 
-    const sumWithInitial = cartData?.reduce((accumulator, currentValue) => {
+    const updatedCart = cartData?.map((item) => {
       const isSaleExpired =
-        currentValue?.productSource === "SALE" &&
-        currentValue?.endDateTime &&
-        new Date(currentValue.endDateTime) < now;
+        item?.productSource === "SALE" &&
+        item?.endDateTime &&
+        new Date(item.endDateTime) < now;
 
-      const itemTotal = isSaleExpired
-        ? Number(currentValue?.regularPrice || 0) *
-          Number(currentValue?.qty || 0)
-        : Number(currentValue?.total || 0);
+      if (isSaleExpired) {
+        return {
+          ...item,
+          productSource: "NORMAL",
+          SaleID: null,
+          price: item?.regularPrice,
+          total: Number(item?.regularPrice || 0) * Number(item?.qty || 0),
+          isSaleExpired: true,
+        };
+      }
 
-      return accumulator + itemTotal;
+      return item;
+    });
+
+    if (JSON.stringify(updatedCart) !== JSON.stringify(cartData)) {
+      setCartData(updatedCart);
+      localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+    }
+
+    const sumWithInitial = updatedCart?.reduce((acc, item) => {
+      return acc + Number(item?.total || 0);
     }, 0);
 
-    const sumWithInitial1 = cartData?.reduce(
-      (accumulator, currentValue) =>
-        accumulator + Number(currentValue?.qty || 0),
+    const sumQty = updatedCart?.reduce(
+      (acc, item) => acc + Number(item?.qty || 0),
       0,
     );
 
     let delivery = 0;
     let fee = 0;
+
     if (pickupOption === "localDelivery") {
       delivery =
         sumWithInitial <= shipcCost?.minShippingCostforLocal
           ? currentLocalCost
           : 0;
+
       fee =
         sumWithInitial <= shipcCost?.minServiesCost
           ? shipcCost?.serviesCost
           : 0;
-      console.log("ander", fee);
     } else if (pickupOption === "ShipmentDelivery") {
       delivery =
         sumWithInitial <= shipcCost?.minShipmentCostForShipment
           ? currentShipmentCost
           : 0;
-    } else {
-      delivery = 0;
     }
 
     setBaseCartTotal(sumWithInitial);
     setServiceFee(fee.toFixed(2));
-    console.log("fee", fee);
-
     setDeliveryCharge(delivery.toFixed(2));
 
     const cartAfterDiscount = sumWithInitial - discount;
@@ -466,18 +579,20 @@ function Cart(props) {
           Number(deliverytip) +
           fee +
           ExtraFeesObj.extendedCharge;
+
         setExtrafees(ExtraFeesObj.extendedCharge);
       } else {
         finalTotal = cartAfterDiscount + delivery + Number(deliverytip) + fee;
+
         setExtrafees(0);
       }
     } else {
       finalTotal = cartAfterDiscount + delivery;
     }
 
-    setCartTotal(sumWithInitial.toFixed(2)); // Now correct total
+    setCartTotal(sumWithInitial.toFixed(2));
     setMainTotal(finalTotal.toFixed(2));
-  }, [cartData, pickupOption, deliverytip, discount, extraFees]);
+  }, [cartData, pickupOption, deliverytip, discount]);
 
   const emptyCart = async () => {
     setCartData([]);
@@ -615,6 +730,7 @@ function Cart(props) {
         });
       }
     }
+    await checkPRiceOFPRoduct(cartData);
 
     let data = [];
     let cart = localStorage.getItem("addCartDetail");
@@ -638,7 +754,7 @@ function Cart(props) {
         price: finalPrice,
         total: isSaleExpired ? finalPrice * element?.qty : element?.total,
         seller_id: element?.userid,
-        saleID: isSaleExpired ? null : element?.SaleID || null,
+        saleID: element?.SaleID,
         productSource: isSaleExpired
           ? "NORMAL"
           : element?.productSource || "NORMAL",
@@ -732,6 +848,7 @@ function Cart(props) {
         return false;
       }
     }
+
     const deliveryTip = parseFloat(deliverytip || 0);
     const servicefee = parseFloat(serviceFee || 0);
 
@@ -754,7 +871,7 @@ function Cart(props) {
       extraFees,
       order_platform: "web",
     };
-   console.log(newData);
+
     localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
 
