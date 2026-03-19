@@ -22,6 +22,8 @@ function Cart(props) {
   const [user, setUser] = useContext(userContext);
   const [CartTotal, setCartTotal] = useState(0);
   const [pincodes, setPincodes] = useState([]);
+  const [isPriceChanged, setIsPriceChanged] = useState(false);
+
   const [paymentChecked, setPaymentChecked] = useState(false);
   const [cancelDone, setCancelDone] = useState(false);
   const [cartData, setCartData] = useContext(cartContext);
@@ -152,25 +154,17 @@ function Cart(props) {
 
       updatedItem.productSource = match.productSource;
 
-      // if (match.productSource === "COMBO" && match.freeProducts?.length > 0) {
-      //   updatedItem.free_product = match.freeProducts.map((fp) => ({
-      //     product: { ...fp, _id: fp.productId },
-      //   }));
-      // } else {
-      //   updatedItem.free_product = [];
-      // }
-
       return updatedItem;
     });
 
     return updatedCart;
   };
 
-  useEffect(() => {
-    if (cartData?.length) {
-      checkPRiceOFPRoduct(cartData);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (cartData?.length) {
+  //     checkPRiceOFPRoduct(cartData);
+  //   }
+  // }, []);
 
   const checkPRiceOFPRoduct = async (cartData) => {
     try {
@@ -186,9 +180,7 @@ function Cart(props) {
       props.loader(false);
 
       const latestData = res.data || [];
-
       const updatedCart = updateCartWithLatestData(cartData, latestData);
-      console.log(updatedCart);
 
       const isChanged =
         JSON.stringify(cartData) !== JSON.stringify(updatedCart);
@@ -196,10 +188,22 @@ function Cart(props) {
       if (isChanged) {
         setCartData(updatedCart);
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
+
+        setIsPriceChanged(true); // 🔥 FLAG TRUE
+        props.toaster({
+          type: "error",
+          message:
+            "Some sale items have expired. Prices have been updated. Please review your cart",
+        });
+
+        return false; // ❌ stop आगे
       }
+
+      return true; // ✅ no change
     } catch (err) {
       props.loader(false);
       props.toaster({ type: "error", message: err?.message });
+      return false;
     }
   };
 
@@ -1582,13 +1586,24 @@ function Cart(props) {
                         {isLoggedIn ? (
                           <button
                             className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
-                            onClick={() => {
+                            onClick={async () => {
                               if (cartData?.length === 0) {
                                 toaster?.({
                                   type: "warning",
                                   message: "Your cart is empty",
                                 });
-                              } else {
+                                return;
+                              }
+
+                              if (isPriceChanged) {
+                                createProductRquest && createProductRquest();
+                                return;
+                              }
+
+                              const isValid =
+                                await checkPRiceOFPRoduct(cartData);
+
+                              if (isValid) {
                                 createProductRquest && createProductRquest();
                               }
                             }}
