@@ -170,7 +170,18 @@ const ComboBanner = ({ combo }) => {
 };
 
 // ─── Product Row — Normal ─────────────────────────────────────────────────────
-const NormalProductRow = ({ product, index, total, booking, lang, router }) => (
+const NormalProductRow = ({
+  product,
+  index,
+  total,
+  booking,
+  lang,
+  router,
+  t,
+  setProductId,
+  setSelectedProduct,
+  setShowReviews,
+}) => (
   <div
     className={`flex items-center p-2 hover:bg-gray-50 cursor-pointer ${
       index !== total - 1 ? "border-b border-gray-200" : ""
@@ -200,16 +211,41 @@ const NormalProductRow = ({ product, index, total, booking, lang, router }) => (
       </p>
       <p className="text-sm text-gray-500 mt-1">{`Qty: ${product.qty || 1}`}</p>
     </div>
-    <div className="text-right flex-shrink-0 pr-1">
+    <div className="flex flex-col items-end gap-1 pr-1 mt-4">
       <p className="text-sm font-bold text-gray-800">
         ${parseFloat(product.price || 0).toFixed(2)}
       </p>
+
+      {booking?.status === "Completed" && (
+        <button
+          className="bg-custom-green text-white px-3 py-1.5 rounded-md text-xs font-medium hover:shadow-md transition-all duration-200"
+          onClick={(e) => {
+            e.stopPropagation();
+            setProductId(product?.product?._id);
+            setSelectedProduct(product);
+            setShowReviews(true);
+          }}
+        >
+          {t("Review")}
+        </button>
+      )}
     </div>
   </div>
 );
 
 // ─── Product Row — Combo (Main product) ───────────────────────────────────────
-const MainProductRow = ({ product, index, total, booking, lang, router }) => (
+const MainProductRow = ({
+  product,
+  index,
+  total,
+  booking,
+  lang,
+  router,
+  setProductId,
+  setSelectedProduct,
+  setShowReviews,
+  t,
+}) => (
   <div
     className={`flex items-center p-2 hover:bg-blue-50 cursor-pointer relative bg-blue-50/40 ${
       index !== total - 1 ? "border-b border-gray-200" : ""
@@ -244,10 +280,23 @@ const MainProductRow = ({ product, index, total, booking, lang, router }) => (
       </p>
       <p className="text-sm text-gray-500 mt-1">{`Qty: ${product.qty || 1}`}</p>
     </div>
-    <div className="text-right flex-shrink-0 pr-1">
+    <div className="flex flex-col items-end gap-1 pr-1 mt-4">
       <p className="text-sm font-bold text-gray-800">
         ${parseFloat(product.price || 0).toFixed(2)}
       </p>
+  {booking?.status === "Completed" && (
+      <button
+        className="bg-custom-green text-white px-3 py-1.5 rounded-md text-xs font-medium hover:shadow-md transition-all duration-200"
+        onClick={(e) => {
+          e.stopPropagation();
+          setProductId(product?.product?._id);
+          setSelectedProduct(product);
+          setShowReviews(true);
+        }}
+      >
+        {t("Review")}
+      </button>
+  )}
     </div>
   </div>
 );
@@ -398,7 +447,6 @@ const ComboPriceSummary = ({ booking }) => {
   );
 };
 
-
 const FreeItemRow = ({ fp, lang, isLast }) => {
   const { t } = useTranslation();
   const product = fp?.product;
@@ -464,8 +512,15 @@ const FreeItemRow = ({ fp, lang, isLast }) => {
 // Free items are NOT in productDetail — they come from combo_id.free_product[]
 //   and are injected as virtual rows right after their main product row
 
-
-const ProductList = ({ booking, lang, router }) => {
+const ProductList = ({
+  booking,
+  lang,
+  router,
+  t,
+  setProductId,
+  setSelectedProduct,
+  setShowReviews,
+}) => {
   const products = booking.productDetail;
 
   // Split into normal and combo buckets
@@ -505,6 +560,10 @@ const ProductList = ({ booking, lang, router }) => {
           booking={booking}
           lang={lang}
           router={router}
+          t={t}
+          setProductId={setProductId}
+          setSelectedProduct={setSelectedProduct}
+          setShowReviews={setShowReviews}
         />,
       );
     });
@@ -553,6 +612,10 @@ const ProductList = ({ booking, lang, router }) => {
           booking={booking}
           lang={lang}
           router={router}
+          t={t}
+          setProductId={setProductId}
+          setSelectedProduct={setSelectedProduct}
+          setShowReviews={setShowReviews}
         />,
       );
 
@@ -604,6 +667,9 @@ const OrderCard = ({
   setParkingNo,
   handleSubmit,
   onClose,
+  setProductId,
+  setSelectedProduct,
+  setShowReviews,
 }) => {
   const router = useRouter();
   const { t } = useTranslation();
@@ -666,7 +732,6 @@ const OrderCard = ({
             </div>
           </div>
 
-        
           <div className="hidden md:flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <div
@@ -820,7 +885,6 @@ const OrderCard = ({
         </div>
       )}
 
-
       <div className="px-4 py-3 bg-white border-b border-gray-200">
         <div className="flex flex-wrap gap-2 justify-end">
           {(() => {
@@ -949,14 +1013,20 @@ const OrderCard = ({
         </div>
       )}
 
-     
       <div
         className={expandedBookingId === booking._id ? "hidden" : "block p-4"}
       >
         {/* Product rows — smart rendering per product */}
-        <ProductList booking={booking} lang={lang} router={router} />
+        <ProductList
+          booking={booking}
+          lang={lang}
+          router={router}
+          t={t}
+          setProductId={setProductId}
+          setSelectedProduct={setSelectedProduct}
+          setShowReviews={setShowReviews}
+        />
 
-        
         {hasCombo && <ComboPriceSummary booking={booking} />}
 
         {/* Barcode + Order total */}

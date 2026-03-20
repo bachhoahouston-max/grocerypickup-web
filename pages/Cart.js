@@ -141,11 +141,23 @@ function Cart(props) {
 
       let updatedItem = { ...item };
 
-      if (item.price !== match.price) {
+      if (item.productSource === "Sale") {
+        if (item.price !== match.price) {
+          props.toaster({
+            type: "error",
+            message: t(
+              "Some sale items have expired. Prices have been updated. Please review you cart",
+            ),
+          });
+        }
+      }
+
+      if (item.productSource === "COMBO" && match.productSource !== "COMBO") {
+        updatedItem.free_product = [];
+
         props.toaster({
-          type: "error",
-          message:
-            "Some sale items have expired. Prices have been updated. Please review your cart",
+          type: "warning",
+          message: "Combo offer expired. Free items removed.",
         });
       }
 
@@ -189,17 +201,18 @@ function Cart(props) {
         setCartData(updatedCart);
         localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
 
-        setIsPriceChanged(true); // 🔥 FLAG TRUE
+        setIsPriceChanged(true);
         props.toaster({
           type: "error",
-          message:
-            "Some sale items have expired. Prices have been updated. Please review your cart",
+          message: t(
+            "Some sale items have expired. Prices have been updated. Please review you cart",
+          ),
         });
 
-        return false; // ❌ stop आगे
+        return false;
       }
 
-      return true; // ✅ no change
+      return true;
     } catch (err) {
       props.loader(false);
       props.toaster({ type: "error", message: err?.message });

@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import Image from "next/image";
 import { RxCross2 } from "react-icons/rx";
 import Compressor from "compressorjs";
+// import AddReview from "@/components/AddReview";
 // import AddReview from "../components/AddReview";
 
 function Myhistory(props) {

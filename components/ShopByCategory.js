@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-
+import { languageContext } from "@/pages/_app";
 
 const CategoryCard = ({ item, url, router }) => {
-
+  const { lang } = useContext(languageContext);
 
   return (
     <Link
@@ -23,21 +23,22 @@ const CategoryCard = ({ item, url, router }) => {
             alt={item?.name || "Category"}
             fill
             className="object-cover rounded-full"
-          // sizes="(max-width: 768px) 100px, 120px"
+            // sizes="(max-width: 768px) 100px, 120px"
           />
         </div>
       </div>
       <p className="text-black text-[14px] md:text-[16px] font-medium text-center">
-        {item?.name}
+        {lang === "en" ? item?.name : item?.v_name || item?.name}
       </p>
     </Link>
-  )
+  );
 };
 
 function ShopByCategory() {
   const [categorys, setCategory] = useState([]);
   const router = useRouter();
   const { t } = useTranslation();
+  const { lang } = useContext(languageContext);
 
   const [width, setWidth] = useState(360);
   // useEffect(() => {
@@ -49,7 +50,6 @@ function ShopByCategory() {
 
   //   window.addEventListener('resize', handleResize);
   //   // }
-
 
   //   return () => window.removeEventListener('resize', handleResize);
   // }
@@ -66,22 +66,23 @@ function ShopByCategory() {
       console.log("window", window);
       setWidth(window.innerWidth);
     };
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       handleResize();
     }
-
-
   }, [router]);
 
   return (
     <div className="bg-transparent px-4 mt-4 mb-0  ">
-      <div className="hidden md:block md:w-full mx-auto" >
+      <div className="hidden md:block md:w-full mx-auto">
         <h1 className="text-xl md:text-[28px] text-[#2E7D32] font-semibold  leading-[36px] tracking-[0]  md:mb-5 mb-2 py-2 hidden md:flex">
           {/* {t("Shop By Category")} */}
-          <ShoppingCart className="text-[#2E7D32] h-8 w-8 mr-2" /> {t('Browse by Category')}
-
+          <ShoppingCart className="text-[#2E7D32] h-8 w-8 mr-2" />{" "}
+          {t("Browse by Category")}
         </h1>
-        <div className="overflow-x-auto scrollbar-hide" style={{ maxWidth: width - 80 }}>
+        <div
+          className="overflow-x-auto scrollbar-hide"
+          style={{ maxWidth: width - 80 }}
+        >
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-6 md:gap-8 ">
             <Link
               className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
@@ -102,7 +103,6 @@ function ShopByCategory() {
               </div>
               <p className="text-black text-[14px] sm:text-[16px] font-semibold text-center">
                 {t("New Arrivals")}
-
               </p>
             </Link>
 
@@ -137,18 +137,14 @@ function ShopByCategory() {
                 router={router}
               />
             ))}
-
           </div>
         </div>
-
-
       </div>
 
       {/* Mobile Category Row */}
       <div className="md:hidden" style={{ maxWidth: width - 32 }}>
         <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
           <div className="flex gap-2 w-full min-w-0">
-
             {/* New Arrival */}
             <div
               className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
@@ -194,15 +190,8 @@ function ShopByCategory() {
                 </p>
               </div>
             ))}
-
           </div>
         </div>
-
-
-
-
-
-
       </div>
     </div>
   );

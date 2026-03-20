@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { languageContext } from "@/pages/_app";
 
 
 const CategoryCard = ({ item, url, router }) => {
+  const { lang } = useContext(languageContext);
 
 
   return (
@@ -28,7 +30,7 @@ const CategoryCard = ({ item, url, router }) => {
         </div>
       </div>
       <p className="text-black text-[8px] md:text-[10px] font-medium text-center">
-        {item?.name}
+      {lang === "en" ? item?.name : item?.v_name || item?.name}
       </p>
     </Link>
   )
@@ -38,6 +40,7 @@ function ShopByCategoryHeader() {
   const [categorys, setCategory] = useState([]);
   const router = useRouter();
   const { t } = useTranslation();
+  const { lang } = useContext(languageContext);
 
   const [width, setWidth] = useState(360);
   // useEffect(() => {
@@ -186,18 +189,14 @@ function ShopByCategoryHeader() {
                 </div> */}
 
                 <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
-                  {category?.name}
+                  {/* {category?.name} */}
+                   {lang === "en" ? category?.name : category?.v_name || category?.name}
                 </p>
               </div>
             ))}
 
           </div>
         </div>
-
-
-
-
-
 
       </div>
     </div>
