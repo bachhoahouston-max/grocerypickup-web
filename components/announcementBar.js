@@ -39,22 +39,18 @@ function AnnouncementBar({ announcementBar, setAnnouncementBar, loader, toaster 
     <>
       <style>
         {`
-@keyframes marquee-mobile {
-  0% { transform: translateX(0%); }
+@keyframes marquee {
+  0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
 }
 
-@media (max-width: 640px) {
-  .animate-marquee-mobile {
-    animation: marquee-mobile 15s linear infinite;
-  }
+.animate-marquee-mobile {
+  animation: marquee 10s linear infinite;
 }
 
-@media (min-width: 641px) {
-  .animate-marquee-mobile {
-    animation: none; /* desktop: no animation */
-  }
-}
+
+
+
 `}
       </style>
 
@@ -62,18 +58,17 @@ function AnnouncementBar({ announcementBar, setAnnouncementBar, loader, toaster 
         className={`transition-all duration-500 ease-in-out ${announcementBar ? "opacity-100 max-h-12" : "opacity-0 max-h-0 overflow-hidden"
           }`}
       >
-        {/* <div className="md:hidden relative w-full h-12 overflow-hidden flex justify-center items-center bg-custom-green text-white">
-          <div
-            className="absolute whitespace-nowrap animate-marquee-mobile left-8 md:left-[30%]"
-          >
-            <span className="pr-8">{shipmentCostMessage}</span>
-          </div>
-
-        </div> */}
-
-        <div className="w-full py-2 bg-custom-green text-white text-center min-h-12 ">
-          {shipmentCostMessage && <marquee scrollamount="10" ><p className="pt-1">{shipmentCostMessage}</p></marquee>}
+        <div className="w-full py-2 bg-custom-green text-white text-center min-h-12 overflow-hidden">
+          {shipmentCostMessage && (
+            <div className="animate-marquee-mobile whitespace-nowrap mt-1">
+              <span>{shipmentCostMessage}</span>
+            </div>
+          )}
         </div>
+
+        {/* <div className="w-full py-2 bg-custom-green text-white text-center min-h-12 ">
+          {shipmentCostMessage && <marquee scrollamount="10" ><p className="pt-1">{shipmentCostMessage}</p></marquee>}
+        </div> */}
 
 
 
