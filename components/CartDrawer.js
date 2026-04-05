@@ -266,6 +266,8 @@ const isNormalItem = (item) => item?.productSource === "NORMAL";
 const isSaleItem = (item) => item?.productSource === "SALE";
 const isComboItem = (item) => item?.productSource === "COMBO";
 
+
+
 const NormalCartRow = ({
   item,
   i,
@@ -277,50 +279,66 @@ const NormalCartRow = ({
   cartClose,
   formatPrice,
   saleExpired,
-}) => (
-  <div className="w-full bg-white rounded-xl shadow-md p-3">
-    <div className="flex flex-row items-start md:items-center justify-between gap-4">
-      {/* Image */}
-      <CartImage item={item} />
+}) => {
+  const { t } = useTranslation();
 
-      {/* Info */}
-      <div className="flex flex-col flex-1 p-1 min-w-0">
-        <p className="text-black font-medium md:text-base text-sm">
-          {lang === "en" ? item?.name : item?.vietnamiesName}
-        </p>
-        <div className="text-sm text-black mt-1 flex gap-3 items-center flex-wrap">
-          <span className="text-xs md:text-sm">
-            {item?.price_slot?.value ?? 1} {item?.price_slot?.unit ?? "unit"}
-          </span>
-          <span className="font-medium">
-            {constant.currency}
-            {saleExpired ? item?.price_slot?.other_price : item?.price}
-          </span>
-          {item?.price_slot?.other_price && (
-            <span className="line-through text-xs text-gray-400">
-              {constant.currency}
-              {item?.price_slot?.other_price}
+  return (
+    <div className="w-full bg-white rounded-xl shadow-md p-3">
+      <div className="flex flex-row items-start md:items-center justify-between gap-4">
+        {/* Image */}
+        <CartImage item={item} />
+
+        {/* Info */}
+        <div className="flex flex-col flex-1 p-1 min-w-0">
+          <p className="text-black font-medium md:text-base text-sm">
+            {lang === "en" ? item?.name : item?.vietnamiesName}
+          </p>
+          <div className="text-sm text-black mt-1 flex gap-3 items-center flex-wrap">
+            <span className="text-xs md:text-sm">
+              {item?.price_slot?.value ?? 1} {item?.price_slot?.unit ?? "unit"}
             </span>
-          )}
-          {item?.endDateTime &&
-            (new Date(item.endDateTime) < new Date() ||
-            item.productSource === "NORMAL" ? (
-              <span className="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">
-                Sale Ended – Price changed to regular price
+            <span className="font-medium">
+              {constant.currency}
+              {saleExpired ? item?.price_slot?.other_price : item?.price}
+            </span>
+            {item?.price_slot?.other_price && (
+              <span className="line-through text-xs text-gray-400">
+                {constant.currency}
+                {item?.price_slot?.other_price}
               </span>
-            ) : (
-              <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-orange-200">
-                🔥 SALE
-              </span>
-            ))}
+            )}
+            {item?.endDateTime &&
+              (new Date(item.endDateTime) < new Date() ||
+                item.productSource === "NORMAL" ? (
+                <span className="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">
+                  {t(`Sale Ended – Price changed to regular price`)}
+                </span>
+              ) : (
+                <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-orange-200">
+                  🔥 SALE
+                </span>
+              ))}
+          </div>
+          <PickupAvailability
+            pickupConfig={pickupConfig}
+            pickupOption={pickupOption}
+          />
         </div>
-        <PickupAvailability
-          pickupConfig={pickupConfig}
-          pickupOption={pickupOption}
+
+        {/* Desktop controls */}
+        <CartControls
+          item={item}
+          i={i}
+          decreaseQty={decreaseQty}
+          increaseQty={increaseQty}
+          cartClose={cartClose}
+          formatPrice={formatPrice}
+          saleExpired={saleExpired}
+          device="desktop"
         />
       </div>
 
-      {/* Desktop controls */}
+      {/* Mobile controls */}
       <CartControls
         item={item}
         i={i}
@@ -329,23 +347,11 @@ const NormalCartRow = ({
         cartClose={cartClose}
         formatPrice={formatPrice}
         saleExpired={saleExpired}
-        device="desktop"
+        device="mobile"
       />
     </div>
-
-    {/* Mobile controls */}
-    <CartControls
-      item={item}
-      i={i}
-      decreaseQty={decreaseQty}
-      increaseQty={increaseQty}
-      cartClose={cartClose}
-      formatPrice={formatPrice}
-      saleExpired={saleExpired}
-      device="mobile"
-    />
-  </div>
-);
+  );
+}
 
 // ─── Combo Cart Row ───────────────────────────────────────────────────────────
 const ComboCartRow = ({
