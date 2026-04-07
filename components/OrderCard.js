@@ -789,8 +789,8 @@ const OrderCard = ({
               {booking?.SecretCode &&
                 (booking?.status === "Pending" ||
                   booking?.status === "Preparing") && (
-                  <div className="flex items-center">
-                    <div className="p-2 bg-yellow-100 rounded-lg mr-3">
+                  <div className="grid items-center  col-span-2 bg-[#FDF6EA] border-2 border-[#9E683C] pt-2 rounded-lg">
+                    {/* <div className="p-2 bg-yellow-100 rounded-lg mr-3">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5 text-yellow-600"
@@ -803,12 +803,19 @@ const OrderCard = ({
                           clipRule="evenodd"
                         />
                       </svg>
-                    </div>
+                    </div> */}
                     <div>
-                      <p className="text-sm text-gray-500">{t("Secret Code")}</p>
-                      <p className="text-base font-medium text-gray-800">
+                      <p className="text-sm text-center text-[#9E683C] font-bold">{t("SHOW THIS CODE TO STAFF")}</p>
+                      <p className="text-3xl font-bold text-gray-800 text-center">
                         {booking.SecretCode}
                       </p>
+                    </div>
+                    <div className="w-full">
+                      <button
+                        className=" w-full px-4 py-2 bg-[#F59E0B] text-white text-sm font-bold rounded-md cursor-pointer"
+                      >
+                        {t('STAFF NOTIFIED')}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -879,6 +886,32 @@ const OrderCard = ({
                 </div>
               )}
             </div>
+
+            {(booking?.status === "Pending" || booking?.status === "Preparing") &&
+              (booking?.isDriveUp || booking?.isOrderPickup) &&
+              booking?.createdAt &&
+              new Date() - new Date(booking.createdAt) >= 15 * 60 * 1000 && (
+                <div className=" pt-2">
+                  <div className="flex flex-wrap gap-2 justify-end">
+                    {booking?.isDriveUp && (
+                      <button
+                        onClick={() => toggleModal(booking._id)}
+                        className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
+                      >
+                        {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
+                      </button>
+                    )}
+                    {booking?.isOrderPickup && !booking.SecretCode && (
+                      <button
+                        onClick={() => getSecrectCode(booking._id)}
+                        className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
+                      >
+                        {t("I'm here")}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
           </div>
         )}
 
@@ -914,31 +947,7 @@ const OrderCard = ({
           )}
       </div>
 
-      {(booking?.status === "Pending" || booking?.status === "Preparing") &&
-        (booking?.isDriveUp || booking?.isOrderPickup) &&
-        booking?.createdAt &&
-        new Date() - new Date(booking.createdAt) >= 15 * 60 * 1000 && (
-          <div className="px-4 py-3 bg-white border-b border-gray-200">
-            <div className="flex flex-wrap gap-2 justify-end">
-              {booking?.isDriveUp && (
-                <button
-                  onClick={() => toggleModal(booking._id)}
-                  className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
-                >
-                  {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
-                </button>
-              )}
-              {booking?.isOrderPickup && (
-                <button
-                  onClick={() => getSecrectCode(booking._id)}
-                  className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
-                >
-                  {t("I'm here")}
-                </button>
-              )}
-            </div>
-          </div>
-        )}
+
 
       {/* ── Parking modal ───────────────────────────────────────────────────── */}
       {isOpen && (
