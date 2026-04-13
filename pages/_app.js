@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
@@ -48,6 +49,38 @@ function App({ Component, pageProps }) {
 
   useEffect(() => {
     getUserdetail();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    let currentBuildId = null;
+
+    const clearCachesAndReload = async () => {
+      if ("caches" in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((key) => caches.delete(key)));
+      }
+      window.location.reload();
+    };
+
+    const checkVersion = async () => {
+      try {
+        const res = await axios.get("/api/version", { params: { t: Date.now() } });
+        const { buildId } = res.data;
+        if (currentBuildId === null) {
+          currentBuildId = buildId;
+        } else if (currentBuildId !== buildId) {
+          await clearCachesAndReload();
+        }
+      } catch {
+        // ignore network errors
+      }
+    };
+
+    checkVersion();
+    const interval = setInterval(checkVersion, 60 * 1000); // poll every 60 seconds
+    return () => clearInterval(interval);
   }, []);
 
   const changeLang = (language) => {
