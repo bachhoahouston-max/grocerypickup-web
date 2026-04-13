@@ -887,10 +887,15 @@ const OrderCard = ({
               )}
             </div>
 
-            {(booking?.status === "Pending" || booking?.status === "Preparing") &&
+          
+          </div>
+        )}
+
+          {(booking?.status === "Pending" || booking?.status === "Preparing") &&
               (booking?.isDriveUp || booking?.isOrderPickup) &&
-              booking?.createdAt &&
-              new Date() - new Date(booking.createdAt) >= 15 * 60 * 1000 && (
+              // booking?.createdAt &&
+              // new Date() - new Date(booking.createdAt) >= 15 * 60 * 1000 &&
+               (
                 <div className=" pt-2">
                   <div className="flex flex-wrap gap-2 justify-end">
                     {booking?.isDriveUp && (
@@ -901,7 +906,7 @@ const OrderCard = ({
                         {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
                       </button>
                     )}
-                    {booking?.isOrderPickup && !booking.SecretCode && (
+                    {booking?.isOrderPickup  && !booking?.SecretCode &&  (
                       <button
                         onClick={() => getSecrectCode(booking._id)}
                         className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
@@ -912,8 +917,6 @@ const OrderCard = ({
                   </div>
                 </div>
               )}
-          </div>
-        )}
 
       <div className="px-4 py-3 bg-white border-b border-gray-200">
         <div className="flex flex-wrap gap-2 justify-end">
