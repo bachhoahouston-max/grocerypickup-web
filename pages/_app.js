@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import axios from "axios";
+import { Api } from "@/services/service";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
@@ -66,8 +66,8 @@ function App({ Component, pageProps }) {
 
     const checkVersion = async () => {
       try {
-        const res = await axios.get("/api/version", { params: { t: Date.now() } });
-        const { buildId } = res.data;
+        const res = await Api("get", "version", null, router);
+        const { buildId } = res;
         if (currentBuildId === null) {
           currentBuildId = buildId;
         } else if (currentBuildId !== buildId) {
