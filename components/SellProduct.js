@@ -223,7 +223,7 @@ const SellProduct = ({ loader, toaster }) => {
             🔥 {t("BHH Weekly Deals")}
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
-          <div className="md:mt-4 mt-2 grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto">
+          <div className={`md:mt-4 mt-2 grid md:grid-cols-6 lg:grid-cols-6 ${saleData.length === 1?'grid-cols-1':'grid-cols-2'} gap-2 mx-auto`}>
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
                 (cartItem) => cartItem.id === item?.product?._id,
@@ -234,7 +234,7 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className=" bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5"
+                  className={`bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5`}
                 >
                   {/* Category Badge */}
                   {/* <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
