@@ -43,6 +43,9 @@ function ShopByCategoryHeader() {
   const { lang } = useContext(languageContext);
 
   const [width, setWidth] = useState(360);
+  console.log(router)
+const queryName = router?.query?.cat_id;
+
   // useEffect(() => {
   //   const handleResize = () => {
   //     console.log("window", window);
@@ -146,17 +149,17 @@ function ShopByCategoryHeader() {
       {/* Mobile Category Row */}
       <div className="md:hidden" style={{ maxWidth: width - 32 }}>
         <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
-          <div className="flex gap-2 w-full min-w-0">
+          <div className="flex gap-3 w-full min-w-0">
 
             {/* New Arrival */}
             <div
-              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
+                className={`${(router?.pathname === '/categories/[cat_id]' &&  queryName === 'all') && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
               onClick={() =>
                 router.push("/categories/all?category=all&sort_by=new")
               }
             >
-              {/* <div className="relative mb-3 hidden">
-                <div className="relative w-16 h-16 rounded-full group-hover:scale-105 transition-all duration-300">
+              <div className="relative  ">
+                <div className="relative w-5 h-5 rounded-full group-hover:scale-105 transition-all duration-300">
                   <Image
                     src="/NewArrival.png"
                     alt="Category"
@@ -164,7 +167,7 @@ function ShopByCategoryHeader() {
                     className="object-contain"
                   />
                 </div>
-              </div> */}
+              </div>
               <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
                 {t("New Arrivals")}
               </p>
@@ -172,13 +175,13 @@ function ShopByCategoryHeader() {
 
             {/* Category Items */}
             {categorys.map((category, index) => (
-              <div
+              <div 
                 key={index}
-                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
+                className={`${(router?.pathname === '/categories/[cat_id]' && category?.slug === queryName) && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
                 onClick={() => router.push(`/categories/${category?.slug}`)}
               >
-                {/* <div className="relative mb-3 hidden">
-                  <div className="relative w-16 h-16 rounded-full shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
+                <div className="relative ">
+                  <div className="relative w-5 h-5 rounded-full shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
                     <Image
                       src={category?.image}
                       alt={category?.name || "Category"}
@@ -186,7 +189,7 @@ function ShopByCategoryHeader() {
                       className="object-cover rounded-full"
                     />
                   </div>
-                </div> */}
+                </div>
 
                 <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
                   {/* {category?.name} */}
