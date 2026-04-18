@@ -85,14 +85,14 @@ function Search(props) {
                 item.startDateTime && item.endDateTime
                   ? SaleProduct
                   : GroceryCatories;
-
+               const url =  item.startDateTime && item.endDateTime ? `/SaleDetails/${item?.product?.slug}` : `/product-details/${item?.slug}`;
               return (
                 <div key={i} className="w-full">
                   <Component
                     {...props}
                     item={item}
                     i={i}
-                    url={`/product-details/${item?.slug}`}
+                    url={url}
                   />
                 </div>
               );
