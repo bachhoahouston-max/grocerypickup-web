@@ -640,7 +640,7 @@ export default function ComboOfferCards(props) {
   };
 
   return (
-    <div className=" p-6">
+    <div className="p-1 md:p-6">
       {/* Section header */}
       {/* <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
