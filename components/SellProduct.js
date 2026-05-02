@@ -7,7 +7,7 @@ import { produce } from "immer";
 import { Api } from "@/services/service";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { useTranslation } from "react-i18next";
-import { Zap } from "lucide-react";
+import { AlarmClock, Zap } from "lucide-react";
 import Link from "next/link";
 
 const SellProduct = ({ loader, toaster }) => {
@@ -234,34 +234,25 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className={`grid bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5 ${(saleData.length % 2 != 0 && saleData.length === i+1)  ?'col-span-2':'col-span-1'}`}
+                  className={`grid bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5 ${(saleData.length % 2 != 0 && saleData.length === i + 1) ? 'col-span-2' : 'col-span-1'}`}
                 >
+                  <div className="absolute top-0 left-0 z-10">
+                    <div className="flex items-center gap-2 bg-[#0F3D2E] text-white px-3 py-2 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
+                      <span className="text-[#F2D27A] text-lg animate-vibrate"><AlarmClock className="text-[#F2D27A]" /></span>
+                      <div className="flex flex-col leading-tight">
+                        <span className="text-[8px] font-bold text-[#F2D27A] uppercase tracking-widest">Flash Deal</span>
+                        <span className="text-[12px] font-bold text-white tracking-wide">
+                          {currentSale?.days}d : {currentSale?.hours}h : {currentSale?.minutes}m
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                   {/* Category Badge */}
                   {/* <div className="absolute top-3 left-3 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
                     {item.product?.categoryName}
                   </div> */}
                   <div className="relative bg-white py-2 rounded-2xl overflow-hidden ">
-                    <div class="flex items-center justify-center absolute top-0 left-0 gap-1 z-10 ">
-                      <button
-                        class="flex items-center gap-2 px-2 py-1 rounded-full 
-                                bg-gradient-to-r from-red-600 to-orange-500 
-                                text-white font-semibold shadow-lg 
-                                hover:scale-105 transition-transform duration-200"
-                      >
-                        <span class="text-xl animate-vibrate">⏰</span>
 
-                        <span class="text-[12px] hidden md:flex">
-                          Ending in
-                        </span>
-
-                        <span class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup ">
-                          {/* 04d 22h 20m 15s */}
-                          {currentSale?.days}d:
-                          {currentSale?.hours}h:
-                          {currentSale?.minutes}m{/* {currentSale?.seconds}s */}
-                        </span>
-                      </button>
-                    </div>
                     <div className="relative">
                       {/* Sale Timer */}
 
@@ -272,7 +263,7 @@ const SellProduct = ({ loader, toaster }) => {
                             alt={item.product?.name || "Product Image"}
                             fill
                             className="object-contain rounded-xl cursor-pointer"
-                            // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
+                          // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                           />
                         </Link>
                       </div>

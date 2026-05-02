@@ -8,7 +8,7 @@ import { IoAddSharp, IoRemoveSharp } from "react-icons/io5";
 import AddToCartButton from "./Addtocartbutton";
 import { produce } from "immer";
 import { FiShoppingCart } from "react-icons/fi";
-import { ArrowBigRight, ArrowRight } from "lucide-react";
+import { AlarmClock, ArrowBigRight, ArrowRight, Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -46,7 +46,7 @@ const useCountdown = (endDateTime) => {
   }, [endDateTime]);
   const pad = (n) => String(n).padStart(2, "0");
   // return `${t.d > 0 ? t.d + "d:" : ""}${pad(t.h)}h:${pad(t.m)}m:${pad(t.s)}s`;
-  return `${t.d > 0 ? t.d + "d:" : ""}${pad(t.h)}h:${pad(t.m)}m`;
+  return `${t.d > 0 ? t.d + "d : " : ""}${pad(t.h)}h : ${pad(t.m)}m`;
 };
 
 // ─── Product Avatar ───────────────────────────────────────────────────────────
@@ -81,20 +81,14 @@ const CountdownBadge = ({ endDateTime }) => {
     //         {time}
     //     </span>
     // </div>
-    <button
-      class="flex items-center gap-2 px-2 py-1 rounded-full 
-                                bg-gradient-to-r from-red-600 to-orange-500 
-                                text-white font-semibold shadow-lg 
-                                hover:scale-105 transition-transform duration-200"
-    >
-      <span class="text-xl animate-vibrate">⏰</span>
-
-      <span class="text-[12px] hidden md:flex">Ending in</span>
-
-      <span class="bg-white text-red-600 font-bold px-3 py-1 rounded-full text-sm animate-popup ">
-        {time}
-      </span>
-    </button>
+    <div className="flex items-center gap-2 bg-[#0F3D2E] text-white px-3 py-2 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
+      {/* <span className="text-[#F2D27A] text-lg animate-vibrate">⏰</span> */}
+      <span className="text-[#F2D27A] text-lg animate-vibrate"><AlarmClock className="text-[#F2D27A]" /></span>
+      <div className="flex flex-col leading-tight">
+        <span className="text-[8px] font-bold text-[#F2D27A] uppercase tracking-widest">Flash Deal</span>
+        <span className="text-[12px] font-bold text-white tracking-wide">{time}</span>
+      </div>
+    </div>
   );
 };
 
@@ -307,8 +301,8 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
           <button
             onClick={handleAdd}
             className={`w-full py-3.5 rounded-2xl font-black text-sm text-white transition-all duration-200 ${added
-                ? "bg-green-700 shadow-lg shadow-green-200"
-                : "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200 active:scale-95"
+              ? "bg-green-700 shadow-lg shadow-green-200"
+              : "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200 active:scale-95"
               }`}
           >
             {added
@@ -334,19 +328,58 @@ const OfferCard = ({
   const savingsPct = Math.round((savings / retail) * 100);
   const router = useRouter();
   const { t } = useTranslation();
+  const [counts, setCounts] = useState({})
 
   const cartItem = cartData.find(
     (cartItem) => cartItem.combo_id === offer?._id,
   );
   const itemQuantity = cartItem ? cartItem.qty : 0;
 
-  return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
-      <div className="relative  px-4 pt-10 pb-2 flex items-center justify-center gap-3 min-h-[160px]">
-        <div className="absolute top-2.5 left-2.5 z-10">
-          <CountdownBadge endDateTime={offer.endDateTime} />
-        </div>
+  useEffect(() => {
+    let intrval = setInterval(() => {
+      calculateTimeLeft()
+    }, 1000);
 
+    return (() => clearInterval(intrval))
+  }, [offer])
+
+  console.log(counts)
+
+  const calculateTimeLeft = () => {
+    const now = new Date().getTime();
+    const endDate = new Date(offer.endDateTime).getTime();
+    const distance = endDate - now;
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    setCounts({ days, hours, minutes, seconds })
+    return { days, hours, minutes, seconds };
+  };
+
+  return (
+    <div className="bg-[#0F3D2E] md:bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
+      <div className="bg-[#0F3D2E] md:bg-white w-full  z-10 p-2 md:hidden flex justify-between items-center rounded-t-2xl ">
+        <div className="flex gap-1 items-center">
+          <Zap className='text-[#F2D27A]' />
+          <p className="text-xs font-bold text-white ">FLASE SALE</p>
+        </div>
+        <div className="bg-[#F2D27A] border-2 border-[#F2D27A] rounded-2xl">
+          <div className="bg-[#F2D27A] border-2 border-[#0F3D2E] text-black px-2 rounded-2xl">
+            <span className="text-xs font-bold flex">
+              {/* <AlarmClock className="text-black text-[10x]" />  */}
+              {counts?.days}d : {counts?.hours}h : {counts?.minutes}m
+            </span>
+          </div>
+        </div>
+        <p className="text-[10px]">Limited time only!</p>
+      </div>
+      <div className="max-w-max md:block hidden">
+        <CountdownBadge endDateTime={offer.endDateTime} />
+      </div>
+      <div className="relative bg-white px-4  pb-2 flex items-center justify-center gap-3 min-h-[120px] rounded-t-2xl">
         <div
           className="group-hover:scale-105 transition-transform duration-200 relative"
           onClick={() => onOpen(offer)}
@@ -378,7 +411,7 @@ const OfferCard = ({
         </div>
       </div>
 
-      <div className="px-4 pt-0 pb-0">
+      <div className="px-4 pt-0 pb-0 bg-white">
         {/* Category label */}
         {/* <p className="text-xs font-bold text-green-700 uppercase tracking-wider mb-1">
                     {offer.main_product.categoryName} Combo
@@ -433,13 +466,13 @@ const OfferCard = ({
               </div>
             </div>
           ) : (
-            <div className="mx-auto">
+            <div className="mx-auto md:mb-0 mb-1">
               <button
                 className=" my-1.5 bg-gradient-to-t to-[#34A853] from-custom-green bg-custom-green text-white font-semibold w-full px-2 py-2 rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors"
                 onClick={() => handleAddToCart(offer)}
               >
                 <IoAddSharp className="text-white w-6 h-6" />
-                {"Add Combo"}
+                {"Add Combo Now"}
               </button>
             </div>
           )}
