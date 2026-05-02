@@ -42,7 +42,7 @@ function MobileFooter() {
   const cartlenth = cartData.reduce((total, item) => total + (item.qty || 0), 0)
 
   return (
-    <div className="bg-custom-green w-full grid grid-cols-4 rounded-t-[30px]">
+    <div className="bg-[#1F6B3A] w-full grid grid-cols-4 rounded-t-[30px]">
       {menuItems.map((item, idx) => {
         const isActive = currentPath === item.path;
 

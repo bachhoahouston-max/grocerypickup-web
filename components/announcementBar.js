@@ -58,7 +58,7 @@ function AnnouncementBar({ announcementBar, setAnnouncementBar, loader, toaster 
         className={`transition-all duration-500 ease-in-out ${announcementBar ? "opacity-100 max-h-12" : "opacity-0 max-h-0 overflow-hidden"
           }`}
       >
-        <div className="w-full py-2 bg-custom-green text-white text-center min-h-12 overflow-hidden">
+        <div className="w-full py-2 bg-[#1F6B3A] text-white text-center min-h-12 overflow-hidden">
           {shipmentCostMessage && (
             <div className="animate-marquee-mobile whitespace-nowrap mt-1">
               <span>{shipmentCostMessage}</span>

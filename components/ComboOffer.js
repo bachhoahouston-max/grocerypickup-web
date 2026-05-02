@@ -81,7 +81,7 @@ const CountdownBadge = ({ endDateTime }) => {
     //         {time}
     //     </span>
     // </div>
-    <div className="flex items-center gap-2 bg-[#0F3D2E] text-white px-3 py-2 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
+    <div className="flex items-center gap-2 bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] text-white px-3 py-1 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
       {/* <span className="text-[#F2D27A] text-lg animate-vibrate">⏰</span> */}
       <span className="text-[#F2D27A] text-lg animate-vibrate"><AlarmClock className="text-[#F2D27A]" /></span>
       <div className="flex flex-col leading-tight">
@@ -360,13 +360,14 @@ const OfferCard = ({
   };
 
   return (
-    <div className="bg-[#0F3D2E] md:bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
-      <div className="bg-[#0F3D2E] md:bg-white w-full  z-10 p-2 md:hidden flex justify-between items-center rounded-t-2xl ">
+    <div className="md:bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
+      <div className="bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] md:bg-white w-full  z-10 p-1 md:hidden flex justify-between items-center rounded-t-2xl ">
         <div className="flex gap-1 items-center">
-          <Zap className='text-[#F2D27A]' />
+          {/* <Zap className='text-[#F2D27A]' /> */}
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#F2D27A" stroke="#F2D27A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap-icon lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></svg>
           <p className="text-xs font-bold text-white ">FLASH SALE</p>
         </div>
-        <div className="bg-[#F2D27A] border-2 border-[#F2D27A] rounded-2xl">
+        <div className="bg-gradient-to-t to-[#F2D27A] from-[#2E7D32] border-2 border-[#F2D27A] rounded-2xl">
           <div className="bg-[#F2D27A] border-2 border-[#0F3D2E] text-black px-2 rounded-2xl">
             <span className="text-xs font-bold flex">
               {/* <AlarmClock className="text-black text-[10x]" />  */}
@@ -436,7 +437,7 @@ const OfferCard = ({
         </div>
 
         {/* Title */}
-        <p className="text-sm font-normal text-gray-800 leading-snug line-clamp-2  md:min-h-[40px] min-h-[20px]">
+        <p className="text-xs font-normal text-gray-800 leading-snug line-clamp-2 text-center md:min-h-[40px] min-h-[20px]">
           {offer.promo_text}
         </p>
 

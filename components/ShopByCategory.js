@@ -23,7 +23,7 @@ const CategoryCard = ({ item, url, router }) => {
             alt={item?.name || "Category"}
             fill
             className="object-cover rounded-full"
-            // sizes="(max-width: 768px) 100px, 120px"
+          // sizes="(max-width: 768px) 100px, 120px"
           />
         </div>
       </div>
@@ -91,7 +91,7 @@ function ShopByCategory() {
               // }
               href="/categories/all?category=all&sort_by=new"
             >
-              <div className="relative mb-3">
+              <div className="relative mb-2">
                 <div className="relative w-28 h-28 md:w-28 md:h-28 rounded-full  group-hover:scale-105 transition-all duration-300">
                   <Image
                     src="/NewArrival.png"
@@ -152,7 +152,7 @@ function ShopByCategory() {
                 router.push("/categories/all?category=all&sort_by=new")
               }
             >
-              <div className="relative mb-3">
+              <div className="relative mb-1">
                 <div className="relative w-16 h-16 rounded-full group-hover:scale-105 transition-all duration-300">
                   <Image
                     src="/NewArrival.png"
@@ -174,7 +174,7 @@ function ShopByCategory() {
                 className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
                 onClick={() => router.push(`/categories/${category?.slug}`)}
               >
-                <div className="relative mb-3">
+                <div className="relative mb-1">
                   <div className="relative w-16 h-16 rounded-full shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
                     <Image
                       src={category?.image}

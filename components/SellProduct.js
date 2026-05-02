@@ -237,7 +237,7 @@ const SellProduct = ({ loader, toaster }) => {
                   className={`grid bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5 ${(saleData.length % 2 != 0 && saleData.length === i + 1) ? 'col-span-2' : 'col-span-1'}`}
                 >
                   <div className="absolute top-0 left-0 z-10">
-                    <div className="flex items-center gap-2 bg-[#0F3D2E] text-white px-3 py-2 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
+                    <div className="flex items-center gap-2 bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] text-white px-3 py-1  text-white px-3 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
                       <span className="text-[#F2D27A] text-lg animate-vibrate"><AlarmClock className="text-[#F2D27A]" /></span>
                       <div className="flex flex-col leading-tight">
                         <span className="text-[8px] font-bold text-[#F2D27A] uppercase tracking-widest">Flash Deal</span>

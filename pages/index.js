@@ -66,7 +66,7 @@ export default function Home(props) {
           <Suspense fallback={<div>Loading.....</div>}>
             <MainHeader />
           </Suspense>
-          <div className="">
+          <div className="mb-2">
             <Suspense fallback={<div>Loading.....</div>}>
               <ShopByCategory loader={props.loader} toaster={props.toaster} />
             </Suspense>
