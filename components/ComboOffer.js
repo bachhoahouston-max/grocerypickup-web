@@ -361,7 +361,7 @@ const OfferCard = ({
 
   return (
     <div className="md:bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
-      <div className="bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] md:bg-white w-full  z-10 p-1 md:hidden flex justify-between items-center rounded-t-2xl ">
+      <div className="bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] md:bg-white w-full  z-10 p-1 md:hidden flex justify-between items-center rounded-t-2xl border-b-2 border-b-[#F2D27A] ">
         <div className="flex gap-1 items-center">
           {/* <Zap className='text-[#F2D27A]' /> */}
           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#F2D27A" stroke="#F2D27A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap-icon lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></svg>
@@ -380,7 +380,7 @@ const OfferCard = ({
       <div className="max-w-max md:block hidden">
         <CountdownBadge endDateTime={offer.endDateTime} />
       </div>
-      <div className="relative bg-white px-4  pb-2 flex items-center justify-center gap-3 min-h-[120px] rounded-t-2xl">
+      <div className="relative bg-white px-4  pb-2 flex items-center justify-center gap-3 min-h-[120px]">
         <div
           className="group-hover:scale-105 transition-transform duration-200 relative"
           onClick={() => onOpen(offer)}
