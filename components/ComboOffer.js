@@ -364,7 +364,7 @@ const OfferCard = ({
       <div className="bg-[#0F3D2E] md:bg-white w-full  z-10 p-2 md:hidden flex justify-between items-center rounded-t-2xl ">
         <div className="flex gap-1 items-center">
           <Zap className='text-[#F2D27A]' />
-          <p className="text-xs font-bold text-white ">FLASE SALE</p>
+          <p className="text-xs font-bold text-white ">FLASH SALE</p>
         </div>
         <div className="bg-[#F2D27A] border-2 border-[#F2D27A] rounded-2xl">
           <div className="bg-[#F2D27A] border-2 border-[#0F3D2E] text-black px-2 rounded-2xl">
@@ -374,7 +374,7 @@ const OfferCard = ({
             </span>
           </div>
         </div>
-        <p className="text-[10px]">Limited time only!</p>
+        <p className="text-[10px] text-white">Limited time only!</p>
       </div>
       <div className="max-w-max md:block hidden">
         <CountdownBadge endDateTime={offer.endDateTime} />
