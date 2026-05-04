@@ -437,7 +437,7 @@ const OfferCard = ({
         </div>
 
         {/* Title */}
-        <p className="text-xs font-normal text-gray-800 leading-snug line-clamp-2 text-center md:min-h-[40px] min-h-[20px]">
+        <p className="text-xs font-semibold text-gray-800 leading-snug line-clamp-2 text-center md:min-h-[40px] min-h-[20px]">
           {offer.promo_text}
         </p>
 
