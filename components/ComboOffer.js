@@ -369,8 +369,9 @@ const OfferCard = ({
         </div>
         <div className="bg-gradient-to-t to-[#F2D27A] from-[#2E7D32] border-2 border-[#F2D27A] rounded-2xl">
           <div className="bg-[#F2D27A] border-2 border-[#0F3D2E] text-black px-2 rounded-2xl">
-            <span className="text-xs font-bold flex">
-              {/* <AlarmClock className="text-black text-[10x]" />  */}
+            <span className="text-xs font-bold flex gap-1">
+              {/* <AlarmClock className="text-black text-[8x]" /> */}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alarm-clock-icon lucide-alarm-clock"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2" /><path d="M5 3 2 6" /><path d="m22 6-3-3" /><path d="M6.38 18.7 4 21" /><path d="M17.64 18.67 20 21" /></svg>
               {counts?.days}d : {counts?.hours}h : {counts?.minutes}m
             </span>
           </div>
@@ -391,7 +392,8 @@ const OfferCard = ({
           </span>
         </div>
         <div className="">
-          <ArrowBigRight size={28} className="text-custom-green font-bold" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#2E7D32" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"><path d="M13.207 19.793a.707.707 0 0 1-1.207-.5V16a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h6a1 1 0 0 0 1-1V4.707a.707.707 0 0 1 1.207-.5l6.94 6.94a1.207 1.207 0 0 1 0 1.707z" /></svg>
+          {/* <ArrowBigRight size={28} className="text-[#2E7D32] font-bold" /> */}
         </div>
         <div className="flex gap-2" onClick={() => onOpen(offer)}>
           {offer.free_product.map((fp, i) => (
@@ -418,7 +420,7 @@ const OfferCard = ({
                     {offer.main_product.categoryName} Combo
                 </p> */}
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-2">
           <div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-xl font-black text-[#E53935]">
@@ -437,7 +439,7 @@ const OfferCard = ({
         </div>
 
         {/* Title */}
-        <p className="text-xs font-semibold text-gray-800 leading-snug line-clamp-2 text-center md:min-h-[40px] min-h-[20px]">
+        <p className="text-xs mt-1 font-semibold text-gray-800 leading-snug line-clamp-2 text-center md:min-h-[40px] min-h-[20px]">
           {offer.promo_text}
         </p>
 
@@ -467,14 +469,19 @@ const OfferCard = ({
               </div>
             </div>
           ) : (
-            <div className="mx-auto md:mb-0 mb-1">
-              <button
-                className=" my-1.5 bg-gradient-to-t to-[#34A853] from-custom-green bg-custom-green text-white font-semibold w-full px-2 py-2 rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors"
-                onClick={() => handleAddToCart(offer)}
-              >
-                <IoAddSharp className="text-white w-6 h-6" />
-                {"Add Combo Now"}
-              </button>
+            <div className="mx-auto md:mb-0 mb-1 w-full flex justify-center">
+              <div className="bg-gradient-to-t to-[#F2D27A] from-[#2E7D32] border-2 border-[#F2D27A] rounded-2xl">
+                <div className="bg-[#F2D27A] border-2 border-white text-black px-2 rounded-2xl">
+                  <button
+                    className="bg-transparent text-black font-semibold rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors"
+                    onClick={() => handleAddToCart(offer)}
+                  >
+                    <IoAddSharp className="text-black w-6 h-6" />
+                    {"Add Combo Now"}
+                  </button>
+
+                </div>
+              </div>
             </div>
           )}
         </div>
