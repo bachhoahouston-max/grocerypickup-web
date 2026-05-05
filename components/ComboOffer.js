@@ -470,17 +470,17 @@ const OfferCard = ({
             </div>
           ) : (
             <div className="mx-auto md:mb-0 mb-1 w-full flex justify-center">
-              <div className="bg-gradient-to-t to-[#F2D27A] from-[#2E7D32] border-2 border-[#F2D27A] rounded-2xl">
-                <div className="bg-[#F2D27A] border-2 border-[#F2D27A] text-black px-2 rounded-2xl">
-                  <button
-                    className="bg-transparent text-black font-semibold rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors"
-                    onClick={() => handleAddToCart(offer)}
-                  >
-                    <IoAddSharp className="text-black w-6 h-6" />
-                    {"Add Combo Now"}
-                  </button>
+              <div className="bg-gradient-to-l from-[#F2D27A] to-[#E6C068] border-2 border-[#F2D27A] rounded-2xl">
+                {/* <div className="bg-[#F2D27A] border-2 border-[#F2D27A] text-black px-2 rounded-2xl"> */}
+                <button
+                  className="px-2 bg-transparent text-[#0F3D2E] font-semibold rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors"
+                  onClick={() => handleAddToCart(offer)}
+                >
+                  <IoAddSharp className="text-[#0F3D2E] w-6 h-6" />
+                  {"Add Combo Now"}
+                </button>
 
-                </div>
+                {/* </div> */}
               </div>
             </div>
           )}
