@@ -360,7 +360,7 @@ const OfferCard = ({
   };
 
   return (
-    <div className="md:bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 overflow-hidden cursor-pointer group">
       <div className="bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] md:bg-white w-full  z-10 p-1 md:hidden flex justify-between items-center rounded-t-2xl border-b-2 border-b-[#F2D27A] ">
         <div className="flex gap-1 items-center">
           {/* <Zap className='text-[#F2D27A]' /> */}
@@ -392,7 +392,7 @@ const OfferCard = ({
           </span>
         </div>
         <div className="">
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#2E7D32" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"><path d="M13.207 19.793a.707.707 0 0 1-1.207-.5V16a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h6a1 1 0 0 0 1-1V4.707a.707.707 0 0 1 1.207-.5l6.94 6.94a1.207 1.207 0 0 1 0 1.707z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#2E7D32" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"><path d="M13.207 19.793a.707.707 0 0 1-1.207-.5V16a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h6a1 1 0 0 0 1-1V4.707a.707.707 0 0 1 1.207-.5l6.94 6.94a1.207 1.207 0 0 1 0 1.707z" /></svg>
           {/* <ArrowBigRight size={28} className="text-[#2E7D32] font-bold" /> */}
         </div>
         <div className="flex gap-2" onClick={() => onOpen(offer)}>
@@ -471,7 +471,7 @@ const OfferCard = ({
           ) : (
             <div className="mx-auto md:mb-0 mb-1 w-full flex justify-center">
               <div className="bg-gradient-to-t to-[#F2D27A] from-[#2E7D32] border-2 border-[#F2D27A] rounded-2xl">
-                <div className="bg-[#F2D27A] border-2 border-white text-black px-2 rounded-2xl">
+                <div className="bg-[#F2D27A] border-2 border-[#F2D27A] text-black px-2 rounded-2xl">
                   <button
                     className="bg-transparent text-black font-semibold rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors"
                     onClick={() => handleAddToCart(offer)}
