@@ -473,7 +473,7 @@ const OfferCard = ({
               {/* <div className="bg-gradient-to-l from-[#F5D97A] to-[#D4A94F] border-2 border-[#F2D27A] rounded-2xl shadow-xl/30 "> */}
               {/* <div className="bg-[#F2D27A] border-2 border-[#F2D27A] text-black px-2 rounded-2xl"> */}
               <button
-                className="px-2 py-0.5 bg-gradient-to-b from-[#F5D97A] from-65% to-[#D4A94F] shadow-xl/30 text-[#1F5D3A] font-semibold rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-[0px_5px_6px_0px_rgba(0,_0,_0,_0.7)]"
+                className="px-2 py-0.5 bg-gradient-to-b from-[#F5D97A] from-65% to-[#F5D97A] shadow-xl/30 text-[#1F5D3A] font-bold rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-[0px_5px_6px_0px_rgba(0,_0,_0,_0.7)]"
                 onClick={() => handleAddToCart(offer)}
               >
                 <IoAddSharp className="text-[#1F5D3A] w-6 h-6" />
