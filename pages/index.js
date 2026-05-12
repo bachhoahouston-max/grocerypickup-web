@@ -27,7 +27,6 @@ export default function Home(props) {
 
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     const token = localStorage.getItem("token");
     if (!token) return;
     fetchFavorite();
@@ -133,15 +132,48 @@ function AllProducts(props) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(true); // ✅ New state
   const observerRef = useRef(null);
+  const restoredRef = useRef(false);
   const dataLimit = 18;
 
   useEffect(() => {
+    const key = "bhh_home_products";
+    const saved = sessionStorage.getItem(key);
+
     async function fetchData() {
       const cat = await Api("get", "getCategory", null, router);
       setCategory(cat.data || []);
-      fetchProducts(1, true);
     }
     fetchData();
+
+    if (saved) {
+      try {
+        const { scrollY, page: savedPage } = JSON.parse(saved);
+        sessionStorage.removeItem(key);
+        restoredRef.current = true;
+
+        // One API call with larger limit to reload all pages at once
+        const bulkLimit = (savedPage || 1) * dataLimit;
+        setLoadingMore(true);
+        Api("get", `getTopSoldProduct?page=1&limit=${bulkLimit}`, null, router).then(
+          (res) => {
+            if (res?.data) {
+              setProductList(res.data);
+              setPage(savedPage || 1);
+              setHasMore(res.data.length >= bulkLimit);
+            }
+            setLoadingMore(false);
+            restoredRef.current = false;
+            setTimeout(() => window.scrollTo(0, scrollY || 0), 500);
+          },
+          () => { setLoadingMore(false); restoredRef.current = false; }
+        );
+      } catch {
+        sessionStorage.removeItem(key);
+        fetchProducts(1, true);
+      }
+    } else {
+      fetchProducts(1, true);
+    }
   }, []);
 
   const fetchProducts = async (pageNum, reset = false) => {
@@ -213,13 +245,26 @@ function AllProducts(props) {
   }, [hasMore, loadingMore]);
 
   useEffect(() => {
-    if (page > 1) {
+    if (page > 1 && !restoredRef.current) {
       if (selectedCategory === "all") {
         fetchProducts(page);
       } else {
         fetchProductsByCategory(selectedCategory, page);
       }
     }
+  }, [page]);
+
+  useEffect(() => {
+    const handleRouteChangeStart = () => {
+      try {
+        sessionStorage.setItem(
+          "bhh_home_products",
+          JSON.stringify({ scrollY: window.scrollY, page })
+        );
+      } catch { /* sessionStorage full */ }
+    };
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    return () => router.events.off("routeChangeStart", handleRouteChangeStart);
   }, [page]);
 
   const handleCategoryClickAll = () => {

@@ -132,6 +132,9 @@ function Payment(props) {
         product_data: {
           name: item.name,
           tax_code: item.tax_code || "txcd_10000000",
+          metadata: {
+            productId: item.id || item._id || "",
+          },
         },
       },
     }));

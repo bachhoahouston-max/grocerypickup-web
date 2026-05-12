@@ -934,7 +934,7 @@ function Cart(props) {
           name: item.name,
           tax_code: item.tax_code || "txcd_10000000",
           metadata: {
-            productId: item._id || "",
+            productId: item.id || item._id || "",
           },
         },
       },

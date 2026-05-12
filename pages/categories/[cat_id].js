@@ -62,6 +62,8 @@ function Categories(props) {
   const [openCategory, setOpenCategory] = useState(false);
   const [open, setOpen] = useState(false);
   const topRef = useRef(null);
+  const restoredFromCacheRef = useRef(false);
+  const isInitialMount = useRef(true);
 
   // Infinite scroll states
   const [isFetching, setIsFetching] = useState(false);
@@ -84,14 +86,50 @@ function Categories(props) {
   };
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-
-  useEffect(() => {
     const { cat_id, sort_by } = router?.query || {};
+    if (!cat_id) return;
     setSelectedCategories(cat_id);
     setSelectedSortBy(sort_by);
+
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      const key = `bhh_cat_scroll_${cat_id}`;
+      const saved = sessionStorage.getItem(key);
+      if (saved) {
+        try {
+          const { scrollY, page: savedPage } = JSON.parse(saved);
+          sessionStorage.removeItem(key);
+          restoredFromCacheRef.current = true;
+          props.loader(true);
+
+          // One API call with a larger limit to reload all pages at once
+          const bulkLimit = (savedPage || 1) * limit;
+          let url = `getProductBycategoryId?page=1&limit=${bulkLimit}&category=${cat_id}`;
+          if (sort_by) url += `&sort_by=${sort_by}`;
+
+          Api("get", url, "", router).then(
+            (res) => {
+              props.loader(false);
+              SetProductList(res.data || []);
+              setCurrentPage(savedPage || 1);
+              const tp = res.pagination?.totalPages || 1;
+              setTotalPages(tp);
+              setHasMore((savedPage || 1) < tp);
+              setTimeout(() => window.scrollTo(0, scrollY || 0), 200);
+            },
+            () => {
+              props.loader(false);
+              window.scrollTo(0, 0);
+            }
+          );
+        } catch {
+          sessionStorage.removeItem(key);
+          window.scrollTo(0, 0);
+        }
+      } else {
+        window.scrollTo(0, 0);
+      }
+    }
   }, [router]);
 
   useEffect(() => {
@@ -99,9 +137,12 @@ function Categories(props) {
   }, []);
 
   useEffect(() => {
-    if (selectedCategories) {
-      resetAndFetchProducts();
+    if (!selectedCategories) return;
+    if (restoredFromCacheRef.current) {
+      restoredFromCacheRef.current = false;
+      return;
     }
+    resetAndFetchProducts();
   }, [selectedCategories, selectedSortBy]);
 
   useEffect(() => {
@@ -114,6 +155,20 @@ function Categories(props) {
     if (!isFetching || !hasMore) return;
     loadMoreProducts();
   }, [isFetching]);
+
+  useEffect(() => {
+    const handleRouteChangeStart = () => {
+      if (!selectedCategories) return;
+      try {
+        sessionStorage.setItem(
+          `bhh_cat_scroll_${selectedCategories}`,
+          JSON.stringify({ scrollY: window.scrollY, page: currentPage })
+        );
+      } catch { /* sessionStorage full */ }
+    };
+    router.events.on("routeChangeStart", handleRouteChangeStart);
+    return () => router.events.off("routeChangeStart", handleRouteChangeStart);
+  }, [selectedCategories, currentPage]);
 
   const resetAndFetchProducts = () => {
     SetProductList([]);
