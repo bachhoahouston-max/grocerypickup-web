@@ -83,10 +83,16 @@ const CountdownBadge = ({ endDateTime }) => {
     // </div>
     <div className="flex items-center gap-2 bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] text-white px-3 py-1 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
       {/* <span className="text-[#F2D27A] text-lg animate-vibrate">⏰</span> */}
-      <span className="text-[#F2D27A] text-lg animate-vibrate"><AlarmClock className="text-[#F2D27A]" /></span>
+      <span className="text-[#F2D27A] text-lg animate-vibrate">
+        <AlarmClock className="text-[#F2D27A]" />
+      </span>
       <div className="flex flex-col leading-tight">
-        <span className="text-[8px] font-bold text-[#F2D27A] uppercase tracking-widest">Flash Deal</span>
-        <span className="text-[12px] font-bold text-white tracking-wide">{time}</span>
+        <span className="text-[8px] font-bold text-[#F2D27A] uppercase tracking-widest">
+          Flash Deal
+        </span>
+        <span className="text-[12px] font-bold text-white tracking-wide">
+          {time}
+        </span>
       </div>
     </div>
   );
@@ -300,10 +306,11 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
         <div className="md:mb-0 mb-12 px-5 py-4 border-t border-gray-100 bg-white flex-shrink-0">
           <button
             onClick={handleAdd}
-            className={`w-full py-3.5 rounded-2xl font-black text-sm text-white transition-all duration-200 ${added
-              ? "bg-green-700 shadow-lg shadow-green-200"
-              : "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200 active:scale-95"
-              }`}
+            className={`w-full py-3.5 rounded-2xl font-black text-sm text-white transition-all duration-200 ${
+              added
+                ? "bg-green-700 shadow-lg shadow-green-200"
+                : "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200 active:scale-95"
+            }`}
           >
             {added
               ? "✓ Added to Cart!"
@@ -328,7 +335,7 @@ const OfferCard = ({
   const savingsPct = Math.round((savings / retail) * 100);
   const router = useRouter();
   const { t } = useTranslation();
-  const [counts, setCounts] = useState({})
+  const [counts, setCounts] = useState({});
 
   const cartItem = cartData.find(
     (cartItem) => cartItem.combo_id === offer?._id,
@@ -337,13 +344,13 @@ const OfferCard = ({
 
   useEffect(() => {
     let intrval = setInterval(() => {
-      calculateTimeLeft()
+      calculateTimeLeft();
     }, 1000);
 
-    return (() => clearInterval(intrval))
-  }, [offer])
+    return () => clearInterval(intrval);
+  }, [offer]);
 
-  console.log(counts)
+  console.log(counts);
 
   const calculateTimeLeft = () => {
     const now = new Date().getTime();
@@ -355,7 +362,7 @@ const OfferCard = ({
     );
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    setCounts({ days, hours, minutes, seconds })
+    setCounts({ days, hours, minutes, seconds });
     return { days, hours, minutes, seconds };
   };
 
@@ -364,14 +371,45 @@ const OfferCard = ({
       <div className="bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] md:bg-white w-full  z-10 p-1 md:hidden flex justify-between items-center rounded-t-2xl border-b-2 border-b-[#F2D27A] ">
         <div className="flex gap-1 items-center">
           {/* <Zap className='text-[#F2D27A]' /> */}
-          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="#F2D27A" stroke="#F2D27A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap-icon lucide-zap"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" /></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="#F2D27A"
+            stroke="#F2D27A"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-zap-icon lucide-zap"
+          >
+            <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
+          </svg>
           <p className="text-xs font-bold text-white ">FLASH SALE</p>
         </div>
         <div className="bg-gradient-to-t to-[#F2D27A] from-[#2E7D32] border-2 border-[#F2D27A] rounded-2xl">
           <div className="bg-[#F2D27A] border-2 border-[#0F3D2E] text-black px-2 rounded-2xl">
             <span className="text-xs font-bold flex gap-1">
               {/* <AlarmClock className="text-black text-[8x]" /> */}
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alarm-clock-icon lucide-alarm-clock"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2 2" /><path d="M5 3 2 6" /><path d="m22 6-3-3" /><path d="M6.38 18.7 4 21" /><path d="M17.64 18.67 20 21" /></svg>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-alarm-clock-icon lucide-alarm-clock"
+              >
+                <circle cx="12" cy="13" r="8" />
+                <path d="M12 9v4l2 2" />
+                <path d="M5 3 2 6" />
+                <path d="m22 6-3-3" />
+                <path d="M6.38 18.7 4 21" />
+                <path d="M17.64 18.67 20 21" />
+              </svg>
               {counts?.days}d : {counts?.hours}h : {counts?.minutes}m
             </span>
           </div>
@@ -392,7 +430,20 @@ const OfferCard = ({
           </span>
         </div>
         <div className="">
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="#2E7D32" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"><path d="M13.207 19.793a.707.707 0 0 1-1.207-.5V16a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h6a1 1 0 0 0 1-1V4.707a.707.707 0 0 1 1.207-.5l6.94 6.94a1.207 1.207 0 0 1 0 1.707z" /></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="36"
+            height="36"
+            viewBox="0 0 24 24"
+            fill="#2E7D32"
+            stroke="#2E7D32"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-arrow-big-right-icon lucide-arrow-big-right"
+          >
+            <path d="M13.207 19.793a.707.707 0 0 1-1.207-.5V16a1 1 0 0 0-1-1H5a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h6a1 1 0 0 0 1-1V4.707a.707.707 0 0 1 1.207-.5l6.94 6.94a1.207 1.207 0 0 1 0 1.707z" />
+          </svg>
           {/* <ArrowBigRight size={28} className="text-[#2E7D32] font-bold" /> */}
         </div>
         <div className="flex gap-2" onClick={() => onOpen(offer)}>
@@ -469,11 +520,11 @@ const OfferCard = ({
               </div>
             </div>
           ) : (
-            <div className="mx-auto md:mb-0 mb-1 w-full flex justify-center">
+            <div className="mx-auto md:mb-4 mb-1 w-full flex justify-center">
               {/* <div className="bg-gradient-to-l from-[#F5D97A] to-[#D4A94F] border-2 border-[#F2D27A] rounded-2xl shadow-xl/30 "> */}
               {/* <div className="bg-[#F2D27A] border-2 border-[#F2D27A] text-black px-2 rounded-2xl"> */}
               <button
-                className="px-2 py-0.5 bg-gradient-to-b from-[#F5D97A] from-65% to-[#F5D97A] shadow-xl/30 text-[#1F5D3A] font-bold rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-[0px_5px_6px_0px_rgba(0,_0,_0,_0.7)]"
+                className="px-2 py-0.5 bg-[#F6E27A]  shadow-xl/30 text-[#1F5D3A] font-bold rounded-2xl text-sm cursor-pointer flex items-center justify-center gap-2 transition-colors shadow-[0px_1px_1px_0px]"
                 onClick={() => handleAddToCart(offer)}
               >
                 <IoAddSharp className="text-[#1F5D3A] w-6 h-6" />

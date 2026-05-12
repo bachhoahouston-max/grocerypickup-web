@@ -889,7 +889,7 @@ function Cart(props) {
       order_platform: "web",
     };
 
-    localStorage.setItem("checkoutData", JSON.stringify(newData));
+    localStorage.setItem("checkoutData", JSON.stringify(newData)); 
     props.loader && props.loader(true);
 
     try {
@@ -1004,6 +1004,7 @@ function Cart(props) {
     };
 
     // props.loader(true);
+  
     try {
       props.loader(true);
       const res = await Api("post", "create-checkout-session", body, router);
