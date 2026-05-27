@@ -217,6 +217,7 @@ const NormalProductRow = ({
 
       {booking?.status === "Completed" && (
         <button
+          type="button"
           className="bg-custom-green text-white px-3 py-1.5 rounded-md text-xs font-medium hover:shadow-md transition-all duration-200"
           onClick={(e) => {
             e.stopPropagation();
@@ -284,6 +285,7 @@ const MainProductRow = ({
       </p>
       {booking?.status === "Completed" && (
         <button
+          type="button"
           className="bg-custom-green text-white px-3 py-1.5 rounded-md text-xs font-medium hover:shadow-md transition-all duration-200"
           onClick={(e) => {
             e.stopPropagation();
@@ -900,6 +902,7 @@ const OrderCard = ({
                   <div className="flex flex-wrap gap-2 justify-end">
                     {booking?.isDriveUp && (
                       <button
+                        type="button"
                         onClick={() => toggleModal(booking._id)}
                         className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
                       >
@@ -908,6 +911,7 @@ const OrderCard = ({
                     )}
                     {booking?.isOrderPickup  && !booking?.SecretCode &&  (
                       <button
+                        type="button"
                         onClick={() => getSecrectCode(booking._id)}
                         className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
                       >
@@ -927,6 +931,7 @@ const OrderCard = ({
           })() && (
               <div className="w-full border-t border-gray-200 pt-4 flex justify-end">
                 <button
+                  type="button"
                   onClick={() => cancelOrder(booking._id)}
                   className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors"
                 >
@@ -941,6 +946,7 @@ const OrderCard = ({
           isWithin24Hours(booking?.updatedAt) && (
             <div className="w-full border-t border-gray-200 pt-4 flex justify-end">
               <button
+                type="button"
                 onClick={() => ReturnOrder(booking._id)}
                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium cursor-pointer rounded-md transition-colors"
               >
@@ -954,8 +960,14 @@ const OrderCard = ({
 
       {/* ── Parking modal ───────────────────────────────────────────────────── */}
       {isOpen && (
-        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+        <div
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-[200] px-4"
+          onClick={onClose}
+        >
+          <div
+            className="bg-white rounded-lg shadow-lg max-w-md w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">
               {t("Parking Information")}
             </h2>
@@ -969,6 +981,8 @@ const OrderCard = ({
                   value={carBrand}
                   onChange={(e) => setCarBrand(e.target.value)}
                   required
+                  enterKeyHint="next"
+                  onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-black"
                   placeholder={t("Enter Car brand")}
                 />
@@ -982,6 +996,8 @@ const OrderCard = ({
                   value={carColor}
                   onChange={(e) => setCarColor(e.target.value)}
                   required
+                  enterKeyHint="next"
+                  onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 text-black"
                   placeholder={t("Enter Car color")}
                 />

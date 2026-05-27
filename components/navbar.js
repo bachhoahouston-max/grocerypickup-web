@@ -887,7 +887,7 @@ const Navbar = (props) => {
           </div>
           <div className="md:hidden flex items-center  bg-gray-50 rounded-full px-4 py-2 border-2 relative">
             <Search size={17} className="text-gray-400" />
-            <form onSubmit={handleSearchSubmit} className="flex-1">
+            <form onSubmit={handleSearchSubmit} className="flex-1" action="javascript:void(0)">
               <input
                 type="text"
                 value={searchData}

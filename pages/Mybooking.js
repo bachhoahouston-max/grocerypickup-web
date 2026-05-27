@@ -20,7 +20,8 @@ function Mybooking(props) {
   const [showReviews, setShowReviews] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [expandedBookingId, setExpandedBookingId] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  // openModalId: null = no modal open, or the _id of the booking whose modal is open
+  const [openModalId, setOpenModalId] = useState(null);
   const [parkingNo, setParkingNo] = useState(1);
   const [carColor, setCarColor] = useState("");
   const [carBrand, setCarBrand] = useState("");
@@ -30,12 +31,16 @@ function Mybooking(props) {
 
   const toggleModal = (id) => {
     setId(id);
-    setIsOpen(!isOpen);
+    setOpenModalId(id); // open only this booking's modal
   };
 
   let secretCode = Math.floor(1000 + Math.random() * 9000);
   const onClose = () => {
-    setIsOpen(false);
+    setOpenModalId(null);
+    // reset form fields when closing
+    setCarBrand("");
+    setCarColor("");
+    setParkingNo(1);
   };
 
   const handleSubmit = (e) => {
@@ -60,8 +65,8 @@ function Mybooking(props) {
             message: "Delivery Details Added Successfully",
           });
           getBookingsByUser();
-          setIsOpen(false);
-          setParkingNo("");
+          setOpenModalId(null);
+          setParkingNo(1);
           setCarBrand("");
           setCarColor("");
         } else {
@@ -175,8 +180,8 @@ function Mybooking(props) {
             message: "Secret Code Send Successfully",
           });
           getBookingsByUser();
-          setIsOpen(false);
-          setParkingNo("");
+          setOpenModalId(null);
+          setParkingNo(1);
         } else {
           props.toaster({
             type: "error",
@@ -290,7 +295,7 @@ function Mybooking(props) {
                 formatDate2={formatDate2}
                 toggleModal={toggleModal}
                 getSecrectCode={getSecrectCode}
-                isOpen={isOpen}
+                isOpen={openModalId === booking._id}
                 carBrand={carBrand}
                 setCarBrand={setCarBrand}
                 carColor={carColor}
