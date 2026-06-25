@@ -401,7 +401,7 @@ function ProductDetails(props) {
         </div>
       )} */}
       <Head>
-        <title>{productsId?.metatitle}</title>
+        <title>{productsId?.metatitle} | Buy Online – Bach Hoa Houston, TX</title>
         <meta name="description" content={productsId?.metadescription} />
         <link
           rel="canonical"
