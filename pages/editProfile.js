@@ -45,6 +45,23 @@ const EditProfile = ({ loader, toaster }) => {
 
     }, []);
 
+    // Scroll for #change-password
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (window.location.hash !== '#change-password') return;
+
+        const scrollToSection = () => {
+            const el = document.getElementById('change-password');
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        };
+
+        // Delay to let the section render after data loads
+        const timer = setTimeout(scrollToSection, 300);
+        return () => clearTimeout(timer);
+    }, []);
+
     const validateField = (name, value) => {
         switch (name) {
             case 'username':
@@ -451,7 +468,7 @@ const EditProfile = ({ loader, toaster }) => {
                         </div>
 
                         {!isEditing && (
-                            <div className="mt-8">
+                            <div id="change-password" className="mt-8 scroll-mt-24">
                                 <h3 className="text-lg font-semibold mb-4 text-black">{t("Change Password")}</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                     <div className="mb-4">
