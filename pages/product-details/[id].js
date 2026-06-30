@@ -1,5 +1,5 @@
 import GroceryCategories from "@/components/GroceryCatories";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
 import { useRouter } from "next/router";
@@ -52,6 +52,22 @@ function ProductDetails(props) {
   const [index, setIndex] = useState(0);
   const [images, setImages] = useState([]);
 
+  const carouselRef = useRef(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  // image selection mode
+  const mediaItems = [
+    ...(selectedImageList || []).map((src) => ({ type: "image", src })),
+    ...(selectedVideoList || []).map((src) => ({ type: "video", src })),
+  ];
+
+  const handleThumbnailClick = (i) => {
+    setActiveSlide(i);
+    if (carouselRef.current) {
+      carouselRef.current.goToSlide(i);
+    }
+  };
+
   useEffect(() => {
     if (props?.notFoundProduct) {
       props?.toaster({
@@ -70,6 +86,7 @@ function ProductDetails(props) {
     setSelectedImageList(props.product.varients?.[0]?.image || []);
     setSelectedVideoList(props.product.varients?.[0]?.video || []);
     setSelectedImage("");
+    setActiveSlide(0);
 
     setProductReviews([...props.product.reviews] || []);
     setProductList(props.relatedProducts || []);
@@ -428,133 +445,182 @@ function ProductDetails(props) {
             <div className="w-full ">
               <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
                 <div className="p-[10px] rounded-[15px]">
-                  <Carousel
-                    className="h-full w-full max-h-[650px]"
-                    responsive={responsive}
-                    autoPlay={false}
-                    infinite={true}
-                    arrows={true}
-                    showDots={true}
-                  >
-                    {selectedImageList?.map((item, i) => (
-                      <div
-                        key={i}
-                        className="bg-transparent w-full md:h-full  relative flex justify-center"
-                      >
-                        <div className="">
-                          <TransformWrapper
-
-                            initialScale={1}
-                            minScale={1}
-                            maxScale={8}
-                            wheel={{ step: 0.1 }}
-                            doubleClick={{ disabled: true }}
+                  <div className="flex md:flex-row flex-col-reverse md:gap-4 gap-3">
+                    {/* Thumbnail strip */}
+                    {mediaItems.length > 1 && (
+                      <div className="flex md:flex-col flex-row md:space-y-3 md:space-x-0 space-x-3 overflow-x-auto md:overflow-y-auto md:max-h-[500px] md:w-[80px] w-full md:pr-1 pb-1">
+                        {mediaItems.map((media, i) => (
+                          <div
+                            key={`thumb-${i}`}
+                            onClick={() => handleThumbnailClick(i)}
+                            className={`flex-shrink-0 cursor-pointer rounded-lg overflow-hidden transition-all duration-200 bg-gray-50 ${
+                              activeSlide === i
+                                ? "ring-2 ring-custom-green"
+                                : "ring-1 ring-gray-200 hover:ring-gray-300"
+                            }`}
                           >
-                            {({ zoomIn, zoomOut, resetTransform }) => (
-                              <>
-                                <TransformComponent>
-                                  <Image
-                                    width={500}
-                                    height={300}
-                                    className="md:h-[500px] w-full object-contain cursor-move"
-                                    src={item}
-                                    objectFit="contain"
-                                    alt={
-                                      productsId?.imageAltName || "Product image"
-                                    }
-                                  />
-                                </TransformComponent>
-                                <div className="absolute bottom-4 right-4 flex gap-2 z-10">
-                                  <button
-                                    onClick={() => zoomIn()}
-                                    className="bg-white p-2 rounded-full shadow-lg text-black"
-                                  >
+                            {media.type === "image" ? (
+                              <img
+                                className="w-16 h-16 md:w-[72px] md:h-[72px] object-cover"
+                                src={media.src}
+                                alt={
+                                  productsId?.imageAltName ||
+                                  "Product thumbnail"
+                                }
+                              />
+                            ) : (
+                              <div className="w-16 h-16 md:w-[72px] md:h-[72px] relative bg-black flex items-center justify-center">
+                                <video
+                                  src={media.src}
+                                  className="w-full h-full object-cover"
+                                  muted
+                                  playsInline
+                                />
+                                <span className="absolute inset-0 flex items-center justify-center">
+                                  <span className="bg-white/80 rounded-full w-6 h-6 flex items-center justify-center">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
-                                      width="16"
-                                      height="16"
+                                      width="12"
+                                      height="12"
                                       viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
+                                      fill="black"
                                     >
-                                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                                      <path d="M8 5v14l11-7z" />
                                     </svg>
-                                  </button>
-                                  <button
-                                    onClick={() => zoomOut()}
-                                    className="bg-white p-2 rounded-full shadow-lg text-black"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    >
-                                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                                    </svg>
-                                  </button>
-                                  <button
-                                    onClick={() => resetTransform()}
-                                    className="bg-white p-2 rounded-full shadow-lg text-black"
-                                  >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 24 24"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      strokeWidth="2"
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                    >
-                                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-                                      <path d="M21 3v5h-5"></path>
-                                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-                                      <path d="M8 16H3v5"></path>
-                                    </svg>
-                                  </button>
-                                </div>
-                              </>
+                                  </span>
+                                </span>
+                              </div>
                             )}
-                          </TransformWrapper>
-                        </div>
-                        {/* <Image
-                          // width={500}
-                          // height={300}
-                          className="md:h-[500px] w-full object-contain cursor-move bg-transparent md:hidden block"
-                          src={item}
-                          fill
-                          alt={
-                            productsId?.imageAltName || "Product image"
-                          }
-                        /> */}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
 
-                    {selectedVideoList?.map((vid, i) => (
-                      <div
-                        key={`video-${i}`}
-                        className="bg-transparent w-full md:h-full relative flex justify-center items-center"
+                    {/* Main swipeable carousel */}
+                    <div className="flex-1 min-w-0">
+                      <Carousel
+                        ref={carouselRef}
+                        className="h-full w-full max-h-[650px]"
+                        responsive={responsive}
+                        autoPlay={false}
+                        infinite={false}
+                        arrows={true}
+                        showDots={true}
+                        afterChange={(previousSlide, { currentSlide }) =>
+                          setActiveSlide(currentSlide)
+                        }
                       >
-                        <video
-                          src={vid}
-                          controls
-                          playsInline
-                          className="md:h-[500px] w-full max-h-[500px] object-contain bg-black rounded-[10px]"
-                        />
-                      </div>
-                    ))}
-                  </Carousel>
+                        {mediaItems.map((media, i) =>
+                          media.type === "image" ? (
+                            <div
+                              key={i}
+                              className="bg-transparent w-full md:h-full  relative flex justify-center"
+                            >
+                              <div className="">
+                                <TransformWrapper
+                                  initialScale={1}
+                                  minScale={1}
+                                  maxScale={8}
+                                  wheel={{ step: 0.1 }}
+                                  doubleClick={{ disabled: true }}
+                                >
+                                  {({ zoomIn, zoomOut, resetTransform }) => (
+                                    <>
+                                      <TransformComponent>
+                                        <Image
+                                          width={500}
+                                          height={300}
+                                          className="md:h-[500px] w-full object-contain cursor-move"
+                                          src={media.src}
+                                          objectFit="contain"
+                                          alt={
+                                            productsId?.imageAltName ||
+                                            "Product image"
+                                          }
+                                        />
+                                      </TransformComponent>
+                                      <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+                                        <button
+                                          onClick={() => zoomIn()}
+                                          className="bg-white p-2 rounded-full shadow-lg text-black"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                          </svg>
+                                        </button>
+                                        <button
+                                          onClick={() => zoomOut()}
+                                          className="bg-white p-2 rounded-full shadow-lg text-black"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                          </svg>
+                                        </button>
+                                        <button
+                                          onClick={() => resetTransform()}
+                                          className="bg-white p-2 rounded-full shadow-lg text-black"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                            <path d="M21 3v5h-5"></path>
+                                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                            <path d="M8 16H3v5"></path>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </>
+                                  )}
+                                </TransformWrapper>
+                              </div>
+                            </div>
+                          ) : (
+                            <div
+                              key={`video-${i}`}
+                              className="bg-transparent w-full md:h-full relative flex justify-center items-center"
+                            >
+                              <video
+                                src={media.src}
+                                controls
+                                playsInline
+                                className="md:h-[500px] w-full max-h-[500px] object-contain bg-black rounded-[10px]"
+                              />
+                            </div>
+                          )
+                        )}
+                      </Carousel>
+                    </div>
+                  </div>
                 </div>
                 <div className="flex justify-start items-start w-full">
                   <div className="flex flex-col justify-start items-start w-full">
