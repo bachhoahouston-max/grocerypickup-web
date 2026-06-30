@@ -35,6 +35,7 @@ function ProductDetails(props) {
   const [productsId, setProductsId] = useState({});
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedImageList, setSelectedImageList] = useState([]);
+  const [selectedVideoList, setSelectedVideoList] = useState([]);
   const [selectedImage, setSelectedImage] = useState("");
   const [productReviews, setProductReviews] = useState([]);
   const [productList, setProductList] = useState([]);
@@ -67,6 +68,7 @@ function ProductDetails(props) {
     setProductsId(props.product);
     setSelectedColor(props.product.varients?.[0] || null);
     setSelectedImageList(props.product.varients?.[0]?.image || []);
+    setSelectedVideoList(props.product.varients?.[0]?.video || []);
     setSelectedImage("");
 
     setProductReviews([...props.product.reviews] || []);
@@ -425,7 +427,7 @@ function ProductDetails(props) {
 
             <div className="w-full ">
               <div className="grid md:grid-cols-2 grid-cols-1 w-full gap-5">
-                <div className="p-[10px] rounded-[15px] md:max-h-[700px] max-h-[500px]">
+                <div className="p-[10px] rounded-[15px]">
                   <Carousel
                     className="h-full w-full max-h-[650px]"
                     responsive={responsive}
@@ -536,6 +538,20 @@ function ProductDetails(props) {
                             productsId?.imageAltName || "Product image"
                           }
                         /> */}
+                      </div>
+                    ))}
+
+                    {selectedVideoList?.map((vid, i) => (
+                      <div
+                        key={`video-${i}`}
+                        className="bg-transparent w-full md:h-full relative flex justify-center items-center"
+                      >
+                        <video
+                          src={vid}
+                          controls
+                          playsInline
+                          className="md:h-[500px] w-full max-h-[500px] object-contain bg-black rounded-[10px]"
+                        />
                       </div>
                     ))}
                   </Carousel>

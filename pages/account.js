@@ -34,7 +34,6 @@ function Account(props) {
     }
   };
 
-  // Account Settings menu items (mobile view)
   const menuItems = [
     {
       key: "orders",
