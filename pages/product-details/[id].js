@@ -361,8 +361,19 @@ function ProductDetails(props) {
       (res) => {
         props.loader(false);
         if (res.status) {
-          if (isFavorite) {
-            props.toaster({ type: "success", message: res.data?.message });
+          const nowFavorite = !productsId?.favourite;
+          props.toaster({ type: "success", message: res.data?.message });
+
+          if (nowFavorite) {
+            setFavorite((prevFavorites) => {
+              const updatedFavorites = [...prevFavorites, productsId];
+              localStorage.setItem(
+                "favorites",
+                JSON.stringify(updatedFavorites)
+              ); // Save to local storage
+              return updatedFavorites;
+            });
+          } else {
             setFavorite((prevFavorites) => {
               const updatedFavorites = prevFavorites.filter(
                 (fav) => fav._id !== productsId._id
@@ -373,17 +384,10 @@ function ProductDetails(props) {
               ); // Save to local storage
               return updatedFavorites;
             });
-          } else {
-            setFavorite((prevFavorites) => {
-              const updatedFavorites = [...prevFavorites, productsId];
-              localStorage.setItem(
-                "favorites",
-                JSON.stringify(updatedFavorites)
-              ); // Save to local storage
-              return updatedFavorites;
-            });
           }
-          getProductById();
+
+          setProductsId((prev) => ({ ...prev, favourite: nowFavorite }));
+          setIsFavorite(nowFavorite);
         } else {
           props.toaster({ type: "error", message: res.data?.message });
         }
