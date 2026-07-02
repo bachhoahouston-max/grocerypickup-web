@@ -87,7 +87,7 @@ const AboutUs = (props) => {
     <>
       <Head>
         <title>About Bachhoahouston – Vietnamese Specialty Food Store</title>
-        <meta name="description" content="Discover Bachhoahouston, your trusted Vietnamese specialty food store offering groceries, home delivery & more. Rooted in culture, built on care" />
+        <meta name="description" content="Learn about Bach Hoa Houston – your trusted Vietnamese & Asian grocery store in Houston, TX. Quality products, community focus, curbside pickup & local delivery." />
         <link
           rel="canonical"
           href="https://www.bachhoahouston.com/AboutUs"

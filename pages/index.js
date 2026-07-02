@@ -53,10 +53,10 @@ export default function Home(props) {
   return (
     <>
       <Head>
-        <title>Shop Everyday Essentials at Bachhoahouston Today</title>
+        <title>Bách Hóa Houston | Vietnamese & Asian Grocery Store in Houston, TX</title>
         <meta
           name="description"
-          content="Bachhoahouston offers top-quality groceries, beauty & more with fast home delivery, curbside pickup & shipping. Shop daily essentials now!"
+          content="Shop authentic Vietnamese & Asian groceries at Bach Hoa Houston, TX. Fresh produce, pantry staples, frozen foods & more. Curbside pickup, same-day delivery & shipping available!"
         />
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>

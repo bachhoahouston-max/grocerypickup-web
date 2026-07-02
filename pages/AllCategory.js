@@ -37,10 +37,10 @@ const Category = (props) => {
   return (
     <>
       <Head>
-        <title>Shop All Categories – Bachhoahouston Retail Store</title>
+        <title>Shop Vietnamese & Asian Groceries | All Categories – Bach Hoa Houston, TX</title>
         <meta
           name="description"
-          content="Explore and shop all categories from groceries to beauty, books, and home goods at Bachhoahouston. Delivery and pickup options available"
+          content="Browse all Vietnamese & Asian grocery categories at Bach Hoa Houston. Shop vegetables, frozen food, snacks, pantry essentials and more online with fast Houston delivery."
         />
         <link
           rel="canonical"
