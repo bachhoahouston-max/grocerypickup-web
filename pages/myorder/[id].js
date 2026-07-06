@@ -302,10 +302,11 @@
 // }
 
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { useRouter } from "next/router";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import moment from "moment";
 import {
   MdLocationOn,
@@ -484,9 +485,26 @@ export default function OrderDetails(props) {
   const [productsId, setProductsId] = useState({});
   const [ordersData, setOrdersData] = useState([]);
   const [selectedImageList, setSelectedImageList] = useState([]);
+  const [selectedVideoList, setSelectedVideoList] = useState([]);
   const { id } = router.query;
   const { lang } = useContext(languageContext);
   const { t } = useTranslation();
+
+  const carouselRef = useRef(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  // image selection mode
+  const mediaItems = [
+    ...(selectedImageList || []).map((src) => ({ type: "image", src })),
+    ...(selectedVideoList || []).map((src) => ({ type: "video", src })),
+  ];
+
+  const handleThumbnailClick = (i) => {
+    setActiveSlide(i);
+    if (carouselRef.current) {
+      carouselRef.current.goToSlide(i);
+    }
+  };
 
   useEffect(() => {
     if (router.isReady && id) {
@@ -513,6 +531,8 @@ export default function OrderDetails(props) {
       );
       setProductsId(d);
       setSelectedImageList(d?.image || []);
+      setSelectedVideoList(d?.video || []);
+      setActiveSlide(0);
     } catch (err) {
       props?.loader(false);
       props?.toaster({ type: "error", message: err?.message });
@@ -593,39 +613,187 @@ export default function OrderDetails(props) {
               {/* Product Image Carousel */}
               <div className="border-b border-gray-100">
                 <div className={`p-4 ${isCombo ? "bg-blue-50/30" : "bg-orange-50/30"}`}>
-                  <Carousel
-                    responsive={responsive}
-                    autoPlay={false}
-                    infinite={true}
-                    arrows={true}
-                    className="product-carousel"
-                  >
-                    {selectedImageList.length > 0 ? (
-                      selectedImageList.map((img, index) => (
-                        <div
-                          key={index}
-                          className="h-60 sm:h-72 md:h-80 lg:h-[22rem] xl:h-[24rem] flex items-center justify-center p-4 relative"
-                        >
-                          <Image
-                            fill
-                            src={img}
-                            alt={`Product image ${index + 1}`}
-                            className="object-contain"
-                            onError={(e) => (e.target.src = "/default-product-image.png")}
-                          />
+                  {mediaItems.length > 0 ? (
+                    <div className="flex md:flex-row flex-col-reverse md:gap-4 gap-3">
+                      {/* Thumbnail strip */}
+                      {mediaItems.length > 1 && (
+                        <div className="flex md:flex-col flex-row md:space-y-3 md:space-x-0 space-x-3 overflow-x-auto md:overflow-y-auto md:max-h-[24rem] md:w-[80px] w-full md:pr-1 pb-1">
+                          {mediaItems.map((media, i) => (
+                            <div
+                              key={`thumb-${i}`}
+                              onClick={() => handleThumbnailClick(i)}
+                              className={`flex-shrink-0 cursor-pointer rounded-lg overflow-hidden transition-all duration-200 bg-gray-50 ${activeSlide === i
+                                  ? "ring-2 ring-custom-green"
+                                  : "ring-1 ring-gray-200 hover:ring-gray-300"
+                                }`}
+                            >
+                              {media.type === "image" ? (
+                                <img
+                                  className="w-16 h-16 md:w-[72px] md:h-[72px] object-cover"
+                                  src={media.src}
+                                  alt="Product thumbnail"
+                                  onError={(e) =>
+                                    (e.target.src = "/default-product-image.png")
+                                  }
+                                />
+                              ) : (
+                                <div className="w-16 h-16 md:w-[72px] md:h-[72px] relative bg-black flex items-center justify-center">
+                                  <video
+                                    src={media.src}
+                                    className="w-full h-full object-cover"
+                                    muted
+                                    playsInline
+                                  />
+                                  <span className="absolute inset-0 flex items-center justify-center">
+                                    <span className="bg-white/80 rounded-full w-6 h-6 flex items-center justify-center">
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="12"
+                                        height="12"
+                                        viewBox="0 0 24 24"
+                                        fill="black"
+                                      >
+                                        <path d="M8 5v14l11-7z" />
+                                      </svg>
+                                    </span>
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          ))}
                         </div>
-                      ))
-                    ) : (
-                      <div className="h-60 sm:h-72 md:h-80 flex items-center justify-center p-4 relative">
-                        <Image
-                          fill
-                          src="/default-product-image.png"
-                          alt="Default product image"
-                          className="object-contain"
-                        />
+                      )}
+
+                      {/* Main swipeable carousel */}
+                      <div className="flex-1 min-w-0">
+                        <Carousel
+                          ref={carouselRef}
+                          responsive={responsive}
+                          autoPlay={false}
+                          infinite={false}
+                          arrows={true}
+                          className="product-carousel"
+                          afterChange={(previousSlide, { currentSlide }) =>
+                            setActiveSlide(currentSlide)
+                          }
+                        >
+                          {mediaItems.map((media, i) =>
+                            media.type === "image" ? (
+                              <div
+                                key={i}
+                                className="h-60 sm:h-72 md:h-80 lg:h-[22rem] xl:h-[24rem] flex items-center justify-center p-4 relative"
+                              >
+                                <TransformWrapper
+                                  initialScale={1}
+                                  minScale={1}
+                                  maxScale={8}
+                                  wheel={{ step: 0.1 }}
+                                  doubleClick={{ disabled: true }}
+                                >
+                                  {({ zoomIn, zoomOut, resetTransform }) => (
+                                    <>
+                                      <TransformComponent>
+                                        <img
+                                          src={media.src}
+                                          alt={`Product image ${i + 1}`}
+                                          className="h-60 sm:h-72 md:h-80 lg:h-[22rem] xl:h-[24rem] w-full object-contain cursor-move"
+                                          onError={(e) =>
+                                          (e.target.src =
+                                            "/default-product-image.png")
+                                          }
+                                        />
+                                      </TransformComponent>
+                                      <div className="absolute bottom-4 right-4 flex gap-2 z-10">
+                                        <button
+                                          onClick={() => zoomIn()}
+                                          className="bg-white p-2 rounded-full shadow-lg text-black"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                          </svg>
+                                        </button>
+                                        <button
+                                          onClick={() => zoomOut()}
+                                          className="bg-white p-2 rounded-full shadow-lg text-black"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                          </svg>
+                                        </button>
+                                        <button
+                                          onClick={() => resetTransform()}
+                                          className="bg-white p-2 rounded-full shadow-lg text-black"
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          >
+                                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                                            <path d="M21 3v5h-5"></path>
+                                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                                            <path d="M8 16H3v5"></path>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </>
+                                  )}
+                                </TransformWrapper>
+                              </div>
+                            ) : (
+                              <div
+                                key={`video-${i}`}
+                                className="h-60 sm:h-72 md:h-80 lg:h-[22rem] xl:h-[24rem] flex items-center justify-center p-4 relative"
+                              >
+                                <video
+                                  src={media.src}
+                                  controls
+                                  playsInline
+                                  className="h-full w-full object-contain bg-black rounded-[10px]"
+                                />
+                              </div>
+                            )
+                          )}
+                        </Carousel>
                       </div>
-                    )}
-                  </Carousel>
+                    </div>
+                  ) : (
+                    <div className="h-60 sm:h-72 md:h-80 flex items-center justify-center p-4 relative">
+                      <Image
+                        fill
+                        src="/default-product-image.png"
+                        alt="Default product image"
+                        className="object-contain"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
