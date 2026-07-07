@@ -152,7 +152,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
         {/* Category Badge */}
         <div className="absolute top-0 left-0 bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full z-10">
-          {item.categoryName}
+          {item?.categoryName}
         </div>
 
         {/* Favorite Button */}
@@ -172,7 +172,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
           {/* <div className="relative w-full h-56 flex items-center justify-center mb-4 z-0"> */}
 
           <Image
-            src={item.varients[0].image[0]}
+            src={item?.varients[0]?.image[0]}
             alt={item?.imageAltName || "Product Image"}
             className="object-contain rounded-xl cursor-pointer"
             // onClick={() => router.push(url)}
