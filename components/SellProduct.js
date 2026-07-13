@@ -314,7 +314,7 @@ const SellProduct = ({ loader, toaster }) => {
                     </span>
                     {item?.price_slot?.our_price && (
                       <span className="text-gray-500 text-sm line-through">
-                        ${item.price_slot?.our_price}
+                        ${item.price_slot?.our_price?.toFixed(2)}
                       </span>
                     )}
                     {item.product?.price_slot?.[0]?.our_price && (
