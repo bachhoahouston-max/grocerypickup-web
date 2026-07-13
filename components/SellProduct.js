@@ -312,9 +312,9 @@ const SellProduct = ({ loader, toaster }) => {
                     <span className="text-[#E53935]  text-[17px] md:text-xl font-bold">
                       ${item.price}
                     </span>
-                    {item?.price_slot?.our_price && (
+                    {item?.price_slot?.our_price > 0 && (
                       <span className="text-gray-500 text-sm line-through">
-                        ${item.price_slot?.our_price?.toFixed(2)}
+                        ${Number(item.price_slot?.our_price)?.toFixed(2)}
                       </span>
                     )}
                     {item.product?.price_slot?.[0]?.our_price && (
