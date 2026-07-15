@@ -234,7 +234,7 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className={`grid bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5 ${(saleData.length % 2 != 0 && saleData.length === i + 1) ? 'col-span-2' : 'col-span-1'}`}
+                  className={`grid bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg ${(saleData.length % 2 != 0 && saleData.length === i + 1) ? 'col-span-2' : 'col-span-1'}`} // p-2.5 
                 >
                   <div className="absolute top-0 left-0 z-10">
                     <div className="flex items-center gap-2 bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] text-white px-3 py-1  text-white px-3 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
@@ -256,13 +256,13 @@ const SellProduct = ({ loader, toaster }) => {
                     <div className="relative">
                       {/* Sale Timer */}
 
-                      <div className="relative w-full h-48 mb-4">
+                      <div className="relative w-full h-48 "> //mb-4
                         <Link href={`/SaleDetails/${item?.product?.slug}`}>
                           <Image
                             src={item.product?.varients[0]?.image[0]}
                             alt={item.product?.name || "Product Image"}
                             fill
-                            className="object-contain rounded-xl cursor-pointer"
+                            className="object-cover rounded-xl cursor-pointer" //object-contain
                           // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                           />
                         </Link>
