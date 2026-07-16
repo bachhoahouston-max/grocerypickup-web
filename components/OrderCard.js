@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { MdFileDownload } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import Barcode from "react-barcode";
+import Invoice from "./Invoice";
+import { useEffect, useState } from "react";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -675,6 +677,56 @@ const OrderCard = ({
 
   const hasCombo = isComboOrder(booking);
 
+  const [productsCount, setProductCount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [productItem, setProductItem] = useState([]);
+  const [cartData, setCartData] = useState({});
+  const [TotalItem, setTotalItem] = useState("0");
+
+  useEffect(() => {
+    setInitialInvoiceData(booking)
+  }, [booking])
+
+  const setInitialInvoiceData = (order) => {
+    setCartData(order);
+    const totalQty = order?.productDetail?.reduce(
+      (sum, item) => sum + (item.qty || 0),
+      0,
+    );
+    setTotalItem(totalQty);
+    let mainTotal = 0
+    let subtotal = 0
+    let qty = 0
+    const data = order?.productDetail?.map((item) => {
+      let total = Number((Number(item?.price) * Number(item?.qty)).toFixed(2))
+      subtotal = Number((Number(subtotal) + Number(total)).toFixed(2))
+      qty = Number(item?.qty) + Number(qty)
+      return ({
+        name: item?.product?.name,
+        combo_id: item?.combo_id,
+        product: item?.product,
+        qty: item?.qty || 1,
+        unit: item?.product?.price_slot[0]?.unit,
+        price: item?.price || 0,
+        tax: item?.tax || 0,
+        total: total?.toFixed(2) || 0,
+        fullfillQty: item?.fullfillQty,
+        shortage: item?.shortage,
+        taxAmount: item?.taxAmount,
+        refundAmount: item?.refundAmount,
+        reason: item?.reason,
+        refund_status: item?.refund_status,
+      })
+    })
+
+    mainTotal = Number(subtotal) + Number(order?.Deliverytip || 0) + Number(order?.extraFees || 0) + Number(order?.serviceFee || 0) + Number(order.totalTax || 0) + Number(order.deliveryfee || 0)
+    mainTotal = Number((mainTotal - Number(order?.discount || 0)).toFixed(2))
+
+    setProductCount(qty)
+    setProductItem(data)
+    setTotalAmount(mainTotal)
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-md border border-gray-200 hover:border-gray-300 transition-all mb-2 p-1">
       {/* ── Header ─────────────────────────────────────────────────────────── */}
@@ -692,10 +744,11 @@ const OrderCard = ({
               </div>
               <div className="flex items-center gap-1">
                 <StatusBadge booking={booking} />
-                <MdFileDownload
+                <Invoice order={cartData} totalAmount={totalAmount} productItem={productItem} productsCount={productsCount} />
+                {/* <MdFileDownload
                   className="text-xl text-black cursor-pointer"
                   onClick={() => GeneratePDF(booking._id, booking.orderId)}
-                />
+                /> */}
                 <button
                   onClick={() => toggleBooking(booking._id)}
                   className="p-1 rounded-full hover:bg-gray-200"
@@ -761,10 +814,12 @@ const OrderCard = ({
             <div className="flex flex-col items-end gap-1">
               <div className="flex items-center gap-2">
                 <StatusBadge booking={booking} />
-                <MdFileDownload
+                <Invoice order={cartData} totalAmount={totalAmount} productItem={productItem} productsCount={productsCount} />
+
+                {/* <MdFileDownload
                   className="text-xl text-black cursor-pointer"
                   onClick={() => GeneratePDF(booking._id, booking.orderId)}
-                />
+                /> */}
                 <button
                   onClick={() => toggleBooking(booking._id)}
                   className="p-1 rounded-full hover:bg-gray-200"
@@ -889,38 +944,38 @@ const OrderCard = ({
               )}
             </div>
 
-          
+
           </div>
         )}
 
-          {(booking?.status === "Pending" || booking?.status === "Preparing") &&
-              (booking?.isDriveUp || booking?.isOrderPickup) &&
-              // booking?.createdAt &&
-              // new Date() - new Date(booking.createdAt) >= 15 * 60 * 1000 &&
-               (
-                <div className=" pt-2">
-                  <div className="flex flex-wrap gap-2 justify-end">
-                    {booking?.isDriveUp && (
-                      <button
-                        type="button"
-                        onClick={() => toggleModal(booking._id)}
-                        className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
-                      >
-                        {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
-                      </button>
-                    )}
-                    {booking?.isOrderPickup  && !booking?.SecretCode &&  (
-                      <button
-                        type="button"
-                        onClick={() => getSecrectCode(booking._id)}
-                        className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
-                      >
-                        {t("I'm here")}
-                      </button>
-                    )}
-                  </div>
-                </div>
+      {(booking?.status === "Pending" || booking?.status === "Preparing") &&
+        (booking?.isDriveUp || booking?.isOrderPickup) &&
+        // booking?.createdAt &&
+        // new Date() - new Date(booking.createdAt) >= 15 * 60 * 1000 &&
+        (
+          <div className=" pt-2">
+            <div className="flex flex-wrap gap-2 justify-end">
+              {booking?.isDriveUp && (
+                <button
+                  type="button"
+                  onClick={() => toggleModal(booking._id)}
+                  className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
+                >
+                  {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
+                </button>
               )}
+              {booking?.isOrderPickup && !booking?.SecretCode && (
+                <button
+                  type="button"
+                  onClick={() => getSecrectCode(booking._id)}
+                  className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
+                >
+                  {t("I'm here")}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
 
       <div className="px-4 py-3 bg-white border-b border-gray-200">
         <div className="flex flex-wrap gap-2 justify-end">

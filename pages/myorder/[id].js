@@ -319,6 +319,7 @@ import { useTranslation } from "react-i18next";
 import { Api } from "@/services/service";
 import { languageContext } from "../_app";
 import Image from "next/image";
+import OrderPaymentSummary from "@/components/OrderPaymentSummary";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const getCombo = (productDetail) =>
@@ -542,6 +543,31 @@ export default function OrderDetails(props) {
   // ── Derived state ──────────────────────────────────────────────────────────
   const combo = getCombo(productsId);
   const isCombo = !!combo;
+
+  // Refund/payment breakdown needs the same shape OrderCard builds for the
+  // invoice (item.total, fullfillQty, shortage, taxAmount, refundAmount,
+  // refund_status) plus the final charged total across the whole order.
+  const productItem = (ordersData?.productDetail || []).map((item) => ({
+    total: (Number(item?.price || 0) * Number(item?.qty || 0)).toFixed(2),
+    fullfillQty: item?.fullfillQty,
+    shortage: item?.shortage,
+    taxAmount: item?.taxAmount,
+    refundAmount: item?.refundAmount,
+    refund_status: item?.refund_status,
+  }));
+
+  const subtotal = productItem.reduce((sum, i) => sum + Number(i.total || 0), 0);
+  const totalAmount = parseFloat(
+    (
+      subtotal +
+      Number(ordersData?.Deliverytip || 0) +
+      Number(ordersData?.extraFees || 0) +
+      Number(ordersData?.serviceFee || 0) +
+      Number(ordersData?.totalTax || 0) +
+      Number(ordersData?.deliveryfee || 0) -
+      Number(ordersData?.discount || 0)
+    ).toFixed(2)
+  );
 
   return (
     <div className="bg-gray-50 min-h-screen py-8">
@@ -797,55 +823,48 @@ export default function OrderDetails(props) {
                 </div>
               </div>
 
-              {/* Product Info */}
-              <div className="p-4 sm:p-6">
-                {/* Name */}
-                <h2 className="hidden md:block text-2xl font-bold text-gray-800 mb-4">
-                  {lang === "en"
-                    ? productsId?.product?.name
-                    : (productsId?.product?.vietnamiesName || productsId?.product?.name)}
-                </h2>
-                <h2 className="block md:hidden text-xl font-bold text-gray-800 mb-4">
-                  {productsId?.product?.name}
-                </h2>
-
-                {/* Price + Qty */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <div className="flex items-center mb-4">
-                      <FaMoneyBillWave className="text-orange-400 mr-3 text-xl flex-shrink-0" />
-                      <div>
-                        <p className="text-gray-500 text-sm">{t("Price")}</p>
-                        <div className="flex items-center gap-2">
-                          <p className={`text-xl font-semibold ${isCombo ? "text-green-700" : "text-gray-600"}`}>
-                            ${parseFloat(productsId?.price || 0).toFixed(2)}
-                          </p>
-                          {/* Show original price strikethrough for combo */}
-                          {isCombo && combo?.main_price_slot?.our_price && (
-                            <p className="text-sm text-gray-400 line-through">
-                              ${parseFloat(combo.main_price_slot.our_price).toFixed(2)}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center mb-4">
-                      <MdProductionQuantityLimits className="text-orange-400 mr-3 text-xl flex-shrink-0" />
-                      <div>
-                        <p className="text-gray-500 text-sm">{t("Quantity")}</p>
-                        <p className="font-bold text-gray-700">{productsId?.qty}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
-          {/* ── Right: Shipping ───────────────────────────────────────────────── */}
-          <div className="md:col-span-2 col-span-1">
-            <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-6">
+          {/* ── Right: Product Info + Shipping ───────────────────────────────── */}
+          <div className="md:col-span-2 col-span-1 space-y-6">
+            {/* Name / Price / Qty */}
+            <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
+                {lang === "en"
+                  ? productsId?.product?.name
+                  : (productsId?.product?.vietnamiesName || productsId?.product?.name)}
+              </h2>
+
+              <div className="flex items-center mb-4">
+                <FaMoneyBillWave className="text-orange-400 mr-3 text-xl flex-shrink-0" />
+                <div>
+                  <p className="text-gray-500 text-sm">{t("Price")}</p>
+                  <div className="flex items-center gap-2">
+                    <p className={`text-xl font-semibold ${isCombo ? "text-green-700" : "text-gray-600"}`}>
+                      ${parseFloat(productsId?.price || 0).toFixed(2)}
+                    </p>
+                    {/* Show original price strikethrough for combo */}
+                    {isCombo && combo?.main_price_slot?.our_price && (
+                      <p className="text-sm text-gray-400 line-through">
+                        ${parseFloat(combo.main_price_slot.our_price).toFixed(2)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center">
+                <MdProductionQuantityLimits className="text-orange-400 mr-3 text-xl flex-shrink-0" />
+                <div>
+                  <p className="text-gray-500 text-sm">{t("Quantity")}</p>
+                  <p className="font-bold text-gray-700">{productsId?.qty}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Shipping Info */}
+            <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
               <h3 className="text-lg font-semibold mb-4 pb-2 border-b border-gray-100 flex items-center text-gray-600">
                 <MdLocalShipping className="text-orange-400 mr-2" />
                 {t("Shipping Information")}
@@ -866,34 +885,13 @@ export default function OrderDetails(props) {
                 <p className="text-gray-500">{t("No shipping address available")}</p>
               )}
             </div>
-
-            {/* ── Order Summary (combo-aware) ─────────────────────────────────── */}
-            <div className="bg-white rounded-xl shadow-md p-4 sm:p-6">
-              <h3 className="text-lg font-semibold mb-4 pb-2 border-b border-gray-100 text-gray-600">
-                {t("Order Summary")}
-              </h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">{t("Subtotal")}</span>
-                  <span className="text-gray-700">${ordersData?.subtotal || "0.00"}</span>
-                </div>
-                {parseFloat(ordersData?.discount || 0) > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">{t("Discount")}</span>
-                    <span className="text-green-600">-${ordersData?.discount}</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-gray-500">{t("Tax")}</span>
-                  <span className="text-gray-700">${ordersData?.totalTax || "0.00"}</span>
-                </div>
-                <div className="border-t border-gray-100 pt-3 flex justify-between font-bold text-base">
-                  <span className="text-gray-700">{t("Total")}</span>
-                  <span className="text-orange-500">${ordersData?.total || "0.00"}</span>
-                </div>
-              </div>
-            </div>
           </div>
+        </div>
+
+        {/* ── Payment Summary — always visible; Refund Summary box joins it
+             only when this order actually had a shortage refund ──────────── */}
+        <div className="mt-6 md:mt-8">
+          <OrderPaymentSummary order={ordersData} productItem={productItem} totalAmount={totalAmount} />
         </div>
       </div>
 

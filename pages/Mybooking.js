@@ -29,6 +29,8 @@ function Mybooking(props) {
   const [Id, setId] = useState("");
   const { lang } = useContext(languageContext);
 
+
+
   const toggleModal = (id) => {
     setId(id);
     setOpenModalId(id); // open only this booking's modal
@@ -42,6 +44,9 @@ function Mybooking(props) {
     setCarColor("");
     setParkingNo(1);
   };
+
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

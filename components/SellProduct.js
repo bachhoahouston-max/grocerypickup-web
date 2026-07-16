@@ -256,13 +256,13 @@ const SellProduct = ({ loader, toaster }) => {
                     <div className="relative">
                       {/* Sale Timer */}
 
-                      <div className="relative w-full h-48 "> //mb-4
+                      <div className="relative w-full h-64 "> //mb-4
                         <Link href={`/SaleDetails/${item?.product?.slug}`}>
                           <Image
                             src={item.product?.varients[0]?.image[0]}
                             alt={item.product?.name || "Product Image"}
                             fill
-                            className="object-cover rounded-xl cursor-pointer" //object-contain
+                            className="object-contain rounded-xl cursor-pointer" //object-contain
                           // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                           />
                         </Link>
@@ -273,7 +273,7 @@ const SellProduct = ({ loader, toaster }) => {
                             {t("Out of Stock")}
                           </button>
                         ) : itemQuantity > 0 ? (
-                          <div className="flex justify-center items-center">
+                          <div className="flex justify-center items-center ">
                             <div className="flex justify-between items-center gap-2 md:w-[200px] w-[150px] bg-gray-100 p-1 rounded-2xl">
                               <div
                                 className="bg-custom-green cursor-pointer rounded-full p-2 flex justify-center items-center"
@@ -308,40 +308,43 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                   </div>
 
-                  <div className="flex items-center md:justify-start justify-start md:gap-3 gap-1 mb-1 md:px-1">
-                    <span className="text-[#E53935]  text-[17px] md:text-xl font-bold">
-                      ${item.price}
-                    </span>
-                    {item?.price_slot?.our_price > 0 && (
-                      <span className="text-gray-500 text-sm line-through">
-                        ${Number(item.price_slot?.our_price)?.toFixed(2)}
+                  <div className="px-2 pb-2">
+
+                    <div className="flex items-center md:justify-start justify-start md:gap-3 gap-1 mb-1 md:px-1">
+                      <span className="text-[#E53935]  text-[17px] md:text-xl font-bold">
+                        ${item.price}
                       </span>
-                    )}
-                    {item.product?.price_slot?.[0]?.our_price && (
-                      <span className=" bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded font-bold">
-                        {/* {Math.round(
+                      {item?.price_slot?.our_price > 0 && (
+                        <span className="text-gray-500 text-sm line-through">
+                          ${Number(item.price_slot?.our_price)?.toFixed(2)}
+                        </span>
+                      )}
+                      {item.product?.price_slot?.[0]?.our_price && (
+                        <span className=" bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded font-bold">
+                          {/* {Math.round(
                           ((item.price_slot?.our_price - item.price) /
                             item.price_slot?.our_price) *
                           100
                         )}
                         % OFF */}
-                        Save $
-                        {(item.price_slot?.our_price - item.price).toFixed(2)}
-                      </span>
+                          Save $
+                          {(item.price_slot?.our_price - item.price).toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                    {item.product?.Quantity < 5 && (
+                      <p className="text-red-600 font-bold text-[12px]">
+                        Only {item.product?.Quantity} left in stock
+                      </p>
                     )}
-                  </div>
-                  {item.product?.Quantity < 5 && (
-                    <p className="text-red-600 font-bold text-[12px]">
-                      Only {item.product?.Quantity} left in stock
-                    </p>
-                  )}
 
-                  <div className="flex md:justify-start md:items-center md:px-1">
-                    <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 ">
-                      {lang === "en"
-                        ? item.product?.name
-                        : item.product?.vietnamiesName || item.product?.name}
-                    </h3>
+                    <div className="flex md:justify-start md:items-center md:px-1">
+                      <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 ">
+                        {lang === "en"
+                          ? item.product?.name
+                          : item.product?.vietnamiesName || item.product?.name}
+                      </h3>
+                    </div>
                   </div>
 
                   {/* Price Section */}
