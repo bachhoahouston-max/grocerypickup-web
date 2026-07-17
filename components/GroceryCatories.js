@@ -180,7 +180,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </Link> */}
 
         <div className="relative w-full md:h-68 h-48"> //mb-4
-          <Link href={`/SaleDetails/${item?.product?.slug}`}>
+          <Link href={url}>
             <Image
               src={item?.varients[0]?.image[0]}
               alt={item.imageAltName || "Product Image"}
