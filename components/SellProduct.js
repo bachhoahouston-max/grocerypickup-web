@@ -262,7 +262,7 @@ const SellProduct = ({ loader, toaster }) => {
                             src={item.product?.varients[0]?.image[0]}
                             alt={item.product?.name || "Product Image"}
                             fill
-                            className="object-contain rounded-xl cursor-pointer" //object-contain
+                            className="object-cover rounded-xl cursor-pointer" //object-contain
                           // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                           />
                         </Link>
@@ -308,7 +308,7 @@ const SellProduct = ({ loader, toaster }) => {
                     </div>
                   </div>
 
-                  <div className="px-2 pb-2">
+                  <div className="px-1 pb-1">
 
                     <div className="flex items-center md:justify-start justify-start md:gap-3 gap-1 mb-1 md:px-1">
                       <span className="text-[#E53935]  text-[17px] md:text-xl font-bold">
