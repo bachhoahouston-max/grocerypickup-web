@@ -223,7 +223,7 @@ const SellProduct = ({ loader, toaster }) => {
             🔥 {t("BHH Weekly Deals")}
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
-          <div className={`md:mt-4 mt-2 grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto`}>
+          <div className={`md:mt-4 mt-2 grid md:grid-cols-6 lg:grid-cols-5 grid-cols-2 gap-2 mx-auto`}>
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
                 (cartItem) => cartItem.id === item?.product?._id,
@@ -234,7 +234,7 @@ const SellProduct = ({ loader, toaster }) => {
               return (
                 <div
                   key={i}
-                  className={`grid bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg ${(saleData.length % 2 != 0 && saleData.length === i + 1) ? 'col-span-2' : 'col-span-1'}`} // p-2.5 
+                  className={`grid bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-sm hover:shadow-md ${(saleData.length % 2 != 0 && saleData.length === i + 1) ? 'col-span-2' : 'col-span-1'}`} // p-2.5 
                 >
                   <div className="absolute top-0 left-0 z-10">
                     <div className="flex items-center gap-2 bg-gradient-to-r to-[#2E7D32] from-[#0F3D2E] text-white px-3 py-1  text-white px-3 rounded-br-4xl rounded-tl-2xl rounded-tr-md -rounded-bl-md shadow-lg border-b-3 border-r-3 border-[#F2D27A]">
@@ -256,7 +256,7 @@ const SellProduct = ({ loader, toaster }) => {
                     <div className="relative">
                       {/* Sale Timer */}
 
-                      <div className="relative w-full h-64 "> //mb-4
+                      <div className="relative w-full md:h-68 h-48"> //mb-4
                         <Link href={`/SaleDetails/${item?.product?.slug}`}>
                           <Image
                             src={item.product?.varients[0]?.image[0]}

@@ -134,7 +134,7 @@ const BestSeller = (props) => {
             </div>
 
 
-            <div className="grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto w-full">
+            <div className="grid md:grid-cols-5 lg:grid-cols-5 grid-cols-2 gap-2 mx-auto w-full">
                 {productList.length > 0 ? (
                     productList.map((item, i) => (
                         <GroceryCatories

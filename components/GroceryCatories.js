@@ -145,7 +145,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
     <div
       key={i}
-      className=" bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-lg  p-2.5"
+      className=" bg-white w-full rounded-[12px] transition-all duration-300 relative shadow-sm "
     >
       <div className="relative bg-white  py-2 rounded-2xl overflow-hidden">
 
@@ -168,23 +168,28 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
         {/* Product Image */}
-        <Link href={url} className="relative w-full h-48 flex items-center justify-center mb-4 z-0 " scroll={true}>
-          {/* <div className="relative w-full h-56 flex items-center justify-center mb-4 z-0"> */}
-
+        {/* <Link href={url} className="relative w-full h-48 flex items-center justify-center z-0 " scroll={true}>
           <Image
             src={item?.varients[0]?.image[0]}
             alt={item?.imageAltName || "Product Image"}
-            className="object-contain rounded-xl cursor-pointer"
-            // onClick={() => router.push(url)}
+            className="object-cover rounded-xl cursor-pointer"
             fill
-            // width={160}
-            // height={160}
-            // objectFit="contain"
             priority
           />
 
-          {/* </div> */}
-        </Link>
+        </Link> */}
+
+        <div className="relative w-full w-60 md:h-68 h-48"> //mb-4
+          <Link href={`/SaleDetails/${item?.product?.slug}`}>
+            <Image
+              src={item?.varients[0]?.image[0]}
+              alt={item.imageAltName || "Product Image"}
+              fill
+              className="object-cover rounded-xl cursor-pointer" //object-contain
+            // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
+            />
+          </Link>
+        </div>
 
         {/* Product Name */}
 
@@ -282,32 +287,33 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
       </div>
-
-      {/* Price and Add to Cart */}
-      <div className="md:flex justify-between items-center gap-3 ml-1">
-        {/* Price */}
-        <div className="flex flex-col">
-          <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
-            {constant.currency}{" "}
-            {Number(item?.price_slot[0]?.our_price || 0).toFixed(2)}
-          </p>
-          {item?.price_slot[0]?.other_price && (
-            <del className="text-custom-green text-sm font-medium">
+      <div className="px-1 pb-1">
+        {/* Price and Add to Cart */}
+        <div className="md:flex justify-between items-center gap-3 ml-1">
+          {/* Price */}
+          <div className="flex flex-col">
+            <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
               {constant.currency}{" "}
-              {Number(item?.price_slot[0]?.other_price || 0).toFixed(2)}
-            </del>
-          )}
+              {Number(item?.price_slot[0]?.our_price || 0).toFixed(2)}
+            </p>
+            {item?.price_slot[0]?.other_price && (
+              <del className="text-custom-green text-sm font-medium">
+                {constant.currency}{" "}
+                {Number(item?.price_slot[0]?.other_price || 0).toFixed(2)}
+              </del>
+            )}
+          </div>
+
+          {/* Add to Cart / Quantity Controls */}
+
         </div>
 
-        {/* Add to Cart / Quantity Controls */}
+
+        <h3 className="text-black md:text-md text-sm font-medium min-h-[40px] line-clamp-2 px-2">
+          {lang === "en" ? item.name : item.vietnamiesName || item.name}
+        </h3>
 
       </div>
-
-      <h3 className="text-black md:text-md text-sm font-medium min-h-[40px] line-clamp-2 px-2">
-        {lang === "en" ? item.name : item.vietnamiesName || item.name}
-      </h3>
-
-
     </div>
   );
 };

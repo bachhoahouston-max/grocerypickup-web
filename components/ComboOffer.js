@@ -306,11 +306,10 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
         <div className="md:mb-0 mb-12 px-5 py-4 border-t border-gray-100 bg-white flex-shrink-0">
           <button
             onClick={handleAdd}
-            className={`w-full py-3.5 rounded-2xl font-black text-sm text-white transition-all duration-200 ${
-              added
+            className={`w-full py-3.5 rounded-2xl font-black text-sm text-white transition-all duration-200 ${added
                 ? "bg-green-700 shadow-lg shadow-green-200"
                 : "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200 active:scale-95"
-            }`}
+              }`}
           >
             {added
               ? "✓ Added to Cart!"
@@ -754,7 +753,7 @@ export default function ComboOfferCards(props) {
       </div> */}
 
       {/* Cards grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
         {offers.map((offer) => (
           <OfferCard
             key={offer._id}
