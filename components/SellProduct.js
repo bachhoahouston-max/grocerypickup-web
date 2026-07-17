@@ -223,7 +223,7 @@ const SellProduct = ({ loader, toaster }) => {
             🔥 {t("BHH Weekly Deals")}
             <Zap className="text-custom-green" fill="#2e7d32" />
           </p>
-          <div className={`md:mt-4 mt-2 grid md:grid-cols-6 lg:grid-cols-5 grid-cols-2 gap-2 mx-auto`}>
+          <div className={`md:mt-4 mt-2 grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto`}>
             {saleData.map((item, i) => {
               const cartItem = cartData.find(
                 (cartItem) => cartItem.id === item?.product?._id,

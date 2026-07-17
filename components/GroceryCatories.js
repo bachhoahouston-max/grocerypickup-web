@@ -179,7 +179,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
         </Link> */}
 
-        <div className="relative w-full w-60 md:h-68 h-48"> //mb-4
+        <div className="relative w-full md:h-68 h-48"> //mb-4
           <Link href={`/SaleDetails/${item?.product?.slug}`}>
             <Image
               src={item?.varients[0]?.image[0]}
