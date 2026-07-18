@@ -262,7 +262,7 @@ const SellProduct = ({ loader, toaster }) => {
                             src={item.product?.varients[0]?.image[0]}
                             alt={item.product?.name || "Product Image"}
                             fill
-                            className="object-contain rounded-xl cursor-pointer" //object-contain
+                            className="md:object-contain object-cover rounded-xl cursor-pointer" //object-contain
                           // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                           />
                         </Link>
