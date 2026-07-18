@@ -346,7 +346,7 @@ function AllProducts(props) {
       {/* <div className="md:hidden sticky top-0 z-40 bg-white px-2 py-2 shadow-sm">
         <CategoryDropdown />
       </div> */}
-      <div className="md:flex justify-between  md:mt-5 hidden">
+      <div className="md:flex justify-between hidden">
         <h1 className=" text-[20px] md:text-2xl font-bold pt-5 text-[#2E7D32]">
           ⭐ {t("BHH Picks")}
         </h1>

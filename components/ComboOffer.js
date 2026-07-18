@@ -307,8 +307,8 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
           <button
             onClick={handleAdd}
             className={`w-full py-3.5 rounded-2xl font-black text-sm text-white transition-all duration-200 ${added
-                ? "bg-green-700 shadow-lg shadow-green-200"
-                : "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200 active:scale-95"
+              ? "bg-green-700 shadow-lg shadow-green-200"
+              : "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200 active:scale-95"
               }`}
           >
             {added
@@ -418,12 +418,12 @@ const OfferCard = ({
       <div className="max-w-max md:block hidden">
         <CountdownBadge endDateTime={offer.endDateTime} />
       </div>
-      <div className="relative bg-white px-4  pb-2 flex items-center justify-center gap-3 min-h-[120px]">
+      <div className="relative bg-white pb-2 flex items-center justify-center gap-1 min-h-[120px]">
         <div
           className="group-hover:scale-105 transition-transform duration-200 relative"
           onClick={() => onOpen(offer)}
         >
-          <ProductAvatar product={offer.main_product} className="w-32 h-32 " />
+          <ProductAvatar product={offer.main_product} className="w-52 h-52 " />
           <span className="bg-[#F6E27A] absolute -bottom-3 left-1/4 text-[#1F6B3A] text-base font-black px-2.5 py-0.5 rounded-full shadow">
             BUY
           </span>
@@ -455,7 +455,7 @@ const OfferCard = ({
                 className="flex flex-col items-center gap-1.5 flex-shrink-0 absolute "
                 onClick={() => onOpen(offer)}
               ></div>
-              <ProductAvatar product={fp.product} className="w-32 h-32" />
+              <ProductAvatar product={fp.product} className="w-52 h-52" />
               <span className="bg-green-700 absolute -bottom-3 left-1/4 text-white text-base font-black px-2.5 py-0.5 rounded-full shadow">
                 FREE
               </span>

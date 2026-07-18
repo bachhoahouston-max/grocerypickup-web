@@ -124,7 +124,7 @@ const NewArrival = (props) => {
     return (
         <div className="flex flex-col relative w-full">
 
-            <div className="flex justify-between w-full md:mt-10 mt-2">
+            <div className="flex justify-between w-full mt-4">
                 <h1 className="text-[20px] md:text-2xl font-bold mb-4  text-[#2E7D32]">
                     {/* {t("New Arrivals")} */}
                     ✨ {t('Fresh in Today')}

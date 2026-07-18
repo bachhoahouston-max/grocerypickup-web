@@ -217,7 +217,7 @@ const SellProduct = ({ loader, toaster }) => {
   return (
     <>
       {saleData.length > 0 && (
-        <div className="  md:mt-10 lg:mt-8 mb-4 bg-transparent md:px-0 px-2 ">
+        <div className="mb-4 bg-transparent md:px-0 px-2 ">
           <p className="text-[#2E7D32] md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
             {/* {t("Offer of the Week")} */}
             🔥 {t("BHH Weekly Deals")}
