@@ -6,6 +6,7 @@ import { IoIosArrowBack, IoIosClose } from "react-icons/io";
 import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
 import { Api } from "@/services/service";
+import { clearSyncedCart } from "@/services/cartSync";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
 import { FaRegCalendarAlt } from "react-icons/fa";
@@ -620,6 +621,9 @@ function Cart(props) {
     localStorage.removeItem("addCartDetail");
     setSearchTerm("");
     getProfileData();
+    if (user?._id && user?.token) {
+      clearSyncedCart(router).catch(() => {});
+    }
   };
 
   const cartClose = (item, i) => {
@@ -1085,6 +1089,14 @@ function Cart(props) {
           localStorage.removeItem("addCartDetail");
           localStorage.removeItem("checkoutData");
           setCartData([]);
+          // Clear the synced cart immediately rather than waiting on the
+          // generic debounced sync — Stripe's redirect back to this page is
+          // a full reload, so a pending debounce here can get cancelled
+          // before it fires, leaving the pre-order cart on the server to
+          // reappear on the next load.
+          if (user?._id && user?.token) {
+            clearSyncedCart(router).catch(() => {});
+          }
           setSuccessPopup(true);
         }
       } catch (error) {

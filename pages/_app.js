@@ -1,5 +1,6 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import { Api } from "@/services/service";
+import { getSyncedCart, saveSyncedCart } from "@/services/cartSync";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
@@ -29,6 +30,111 @@ function App({ Component, pageProps }) {
 
   // ✅ useTranslation ek hi baar call karo
   const { t, i18n } = useTranslation();
+
+  // ── Cross-platform cart sync (separate from the local-cart logic above) ──
+  // Tracks which account this device has already merged its local cart into.
+  // Persisted in localStorage (not just a ref) so a plain page reload/Stripe
+  // redirect — which remounts this component — is still recognized as "the
+  // same session" and just pulls the server's cart instead of re-merging
+  // with whatever happens to be in localStorage at that instant.
+  const getSyncedUserId = () =>
+    typeof window === "undefined" ? null : localStorage.getItem("cartSyncUserId");
+  const setSyncedUserId = (id) => {
+    if (typeof window === "undefined") return;
+    if (id) localStorage.setItem("cartSyncUserId", id);
+    else localStorage.removeItem("cartSyncUserId");
+  };
+  // Blocks the "push on change" effect from firing for cart updates that
+  // came FROM the server (pull/merge), so we don't immediately echo them back.
+  const cartHydrated = useRef(false);
+  const cartPushTimer = useRef(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const userId = user?._id;
+    if (!userId || !user?.token) {
+      setSyncedUserId(null);
+      cartHydrated.current = true;
+      return;
+    }
+
+    let cancelled = false;
+
+    const syncCartOnLogin = async () => {
+      try {
+        const res = await getSyncedCart(router);
+        if (cancelled) return;
+
+        const serverItems = res?.data?.items || [];
+        const isNewSessionForUser = getSyncedUserId() !== userId;
+        let finalItems = serverItems;
+
+        if (isNewSessionForUser) {
+          // Merge this device's local/guest cart into the account's synced
+          // cart on login, instead of discarding either side. Web items key
+          // on `id`, app items key on `productid` — fall back across both
+          // so a cart merged from the app still dedupes correctly.
+          const keyOf = (item) => item.id || item.productid;
+          const byId = new Map();
+          serverItems.forEach((item) => {
+            console.log("serverItems", item);
+
+            let nwtdata = { ...item };
+            if (nwtdata.productSource === "SALE") {
+              nwtdata.regularPrice = nwtdata.price
+              nwtdata.price = nwtdata.offer;
+              nwtdata.total = (nwtdata.price * nwtdata.qty).toFixed(2);
+
+            }
+            console.log("keys", nwtdata);
+            byId.set(keyOf(item), nwtdata)
+          }
+          );
+          cartData.forEach((item) => {
+            if (!byId.has(keyOf(item))) byId.set(keyOf(item), item);
+          });
+          finalItems = Array.from(byId.values());
+        }
+
+        cartHydrated.current = false;
+        setCartData(finalItems);
+        localStorage.setItem("addCartDetail", JSON.stringify(finalItems));
+        setSyncedUserId(userId);
+
+        if (isNewSessionForUser) {
+          await saveSyncedCart(finalItems, router);
+        }
+      } catch {
+        // Offline or sync failure — keep using the local cart as-is.
+      } finally {
+        cartHydrated.current = true;
+      }
+    };
+
+    syncCartOnLogin();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?._id, user?.token]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!user?._id || !user?.token) return;
+    if (!cartHydrated.current) return;
+
+    clearTimeout(cartPushTimer.current);
+    cartPushTimer.current = setTimeout(() => {
+      saveSyncedCart(cartData, router).catch(() => {
+        // Offline or sync failure — local cart already has the change,
+        // it'll be pushed again on the next cart edit.
+      });
+    }, 800);
+
+    return () => clearTimeout(cartPushTimer.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartData]);
 
   // ✅ getUserdetail with window guard
   const getUserdetail = () => {
