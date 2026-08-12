@@ -43,81 +43,123 @@ export default function AddressForm({
 
           {/* Form */}
           <div className="flex flex-wrap gap-3">
-            <input
-              type="text"
-              name="name"
-              placeholder={t("First Name")}
-              value={profileData.name || ""}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 text-sm w-full md:w-[48%] text-black"
-            />
-
-            <input
-              type="text"
-              name="lastname"
-              placeholder={t("Last Name")}
-              value={profileData.lastname || ""}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 text-sm w-full md:w-[48%] text-black"
-            />
-
-            <input
-              type="email"
-              name="email"
-              placeholder={t("Email")}
-              value={profileData.email || ""}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 text-sm w-full md:w-[48%] text-black"
-            />
-
-            <input
-              type="text"
-              name="phoneNumber"
-              placeholder={t("Phone Number")}
-              value={profileData.phoneNumber || ""}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 text-sm w-full md:w-[48%] text-black"
-            />
-            {optionType === "localDelivery" && (
-              <select
-                name="zipcode"
-                value={profileData.zipcode || ""}
+            <div className="w-full md:w-[48%]">
+              <label className="block text-sm font-bold text-gray-800 mb-1">
+                {t("First Name")}
+              </label>
+              <input
+                type="text"
+                name="name"
+                placeholder={t("First Name")}
+                value={profileData.name || ""}
                 onChange={handleInputChange}
-                className="border rounded-lg py-2 px-3 text-sm w-full md:w-[420px] text-black"
-              >
-                <option value="">{t("Select Zipcode")}</option>
-                {pincodes.map((z, idx) => (
-                  <option key={idx} value={z.pincode}>
-                    {z.pincode}
-                  </option>
-                ))}
-              </select>
+                className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+              />
+            </div>
+
+            <div className="w-full md:w-[48%]">
+              <label className="block text-sm font-bold text-gray-800 mb-1">
+                {t("Last Name")}
+              </label>
+              <input
+                type="text"
+                name="lastname"
+                placeholder={t("Last Name")}
+                value={profileData.lastname || ""}
+                onChange={handleInputChange}
+                className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+              />
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm font-bold text-gray-800 mb-1">
+                {t("Email")}
+              </label>
+              <input
+                type="email"
+                name="email"
+                placeholder={t("Email")}
+                value={profileData.email || ""}
+                onChange={handleInputChange}
+                className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+              />
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm font-bold text-gray-800 mb-1">
+                {t("Phone Number")}
+              </label>
+              <input
+                type="text"
+                name="phoneNumber"
+                placeholder={t("Phone Number")}
+                value={profileData.phoneNumber || ""}
+                onChange={handleInputChange}
+                className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+              />
+            </div>
+
+            {optionType === "localDelivery" && (
+              <div className="w-full">
+                <label className="block text-sm font-bold text-gray-800 mb-1">
+                  {t("ZIP Code")}
+                </label>
+                <select
+                  name="zipcode"
+                  value={profileData.zipcode || ""}
+                  onChange={handleInputChange}
+                  className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+                >
+                  <option value="">{t("Select Zipcode")}</option>
+                  {pincodes.map((z, idx) => (
+                    <option key={idx} value={z.pincode}>
+                      {z.pincode}
+                    </option>
+                  ))}
+                </select>
+              </div>
             )}
-            <AddressInput
-              setProfileData={setProfileData}
-              profileData={profileData}
-              value={profileData.address}
-              className="border rounded-lg py-2 px-3 text-sm w-[310px] md:w-[610px] text-black"
-              required
-            />
 
-            <input
-              type="text"
-              name="ApartmentNo"
-              placeholder={t("Apartment #")}
-              value={profileData.ApartmentNo || ""}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 text-sm w-full md:w-[48%] text-black"
-            />
+            <div className="w-full">
+              <label className="block text-sm font-bold text-gray-800 mb-1">
+                {t("Street Address")}
+              </label>
+              <AddressInput
+                setProfileData={setProfileData}
+                profileData={profileData}
+                value={profileData.address}
+                className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+                required
+              />
+            </div>
 
-            <input
-              type="text"
-              name="SecurityGateCode"
-              placeholder={t("Security Gate Code")}
-              value={profileData.SecurityGateCode || ""}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 text-sm w-full md:w-[48%] text-black"
-            />
+            <div className="w-full">
+              <label className="block text-sm font-bold text-gray-800 mb-1">
+                {t("Apartment / Suite (Optional)")}
+              </label>
+              <input
+                type="text"
+                name="ApartmentNo"
+                placeholder={t("Apartment #")}
+                value={profileData.ApartmentNo || ""}
+                onChange={handleInputChange}
+                className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+              />
+            </div>
+
+            <div className="w-full">
+              <label className="block text-sm font-bold text-gray-800 mb-1">
+                {t("Security Gate Code (Optional)")}
+              </label>
+              <input
+                type="text"
+                name="SecurityGateCode"
+                placeholder={t("Security Gate Code")}
+                value={profileData.SecurityGateCode || ""}
+                onChange={handleInputChange}
+                className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+              />
+            </div>
 
             <label className="flex items-center gap-2 mt-1 w-full">
               <input
@@ -136,14 +178,19 @@ export default function AddressForm({
               </span>
             </label>
 
-            <input
-              type="text"
-              name="BusinessAddress"
-              placeholder={t("Enter Company Name")}
-              value={profileData.BusinessAddress || ""}
-              onChange={handleInputChange}
-              className="border rounded-lg py-2 px-3 text-sm w-full text-black"
-            />
+            <div className="w-full">
+              <label className="block text-sm font-bold text-gray-800 mb-1">
+                {t("Company Name")}
+              </label>
+              <input
+                type="text"
+                name="BusinessAddress"
+                placeholder={t("Enter Company Name")}
+                value={profileData.BusinessAddress || ""}
+                onChange={handleInputChange}
+                className="border rounded-lg py-2 px-3 text-sm w-full text-black"
+              />
+            </div>
           </div>
 
           {/* Submit Button */}
