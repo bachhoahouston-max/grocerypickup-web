@@ -128,7 +128,7 @@ function ProductDetails(props) {
       const cartItem = cartData.find(
         (f) =>
           f._id === productsId?._id &&
-          f.price_slot?.our_price === selectedPrice?.our_price
+          f.priceSlotIndex === priceIndex
       );
 
       if (cartItem) {
@@ -154,6 +154,14 @@ function ProductDetails(props) {
       return;
     }
 
+    if (productsId?.vendor?.type === "restaurant" && productsId?.vendor?.isOpen === false) {
+      props.toaster({
+        type: "error",
+        message: `${productsId?.vendor?.name || "This restaurant"} is currently closed. Ordering is unavailable right now.`,
+      });
+      return;
+    }
+
     if (productsId.Quantity <= 0) {
       props.toaster({
         type: "error",
@@ -166,7 +174,7 @@ function ProductDetails(props) {
     const existingItem = cartData.find(
       (f) =>
         f._id === productsId._id &&
-        f.price_slot?.our_price === selectedPrice.our_price
+        f.priceSlotIndex === priceIndex
     );
 
     const price = parseFloat(selectedPrice?.our_price);
@@ -191,6 +199,7 @@ function ProductDetails(props) {
         our_price: Number(ourPrice || 0),
         price: selectedPrice?.our_price || 0,
         price_slot: selectedPrice || {},
+        priceSlotIndex: priceIndex,
         productSource: "NORMAL",
         percentageDifference: Number(percentageDifference || 0).toFixed(2),
       };
@@ -233,7 +242,7 @@ function ProductDetails(props) {
       let existingItem = draft.find(
         (item) =>
           item._id === productsId._id &&
-          item.price_slot.value === selectedPrice.value
+          item.priceSlotIndex === priceIndex
       );
 
       if (!existingItem) {
@@ -266,7 +275,7 @@ function ProductDetails(props) {
       const existingItem = draft.find(
         (item) =>
           item._id === productsId._id &&
-          item.price_slot.value === selectedPrice.value
+          item.priceSlotIndex === priceIndex
       );
 
       if (existingItem) {
@@ -706,7 +715,21 @@ function ProductDetails(props) {
                         })}
                     </div>
 
-                    {isInCart ? (
+                    {productsId?.vendor?.type === "restaurant" && productsId?.vendor?.isOpen === false ? (
+                      <>
+                        <button
+                          disabled
+                          className="bg-gray-300 px-4 py-2 rounded-[8px] text-gray-600 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed"
+                        >
+                          {t("Store Closed")}
+                        </button>
+                        <p className="text-orange-700 text-sm font-medium mt-2">
+                          {t("{{name}} is currently closed. Ordering is unavailable right now.", {
+                            name: productsId?.vendor?.name || "This restaurant",
+                          })}
+                        </p>
+                      </>
+                    ) : isInCart ? (
                       <>
                         <div className="p-1 flex justify-between mt-7 md:mt-20 w-[250px] bg-gray-100 rounded-2xl">
                           <div

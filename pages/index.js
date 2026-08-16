@@ -17,6 +17,7 @@ import { Loader2 } from "lucide-react";
 import NewArrival from "@/components/NewArrival";
 import { usePathname } from "next/navigation";
 import ComboOfferCards from "@/components/ComboOffer";
+import VendorClosedBanner from "@/components/VendorClosedBanner";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -355,6 +356,8 @@ function AllProducts(props) {
         </div>
       </div>
 
+
+      <VendorClosedBanner products={productList} />
 
       <div className="grid md:grid-cols-6 lg:grid-cols-6 grid-cols-2 gap-2 mx-auto w-full">
         {productList.length > 0 ? (

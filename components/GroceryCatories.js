@@ -48,6 +48,14 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
   };
 
   const handleAddToCart = async () => {
+    if (item?.vendor?.type === "restaurant" && item?.vendor?.isOpen === false) {
+      toaster({
+        type: "error",
+        message: `${item?.vendor?.name || "This restaurant"} is currently closed. Ordering is unavailable right now.`,
+      });
+      return;
+    }
+
     const itemQuantity = await handleQuantity(item);
 
     // const itemQuantity = Number(item?.Quantity ?? 0);
@@ -61,7 +69,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       return;
     }
 
-    const existingItem = cartData.find((f) => f._id === item?._id);
+    const existingItem = cartData.find((f) => f._id === item?._id && (f.priceSlotIndex ?? 0) === 0);
 
     if (existingItem) {
       toaster({ type: "info", message: "Item already in cart." });
@@ -78,6 +86,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
       price: item.price_slot?.[0]?.our_price ?? 0,
       total: Number(item.price_slot?.[0]?.our_price ?? 0),
       price_slot: item.price_slot?.[0] || {},
+      priceSlotIndex: 0,
       tax: item?.tax,
       productSource: "NORMAL",
     };
@@ -136,9 +145,10 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
     }
   }, []);
 
-  const cartItem = cartData.find((cartItem) => cartItem._id === item._id);
+  const cartItem = cartData.find((cartItem) => cartItem._id === item._id && (cartItem.priceSlotIndex ?? 0) === 0);
   const itemQuantity = cartItem ? cartItem.qty : 0;
 
+  const isVendorClosed = item?.vendor?.type === "restaurant" && item?.vendor?.isOpen === false;
 
   return (
     // className="bg-transparent w-full rounded-[12px] shadow-lg hover:shadow-xl transition-all duration-300 md:p-4 p-2.5 relative"
@@ -189,12 +199,25 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
             // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
             />
           </Link>
+          {isVendorClosed && (
+            <div className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center z-10">
+              <span className="bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+                {t("STORE CLOSED")}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Product Name */}
 
         <div className="absolute bottom-0 right-0">
-          {item?.Quantity <= 0 ? (
+          {isVendorClosed ? (
+            <div className="rounded-full flex items-center justify-end">
+              <span className="bg-gray-300 text-gray-600 font-semibold px-4 py-2 rounded-full text-sm">
+                {t("Unavailable")}
+              </span>
+            </div>
+          ) : item?.Quantity <= 0 ? (
             <div className=" rounded-full flex items-center justify-end  ">
               <button
                 className="  bg-gray-400 text-white font-semibold px-4 py-2 rounded-full text-sm cursor-not-allowed flex items-center gap-2"
@@ -209,7 +232,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                 className="bg-custom-green  cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
                 onClick={() => {
                   const updatedCart = cartData.map((cartItem) => {
-                    if (cartItem._id === item._id) {
+                    if (cartItem._id === item._id && (cartItem.priceSlotIndex ?? 0) === 0) {
                       if (cartItem.qty > 1) {
                         const newQty = cartItem.qty - 1;
                         return {
@@ -241,7 +264,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
               <div
                 className="bg-custom-green cursor-pointer rounded-full w-7 h-7 flex justify-center items-center transition-colors"
                 onClick={async () => {
-                  const existingCartItem = cartData.find((cartItem) => cartItem._id === item._id);
+                  const existingCartItem = cartData.find((cartItem) => cartItem._id === item._id && (cartItem.priceSlotIndex ?? 0) === 0);
                   if (existingCartItem) {
                     const availableQuantity = await handleQuantity(item);
                     if (existingCartItem.qty + 1 > availableQuantity) {
@@ -253,7 +276,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
                       return
                     }
                     cartData.forEach(async (cartItem) => {
-                      if (cartItem._id === item._id) {
+                      if (cartItem._id === item._id && (cartItem.priceSlotIndex ?? 0) === 0) {
                         cartItem.qty = cartItem.qty + 1;
                         cartItem.total = (
                           (cartItem.price || 0) *
@@ -292,11 +315,15 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         <div className="md:flex justify-between items-center gap-3 ml-1">
           {/* Price */}
           <div className="flex flex-col">
-            <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
-              {constant.currency}{" "}
-              {Number(item?.price_slot[0]?.our_price || 0).toFixed(2)}
-            </p>
-            {item?.price_slot[0]?.other_price && (
+            {isVendorClosed ? (
+              <p className="text-gray-400 md:text-xl text-[17px] font-bold">{t("Unavailable")}</p>
+            ) : (
+              <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
+                {constant.currency}{" "}
+                {Number(item?.price_slot[0]?.our_price || 0).toFixed(2)}
+              </p>
+            )}
+            {!isVendorClosed && item?.price_slot[0]?.other_price && (
               <del className="text-custom-green text-sm font-medium">
                 {constant.currency}{" "}
                 {Number(item?.price_slot[0]?.other_price || 0).toFixed(2)}

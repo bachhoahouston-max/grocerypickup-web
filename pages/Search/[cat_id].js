@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { SearchX } from "lucide-react";
 import SaleProduct from "@/components/SaleProduct";
+import VendorClosedBanner from "@/components/VendorClosedBanner";
 
 function Search(props) {
   const router = useRouter();
@@ -79,6 +80,7 @@ function Search(props) {
           <p className="text-black font-bold text-[20px] md:text-[24px] mb-5 md:mt-0 mt-2">
             {t("Search Result")}{" "}
           </p>
+          <VendorClosedBanner products={productList} />
           <div className="grid sm:grid-cols-3 lg:grid-cols-5 grid-cols-2 w-full md:gap-2 gap-2">
             {productList.map((item, i) => {
               const Component =

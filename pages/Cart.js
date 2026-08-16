@@ -112,10 +112,13 @@ function Cart(props) {
       const source = item?.productSource || "NORMAL";
 
       const mainId = item?.product?._id || item?._id;
+      const currentPrice = item?.price || item?.our_price || 0;
 
       let obj = {
         productSource: source,
         productId: mainId,
+        price: currentPrice,
+        priceSlotIndex: item.priceSlotIndex
       };
 
       if (source === "COMBO" && item?.free_product?.length > 0) {
@@ -133,15 +136,18 @@ function Cart(props) {
   };
 
   const updateCartWithLatestData = (cartData, latestData) => {
+    console.log("Latest Data:", latestData);
+    console.log("Cart Data:", cartData);
+    // return cartData
     const updatedCart = cartData.map((item) => {
       const match = latestData.find(
-        (p) => String(p.productId) === String(item?.id || item?.product?._id),
+        (p) => String(p.productId) === String(item?.id || item?.product?._id) && item.priceSlotIndex === p.priceSlotIndex
       );
-
+      console.log("Match Found:", match);
       if (!match) return item;
 
       let updatedItem = { ...item };
-
+      console.log("Match Found1:", match);
       if (item.productSource === "Sale") {
         if (item.price !== match.price) {
           props.toaster({
@@ -161,15 +167,17 @@ function Cart(props) {
           message: "Combo offer expired. Free items removed.",
         });
       }
+      if (item.price !== match.price) {
+        updatedItem.price = match.price;
+        updatedItem.our_price = match.price;
+        updatedItem.total = match.price * (item.qty || 1);
 
-      updatedItem.price = match.price;
-      updatedItem.total = match.price * (item.qty || 1);
-
-      updatedItem.productSource = match.productSource;
-
+        updatedItem.productSource = match.productSource;
+      }
       return updatedItem;
     });
-
+    console.log("Updated Cart:", updatedCart);
+    console.log("Original Cart:", cartData);
     return updatedCart;
   };
 
@@ -193,6 +201,7 @@ function Cart(props) {
       props.loader(false);
 
       const latestData = res.data || [];
+      console.log("Latest Data from API:", latestData);
       const updatedCart = updateCartWithLatestData(cartData, latestData);
 
       const isChanged =
@@ -216,6 +225,7 @@ function Cart(props) {
       return true;
     } catch (err) {
       props.loader(false);
+      console.log(err)
       props.toaster({ type: "error", message: err?.message });
       return false;
     }
@@ -622,7 +632,7 @@ function Cart(props) {
     setSearchTerm("");
     getProfileData();
     if (user?._id && user?.token) {
-      clearSyncedCart(router).catch(() => {});
+      clearSyncedCart(router).catch(() => { });
     }
   };
 
@@ -893,7 +903,7 @@ function Cart(props) {
       order_platform: "web",
     };
 
-    localStorage.setItem("checkoutData", JSON.stringify(newData)); 
+    localStorage.setItem("checkoutData", JSON.stringify(newData));
     props.loader && props.loader(true);
 
     try {
@@ -1008,7 +1018,7 @@ function Cart(props) {
     };
 
     // props.loader(true);
-  
+
     try {
       props.loader(true);
       const res = await Api("post", "create-checkout-session", body, router);
@@ -1095,7 +1105,7 @@ function Cart(props) {
           // before it fires, leaving the pre-order cart on the server to
           // reappear on the next load.
           if (user?._id && user?.token) {
-            clearSyncedCart(router).catch(() => {});
+            clearSyncedCart(router).catch(() => { });
           }
           setSuccessPopup(true);
         }
