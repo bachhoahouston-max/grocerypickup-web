@@ -35,6 +35,14 @@ const SaleProduct = ({ item, i, url, loader, toaster }) => {
   };
 
   const handleAddToCart = async (item) => {
+    if (item?.product?.vendor?.type === "restaurant" && item?.product?.vendor?.isOpen === false) {
+      toaster({
+        type: "error",
+        message: `${item?.product?.vendor?.name || "This restaurant"} is currently closed. Ordering is unavailable right now.`,
+      });
+      return;
+    }
+
     const availableQuantity = await handleQuantity(item?.product);
 
     if (availableQuantity <= 0) {
@@ -219,6 +227,8 @@ const SaleProduct = ({ item, i, url, loader, toaster }) => {
   );
   const itemQuantity = cartItem ? cartItem.qty : 0;
   const currentSale = countdown[item._id];
+  const isVendorClosed =
+    item?.product?.vendor?.type === "restaurant" && item?.product?.vendor?.isOpen === false;
   return (
     <>
       <div
@@ -258,9 +268,22 @@ const SaleProduct = ({ item, i, url, loader, toaster }) => {
                   // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                 />
               </Link>
+              {isVendorClosed && (
+                <div className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center z-10">
+                  <span className="bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full whitespace-nowrap text-center">
+                    {t("Ordering Window Closed")}
+                  </span>
+                </div>
+              )}
             </div>
             <div className="absolute bottom-0 right-0">
-              {item?.product?.Quantity <= 0 ? (
+              {isVendorClosed ? (
+                <div className="rounded-full flex items-center justify-end">
+                  <span className="bg-gray-300 text-gray-600 font-semibold px-4 py-2 rounded-full text-sm">
+                    {t("Unavailable")}
+                  </span>
+                </div>
+              ) : item?.product?.Quantity <= 0 ? (
                 <button className="w-full py-2 bg-gray-400 text-white font-semibold rounded-full cursor-not-allowed">
                   {t("Out of Stock")}
                 </button>
@@ -300,28 +323,30 @@ const SaleProduct = ({ item, i, url, loader, toaster }) => {
           </div>
         </div>
 
-        <div className="flex items-center md:justify-start justify-start md:gap-3 gap-1 mb-1 md:px-1">
-          <span className="text-[#E53935]  text-[17px] md:text-xl font-bold">
-            ${item.price}
-          </span>
-          {item?.price_slot?.our_price && (
-            <span className="text-gray-500 text-sm line-through">
-              ${item.price_slot?.our_price}
+        {!isVendorClosed && (
+          <div className="flex items-center md:justify-start justify-start md:gap-3 gap-1 mb-1 md:px-1">
+            <span className="text-[#E53935]  text-[17px] md:text-xl font-bold">
+              ${item.price}
             </span>
-          )}
-          {item.product?.price_slot?.[0]?.our_price && (
-            <span className=" bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded font-bold">
-              {/* {Math.round(
+            {item?.price_slot?.our_price && (
+              <span className="text-gray-500 text-sm line-through">
+                ${item.price_slot?.our_price}
+              </span>
+            )}
+            {item.product?.price_slot?.[0]?.our_price && (
+              <span className=" bg-red-100 text-red-600 text-[12px] px-1 py-1 rounded font-bold">
+                {/* {Math.round(
                           ((item.price_slot?.our_price - item.price) /
                             item.price_slot?.our_price) *
                           100
                         )}
                         % OFF */}
-              Save ${(item.price_slot?.our_price - item.price).toFixed(2)}
-            </span>
-          )}
-        </div>
-        {item.product?.Quantity < 5 && (
+                Save ${(item.price_slot?.our_price - item.price).toFixed(2)}
+              </span>
+            )}
+          </div>
+        )}
+        {!isVendorClosed && item.product?.Quantity < 5 && (
           <p className="text-red-600 font-bold text-[12px]">
             Only {item.product?.Quantity} left in stock
           </p>

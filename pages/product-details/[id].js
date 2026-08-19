@@ -144,6 +144,9 @@ function ProductDetails(props) {
     }
   }, [cartData, productsId, selectedPrice]);
 
+  const isVendorClosed =
+    productsId?.vendor?.type === "restaurant" && productsId?.vendor?.isOpen === false;
+
   const handleAddToCart = () => {
     if (!productsId || !productsId._id || !selectedPrice?.our_price) {
       console.error(
@@ -154,7 +157,7 @@ function ProductDetails(props) {
       return;
     }
 
-    if (productsId?.vendor?.type === "restaurant" && productsId?.vendor?.isOpen === false) {
+    if (isVendorClosed) {
       props.toaster({
         type: "error",
         message: `${productsId?.vendor?.name || "This restaurant"} is currently closed. Ordering is unavailable right now.`,
@@ -657,7 +660,22 @@ function ProductDetails(props) {
                       </div>
                     </div>
 
-                    <div className="pt-7 md:pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
+                    {isVendorClosed && (
+                      <div className="mt-7 md:mt-10 w-full md:w-[400px] bg-orange-50 border border-orange-200 rounded-[10px] px-4 py-3">
+                        <p className="text-orange-800 text-sm font-semibold">
+                          {t("{{name}} is currently closed", { name: productsId?.vendor?.name || "This restaurant" })}
+                        </p>
+                        <p className="text-orange-700 text-xs mt-0.5">
+                          {t("Ordering is unavailable right now")}
+                        </p>
+                      </div>
+                    )}
+
+                    <div
+                      className={`pt-7 md:pt-20 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5 ${
+                        isVendorClosed ? "hidden" : ""
+                      }`}
+                    >
                       {priceSlot &&
                         priceSlot.map((data, i) => {
                           const otherprice = parseFloat(data?.other_price);
@@ -715,21 +733,7 @@ function ProductDetails(props) {
                         })}
                     </div>
 
-                    {productsId?.vendor?.type === "restaurant" && productsId?.vendor?.isOpen === false ? (
-                      <>
-                        <button
-                          disabled
-                          className="bg-gray-300 px-4 py-2 rounded-[8px] text-gray-600 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed"
-                        >
-                          {t("Ordering Window Closed")}
-                        </button>
-                        <p className="text-orange-700 text-sm font-medium mt-2">
-                          {t("{{name}} is currently closed. Ordering is unavailable right now.", {
-                            name: productsId?.vendor?.name || "This restaurant",
-                          })}
-                        </p>
-                      </>
-                    ) : isInCart ? (
+                    {isVendorClosed ? null : isInCart ? (
                       <>
                         <div className="p-1 flex justify-between mt-7 md:mt-20 w-[250px] bg-gray-100 rounded-2xl">
                           <div

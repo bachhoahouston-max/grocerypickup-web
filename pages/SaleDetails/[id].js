@@ -143,6 +143,9 @@ function ProductDetails(props) {
     };
   }, [saleEndTime, isSaleActive]);
 
+  const isVendorClosed =
+    productsId?.vendor?.type === "restaurant" && productsId?.vendor?.isOpen === false;
+
   const handleAddToCart = () => {
     if (!productsId || !productsId._id || !selectedPrice?.our_price) {
       console.error(
@@ -150,6 +153,14 @@ function ProductDetails(props) {
         productsId,
         selectedPrice
       );
+      return;
+    }
+
+    if (isVendorClosed) {
+      props.toaster({
+        type: "error",
+        message: `${productsId?.vendor?.name || "This restaurant"} is currently closed. Ordering is unavailable right now.`,
+      });
       return;
     }
 
@@ -680,7 +691,22 @@ function ProductDetails(props) {
                     </div>
                   </div>
 
-                  <div className="md:pt-20 pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5">
+                  {isVendorClosed && (
+                    <div className="mt-7 md:mt-10 w-full md:w-[400px] bg-orange-50 border border-orange-200 rounded-[10px] px-4 py-3">
+                      <p className="text-orange-800 text-sm font-semibold">
+                        {t("{{name}} is currently closed", { name: productsId?.vendor?.name || "This restaurant" })}
+                      </p>
+                      <p className="text-orange-700 text-xs mt-0.5">
+                        {t("Ordering is unavailable right now")}
+                      </p>
+                    </div>
+                  )}
+
+                  <div
+                    className={`md:pt-20 pt-5 w-full md:w-[400px] grid md:grid-cols-3 grid-cols-2 gap-5 ${
+                      isVendorClosed ? "hidden" : ""
+                    }`}
+                  >
                     {prizeSlot && (
                       <div>
                         <div
@@ -732,7 +758,7 @@ function ProductDetails(props) {
                   </div>
 
                   <div className="md:pt-16 pt-5">
-                    {isInCart ? (
+                    {isVendorClosed ? null : isInCart ? (
                       <>
                         <div className="p-1 flex justify-between w-[250px] bg-gray-100 rounded-2xl">
                           <div

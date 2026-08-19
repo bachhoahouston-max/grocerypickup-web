@@ -315,9 +315,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         <div className="md:flex justify-between items-center gap-3 ml-1">
           {/* Price */}
           <div className="flex flex-col">
-            {isVendorClosed ? (
-              <p className="text-gray-400 md:text-xl text-[17px] font-bold">{t("Unavailable")}</p>
-            ) : (
+            {!isVendorClosed && (
               <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
                 {constant.currency}{" "}
                 {Number(item?.price_slot[0]?.our_price || 0).toFixed(2)}
