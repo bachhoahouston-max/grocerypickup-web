@@ -8,7 +8,6 @@ import FormControl from "@mui/material/FormControl";
 import { FaCircleChevronDown } from "react-icons/fa6";
 import { FaCircleChevronUp } from "react-icons/fa6";
 import GroceryCatories from "@/components/GroceryCatories";
-import VendorClosedBanner from "@/components/VendorClosedBanner";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { IoFilterSharp } from "react-icons/io5";
 import Drawer from "@mui/material/Drawer";
@@ -389,7 +388,6 @@ function Categories(props) {
             </div>
 
             <div className="md:mt-0 mt-2">
-              <VendorClosedBanner products={productList} />
               <div className="grid lg:grid-cols-5 xl:grid-cols-6 md:grid-cols-6 grid-cols-2 mb-6 space-x-2 justify-between">
                 {productList.length > 0 ? (
                   productList.map((item, i) => (
