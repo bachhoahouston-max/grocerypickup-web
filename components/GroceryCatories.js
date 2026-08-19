@@ -201,8 +201,8 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
           </Link>
           {isVendorClosed && (
             <div className="absolute inset-0 bg-black/40 rounded-xl flex items-center justify-center z-10">
-              <span className="bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-                {t("STORE CLOSED")}
+              <span className="bg-red-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full whitespace-nowrap text-center">
+                {t("Ordering Window Closed")}
               </span>
             </div>
           )}

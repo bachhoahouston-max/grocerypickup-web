@@ -721,7 +721,7 @@ function ProductDetails(props) {
                           disabled
                           className="bg-gray-300 px-4 py-2 rounded-[8px] text-gray-600 font-semibold text-md md:mt-5 mt-4 cursor-not-allowed"
                         >
-                          {t("Store Closed")}
+                          {t("Ordering Window Closed")}
                         </button>
                         <p className="text-orange-700 text-sm font-medium mt-2">
                           {t("{{name}} is currently closed. Ordering is unavailable right now.", {
