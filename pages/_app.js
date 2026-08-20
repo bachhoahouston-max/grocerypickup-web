@@ -216,6 +216,16 @@ function App({ Component, pageProps }) {
         }}
       />
 
+      {/* Chatbot widget */}
+      <Script
+        src="https://grocery-aichatbot.vercel.app/widget.js"
+        data-api="https://grocery-aichatbot.vercel.app/api/chat"
+        data-title="Bach Hoa Houston"
+        data-greeting="Hi! How can I help you today?"
+        data-color="#2D7D32"
+        strategy="lazyOnload"
+      />
+
       {/* Sonner Toaster */}
       <SonnerToaster position="top-center" richColors closeButton />
 
