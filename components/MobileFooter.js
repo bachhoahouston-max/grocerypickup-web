@@ -86,7 +86,7 @@ function MobileFooter() {
 }
 
 function TabItem({ item, isActive, onClick }) {
-  const color = isActive ? "text-custom-green" : "text-gray-400";
+  const color = isActive ? "text-custom-green" : "text-black";
   return (
     <div className="flex flex-col justify-center items-center" onClick={onClick}>
       <div className="relative">
