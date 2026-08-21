@@ -918,13 +918,13 @@ const Navbar = (props) => {
             </select>
 
             <div
-              className="relative cursor-pointer"
-              onClick={() => router.push("/Favourite")}
+              className="relative cursor-pointer flex items-center justify-center"
+              onClick={() => router.push("/Cart")}
             >
-              <Heart className="text-custom-green" size={24} />
-              {Favorite.length > 0 && (
+              <ShoppingCart className="text-custom-green" size={24} />
+              {cartlenth > 0 && (
                 <span className="absolute -top-2 -right-2 bg-custom-green text-white text-[10px] font-semibold rounded-full w-4 h-4 flex items-center justify-center">
-                  {Favorite.length}
+                  {cartlenth}
                 </span>
               )}
             </div>

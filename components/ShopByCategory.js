@@ -4,6 +4,7 @@ import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { ShoppingCart } from "lucide-react";
+import { IoIosArrowForward } from "react-icons/io";
 import Link from "next/link";
 import { languageContext } from "@/pages/_app";
 
@@ -143,26 +144,34 @@ function ShopByCategory() {
 
       {/* Mobile Category Row */}
       <div className="md:hidden" style={{ maxWidth: width - 32 }}>
+        <div className="flex items-center justify-between mb-2 px-1">
+          <h2 className="text-lg font-bold text-custom-green">{t("Categories")}</h2>
+          <Link
+            href="/categories/all?category=all"
+            className="flex items-center gap-1 text-custom-green text-sm font-semibold"
+          >
+            {t("View all")}
+            <IoIosArrowForward className="w-4 h-4" />
+          </Link>
+        </div>
         <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
-          <div className="flex gap-2 w-full min-w-0">
+          <div className="flex gap-1.5 w-full min-w-0">
             {/* New Arrival */}
             <div
-              className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
+              className="flex flex-col items-center bg-white rounded-[5px] shadow-sm p-2 min-w-[76px] flex-shrink-0 cursor-pointer transition-transform hover:-translate-y-1"
               onClick={() =>
                 router.push("/categories/all?category=all&sort_by=new")
               }
             >
-              <div className="relative mb-1">
-                <div className="relative w-16 h-16 rounded-full group-hover:scale-105 transition-all duration-300">
-                  <Image
-                    src="/NewArrival.png"
-                    alt="Category"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
+              <div className="relative w-[54px] h-[54px] mb-2">
+                <Image
+                  src="/NewArrival.png"
+                  alt={t("New Arrivals")}
+                  fill
+                  className="object-contain"
+                />
               </div>
-              <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
+              <p className="text-black text-[10px] font-semibold text-center leading-tight line-clamp-2 break-words">
                 {t("New Arrivals")}
               </p>
             </div>
@@ -171,22 +180,19 @@ function ShopByCategory() {
             {categorys.map((category, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0"
+                className="flex flex-col items-center bg-white rounded-[5px] shadow-sm p-2 min-w-[76px] flex-shrink-0 cursor-pointer transition-transform hover:-translate-y-1"
                 onClick={() => router.push(`/categories/${category?.slug}`)}
               >
-                <div className="relative mb-1">
-                  <div className="relative w-16 h-16 rounded-full shadow-md group-hover:shadow-xl group-hover:scale-105 transition-all duration-300">
-                    <Image
-                      src={category?.image}
-                      alt={category?.name || "Category"}
-                      fill
-                      className="object-cover rounded-full"
-                    />
-                  </div>
+                <div className="relative w-[54px] h-[54px] mb-2">
+                  <Image
+                    src={category?.image}
+                    alt={category?.name || "Category"}
+                    fill
+                    className="object-contain"
+                  />
                 </div>
-
-                <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
-                  {category?.name}
+                <p className="text-black text-[10px] font-semibold text-center leading-tight line-clamp-2 break-words">
+                  {lang === "en" ? category?.name : category?.v_name || category?.name}
                 </p>
               </div>
             ))}
