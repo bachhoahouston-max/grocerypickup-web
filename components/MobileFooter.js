@@ -60,7 +60,7 @@ function MobileFooter() {
         </p>
       </div>
 
-      <div className="bg-white w-full grid grid-cols-5 rounded-t-[24px] pt-3 pb-2 shadow-[0_-4px_16px_rgba(0,0,0,0.15)]">
+      <div className="bg-white w-full grid grid-cols-5 rounded-t-[24px] pt-3 pb-2 shadow-[0_-5px_18px_rgba(0,0,0,0.17)]">
         {sideMenuItems.slice(0, 2).map((item, idx) => (
           <TabItem
             key={idx}
