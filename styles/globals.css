@@ -398,3 +398,21 @@ body {
 .animate-fadeOut { animation: fadeOut 0.2s ease-in; }
 .animate-scaleIn { animation: scaleIn 0.3s ease-out; }
 .animate-scaleOut { animation: scaleOut 0.2s ease-in; }
+
+/* On mobile, hide the floating chat bubble (it overlaps the bottom nav).
+   The chat panel itself still works — it's opened from the "Help Center"
+   option in the Account menu. Drop it to the bottom since there's no
+   bubble to sit above. */
+@media (max-width: 768px) {
+  .lcw-bubble {
+    display: none !important;
+  }
+
+  .lcw-panel {
+    bottom: 16px !important;
+    right: 16px !important;
+    left: 16px !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}
