@@ -157,37 +157,135 @@ function App({ Component, pageProps }) {
     getUserdetail();
   }, []);
 
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
+
+  //   let currentBuildId = null;
+
+  //   const clearCachesAndReload = async () => {
+  //     if ("caches" in window) {
+  //       const keys = await caches.keys();
+  //       await Promise.all(keys.map((key) => caches.delete(key)));
+  //     }
+  //     window.location.reload();
+  //   };
+
+  //   const checkVersion = async () => {
+  //     try {
+  //       const res = await Api("get", "version", null, router);
+  //       const { buildId } = res;
+  //       if (currentBuildId === null) {
+  //         currentBuildId = buildId;
+  //       } else if (currentBuildId !== buildId) {
+  //         await clearCachesAndReload();
+  //       }
+  //     } catch {
+  //       // ignore network errors
+  //     }
+  //   };
+
+  //   checkVersion();
+  //   const interval = setInterval(checkVersion, 60 * 1000); // poll every 60 seconds
+  //   return () => clearInterval(interval);
+  // }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    let currentBuildId = null;
+    const STORAGE_KEY = "app_build_id";
+    const CHECK_INTERVAL = 15 * 1000; // 15 seconds
+
+    let isReloading = false;
 
     const clearCachesAndReload = async () => {
-      if ("caches" in window) {
-        const keys = await caches.keys();
-        await Promise.all(keys.map((key) => caches.delete(key)));
+      if (isReloading) return;
+
+      isReloading = true;
+
+      try {
+        // Clear Service Worker / Cache Storage
+        if ("caches" in window) {
+          const cacheKeys = await caches.keys();
+
+          await Promise.all(
+            cacheKeys.map((key) => caches.delete(key))
+          );
+        }
+
+        // Ask service workers to update immediately
+        if ("serviceWorker" in navigator) {
+          const registrations =
+            await navigator.serviceWorker.getRegistrations();
+
+          await Promise.all(
+            registrations.map((registration) =>
+              registration.update().catch(() => { })
+            )
+          );
+        }
+      } catch (error) {
+        console.error("Cache clearing failed:", error);
       }
+
+      // Force browser to request the page again
       window.location.reload();
     };
 
     const checkVersion = async () => {
       try {
-        const res = await Api("get", "version", null, router);
-        const { buildId } = res;
-        if (currentBuildId === null) {
-          currentBuildId = buildId;
-        } else if (currentBuildId !== buildId) {
+        // Cache-busting query parameter
+        const cacheBuster = `_t=${Date.now()}`;
+
+        const res = await Api(
+          "get",
+          `version?${cacheBuster}`,
+          null,
+          router
+        );
+
+        const serverBuildId = res?.buildId;
+
+        if (!serverBuildId) return;
+
+        const storedBuildId =
+          sessionStorage.getItem(STORAGE_KEY);
+
+        // First visit in this browser tab
+        if (!storedBuildId) {
+          sessionStorage.setItem(
+            STORAGE_KEY,
+            serverBuildId
+          );
+          return;
+        }
+
+        // New deployment detected
+        if (storedBuildId !== serverBuildId) {
+          sessionStorage.setItem(
+            STORAGE_KEY,
+            serverBuildId
+          );
+
           await clearCachesAndReload();
         }
-      } catch {
-        // ignore network errors
+      } catch (error) {
+        // Ignore temporary network/API errors
       }
     };
 
+    // Check immediately
     checkVersion();
-    const interval = setInterval(checkVersion, 60 * 1000); // poll every 60 seconds
-    return () => clearInterval(interval);
-  }, []);
+
+    // Check every 15 seconds
+    const interval = setInterval(
+      checkVersion,
+      CHECK_INTERVAL
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [router]);
 
   const changeLang = (language) => {
     setLang(language);
