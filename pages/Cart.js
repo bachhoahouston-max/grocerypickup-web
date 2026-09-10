@@ -794,7 +794,7 @@ function Cart(props) {
         isCurbSidePickupAvailable: element?.isCurbSidePickupAvailable,
         isInStoreAvailable: element?.isInStoreAvailable,
         free_product: element?.free_product?._id,
-        combo_id: element?._id,
+        combo_id: element?.combo_id,
       });
     });
 
