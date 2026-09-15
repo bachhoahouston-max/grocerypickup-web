@@ -72,8 +72,12 @@ const Invoice = ({ order, productsCount, totalAmount, productItem }) => {
     if (!iso) return "";
     const d = new Date(iso);
     if (isNaN(d)) return "Invalid Date";
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    return new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Chicago",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(d);
   }
 
   const customerName =
