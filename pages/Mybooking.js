@@ -31,9 +31,12 @@ function Mybooking(props) {
 
 
 
-  const toggleModal = (id) => {
-    setId(id);
-    setOpenModalId(id); // open only this booking's modal
+  const toggleModal = (booking) => {
+    setId(booking._id);
+    setCarBrand(booking.carBrand || "");
+    setCarColor(booking.carColor || "");
+    setParkingNo(booking.parkingNo || 1);
+    setOpenModalId(booking._id); // open only this booking's modal
   };
 
   let secretCode = Math.floor(1000 + Math.random() * 9000);
