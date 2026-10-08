@@ -199,6 +199,9 @@
   "Available on both IOS & Android": "Available on both IOS & Android",
   "Cart": "Cart",
   "Account": "Account",
+  "Saved": "Saved",
+  "Orders": "Orders",
+  "View all": "View all",
   "Delivery is next day": "Delivery is next day",
   "Warning": "Warning",
   "Disclaimer": "Disclaimer",
@@ -363,5 +366,6 @@
   "Household Essentials": "Household Essentials",
   "Some sale items have expired. Prices have been updated. Please review your cart": "Some deals in your cart have expired. We’ve updated the prices—please review your cart before checkout.",
   "Combo Sale Ended - Free Item Removed": "Combo Sale Ended - Free Item Removed",
-  "Sale Ended - Price changed to regular price": "Sale Ended - Price changed to regular price"
+  "Sale Ended - Price changed to regular price": "Sale Ended - Price changed to regular price",
+  "Chat with us": "Chat with us"
 }

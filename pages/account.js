@@ -14,6 +14,7 @@ import {
   RefreshCcw,
   Headphones,
   ChevronRight,
+  MessageCircle,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -23,6 +24,37 @@ function Account(props) {
   const [user, setUser] = useContext(userContext);
   const { t, i18n } = useTranslation();
   const { lang, changeLang } = useContext(languageContext);
+
+  // Opens the AI chat widget. widget.js (loaded in _app.js) injects a
+  // `.lcw-bubble` button + `.lcw-panel`; on mobile the bubble is hidden via
+  // CSS, so this button on the Help Center card is how users reach the chat.
+  // The widget script is lazy-loaded, so poll briefly for the bubble before
+  // giving up and sending the user to the Help Center page.
+  const openChat = () => {
+    if (typeof document === "undefined") return;
+
+    const tryOpen = () => {
+      const bubble = document.querySelector(".lcw-bubble");
+      if (!bubble) return false;
+      const panel = document.querySelector(".lcw-panel");
+      // toggle() flips open/closed — only click when it's not already open.
+      if (!panel || !panel.classList.contains("lcw-open")) bubble.click();
+      return true;
+    };
+
+    if (tryOpen()) return;
+
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries += 1;
+      if (tryOpen()) {
+        clearInterval(timer);
+      } else if (tries >= 20) {
+        clearInterval(timer);
+        router.push("/HelpCenter");
+      }
+    }, 150);
+  };
 
   const toggleLanguage = () => {
     const next = lang === "vi" ? "en" : "vi";
@@ -188,29 +220,47 @@ function Account(props) {
                 {menuItems.map((item) => {
                   const Icon = item.icon;
                   return (
-                    <button
+                    <div
                       key={item.key}
-                      onClick={item.onClick}
-                      className="w-full flex items-center gap-4 px-4 py-4 hover:bg-gray-50 transition-colors text-left"
+                      className="w-full flex items-center hover:bg-gray-50 transition-colors"
                     >
-                      <div
-                        className={`h-11 w-11 rounded-xl flex items-center justify-center shrink-0 ${item.iconBg}`}
+                      <button
+                        onClick={item.onClick}
+                        className="flex-1 min-w-0 flex items-center gap-4 px-4 py-4 text-left"
                       >
-                        <Icon className={`w-6 h-6 ${item.iconColor}`} />
+                        <div
+                          className={`h-11 w-11 rounded-xl flex items-center justify-center shrink-0 ${item.iconBg}`}
+                        >
+                          <Icon className={`w-6 h-6 ${item.iconColor}`} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-gray-800">{item.title}</p>
+                          <p className="text-gray-500 text-sm truncate">
+                            {item.subtitle}
+                          </p>
+                        </div>
+                      </button>
+
+                      <div className="flex items-center gap-2 pr-4 shrink-0">
+                        {item.value && (
+                          <span className="text-sm font-medium text-custom-green shrink-0">
+                            {item.value}
+                          </span>
+                        )}
+                        {item.key === "help" && (
+                          <button
+                            type="button"
+                            onClick={openChat}
+                            aria-label={t("Chat with us")}
+                            title={t("Chat with us")}
+                            className="h-9 w-9 rounded-full bg-custom-green flex items-center justify-center shadow-sm hover:bg-custom-green/90 transition-colors"
+                          >
+                            <MessageCircle className="w-5 h-5 text-white" />
+                          </button>
+                        )}
+                        <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-gray-800">{item.title}</p>
-                        <p className="text-gray-500 text-sm truncate">
-                          {item.subtitle}
-                        </p>
-                      </div>
-                      {item.value && (
-                        <span className="text-sm font-medium text-custom-green shrink-0">
-                          {item.value}
-                        </span>
-                      )}
-                      <ChevronRight className="w-5 h-5 text-gray-400 shrink-0" />
-                    </button>
+                    </div>
                   );
                 })}
               </div>

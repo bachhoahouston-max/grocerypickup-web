@@ -72,8 +72,12 @@ const Invoice = ({ order, productsCount, totalAmount, productItem }) => {
     if (!iso) return "";
     const d = new Date(iso);
     if (isNaN(d)) return "Invalid Date";
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    return new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/Chicago",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(d);
   }
 
   const customerName =
@@ -228,20 +232,31 @@ const Invoice = ({ order, productsCount, totalAmount, productItem }) => {
   const website = "www.bachhoahouston.com";
 
   const Header = () => (
-    <div style={{ justifyContent: "space-between", alignItems: "center", display: "flex", borderBottom: "1px solid #e5e7eb", paddingBottom: "10px", marginBottom: "5px" }}>
+    <div style={{ justifyContent: "space-between", alignItems: "flex-start", display: "flex", borderBottom: "1px solid #e5e7eb", paddingBottom: "8px", marginBottom: "10px" }}>
       <div>
-        <h1 style={{ fontSize: "2rem", fontWeight: "bold", color: "#206B3A", margin: 0 }}>BACH HOA HOUSTON</h1>
-        <p style={{ fontSize: "0.875rem", margin: 0 }}>{website}</p>
+        <h1 style={{ fontSize: "1.9rem", fontWeight: "900", color: "#046A38", margin: 0, letterSpacing: "0.5px" }}>BACH HOA HOUSTON</h1>
+        <p style={{ fontSize: "0.8rem", margin: "2px 0 0", color: "#111" }}>{website}</p>
       </div>
       <div style={{ textAlign: "right" }}>
-        <p style={{ fontSize: "1.2rem", color: "#206B3A", margin: 0 }}>Order type: <strong>{orderType}</strong></p>
-        <p style={{ fontSize: "0.875rem", margin: 0 }}>Order ID #: <strong>{invoiceId}</strong></p>
-        <p style={{ fontSize: "0.875rem", margin: 0 }}>Order Date: {orderDateTime}</p>
+        <p style={{ fontSize: "1.05rem", margin: "0 0 2px" }}>
+          <span style={{ color: "#046A38", fontWeight: "600" }}>Order type: </span>
+          <strong style={{ color: "#046A38" }}>{orderType}</strong>
+        </p>
+        <p style={{ fontSize: "0.8rem", margin: "0 0 2px", color: "#111" }}>
+          Order ID: <strong>{invoiceId}</strong>
+        </p>
+        <p style={{ fontSize: "0.8rem", margin: "0 0 2px", color: "#111" }}>
+          Order Date: {orderDateTime}
+        </p>
         {(order?.isLocalDelivery || order?.isShipmentDelivery) && order?.dateOfDelivery && (
-          <p style={{ fontSize: "0.875rem", margin: 0 }}>Delivery Date: {convertISODateToFormattedString(order.dateOfDelivery)}</p>
+          <p style={{ fontSize: "0.8rem", margin: 0, color: "#111" }}>
+            Delivery Date: {convertISODateToFormattedString(order.dateOfDelivery)}
+          </p>
         )}
         {(order?.isOrderPickup || order?.isDriveUp) && order?.dateOfDelivery && (
-          <p style={{ fontSize: "0.875rem", margin: 0 }}>Pickup Date: {convertISODateToFormattedString(order.dateOfDelivery)}</p>
+          <p style={{ fontSize: "0.8rem", margin: 0, color: "#111" }}>
+            Pickup Date: {convertISODateToFormattedString(order.dateOfDelivery)}
+          </p>
         )}
       </div>
     </div>
@@ -269,11 +284,11 @@ const Invoice = ({ order, productsCount, totalAmount, productItem }) => {
   );
 
   const BilledTo = ({ showPhone = true, noMargin = false }) => (
-    <div style={{ marginBottom: noMargin ? 0 : "1.5rem", display: "grid" }}>
-      <h2 style={{ fontSize: "1.125rem", fontWeight: "600", marginBottom: "0.25rem" }}>Billed To:</h2>
-      <span>{customerName}</span>
-      <span>{order?.Local_address?.address || order?.user?.email}</span>
-      {showPhone && <span>{order?.Local_address?.phoneNumber || order?.user?.number}</span>}
+    <div style={{ marginBottom: noMargin ? 0 : "1.5rem", display: "grid", fontSize: "0.78rem", lineHeight: "1.35" }}>
+      <h2 style={{ fontSize: "0.82rem", fontWeight: "bold", marginBottom: "0.2rem", color: "#111" }}>Billed To:</h2>
+      <span style={{ color: "#111" }}>{customerName}</span>
+      <span style={{ color: "#111" }}>{order?.Local_address?.address || order?.user?.email}</span>
+      {showPhone && <span style={{ color: "#111" }}>{order?.Local_address?.phoneNumber || order?.user?.number}</span>}
       {order?.Local_address?.BusinessAddress && <span>Business Address: {order?.Local_address?.BusinessAddress}</span>}
       {order?.Local_address?.ApartmentNo && <span>Apartment No: {order?.Local_address?.ApartmentNo}</span>}
       {order?.Local_address?.SecurityGateCode && <span>Security Gate Code: {order?.Local_address?.SecurityGateCode}</span>}
@@ -332,38 +347,34 @@ const Invoice = ({ order, productsCount, totalAmount, productItem }) => {
 
           {/* PAGE 2+: Full invoice */}
           <div style={{ fontFamily: "sans-serif", color: "black", padding: "10px", paddingBottom: "30px" }}>
+            {/* Top header row */}
             <Header />
-            <div style={{ display: "flex", justifyContent: "flex-start", margin: "16px 0" }}>
-              <Barcode value={order.orderId} width={1.5} height={60} fontSize={12} />
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "20px", flexWrap: "wrap", marginBottom: "1.5rem" }}>
-              <div style={{ flex: "1 1 220px" }}>
+
+            {/* Second row: Billed To (Left) + Barcode (Center) + ORDER SUMMARY (Right) */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "20px", marginBottom: "14px" }}>
+              {/* Left: Billed To */}
+              <div style={{ flex: "1 1 0", minWidth: 0 }}>
                 <BilledTo noMargin />
               </div>
 
+              {/* Center: Barcode */}
+              <div style={{ flex: "1 1 0", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Barcode value={order.orderId} width={1.5} height={52} fontSize={12} margin={0} />
+              </div>
+
+              {/* Right: ORDER SUMMARY box */}
               {hasChecklist && (
-                <div
-                  style={{
-                    flex: "1 1 260px",
-                    border: "1px solid #e5e7eb",
-                    borderRadius: "8px",
-                    padding: "12px 16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                    background: "#fafafa",
-                  }}
-                >
-                  <h3 style={{ margin: "0 0 2px", fontSize: "0.9rem", fontWeight: "700", color: "#206B3A" }}>Order Summary</h3>
+                <div style={{ flex: "0 0 auto", border: "1px solid #d1d5db", borderRadius: "6px", padding: "8px 12px", background: "#fff", minWidth: "195px" }}>
+                  <h3 style={{ margin: "0 0 4px", fontSize: "0.8rem", fontWeight: 700, color: "#046A38" }}>ORDER SUMMARY</h3>
                   {[
-                    { label: "Items Ordered", value: itemsOrdered },
-                    { label: "Items Packed", value: itemsPacked },
-                    { label: "Items Shorted", value: itemsShorted, red: true },
-                    { label: "Refunded Items", value: refundedQty, red: true },
+                    { label: "Items Ordered", value: itemsOrdered, color: "#16a34a" },
+                    { label: "Items Packed", value: itemsPacked, color: "#16a34a" },
+                    { label: "Items Shorted", value: itemsShorted, color: "#dc2626" },
+                    { label: "Refunded Items", value: refundedQty, color: "#dc2626" },
                   ].map((s) => (
-                    <div key={s.label} style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem" }}>
-                      <span style={{ color: "#6b7280" }}>{s.label}</span>
-                      <span style={{ fontWeight: "bold", color: s.red ? "#dc2626" : "#206B3A" }}>{s.value}</span>
+                    <div key={s.label} style={{ display: "flex", justifyContent: "space-between", gap: "20px", fontSize: "0.78rem", padding: "1px 0" }}>
+                      <span style={{ color: "#4b5563" }}>{s.label}</span>
+                      <span style={{ fontWeight: "bold", color: s.color }}>{s.value}</span>
                     </div>
                   ))}
                 </div>

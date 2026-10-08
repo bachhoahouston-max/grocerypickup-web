@@ -958,7 +958,7 @@ const OrderCard = ({
               {booking?.isDriveUp && (
                 <button
                   type="button"
-                  onClick={() => toggleModal(booking._id)}
+                  onClick={() => toggleModal(booking)}
                   className="px-4 py-2 bg-[#F59E0B] text-white text-sm font-medium rounded-md cursor-pointer"
                 >
                   {booking.parkingNo ? t("Update Parking Spot") : t("I'm here")}
