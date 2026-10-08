@@ -27,6 +27,10 @@ const getProductCombo = (product) =>
 const isComboOrder = (booking) =>
   booking?.productDetail?.some((p) => !!getProductCombo(p));
 
+// Reward items: redeemed with points, always $0 (productSource "REWARD")
+const isRewardProduct = (product) => product?.productSource === "REWARD";
+const rewardPointsOf = (product) => Number(product?.points || 0) * Number(product?.qty || 1);
+
 const isMainProduct = (product) => {
   const combo = getProductCombo(product);
   if (!combo) return false;
@@ -347,13 +351,74 @@ const FreeProductRow = ({ product, index, total, booking, lang, router }) => (
   </div>
 );
 
+// ─── Product Row — Reward (redeemed with points) ──────────────────────────────
+const RewardProductRow = ({ product, index, total, booking, lang, router, t }) => (
+  <div
+    className={`flex items-center p-2 hover:bg-blue-50 cursor-pointer relative bg-blue-50/40 ${index !== total - 1 ? "border-b border-gray-200" : ""
+      }`}
+    onClick={() =>
+      router.push(`/myorder/${booking._id}?product_id=${product._id}`)
+    }
+  >
+    <span className="absolute top-2 right-2 bg-[#0B4F8A] text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+      🏆 {t("Reward")}
+    </span>
+
+    <div className="flex-shrink-0">
+      <Image
+        width={100}
+        height={100}
+        className="w-20 h-20 rounded-md object-contain border border-gray-200 bg-white"
+        src={product.image?.[0] || "/api/placeholder/100/100"}
+        alt={product.product?.name || "Product"}
+      />
+    </div>
+    <div className="ml-4 flex-grow pr-16">
+      <p className="text-gray-800 font-medium text-sm">
+        {(() => {
+          const text =
+            lang === "en"
+              ? product.product?.name
+              : product.product?.vietnamiesName || product.product?.name;
+          return text?.length > 95 ? text.slice(0, 95) + "..." : text;
+        })()}
+      </p>
+      <p className="text-sm text-gray-500 mt-1">{`Qty: ${product.qty || 1}`}</p>
+    </div>
+    <div className="text-right flex-shrink-0 pr-1 mt-4">
+      <p className="text-xs font-bold text-[#0B4F8A]">
+        {rewardPointsOf(product).toLocaleString()} {t("pts")}
+      </p>
+      <span className="text-xs font-black text-green-700">FREE</span>
+    </div>
+  </div>
+);
+
+// ─── Reward Summary ───────────────────────────────────────────────────────────
+const RewardSummary = ({ booking }) => {
+  const { t } = useTranslation();
+  const rewards = (booking?.productDetail || []).filter(isRewardProduct);
+  if (!rewards.length) return null;
+  const points = rewards.reduce((s, p) => s + rewardPointsOf(p), 0);
+  return (
+    <div className="mt-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 flex items-center justify-between text-sm">
+      <span className="text-[#0B4F8A] font-semibold">
+        🏆 {t("Rewards redeemed")} ({rewards.length})
+      </span>
+      <span className="text-[#0B4F8A] font-bold">
+        −{points.toLocaleString()} {t("pts")}
+      </span>
+    </div>
+  );
+};
+
 // ─── Combo Price Summary ──────────────────────────────────────────────────────
 const ComboPriceSummary = ({ booking }) => {
   const { t } = useTranslation();
 
   // Separate normal vs combo products
   const normalProducts = booking.productDetail.filter(
-    (p) => !getProductCombo(p),
+    (p) => !getProductCombo(p) && !isRewardProduct(p),
   );
   const comboProducts = booking.productDetail.filter((p) => getProductCombo(p));
 
@@ -525,9 +590,11 @@ const ProductList = ({
   const products = booking.productDetail;
 
   // Split into normal and combo buckets
-  const normalProducts = products.filter((p) => !getProductCombo(p));
+  const normalProducts = products.filter((p) => !getProductCombo(p) && !isRewardProduct(p));
   const comboProducts = products.filter((p) => getProductCombo(p));
-  const isMixedOrder = normalProducts.length > 0 && comboProducts.length > 0;
+  const rewardProducts = products.filter((p) => isRewardProduct(p));
+  const isMixedOrder =
+    [normalProducts, comboProducts, rewardProducts].filter((list) => list.length > 0).length > 1;
 
   const rendered = [];
   const seenBanners = new Set(); // combo banners shown once per combo._id
@@ -638,6 +705,37 @@ const ProductList = ({
     });
   }
 
+  // ── Section 3: Reward items (redeemed with points) ─────────────────────────
+  if (rewardProducts.length > 0) {
+    rendered.push(
+      <div
+        key="divider-reward"
+        className="flex items-center gap-2 px-3 py-1.5 bg-[#0B4F8A] border-b border-[#0B4F8A]"
+      >
+        <span className="text-xs font-bold text-white uppercase tracking-wide">
+          🏆 {t("Rewards")}
+        </span>
+        <span className="ml-auto text-xs text-blue-100">
+          {rewardProducts.reduce((s, p) => s + rewardPointsOf(p), 0).toLocaleString()} {t("pts")}
+        </span>
+      </div>,
+    );
+    rewardProducts.forEach((product, idx) => {
+      rendered.push(
+        <RewardProductRow
+          key={product._id || `reward-${idx}`}
+          product={product}
+          index={idx}
+          total={rewardProducts.length}
+          booking={booking}
+          lang={lang}
+          router={router}
+          t={t}
+        />,
+      );
+    });
+  }
+
   return (
     <div className="rounded-lg border border-gray-200 overflow-hidden">
       {rendered}
@@ -704,6 +802,8 @@ const OrderCard = ({
       return ({
         name: item?.product?.name,
         combo_id: item?.combo_id,
+        productSource: item?.productSource,
+        points: item?.points,
         product: item?.product,
         qty: item?.qty || 1,
         unit: item?.product?.price_slot[0]?.unit,
@@ -776,11 +876,18 @@ const OrderCard = ({
 
             <div className="flex items-center justify-between">
               <DeliveryTypeLabel booking={booking} />
-              {hasCombo && (
-                <span className="flex items-center gap-1 bg-green-700 text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                  🎁 {t("Combo")}
-                </span>
-              )}
+              <div className="flex items-center gap-1">
+                {hasCombo && (
+                  <span className="flex items-center gap-1 bg-green-700 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                    🎁 {t("Combo")}
+                  </span>
+                )}
+                {booking?.productDetail?.some(isRewardProduct) && (
+                  <span className="flex items-center gap-1 bg-[#0B4F8A] text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                    🏆 {t("Reward")}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
@@ -805,6 +912,11 @@ const OrderCard = ({
                   {hasCombo && (
                     <span className="flex items-center gap-1 bg-green-700 text-white text-xs font-bold px-2.5 py-1 rounded-full">
                       🎁 {t("Combo Deal")}
+                    </span>
+                  )}
+                  {booking?.productDetail?.some(isRewardProduct) && (
+                    <span className="flex items-center gap-1 bg-[#0B4F8A] text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                      🏆 {t("Reward")}
                     </span>
                   )}
                 </div>
@@ -1108,6 +1220,7 @@ const OrderCard = ({
         />
 
         {hasCombo && <ComboPriceSummary booking={booking} />}
+        <RewardSummary booking={booking} />
 
         {/* Barcode + Order total */}
         <div className="mt-4 flex justify-between items-end">

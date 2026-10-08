@@ -46,8 +46,11 @@ function Payment(props) {
     let data = [];
 
     cartDetails.forEach((element) => {
+      const isReward = element?.productSource === "REWARD";
       data.push({
-        product: element?.id,
+        product: isReward ? element?.product_id : element?.id,
+        productSource: element?.productSource,
+        point_id: isReward ? element?.point_id : undefined,
         image: element.selectedColor?.image,
         BarCode: element.BarCode,
         color: element.selectedColor?.color || "",
@@ -124,7 +127,7 @@ function Payment(props) {
     const checkoutData = JSON.parse(localStorage.getItem("checkoutData"));
     const cartDetails = JSON.parse(localStorage.getItem("addCartDetail"));
 
-    const lineItems = cartDetails.map((item) => ({
+    const lineItems = cartDetails.filter((item) => item.productSource !== "REWARD").map((item) => ({
       quantity: item.qty || 1,
       price_data: {
         currency: "usd",

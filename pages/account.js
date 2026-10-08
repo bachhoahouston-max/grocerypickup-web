@@ -15,6 +15,8 @@ import {
   Headphones,
   ChevronRight,
   MessageCircle,
+  Trophy,
+  Heart,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -75,6 +77,24 @@ function Account(props) {
       iconColor: "text-custom-green",
       iconBg: "bg-green-50",
       onClick: () => router.push("/Mybooking"),
+    },
+    {
+      key: "rewards",
+      title: t("Rewards"),
+      subtitle: t("Your points & redeem rewards"),
+      icon: Trophy,
+      iconColor: "text-[#0B4F8A]",
+      iconBg: "bg-blue-50",
+      onClick: () => router.push("/rewards"),
+    },
+    {
+      key: "saved",
+      title: t("Saved Items"),
+      subtitle: t("Products you saved for later"),
+      icon: Heart,
+      iconColor: "text-rose-500",
+      iconBg: "bg-rose-50",
+      onClick: () => router.push("/Favourite"),
     },
     {
       key: "history",

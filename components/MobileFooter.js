@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { useRouter } from "next/router";
-import { cartContext, openCartContext, favoriteProductContext } from "@/pages/_app";
+import { cartContext, openCartContext } from "@/pages/_app";
 import { useTranslation } from "react-i18next";
-import { Home, ListOrdered, Heart, ShoppingCart, User } from "lucide-react";
+import { Home, ListOrdered, Trophy, ShoppingCart, User } from "lucide-react";
 
 function MobileFooter() {
   const router = useRouter();
@@ -10,7 +10,6 @@ function MobileFooter() {
   const { t } = useTranslation();
   const [openCart, setOpenCart] = useContext(openCartContext);
   const [cartData] = useContext(cartContext);
-  const [Favorite] = useContext(favoriteProductContext);
 
   const cartlenth = cartData.reduce((total, item) => total + (item.qty || 0), 0);
 
@@ -21,10 +20,9 @@ function MobileFooter() {
       path: "/",
     },
     {
-      label: t("Saved"),
-      icon: Heart,
-      path: "/Favourite",
-      count: Favorite.length,
+      label: t("Rewards"),
+      icon: Trophy,
+      path: "/rewards",
     },
     {
       label: t("Orders"),

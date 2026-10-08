@@ -110,6 +110,8 @@ function Cart(props) {
 
     cartData.forEach((item) => {
       const source = item?.productSource || "NORMAL";
+      // Reward prices are always $0 and are validated server-side at order time
+      if (source === "REWARD") return;
 
       const mainId = item?.product?._id || item?._id;
       const currentPrice = item?.price || item?.our_price || 0;
@@ -140,6 +142,7 @@ function Cart(props) {
     console.log("Cart Data:", cartData);
     // return cartData
     const updatedCart = cartData.map((item) => {
+      if (item?.productSource === "REWARD") return item;
       const match = latestData.find(
         (p) => String(p.productId) === String(item?.id || item?.product?._id) && item.priceSlotIndex === p.priceSlotIndex
       );
@@ -761,6 +764,14 @@ function Cart(props) {
         });
       }
     }
+    const hasReward = cartData.some((item) => item?.productSource === "REWARD");
+    if (hasReward && cartData.every((item) => item?.productSource === "REWARD")) {
+      return props.toaster({
+        type: "error",
+        message: t("Please add at least one paid item to your cart to redeem rewards."),
+      });
+    }
+
     await checkPRiceOFPRoduct(cartData);
 
     let data = [];
@@ -777,8 +788,11 @@ function Cart(props) {
 
       const finalPrice = isSaleExpired ? element?.regularPrice : element?.price;
 
+      const isReward = element?.productSource === "REWARD";
+
       data.push({
-        product: element?.id,
+        product: isReward ? element?.product_id : element?.id,
+        point_id: isReward ? element?.point_id : undefined,
         image: element?.selectedColor?.image,
         BarCode: element?.BarCode,
         qty: element?.qty,
@@ -939,20 +953,23 @@ function Cart(props) {
     const checkoutData = JSON.parse(localStorage.getItem("checkoutData"));
     const cartDetails = JSON.parse(localStorage.getItem("addCartDetail"));
 
-    const lineItems = cartDetails.map((item) => ({
-      quantity: item.qty || 1,
-      price_data: {
-        currency: "usd",
-        unit_amount: Math.round(item.price * 100),
-        product_data: {
-          name: item.name,
-          tax_code: item.tax_code || "txcd_10000000",
-          metadata: {
-            productId: item.id || item._id || "",
+    // Reward items are $0 and paid with points, so they're not sent to Stripe
+    const lineItems = cartDetails
+      .filter((item) => item.productSource !== "REWARD")
+      .map((item) => ({
+        quantity: item.qty || 1,
+        price_data: {
+          currency: "usd",
+          unit_amount: Math.round(item.price * 100),
+          product_data: {
+            name: item.name,
+            tax_code: item.tax_code || "txcd_10000000",
+            metadata: {
+              productId: item.id || item._id || "",
+            },
           },
         },
-      },
-    }));
+      }));
 
     const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
     const servicefee = parseFloat(serviceFee || 0);
