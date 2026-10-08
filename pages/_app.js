@@ -314,6 +314,7 @@ function App({ Component, pageProps }) {
         }}
       />
 
+      {/* Chatbot widget */}
       <Script
         src="https://grocery-aichatbot.vercel.app/widget.js"
         data-api="https://grocery-aichatbot.vercel.app/api/chat"
