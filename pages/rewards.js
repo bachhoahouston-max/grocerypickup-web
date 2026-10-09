@@ -418,7 +418,10 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
   const tier = summary?.tier;
   const nextMin = tier?.nextTier?.minPoints;
   const currentMin = summary?.tiers?.find((x) => x.key === tier?.key)?.minPoints || 0;
-  const progress = nextMin ? Math.min(((tier.qualifyingPoints - currentMin) / (nextMin - currentMin)) * 100, 100) : 100;
+  const progress = nextMin
+    ? Math.max(Math.min(((tier.qualifyingPoints - currentMin) / (nextMin - currentMin)) * 100, 100), 0)
+    : 100;
+  const formatTierDate = (ymd) => (ymd ? moment(ymd, "YYYY-MM-DD").format("MMM D, YYYY") : "");
 
   return (
     <div className="mt-6 space-y-6">
@@ -428,6 +431,11 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
             <div>
               <p className="text-gray-500 text-sm">{t("Your tier")}</p>
               <p className="text-[#0B4F8A] font-extrabold text-2xl">{t(tier.name)}</p>
+              {tier.validThrough && (
+                <p className="text-xs md:text-sm text-gray-500">
+                  {t("Valid through")} {formatTierDate(tier.validThrough)}
+                </p>
+              )}
             </div>
             <span className="bg-[#0B4F8A] text-white text-sm font-semibold rounded-full px-4 py-1.5">
               $1 = {tier.pointsPerDollar} {t("points")}
@@ -448,6 +456,14 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
               {tier.nextTier
                 ? `${tier.pointsToNextTier.toLocaleString()} ${t("more tier points to reach")} ${t(tier.nextTier.name)} ($1 = ${tier.nextTier.pointsPerDollar} ${t("points")})`
                 : t("You've reached our highest tier!")}
+            </p>
+            {tier.source === "carried" && tier.pointsToKeepTier > 0 && (
+              <p className="text-xs md:text-sm text-[#0B4F8A] mt-1">
+                {`${t("You earned")} ${t(tier.name)} ${t("in")} ${tier.carriedFromYear}. ${t("Earn")} ${tier.pointsToKeepTier.toLocaleString()} ${t("more tier points in")} ${tier.year} ${t("to keep it through")} ${tier.year + 1}.`}
+              </p>
+            )}
+            <p className="text-[11px] md:text-xs text-gray-400 mt-1">
+              {t("A tier you reach is kept through the end of the next calendar year. Tier points restart every January 1.")}
             </p>
           </div>
 
@@ -484,7 +500,7 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
       <div className="bg-white rounded-2xl border border-gray-200 p-4 text-sm text-gray-600">
         <p className="font-semibold text-[#0B4F8A] mb-1">{t("How it works")}</p>
         <p>{t("Earn points on completed or delivered orders and approved in-store receipts: Loyal $1 = 10, Silver $1 = 11, Gold $1 = 12, Diamond $1 = 13 points.")}</p>
-        <p className="mt-1">{t("Reward points never expire. Tier points are the points you earn each calendar year — they reset on January 1 and everyone starts the year as Loyal.")}</p>
+        <p className="mt-1">{t("Reward points never expire. Tier points are the points you earn each calendar year — they restart on January 1, and a tier you reach is kept through the end of the next year.")}</p>
         <p className="mt-1">{t("Refunded amounts and cancelled orders don't earn points.")}</p>
       </div>
 
