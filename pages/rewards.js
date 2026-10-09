@@ -7,6 +7,7 @@ import moment from "moment";
 import Compressor from "compressorjs";
 import { cartContext, userContext, languageContext } from "./_app";
 import { Api, ApiFormData } from "@/services/service";
+import { cartQtyForProduct, getAvailableStock, rewardLimitError } from "@/services/rewardCart";
 
 const TABS = [
   { key: "redeem", label: "Redeem" },
@@ -29,6 +30,9 @@ const buildRewardCartItem = (reward) => {
     product_id: product._id,
     point_id: reward._id,
     points: reward.points,
+    // Limits travel with the cart line so the cart's +/− can check them
+    perUserLimit: reward.perUserLimit || null,
+    remainingTotal: reward.remainingTotal ?? null,
     productSource: "REWARD",
     name: product.name,
     vietnamiesName: product.vietnamiesName,
@@ -139,12 +143,40 @@ function Rewards(props) {
     setSelected(reward);
   };
 
-  const addRewardToCart = () => {
+  const addRewardToCart = async () => {
     if (!selected) return;
     if (rewardState(selected).disabled) {
       setSelected(null);
       return;
     }
+
+    // Same stock check as normal items, counting units of this product already in the cart
+    try {
+      props.loader?.(true);
+      const stock = await getAvailableStock(selected.product._id, router);
+      if (cartQtyForProduct(cartData, selected.product._id) + 1 > stock) {
+        props.toaster?.({
+          type: "error",
+          message: stock > 0
+            ? t("Item is not available in this quantity in stock. Please choose a different item.")
+            : t("This item is currently out of stock. Please choose a different item."),
+        });
+        setSelected(null);
+        return;
+      }
+      const limitError = rewardLimitError({ ...selected, qtyInCart: 0 }, summary, cartData, t);
+      if (limitError) {
+        props.toaster?.({ type: "error", message: limitError });
+        setSelected(null);
+        return;
+      }
+    } catch (err) {
+      props.toaster?.({ type: "error", message: err?.message });
+      return;
+    } finally {
+      props.loader?.(false);
+    }
+
     const next = [...cartData, buildRewardCartItem(selected)];
     setCartData(next);
     localStorage.setItem("addCartDetail", JSON.stringify(next));

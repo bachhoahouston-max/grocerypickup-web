@@ -261,14 +261,15 @@ import constant from "@/services/constant";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { Api } from "@/services/service";
+import { cartLineProductId, cartQtyForProduct, rewardLimitError } from "@/services/rewardCart";
 
 const isNormalItem = (item) => item?.productSource === "NORMAL";
 const isSaleItem = (item) => item?.productSource === "SALE";
 const isComboItem = (item) => item?.productSource === "COMBO";
 const isRewardItem = (item) => item?.productSource === "REWARD";
 
-// ─── Reward Cart Row (redeemed with points, always $0, qty fixed at 1) ───────
-const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, cartClose }) => {
+// ─── Reward Cart Row (redeemed with points, always $0) ────────────────────────
+const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty, increaseQty, cartClose }) => {
   const { t } = useTranslation();
 
   return (
@@ -302,14 +303,25 @@ const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, cartClose })
           </div>
           <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
         </div>
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <p className="text-[#0B4F8A] font-semibold text-sm md:text-base whitespace-nowrap">
-            −{Number(item?.points || 0).toLocaleString()} {t("pts")}
-          </p>
-          <IoMdClose
-            className="w-5 h-5 text-black cursor-pointer"
-            onClick={() => cartClose(item, i)}
-          />
+        <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-3 flex-shrink-0">
+          <div className="flex items-center justify-center bg-[#0B4F8A] rounded-full px-3 py-1 w-28">
+            <button type="button" aria-label={t("Decrease quantity")} onClick={() => decreaseQty(i, item)}>
+              <IoRemoveSharp className="!text-white text-xl" />
+            </button>
+            <span className="mx-4 text-white font-medium text-base">{item?.qty || 1}</span>
+            <button type="button" aria-label={t("Increase quantity")} onClick={() => increaseQty(i, item)}>
+              <IoAddSharp className="!text-white text-xl" />
+            </button>
+          </div>
+          <div className="flex items-center gap-3">
+            <p className="text-[#0B4F8A] font-semibold text-sm md:text-base whitespace-nowrap">
+              −{(Number(item?.points || 0) * Number(item?.qty || 1)).toLocaleString()} {t("pts")}
+            </p>
+            <IoMdClose
+              className="w-5 h-5 text-black cursor-pointer"
+              onClick={() => cartClose(item, i)}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -765,7 +777,32 @@ export default function CartDrawer({
   };
 
   const increaseQty = async (index, item) => {
-    const itemQuantity = await handleQuantity(item.id);
+    // Reward lines carry a reward_<id> cart id; stock is checked on the real product
+    const productId = cartLineProductId(item);
+    const itemQuantity = await handleQuantity(productId);
+
+    if (isRewardItem(item)) {
+      try {
+        loader(true);
+        const res = await Api("get", "rewards/summary", "", router);
+        const limitError = rewardLimitError(
+          { ...item, qtyInCart: item.qty },
+          res?.data,
+          cartData,
+          t,
+        );
+        if (limitError) {
+          toaster?.({ type: "error", message: limitError });
+          return;
+        }
+      } catch (err) {
+        toaster?.({ type: "error", message: err?.message });
+        return;
+      } finally {
+        loader(false);
+      }
+    }
+
     let itemFreeQuantity = 0;
     if (item.productSource === "COMBO") {
       itemFreeQuantity = await handleQuantity(item.free_product[0].product._id);
@@ -774,7 +811,8 @@ export default function CartDrawer({
     const nextState = produce(cartData, (draft) => {
       const maxQty = itemQuantity ?? Infinity;
 
-      if (draft[index].qty + 1 > maxQty) {
+      // Count every line of this product (e.g. bought + redeemed as a reward)
+      if (cartQtyForProduct(draft, productId) + 1 > maxQty) {
         toaster?.({
           type: "error",
           message:
