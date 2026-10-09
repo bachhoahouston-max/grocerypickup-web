@@ -460,5 +460,6 @@
   "Not enough points": "Không đủ điểm",
   "Decrease quantity": "Giảm số lượng",
   "Increase quantity": "Tăng số lượng",
-  "Item is not available in this quantity in stock. Please choose a different item.": "Sản phẩm không còn đủ số lượng trong kho. Vui lòng chọn sản phẩm khác."
+  "Item is not available in this quantity in stock. Please choose a different item.": "Sản phẩm không còn đủ số lượng trong kho. Vui lòng chọn sản phẩm khác.",
+  "not packed — points returned": "không được đóng gói — đã hoàn điểm"
 }

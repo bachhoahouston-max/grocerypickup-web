@@ -442,7 +442,9 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
     if (h.type === "earn") {
       return `${date} · $${Number(h.amount).toFixed(2)} ${t("spent")}${h.tier ? ` · ${t(h.tier)} ×${h.pointsPerDollar}` : ""}`;
     }
-    if (h.type === "redeem") return `${date} · ${t("Order")} ${h.orderId}${h.pending ? ` · ${t("awaiting payment")}` : ""}`;
+    if (h.type === "redeem") {
+      return `${date} · ${t("Order")} ${h.orderId}${h.pending ? ` · ${t("awaiting payment")}` : ""}${h.shortage > 0 ? ` · ${h.shortage} ${t("not packed — points returned")}` : ""}`;
+    }
     const statusText = { pending: t("Under review"), approved: t("Approved"), rejected: t("Rejected") }[h.status];
     return `${date} · ${statusText}${h.adminNote ? ` · ${h.adminNote}` : ""}`;
   };

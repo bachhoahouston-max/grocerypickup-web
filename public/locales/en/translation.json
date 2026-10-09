@@ -463,5 +463,6 @@
   "Not enough points": "Not enough points",
   "Decrease quantity": "Decrease quantity",
   "Increase quantity": "Increase quantity",
-  "Item is not available in this quantity in stock. Please choose a different item.": "Item is not available in this quantity in stock. Please choose a different item."
+  "Item is not available in this quantity in stock. Please choose a different item.": "Item is not available in this quantity in stock. Please choose a different item.",
+  "not packed — points returned": "not packed — points returned"
 }
