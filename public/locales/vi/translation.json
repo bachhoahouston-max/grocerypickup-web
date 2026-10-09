@@ -456,5 +456,9 @@
   "Earn": "Tích thêm",
   "more tier points in": "điểm hạng trong năm",
   "to keep it through": "để giữ hạng đến hết năm",
-  "A tier you reach is kept through the end of the next calendar year. Tier points restart every January 1.": "Hạng bạn đạt được sẽ được giữ đến hết năm dương lịch tiếp theo. Điểm hạng được tính lại từ đầu mỗi ngày 1 tháng 1."
+  "A tier you reach is kept through the end of the next calendar year. Tier points restart every January 1.": "Hạng bạn đạt được sẽ được giữ đến hết năm dương lịch tiếp theo. Điểm hạng được tính lại từ đầu mỗi ngày 1 tháng 1.",
+  "Not enough points": "Không đủ điểm",
+  "Decrease quantity": "Giảm số lượng",
+  "Increase quantity": "Tăng số lượng",
+  "Item is not available in this quantity in stock. Please choose a different item.": "Sản phẩm không còn đủ số lượng trong kho. Vui lòng chọn sản phẩm khác."
 }

@@ -459,5 +459,9 @@
   "Earn": "Earn",
   "more tier points in": "more tier points in",
   "to keep it through": "to keep it through",
-  "A tier you reach is kept through the end of the next calendar year. Tier points restart every January 1.": "A tier you reach is kept through the end of the next calendar year. Tier points restart every January 1."
+  "A tier you reach is kept through the end of the next calendar year. Tier points restart every January 1.": "A tier you reach is kept through the end of the next calendar year. Tier points restart every January 1.",
+  "Not enough points": "Not enough points",
+  "Decrease quantity": "Decrease quantity",
+  "Increase quantity": "Increase quantity",
+  "Item is not available in this quantity in stock. Please choose a different item.": "Item is not available in this quantity in stock. Please choose a different item."
 }
