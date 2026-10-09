@@ -265,6 +265,56 @@ import { Api } from "@/services/service";
 const isNormalItem = (item) => item?.productSource === "NORMAL";
 const isSaleItem = (item) => item?.productSource === "SALE";
 const isComboItem = (item) => item?.productSource === "COMBO";
+const isRewardItem = (item) => item?.productSource === "REWARD";
+
+// ─── Reward Cart Row (redeemed with points, always $0, qty fixed at 1) ───────
+const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, cartClose }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="w-full bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0B4F8A]">
+        <span className="text-white text-xs">🏆</span>
+        <span className="text-white text-xs font-bold uppercase tracking-wide">
+          {t("Reward")}
+        </span>
+        <span className="ml-2 text-blue-100 text-xs">
+          · {Number(item?.points || 0).toLocaleString()} {t("points")}
+        </span>
+      </div>
+      <div className="p-3 flex flex-row items-start md:items-center justify-between gap-4">
+        <CartImage item={item} />
+        <div className="flex flex-col flex-1 p-1 min-w-0">
+          <p className="text-black font-medium md:text-base text-sm">
+            {lang === "en" ? item?.name : item?.vietnamiesName || item?.name}
+          </p>
+          <div className="text-sm text-black mt-1 flex gap-3 items-center flex-wrap">
+            <span className="text-xs md:text-sm">
+              {item?.price_slot?.value ?? 1} {item?.price_slot?.unit ?? "unit"}
+            </span>
+            {item?.price_slot?.other_price && (
+              <span className="line-through text-xs text-gray-400">
+                {constant.currency}
+                {item.price_slot.other_price}
+              </span>
+            )}
+            <span className="font-black text-green-700 text-xs">FREE</span>
+          </div>
+          <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
+        </div>
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <p className="text-[#0B4F8A] font-semibold text-sm md:text-base whitespace-nowrap">
+            −{Number(item?.points || 0).toLocaleString()} {t("pts")}
+          </p>
+          <IoMdClose
+            className="w-5 h-5 text-black cursor-pointer"
+            onClick={() => cartClose(item, i)}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 
 
@@ -773,6 +823,10 @@ export default function CartDrawer({
 
             if (isComboItem(item)) {
               return <ComboCartRow key={i} {...sharedProps} />;
+            }
+
+            if (isRewardItem(item)) {
+              return <RewardCartRow key={i} {...sharedProps} />;
             }
 
             return <NormalCartRow key={i} {...sharedProps} />;

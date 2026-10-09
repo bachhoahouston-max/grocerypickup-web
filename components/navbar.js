@@ -802,6 +802,16 @@ const Navbar = (props) => {
                         className="px-4 py-2 hover:bg-white/10 flex justify-between items-center cursor-pointer"
                         onClick={() => {
                           setShowHover(false);
+                          router.push("/rewards");
+                        }}
+                      >
+                        {t("Rewards")}
+                        <IoIosArrowForward className="text-xl" />
+                      </li>
+                      <li
+                        className="px-4 py-2 hover:bg-white/10 flex justify-between items-center cursor-pointer"
+                        onClick={() => {
+                          setShowHover(false);
                           router.push("/Myhistory");
                         }}
                       >
