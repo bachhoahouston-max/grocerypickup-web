@@ -1,17 +1,5 @@
 import { useId } from "react";
-
-// Tier colors from the brand spec; light/dark are derived shades for the metallic gradient.
-const TIER_COLORS = {
-  loyal: { base: "#0B4F3C", light: "#3A9C7D", dark: "#05291F" },
-  silver: { base: "#A7B0B7", light: "#EEF1F3", dark: "#6B747B" },
-  gold: { base: "#D8A62E", light: "#F8DE8A", dark: "#94690F" },
-  diamond: { base: "#55B8E8", light: "#D4F1FF", dark: "#22709E" },
-};
-
-export const tierColor = (tier) => {
-  const key = String(tier?.key || tier?.name || tier || "").toLowerCase();
-  return TIER_COLORS[key] || null;
-};
+import { tierColor } from "@/components/TierBadge";
 
 // One laurel branch (left side); mirrored for the right.
 const LEAVES = [
@@ -25,8 +13,8 @@ const LEAVES = [
 
 export default function TierTrophy({ tier, size = 72, className = "" }) {
   const uid = useId().replace(/:/g, "");
-  const c = tierColor(tier) || TIER_COLORS.gold;
-  const isDiamond = c === TIER_COLORS.diamond;
+  const c = tierColor(tier) || tierColor("gold");
+  const isDiamond = c === tierColor("diamond");
   const metal = `metal-${uid}`;
   const shine = `shine-${uid}`;
   const glow = `glow-${uid}`;

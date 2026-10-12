@@ -2,13 +2,14 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { Upload, ImagePlus, X } from "lucide-react";
+import { Upload, ImagePlus, X, ChevronRight } from "lucide-react";
 import moment from "moment";
 import Compressor from "compressorjs";
 import { cartContext, userContext, languageContext } from "./_app";
 import { Api, ApiFormData } from "@/services/service";
 import { cartQtyForProduct, getAvailableStock, rewardLimitError } from "@/services/rewardCart";
-import TierTrophy, { tierColor } from "@/components/TierTrophy";
+import TierBadge, { tierColor } from "@/components/TierBadge";
+import TierTrophy from "@/components/TierTrophy";
 
 const TABS = [
   { key: "redeem", label: "Redeem" },
@@ -17,6 +18,20 @@ const TABS = [
 ];
 
 const BRAND_BLUE = "#0B4F8A";
+// Four-point sparkle used to decorate the points header.
+const Sparkle = ({ size = 16, className = "" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
+    <path d="M12 0 Q13.2 10.8 24 12 Q13.2 13.2 12 24 Q10.8 13.2 0 12 Q10.8 10.8 12 0Z" fill="#F5B82E" />
+  </svg>
+);
+
+const Leaf = ({ className = "" }) => (
+  <svg viewBox="0 0 100 160" className={className} aria-hidden="true">
+    <path d="M50 0 C95 40 95 120 50 160 C5 120 5 40 50 0Z" fill="#2E7D32" />
+    <path d="M50 10 V150" stroke="#fff" strokeOpacity="0.5" strokeWidth="2" />
+  </svg>
+);
+
 const productImage = (product) => product?.varients?.[0]?.image?.[0] || "/placeholder.png";
 
 // Reward lines use their own cart id so other add-to-cart code (which looks up
@@ -213,49 +228,62 @@ function Rewards(props) {
         </div>
 
         {/* Points header */}
-        <div className="flex flex-col items-center text-center mt-6">
-          <TierTrophy tier={summary?.tier} size={88} className="drop-shadow-md" />
-          <p className="text-[#0B4F8A] text-base md:text-lg mt-2">Bách Hoá Houston</p>
-          <p
-            className="tracking-[0.2em] text-sm md:text-base font-semibold mt-1"
-            style={{ color: tierColor(summary?.tier)?.base || "#0B4F8A" }}
-          >
-            {summary?.tier ? t(`${summary.tier.name.toUpperCase()} MEMBER`) : t("REWARDS MEMBER")}
-          </p>
-          {isLoggedIn ? (
-            <>
-              <p className="text-[#0B4F8A] font-extrabold text-6xl md:text-7xl leading-tight mt-2 tabular-nums">
-                {summary ? summary.available.toLocaleString() : "—"}
+        <div className="relative overflow-hidden rounded-3xl mt-6 px-4 py-8 text-center bg-gradient-to-b from-[#E6F3E8] to-[#F4F8FC]">
+          <Leaf className="pointer-events-none absolute -left-6 top-6 w-20 md:w-28 opacity-[0.08] -rotate-[30deg]" />
+          <Leaf className="pointer-events-none absolute -left-2 bottom-0 w-14 md:w-20 opacity-[0.06] rotate-[20deg]" />
+          <Leaf className="pointer-events-none absolute -right-6 top-2 w-20 md:w-28 opacity-[0.08] rotate-[35deg]" />
+          <Leaf className="pointer-events-none absolute -right-2 bottom-2 w-16 md:w-24 opacity-[0.06] -rotate-[15deg]" />
+          <div className="relative flex flex-col items-center">
+            <TierTrophy tier={summary?.tier} size={96} className="drop-shadow-md" />
+            <p className="text-[#0B4F3C] text-base md:text-lg font-semibold">Bách Hoá Houston</p>
+            <div className="relative mt-2 px-8">
+              <Sparkle size={18} className="absolute -right-1 -top-1" />
+              <Sparkle size={12} className="absolute left-0 top-6" />
+              <p className="text-[#0B2F5E] tracking-[0.25em] text-sm md:text-base font-semibold">
+                {summary?.tier ? t(`${summary.tier.name.toUpperCase()} MEMBER`) : t("REWARDS MEMBER")}
               </p>
-              <p className="text-[#0B4F8A] text-base md:text-lg">{t("Available Points")}</p>
-              {(summary?.pending > 0 || pointsInCart > 0) && (
-                <p className="text-xs md:text-sm text-gray-500 mt-1">
-                  {pointsInCart > 0 && `${pointsInCart.toLocaleString()} ${t("pts in your cart")}`}
-                  {pointsInCart > 0 && summary?.pending > 0 && " · "}
-                  {summary?.pending > 0 &&
-                    `${summary.pending.toLocaleString()} ${t("pts on hold for an unpaid checkout")}`}
-                </p>
-              )}
-              {summary?.awaitingPoints > 0 && (
-                <p className="text-xs md:text-sm text-[#1E9E4A] mt-1">
-                  +{summary.awaitingPoints.toLocaleString()} {t("pts coming when your orders are completed or delivered")}
-                </p>
-              )}
-            </>
-          ) : (
-            <div className="mt-4 flex flex-col items-center gap-3">
-              <p className="text-gray-600 text-sm md:text-base max-w-sm">
-                {t("Earn 10 points for every $1 you spend. Sign in to see your points.")}
-              </p>
-              <button
-                type="button"
-                onClick={() => router.push("/signIn")}
-                className="bg-custom-green text-white font-semibold rounded-full px-8 py-2.5 cursor-pointer"
-              >
-                {t("Sign in")}
-              </button>
             </div>
-          )}
+            {isLoggedIn ? (
+              <>
+                <p className="text-[#0B2F5E] font-extrabold text-6xl md:text-7xl leading-tight mt-1 tabular-nums">
+                  {summary ? summary.available.toLocaleString() : "—"}
+                </p>
+                <p className="text-[#0B4F8A] text-base md:text-lg font-medium">{t("Available Points")}</p>
+                {(summary?.pending > 0 || pointsInCart > 0 || summary?.awaitingPoints > 0) && (
+                  <div className="mt-3 flex flex-wrap justify-center gap-2">
+                    {pointsInCart > 0 && (
+                      <span className="rounded-full bg-white/80 text-gray-600 text-xs md:text-sm px-3 py-1">
+                        {pointsInCart.toLocaleString()} {t("pts in your cart")}
+                      </span>
+                    )}
+                    {summary?.pending > 0 && (
+                      <span className="rounded-full bg-white/80 text-gray-600 text-xs md:text-sm px-3 py-1">
+                        {summary.pending.toLocaleString()} {t("pts on hold for an unpaid checkout")}
+                      </span>
+                    )}
+                    {summary?.awaitingPoints > 0 && (
+                      <span className="rounded-full bg-[#D7EDDA] text-[#1E7A3C] text-xs md:text-sm px-3 py-1">
+                        +{summary.awaitingPoints.toLocaleString()} {t("pts coming when your orders are completed or delivered")}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="mt-4 flex flex-col items-center gap-3">
+                <p className="text-gray-600 text-sm md:text-base max-w-sm">
+                  {t("Earn 10 points for every $1 you spend. Sign in to see your points.")}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => router.push("/signIn")}
+                  className="bg-custom-green text-white font-semibold rounded-full px-8 py-2.5 cursor-pointer"
+                >
+                  {t("Sign in")}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {tab === "redeem" && (
@@ -458,71 +486,76 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
     ? Math.max(Math.min(((tier.qualifyingPoints - currentMin) / (nextMin - currentMin)) * 100, 100), 0)
     : 100;
   const formatTierDate = (ymd) => (ymd ? moment(ymd, "YYYY-MM-DD").format("MMM D, YYYY") : "");
+  const tierStyle = tierColor(tier) || { base: "#2E7D32", dark: "#1B5E20" };
+  const nextTiers = (summary?.tiers || []).filter((x) => x.minPoints > currentMin);
 
   return (
     <div className="mt-6 space-y-6">
       {tier && (
-        <div className="bg-white rounded-2xl border border-gray-200 p-4 md:p-6">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-3">
-              <TierTrophy tier={tier} size={56} />
-              <div>
-                <p className="text-gray-500 text-sm">{t("Your tier")}</p>
-                <p className="text-[#0B4F8A] font-extrabold text-2xl">{t(tier.name)}</p>
-                {tier.validThrough && (
-                  <p className="text-xs md:text-sm text-gray-500">
-                    {t("Valid through")} {formatTierDate(tier.validThrough)}
-                  </p>
-                )}
-              </div>
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 md:p-6">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-gray-500 text-sm">{t("Your membership")}</p>
+              <p className="text-[#0B2F5E] font-extrabold text-3xl leading-tight">{t(tier.name)}</p>
+              {tier.validThrough && (
+                <p className="text-sm text-gray-500 mt-0.5">
+                  {t("Valid through")} {formatTierDate(tier.validThrough)}
+                </p>
+              )}
             </div>
-            <span className="bg-[#0B4F8A] text-white text-sm font-semibold rounded-full px-4 py-1.5">
-              $1 = {tier.pointsPerDollar} {t("points")}
+            <span
+              className="text-sm font-semibold rounded-full px-4 py-1.5"
+              style={{ backgroundColor: `${tierStyle.base}22`, color: tierStyle.dark }}
+            >
+              {t(tier.name)}
             </span>
           </div>
 
-          <div className="mt-4">
-            <div className="flex justify-between text-xs md:text-sm text-gray-500 mb-1">
+          <div className="border-t border-gray-100 mt-4 pt-4">
+            <div className="flex justify-between gap-2 text-xs md:text-sm text-gray-600 mb-2">
               <span>
-                {tier.year} {t("tier points")}: <span className="font-semibold text-gray-800">{tier.qualifyingPoints.toLocaleString()}</span>
+                {tier.year} {t("tier points")}: <span className="font-semibold text-gray-900">{tier.qualifyingPoints.toLocaleString()}</span>
               </span>
-              {tier.nextTier && <span>{nextMin.toLocaleString()} → {t(tier.nextTier.name)}</span>}
+              {tier.nextTier && <span>{nextMin.toLocaleString()} {t("points to")} {t(tier.nextTier.name)}</span>}
             </div>
             <div className="h-2.5 rounded-full bg-[#E9EEF5] overflow-hidden">
-              <div className="h-full rounded-full bg-[#0B4F8A]" style={{ width: `${progress}%` }} />
+              <div className="h-full rounded-full bg-[#2E7D32] min-w-[8%]" style={{ width: `${progress}%` }} />
             </div>
-            <p className="text-xs md:text-sm text-gray-600 mt-2">
-              {tier.nextTier
-                ? `${tier.pointsToNextTier.toLocaleString()} ${t("more tier points to reach")} ${t(tier.nextTier.name)} ($1 = ${tier.nextTier.pointsPerDollar} ${t("points")})`
-                : t("You've reached our highest tier!")}
+            <p className="text-sm md:text-base text-gray-800 mt-3">
+              {tier.nextTier ? (
+                <>
+                  <span className="font-bold">{tier.pointsToNextTier.toLocaleString()}</span> {t("points to reach")} {t(tier.nextTier.name)}
+                </>
+              ) : (
+                t("You've reached our highest tier!")
+              )}
             </p>
             {tier.source === "carried" && tier.pointsToKeepTier > 0 && (
               <p className="text-xs md:text-sm text-[#0B4F8A] mt-1">
                 {`${t("You earned")} ${t(tier.name)} ${t("in")} ${tier.carriedFromYear}. ${t("Earn")} ${tier.pointsToKeepTier.toLocaleString()} ${t("more tier points in")} ${tier.year} ${t("to keep it through")} ${tier.year + 1}.`}
               </p>
             )}
-            <p className="text-[11px] md:text-xs text-gray-400 mt-1">
-              {t("A tier you reach is kept through the end of the next calendar year. Tier points restart every January 1.")}
-            </p>
           </div>
+        </div>
+      )}
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
-            {(summary.tiers || []).map((x, idx, all) => (
-              <div
-                key={x.key}
-                className={`rounded-xl border p-3 text-center ${x.key === tier.key ? "border-[#0B4F8A] bg-[#eef4fb]" : "border-gray-200"}`}
-              >
-                <TierTrophy tier={x} size={40} className="mx-auto" />
-                <p className="font-semibold text-[#0B4F8A]">{t(x.name)}</p>
-                <p className="text-xs text-gray-500">
-                  {all[idx + 1]
-                    ? `${x.minPoints.toLocaleString()} – ${(all[idx + 1].minPoints - 1).toLocaleString()}`
-                    : `${x.minPoints.toLocaleString()}+`}
-                </p>
-                <p className="text-sm font-semibold text-gray-700 mt-1">$1 = {x.pointsPerDollar}</p>
-              </div>
+      {nextTiers.length > 0 && (
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 md:p-6">
+          <p className="text-gray-600 text-sm md:text-base mb-3">{t("Next tier benefits")}</p>
+          <ul className="space-y-2">
+            {nextTiers.map((x) => (
+              <li key={x.key} className="flex items-center gap-4 rounded-xl border border-gray-100 bg-[#FAFBFC] px-4 py-3">
+                <TierBadge tier={x} size={40} className="flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-[#0B2F5E] font-bold text-lg leading-tight">{t(x.name)}</p>
+                  <p className="text-sm text-gray-500">
+                    {x.minPoints.toLocaleString()} {t("points")} · $1 = {x.pointsPerDollar} {t("points")}
+                  </p>
+                </div>
+                <ChevronRight className="text-gray-400 flex-shrink-0" size={20} aria-hidden="true" />
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       )}
 
