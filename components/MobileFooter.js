@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useRouter } from "next/router";
 import { cartContext, openCartContext } from "@/pages/_app";
 import { useTranslation } from "react-i18next";
-import { Home, ListOrdered, Trophy, ShoppingCart, User } from "lucide-react";
+import { Home, ListOrdered, Gift, ShoppingCart, User } from "lucide-react";
 
 function MobileFooter() {
   const router = useRouter();
@@ -21,7 +21,7 @@ function MobileFooter() {
     },
     {
       label: t("Rewards"),
-      icon: Trophy,
+      icon: Gift,
       path: "/rewards",
     },
     {

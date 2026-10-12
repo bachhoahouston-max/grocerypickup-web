@@ -249,7 +249,7 @@ function Rewards(props) {
                   {summary ? summary.available.toLocaleString() : "—"}
                 </p>
                 <p className="text-[#0B4F8A] text-base md:text-lg font-medium">{t("Available Points")}</p>
-                {(summary?.pending > 0 || pointsInCart > 0 || summary?.awaitingPoints > 0) && (
+                {(summary?.pending > 0 || pointsInCart > 0) && (
                   <div className="mt-3 flex flex-wrap justify-center gap-2">
                     {pointsInCart > 0 && (
                       <span className="rounded-full bg-white/80 text-gray-600 text-xs md:text-sm px-3 py-1">
@@ -259,11 +259,6 @@ function Rewards(props) {
                     {summary?.pending > 0 && (
                       <span className="rounded-full bg-white/80 text-gray-600 text-xs md:text-sm px-3 py-1">
                         {summary.pending.toLocaleString()} {t("pts on hold for an unpaid checkout")}
-                      </span>
-                    )}
-                    {summary?.awaitingPoints > 0 && (
-                      <span className="rounded-full bg-[#D7EDDA] text-[#1E7A3C] text-xs md:text-sm px-3 py-1">
-                        +{summary.awaitingPoints.toLocaleString()} {t("pts coming when your orders are completed or delivered")}
                       </span>
                     )}
                   </div>
@@ -368,29 +363,21 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
 
   return (
     <>
-      {/* Store banner */}
-      <div className="mt-6 rounded-2xl overflow-hidden shadow-md bg-white grid grid-cols-5">
-        <div className="col-span-2 flex flex-col justify-center p-4 md:p-8 bg-gradient-to-br from-green-50 to-white">
-          <p className="text-[#14532d] font-extrabold text-xl md:text-4xl leading-tight">{t("Visit")}</p>
-          <p className="text-[#14532d] font-extrabold text-xl md:text-4xl leading-tight">Bách Hoá</p>
-          <p className="text-[#F28020] font-extrabold text-xl md:text-4xl leading-tight">Houston</p>
-          <button
-            type="button"
-            onClick={shopNow}
-            className="mt-3 md:mt-5 self-start bg-[#E3062A] hover:bg-[#c40524] text-white font-semibold text-sm md:text-lg rounded-full px-4 md:px-8 py-1.5 md:py-2.5 cursor-pointer"
-          >
-            {t("Shop now")}
-          </button>
-        </div>
-        <div className="col-span-3 relative min-h-[150px] md:min-h-[260px]">
-          {banner?.image ? (
-            // Admin-uploaded banner (Admin → Points → Banner); plain img so any asset host works
-            <img src={banner.image} alt="Bách Hoá Houston" className="absolute inset-0 w-full h-full object-cover" />
-          ) : (
-            <Image src="/Store.png" alt="Bách Hoá Houston store" fill className="object-cover" sizes="(max-width: 768px) 60vw, 600px" />
-          )}
-        </div>
-      </div>
+      {/* Store banner — the whole banner is the admin-set image and links to the admin-set page */}
+      <button
+        type="button"
+        onClick={shopNow}
+        className="mt-6 block w-full rounded-2xl overflow-hidden shadow-md bg-white cursor-pointer"
+      >
+        {banner?.image ? (
+          // Admin-uploaded banner (Admin → Points → Banner); plain img so any asset host works
+          <img src={banner.image} alt="Bách Hoá Houston" className="block w-full h-auto" />
+        ) : (
+          <div className="relative w-full aspect-[3/1]">
+            <Image src="/Store.png" alt="Bách Hoá Houston store" fill className="object-cover" sizes="(max-width: 768px) 100vw, 1000px" />
+          </div>
+        )}
+      </button>
 
       {catalogLoaded && groups.length === 0 && (
         <div className="text-center py-16">
