@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { Trophy, Upload, ImagePlus, X } from "lucide-react";
+import { Upload, ImagePlus, X } from "lucide-react";
 import moment from "moment";
 import Compressor from "compressorjs";
 import { cartContext, userContext, languageContext } from "./_app";
 import { Api, ApiFormData } from "@/services/service";
 import { cartQtyForProduct, getAvailableStock, rewardLimitError } from "@/services/rewardCart";
+import TierTrophy, { tierColor } from "@/components/TierTrophy";
 
 const TABS = [
   { key: "redeem", label: "Redeem" },
@@ -213,9 +214,12 @@ function Rewards(props) {
 
         {/* Points header */}
         <div className="flex flex-col items-center text-center mt-6">
-          <Trophy className="text-[#0B4F8A]" size={44} strokeWidth={1.6} />
+          <TierTrophy tier={summary?.tier} size={88} className="drop-shadow-md" />
           <p className="text-[#0B4F8A] text-base md:text-lg mt-2">Bách Hoá Houston</p>
-          <p className="text-[#0B4F8A] tracking-[0.2em] text-sm md:text-base font-semibold mt-1">
+          <p
+            className="tracking-[0.2em] text-sm md:text-base font-semibold mt-1"
+            style={{ color: tierColor(summary?.tier)?.base || "#0B4F8A" }}
+          >
             {summary?.tier ? t(`${summary.tier.name.toUpperCase()} MEMBER`) : t("REWARDS MEMBER")}
           </p>
           {isLoggedIn ? (
@@ -460,14 +464,17 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
       {tier && (
         <div className="bg-white rounded-2xl border border-gray-200 p-4 md:p-6">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <p className="text-gray-500 text-sm">{t("Your tier")}</p>
-              <p className="text-[#0B4F8A] font-extrabold text-2xl">{t(tier.name)}</p>
-              {tier.validThrough && (
-                <p className="text-xs md:text-sm text-gray-500">
-                  {t("Valid through")} {formatTierDate(tier.validThrough)}
-                </p>
-              )}
+            <div className="flex items-center gap-3">
+              <TierTrophy tier={tier} size={56} />
+              <div>
+                <p className="text-gray-500 text-sm">{t("Your tier")}</p>
+                <p className="text-[#0B4F8A] font-extrabold text-2xl">{t(tier.name)}</p>
+                {tier.validThrough && (
+                  <p className="text-xs md:text-sm text-gray-500">
+                    {t("Valid through")} {formatTierDate(tier.validThrough)}
+                  </p>
+                )}
+              </div>
             </div>
             <span className="bg-[#0B4F8A] text-white text-sm font-semibold rounded-full px-4 py-1.5">
               $1 = {tier.pointsPerDollar} {t("points")}
@@ -505,6 +512,7 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
                 key={x.key}
                 className={`rounded-xl border p-3 text-center ${x.key === tier.key ? "border-[#0B4F8A] bg-[#eef4fb]" : "border-gray-200"}`}
               >
+                <TierTrophy tier={x} size={40} className="mx-auto" />
                 <p className="font-semibold text-[#0B4F8A]">{t(x.name)}</p>
                 <p className="text-xs text-gray-500">
                   {all[idx + 1]
@@ -531,12 +539,12 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
 
       <div className="bg-white rounded-2xl border border-gray-200 p-4 text-sm text-gray-600">
         <p className="font-semibold text-[#0B4F8A] mb-1">{t("How it works")}</p>
-        <p>{t("Earn points on completed or delivered orders and approved in-store receipts: Loyal $1 = 10, Silver $1 = 11, Gold $1 = 12, Diamond $1 = 13 points.")}</p>
-        <p className="mt-1">{t("Reward points never expire. Tier points are the points you earn each calendar year — they restart on January 1, and a tier you reach is kept through the end of the next year.")}</p>
-        <p className="mt-1">{t("Refunded amounts and cancelled orders don't earn points.")}</p>
+        <p>{t("Earn points on completed or delivered orders and approved in-store receipts. For every $1 you spend, you earn points based on your membership tier: Loyal earns 10 points, Silver earns 11 points, Gold earns 12 points, and Diamond earns 13 points.")}</p>
+        <p className="mt-2">{t("Reward points never expire. Tier points reset on January 1 each year. Once you reach a tier, you keep it through the end of the following year.")} {t("Refunded amounts and canceled orders do not earn points.")}</p>
+        <p className="mt-2">{t("Bách Hoá Houston reserves the right to modify, suspend, or cancel the Rewards Program at any time, with or without notice.")}</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-gray-200">
+      {/* <div className="bg-white rounded-2xl border border-gray-200">
         <p className="font-semibold text-[#0B4F8A] px-4 pt-4 pb-2">{t("Points history")}</p>
         {loaded && history.length === 0 && (
           <p className="text-gray-400 text-sm text-center py-10">{t("No points activity yet.")}</p>
@@ -557,7 +565,7 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
             </li>
           ))}
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 }
