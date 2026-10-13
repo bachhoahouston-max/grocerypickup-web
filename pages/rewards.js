@@ -228,7 +228,7 @@ function Rewards(props) {
         </div>
 
         {/* Points header */}
-        <div className="relative overflow-hidden rounded-3xl mt-6 px-4 py-8 text-center bg-gradient-to-b from-[#E6F3E8] to-[#F4F8FC]">
+        <div className="relative overflow-hidden rounded-3xl mt-6 p-6 text-center bg-gradient-to-b from-[#E6F3E8] to-[#F4F8FC]">
           <Leaf className="pointer-events-none absolute -left-6 top-6 w-20 md:w-28 opacity-[0.08] -rotate-[30deg]" />
           <Leaf className="pointer-events-none absolute -left-2 bottom-0 w-14 md:w-20 opacity-[0.06] rotate-[20deg]" />
           <Leaf className="pointer-events-none absolute -right-6 top-2 w-20 md:w-28 opacity-[0.08] rotate-[35deg]" />
