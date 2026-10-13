@@ -1251,12 +1251,14 @@ function Cart(props) {
                           id: "orderPickup",
                           title: t("In Store Pickup"),
                           subtitle: t("Pick it up inside the store"),
+                          image: "/delivery-instore.png",
                           type: "pickup",
                         },
                         {
                           id: "driveUp",
                           title: t("Curbside Pickup"),
                           subtitle: t("We bring it out to your car"),
+                          image: "/delivery-curbside.png",
                           type: "pickup",
                         },
                         {
@@ -1267,12 +1269,14 @@ function Cart(props) {
                           subtitle: isAfterNoon
                             ? t("Cut off time 11:59 pm")
                             : t("Cut off time 12 pm"),
+                          image: "/delivery-sameday.png",
                           type: "delivery",
                         },
                         {
                           id: "ShipmentDelivery",
                           title: t("Shipping"),
                           subtitle: t("Delivery in 3 to 5 business days"),
+                          image: "/delivery-shipping.png",
                           type: "delivery",
                         },
                       ].map((opt) => {
@@ -1286,8 +1290,13 @@ function Cart(props) {
                               : "border-gray-200 border"
                               } cursor-pointer bg-white`}
                           >
-                            <div className="flex items-start justify-between w-full">
-                              <div className="flex items-start gap-2">
+                            <div className="flex items-center justify-between w-full">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={opt.image}
+                                  alt={opt.title}
+                                  className="h-10 w-14 md:h-12 md:w-16 object-contain shrink-0"
+                                />
                                 <input
                                   type="radio"
                                   id={opt.id}

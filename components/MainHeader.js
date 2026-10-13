@@ -76,24 +76,24 @@ function MainHeader() {
     {
       title: "In Store Pickup",
       description: "Pick it up inside the store",
-      image: "/image19.png",
+      image: "/delivery-instore.png",
     },
     {
       title: "Curbside Pickup",
       description: "We bring it out to your car",
-      image: "/image23.png",
+      image: "/delivery-curbside.png",
     },
     {
       title: isAfterNoon
         ? "Next Day Local Delivery"
         : "Same Day Local Delivery",
       description: isAfterNoon ? "Cut off time 11:59 pm" : "Cut off time 12 pm",
-      image: "/image24.png",
+      image: "/delivery-sameday.png",
     },
     {
       title: "Shipping",
       description: "Delivery in 3 to 5 business days",
-      image: "/image25.png",
+      image: "/delivery-shipping.png",
     },
   ];
 
@@ -175,7 +175,7 @@ function MainHeader() {
           >
             <div>
               {" "}
-              <img src={service?.image} className="h-10" />{" "}
+              <img src={service?.image} alt={t(service.title)} className="h-12 w-16 object-contain" />{" "}
             </div>
             <div className="text-left">
               <p className="md:text-[17px] font-semibold text-gray-900">

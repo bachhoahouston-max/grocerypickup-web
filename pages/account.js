@@ -328,7 +328,7 @@ function RewardsCard({ summary, t, onClick }) {
     <button
       onClick={onClick}
       className="w-full rounded-2xl shadow-sm p-4 border flex items-center gap-4 mb-6 text-left"
-      style={{ backgroundColor: `${c.base}14`, borderColor: `${c.base}55` }}
+      style={{ backgroundColor: `${c.bg}`, borderColor: `${c.bg}` }}
     >
       <div
         className="h-14 w-14 rounded-full flex items-center justify-center shrink-0"

@@ -234,8 +234,8 @@ function Rewards(props) {
           <Leaf className="pointer-events-none absolute -right-6 top-2 w-20 md:w-28 opacity-[0.08] rotate-[35deg]" />
           <Leaf className="pointer-events-none absolute -right-2 bottom-2 w-16 md:w-24 opacity-[0.06] -rotate-[15deg]" />
           <div className="relative flex flex-col items-center">
-            <TierCrown tier={summary?.tier} size={96} className="drop-shadow-md" />
-            <div className="relative mt-2 px-8">
+            <TierCrown tier={summary?.tier} size={72} className="drop-shadow-md" />
+            <div className="relative mpx-8">
               <Sparkle size={18} className="absolute -right-1 -top-1" />
               <Sparkle size={12} className="absolute left-0 top-6" />
               <p className="text-[#0B2F5E] tracking-[0.25em] text-sm md:text-base font-semibold">
@@ -244,7 +244,7 @@ function Rewards(props) {
             </div>
             {isLoggedIn ? (
               <>
-                <p className="text-[#0B2F5E] font-extrabold text-6xl md:text-7xl leading-tight mt-1 tabular-nums">
+                <p className="text-[#0B2F5E] font-extrabold text-6xl md:text-7xl leading-tight tabular-nums">
                   {summary ? summary.available.toLocaleString() : "—"}
                 </p>
                 <p className="text-[#0B4F8A] text-base md:text-lg font-medium">{t("Available Points")}</p>
