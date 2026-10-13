@@ -235,9 +235,9 @@ function Rewards(props) {
           <Leaf className="pointer-events-none absolute -right-2 bottom-2 w-16 md:w-24 opacity-[0.06] -rotate-[15deg]" />
           <div className="relative flex flex-col items-center">
             <TierCrown tier={summary?.tier} size={72} className="drop-shadow-md" />
-            <div className="relative mpx-8">
-              <Sparkle size={18} className="absolute -right-1 -top-1" />
-              <Sparkle size={12} className="absolute left-0 top-6" />
+            <div className="relative px-8">
+              <Sparkle size={18} className="absolute -right-2 -top-2" />
+              <Sparkle size={12} className="absolute -left-1 top-5" />
               <p className="text-[#0B2F5E] tracking-[0.25em] text-sm md:text-base font-semibold">
                 {summary?.tier ? t(`${summary.tier.name.toUpperCase()} MEMBER`) : t("REWARDS MEMBER")}
               </p>
