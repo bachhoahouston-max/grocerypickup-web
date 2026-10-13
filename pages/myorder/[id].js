@@ -327,6 +327,41 @@ const getCombo = (productDetail) =>
     ? productDetail.combo_id
     : null;
 
+// Reward items: redeemed with points, always $0 (productSource "REWARD")
+const isRewardItem = (productDetail) => productDetail?.productSource === "REWARD";
+
+// ─── Reward Info Panel ────────────────────────────────────────────────────────
+const RewardInfoPanel = ({ item }) => {
+  const { t } = useTranslation();
+  const points = Number(item?.points || 0) * Number(item?.qty || 1);
+  return (
+    <div className="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+      <div className="flex items-center gap-2 px-5 py-3 bg-[#0B4F8A]">
+        <span className="text-white text-sm">🏆</span>
+        <span className="text-white font-bold text-sm uppercase tracking-wide">{t("Reward")}</span>
+        <span className="ml-auto bg-white text-[#0B4F8A] text-xs font-black px-3 py-1 rounded-full">
+          {points.toLocaleString()} {t("pts")}
+        </span>
+      </div>
+      <div className="p-4 sm:p-5 space-y-2 text-sm">
+        <div className="flex justify-between">
+          <span className="text-gray-500">{t("Points per item")}</span>
+          <span className="text-gray-700 font-medium">{Number(item?.points || 0).toLocaleString()} {t("pts")}</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-gray-500">{t("Quantity")}</span>
+          <span className="text-gray-700 font-medium">{item?.qty || 1}</span>
+        </div>
+        <div className="border-t border-gray-100 pt-2 flex justify-between font-bold">
+          <span className="text-gray-700">{t("Points redeemed")}</span>
+          <span className="text-[#0B4F8A] text-lg">{points.toLocaleString()} {t("pts")}</span>
+        </div>
+        <p className="text-xs text-gray-500 pt-1">{t("This item was free — you paid for it with reward points.")}</p>
+      </div>
+    </div>
+  );
+};
+
 // ─── Free Gift Card ───────────────────────────────────────────────────────────
 const FreeGiftCard = ({ fp, lang }) => {
   const { t } = useTranslation();
@@ -543,6 +578,7 @@ export default function OrderDetails(props) {
   // ── Derived state ──────────────────────────────────────────────────────────
   const combo = getCombo(productsId);
   const isCombo = !!combo;
+  const isReward = isRewardItem(productsId);
 
   // Refund/payment breakdown needs the same shape OrderCard builds for the
   // invoice (item.total, fullfillQty, shortage, taxAmount, refundAmount,
@@ -607,6 +643,11 @@ export default function OrderDetails(props) {
                   {t("Combo Deal")}
                 </span>
               )}
+              {isReward && (
+                <span className="flex items-center gap-1.5 bg-[#0B4F8A] text-white text-xs font-bold px-3 py-1.5 rounded-full">
+                  🏆 {t("Reward")}
+                </span>
+              )}
             </div>
             <span className="bg-orange-400 text-white px-4 py-2 rounded-full font-medium text-sm">
               {ordersData.status || "Processing"}
@@ -622,6 +663,7 @@ export default function OrderDetails(props) {
 
             {/* ── Combo Deal Panel (only for combo items) ── */}
             {isCombo && <ComboInfoPanel combo={combo} lang={lang} />}
+            {isReward && <RewardInfoPanel item={productsId} />}
 
             {/* ── Product Card ── */}
             <div className={`bg-white rounded-xl shadow-md overflow-hidden ${isCombo ? "border-2 border-blue-100" : ""}`}>
@@ -841,9 +883,18 @@ export default function OrderDetails(props) {
                 <div>
                   <p className="text-gray-500 text-sm">{t("Price")}</p>
                   <div className="flex items-center gap-2">
-                    <p className={`text-xl font-semibold ${isCombo ? "text-green-700" : "text-gray-600"}`}>
-                      ${parseFloat(productsId?.price || 0).toFixed(2)}
-                    </p>
+                    {isReward ? (
+                      <p className="text-xl font-black text-green-700">
+                        FREE{" "}
+                        <span className="text-sm font-semibold text-[#0B4F8A]">
+                          · {(Number(productsId?.points || 0) * Number(productsId?.qty || 1)).toLocaleString()} {t("pts")}
+                        </span>
+                      </p>
+                    ) : (
+                      <p className={`text-xl font-semibold ${isCombo ? "text-green-700" : "text-gray-600"}`}>
+                        ${parseFloat(productsId?.price || 0).toFixed(2)}
+                      </p>
+                    )}
                     {/* Show original price strikethrough for combo */}
                     {isCombo && combo?.main_price_slot?.our_price && (
                       <p className="text-sm text-gray-400 line-through">

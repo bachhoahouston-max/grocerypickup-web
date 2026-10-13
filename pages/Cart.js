@@ -110,6 +110,8 @@ function Cart(props) {
 
     cartData.forEach((item) => {
       const source = item?.productSource || "NORMAL";
+      // Reward prices are always $0 and are validated server-side at order time
+      if (source === "REWARD") return;
 
       const mainId = item?.product?._id || item?._id;
       const currentPrice = item?.price || item?.our_price || 0;
@@ -140,6 +142,7 @@ function Cart(props) {
     console.log("Cart Data:", cartData);
     // return cartData
     const updatedCart = cartData.map((item) => {
+      if (item?.productSource === "REWARD") return item;
       const match = latestData.find(
         (p) => String(p.productId) === String(item?.id || item?.product?._id) && item.priceSlotIndex === p.priceSlotIndex
       );
@@ -777,8 +780,11 @@ function Cart(props) {
 
       const finalPrice = isSaleExpired ? element?.regularPrice : element?.price;
 
+      const isReward = element?.productSource === "REWARD";
+
       data.push({
-        product: element?.id,
+        product: isReward ? element?.product_id : element?.id,
+        point_id: isReward ? element?.point_id : undefined,
         image: element?.selectedColor?.image,
         BarCode: element?.BarCode,
         qty: element?.qty,
@@ -917,7 +923,13 @@ function Cart(props) {
         const data = createRes.data.orders || [];
         console.log(data);
         setOrderID(data.orderId);
-        createCheckoutSession(data.orderId);
+        // Rewards only and nothing to pay: no Stripe, the order is placed directly
+        const rewardOnly = cartData.every((item) => item?.productSource === "REWARD");
+        if (rewardOnly && Number(mainTotal) <= 0) {
+          await placeFreeOrder(data.orderId);
+        } else {
+          createCheckoutSession(data.orderId);
+        }
       } else {
         props.loader && props.loader(false);
         props.toaster({ type: "error", message: "Order save failed" });
@@ -935,24 +947,57 @@ function Cart(props) {
     // }
   };
 
+  const clearCartAfterOrder = () => {
+    localStorage.removeItem("addCartDetail");
+    localStorage.removeItem("checkoutData");
+    setCartData([]);
+    // Clear the synced cart immediately rather than waiting on the
+    // generic debounced sync — Stripe's redirect back to this page is
+    // a full reload, so a pending debounce here can get cancelled
+    // before it fires, leaving the pre-order cart on the server to
+    // reappear on the next load.
+    if (user?._id && user?.token) {
+      clearSyncedCart(router).catch(() => { });
+    }
+    setSuccessPopup(true);
+  };
+
+  const placeFreeOrder = async (ID) => {
+    try {
+      const res = await Api("post", "place-free-order", { orderID: ID }, router);
+      if (res?.status) {
+        clearCartAfterOrder();
+      } else {
+        props.toaster({ type: "error", message: res?.message || "Order save failed" });
+      }
+    } catch (err) {
+      props.toaster({ type: "error", message: err?.message || "Order save failed" });
+    } finally {
+      props.loader && props.loader(false);
+    }
+  };
+
   const createCheckoutSession = async (ID) => {
     const checkoutData = JSON.parse(localStorage.getItem("checkoutData"));
     const cartDetails = JSON.parse(localStorage.getItem("addCartDetail"));
 
-    const lineItems = cartDetails.map((item) => ({
-      quantity: item.qty || 1,
-      price_data: {
-        currency: "usd",
-        unit_amount: Math.round(item.price * 100),
-        product_data: {
-          name: item.name,
-          tax_code: item.tax_code || "txcd_10000000",
-          metadata: {
-            productId: item.id || item._id || "",
+    // Reward items are $0 and paid with points, so they're not sent to Stripe
+    const lineItems = cartDetails
+      .filter((item) => item.productSource !== "REWARD")
+      .map((item) => ({
+        quantity: item.qty || 1,
+        price_data: {
+          currency: "usd",
+          unit_amount: Math.round(item.price * 100),
+          product_data: {
+            name: item.name,
+            tax_code: item.tax_code || "txcd_10000000",
+            metadata: {
+              productId: item.id || item._id || "",
+            },
           },
         },
-      },
-    }));
+      }));
 
     const deliveryTip = parseFloat(checkoutData.Deliverytip || 0);
     const servicefee = parseFloat(serviceFee || 0);
@@ -965,6 +1010,22 @@ function Cart(props) {
           ? currentShipmentCost
           : 0 || 0,
     );
+
+    // Stripe needs at least one line item. A rewards-only order that still has
+    // a delivery fee (and no tip/service fee, which the backend adds as items)
+    // charges the fee as a line item instead of as the shipping rate.
+    const shippingAmount = Number(deliveryCharge) + Number(extraFees || 0);
+    const feeAsLineItem = !lineItems.length && !(deliveryTip > 0) && !(servicefee > 0) && shippingAmount > 0;
+    if (feeAsLineItem) {
+      lineItems.push({
+        quantity: 1,
+        price_data: {
+          currency: "usd",
+          unit_amount: Math.round(shippingAmount * 100),
+          product_data: { name: "Delivery Fee", tax_code: "txcd_92010001" },
+        },
+      });
+    }
 
     const metadata = {
       userId: user?._id,
@@ -1005,9 +1066,7 @@ function Cart(props) {
             display_name: "Standard Delivery",
             type: "fixed_amount",
             fixed_amount: {
-              amount: Math.round(
-                (Number(deliveryCharge) + Number(extraFees)) * 100,
-              ), // deliveryCharge used here
+              amount: feeAsLineItem ? 0 : Math.round(shippingAmount * 100), // deliveryCharge used here
               currency: "usd",
             },
           },
@@ -1096,18 +1155,7 @@ function Cart(props) {
         );
 
         if (stripeRes) {
-          localStorage.removeItem("addCartDetail");
-          localStorage.removeItem("checkoutData");
-          setCartData([]);
-          // Clear the synced cart immediately rather than waiting on the
-          // generic debounced sync — Stripe's redirect back to this page is
-          // a full reload, so a pending debounce here can get cancelled
-          // before it fires, leaving the pre-order cart on the server to
-          // reappear on the next load.
-          if (user?._id && user?.token) {
-            clearSyncedCart(router).catch(() => { });
-          }
-          setSuccessPopup(true);
+          clearCartAfterOrder();
         }
       } catch (error) {
         props.toaster({ type: "error", message: "Payment Failed" });
@@ -1203,12 +1251,14 @@ function Cart(props) {
                           id: "orderPickup",
                           title: t("In Store Pickup"),
                           subtitle: t("Pick it up inside the store"),
+                          image: "/delivery-instore.png",
                           type: "pickup",
                         },
                         {
                           id: "driveUp",
                           title: t("Curbside Pickup"),
                           subtitle: t("We bring it out to your car"),
+                          image: "/delivery-curbside.png",
                           type: "pickup",
                         },
                         {
@@ -1219,12 +1269,14 @@ function Cart(props) {
                           subtitle: isAfterNoon
                             ? t("Cut off time 11:59 pm")
                             : t("Cut off time 12 pm"),
+                          image: "/delivery-sameday.png",
                           type: "delivery",
                         },
                         {
                           id: "ShipmentDelivery",
                           title: t("Shipping"),
                           subtitle: t("Delivery in 3 to 5 business days"),
+                          image: "/delivery-shipping.png",
                           type: "delivery",
                         },
                       ].map((opt) => {
@@ -1238,8 +1290,13 @@ function Cart(props) {
                               : "border-gray-200 border"
                               } cursor-pointer bg-white`}
                           >
-                            <div className="flex items-start justify-between w-full">
-                              <div className="flex items-start gap-2">
+                            <div className="flex items-center justify-between w-full">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={opt.image}
+                                  alt={opt.title}
+                                  className="h-10 w-14 md:h-12 md:w-16 object-contain shrink-0"
+                                />
                                 <input
                                   type="radio"
                                   id={opt.id}

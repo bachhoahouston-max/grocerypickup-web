@@ -87,6 +87,12 @@ const Invoice = ({ order, productsCount, totalAmount, productItem }) => {
 
   const items = productItem || [];
 
+  // Reward items are redeemed with points ($0 lines, productSource "REWARD")
+  const rewardPointsOf = (i) => Number(i?.points || 0) * Number(i?.qty || 1);
+  const rewardPointsTotal = items
+    .filter((i) => i?.productSource === "REWARD")
+    .reduce((sum, i) => sum + rewardPointsOf(i), 0);
+
   const total = parseFloat(
     items.reduce((sum, i) =>
       sum + (Number(i?.total) > 0 ? Number(i?.total) : Number(i.price) * Number(i.qty)), 0
@@ -198,6 +204,7 @@ const Invoice = ({ order, productsCount, totalAmount, productItem }) => {
           }
           <div style={{ flex: 1, minWidth: 0 }}>
             {freeLabel && <span style={{ background: "#22c55e", color: "white", fontSize: "9px", padding: "1px 6px", borderRadius: "3px", display: "inline-block", marginBottom: "2px" }}>FREE</span>}
+            {item?.productSource === "REWARD" && <span style={{ background: "#0B4F8A", color: "white", fontSize: "9px", padding: "1px 6px", borderRadius: "3px", display: "inline-block", marginBottom: "2px" }}>REWARD · {rewardPointsOf(item).toLocaleString()} pts</span>}
             <div style={{ fontSize: "0.7rem", wordBreak: "break-word", overflowWrap: "anywhere" }}>{name}</div>
           </div>
         </div>
@@ -509,6 +516,9 @@ const Invoice = ({ order, productsCount, totalAmount, productItem }) => {
               }
               paymentRows.push(
                 { label: "Discount", value: `$${parseFloat(order.discount || 0).toFixed(2)}` },
+                ...(rewardPointsTotal > 0
+                  ? [{ label: "Reward Points Redeemed (items free)", value: `${rewardPointsTotal.toLocaleString()} pts` }]
+                  : []),
                 { label: "Delivery tip", value: `$${parseFloat(order.Deliverytip || 0).toFixed(2)}` },
                 { label: "Delivery Charges", value: `$${parseFloat(order.deliveryfee || 0).toFixed(2)}` },
                 { label: "Service Fee", value: `$${parseFloat(order.serviceFee || 0).toFixed(2)}` },

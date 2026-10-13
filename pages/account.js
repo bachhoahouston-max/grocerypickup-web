@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { userContext, languageContext } from "./_app";
 import { PiSignOutFill } from "react-icons/pi";
@@ -15,8 +15,13 @@ import {
   Headphones,
   ChevronRight,
   MessageCircle,
+  Trophy,
+  Heart,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Api } from "@/services/service";
+import TierCrown from "@/components/TierCrown";
+import { tierColor } from "@/components/TierBadge";
 
 
 function Account(props) {
@@ -24,6 +29,15 @@ function Account(props) {
   const [user, setUser] = useContext(userContext);
   const { t, i18n } = useTranslation();
   const { lang, changeLang } = useContext(languageContext);
+  const [rewards, setRewards] = useState(null);
+
+  useEffect(() => {
+    if (!user?.token) return;
+    // Card is optional; just hide it if the summary can't be loaded
+    Api("get", "rewards/summary", "", router)
+      .then((res) => setRewards(res?.data || null))
+      .catch(() => setRewards(null));
+  }, [user?.token]);
 
   // Opens the AI chat widget. widget.js (loaded in _app.js) injects a
   // `.lcw-bubble` button + `.lcw-panel`; on mobile the bubble is hidden via
@@ -75,6 +89,24 @@ function Account(props) {
       iconColor: "text-custom-green",
       iconBg: "bg-green-50",
       onClick: () => router.push("/Mybooking"),
+    },
+    {
+      key: "rewards",
+      title: t("Rewards"),
+      subtitle: t("Your points & redeem rewards"),
+      icon: Trophy,
+      iconColor: "text-[#0B4F8A]",
+      iconBg: "bg-blue-50",
+      onClick: () => router.push("/rewards"),
+    },
+    {
+      key: "saved",
+      title: t("Saved Items"),
+      subtitle: t("Products you saved for later"),
+      icon: Heart,
+      iconColor: "text-rose-500",
+      iconBg: "bg-rose-50",
+      onClick: () => router.push("/Favourite"),
     },
     {
       key: "history",
@@ -212,6 +244,8 @@ function Account(props) {
                 <ChevronRight className="w-6 h-6 text-gray-400 shrink-0" />
               </button>
 
+              {rewards?.tier && <RewardsCard summary={rewards} t={t} onClick={() => router.push("/rewards")} />}
+
               <h3 className="text-lg font-bold text-gray-800 mb-3">
                 {t("Account Settings")}
               </h3>
@@ -278,6 +312,51 @@ function Account(props) {
         )}
       </div>
     </div>
+  );
+}
+
+function RewardsCard({ summary, t, onClick }) {
+  const tier = summary.tier;
+  const c = tierColor(tier) || tierColor("gold");
+  const currentMin = summary.tiers?.find((x) => x.key === tier.key)?.minPoints || 0;
+  const nextMin = tier.nextTier?.minPoints;
+  const progress = nextMin
+    ? Math.max(Math.min(((tier.qualifyingPoints - currentMin) / (nextMin - currentMin)) * 100, 100), 0)
+    : 100;
+
+  return (
+    <button
+      onClick={onClick}
+      className="w-full rounded-2xl shadow-sm p-4 border flex items-center gap-4 mb-6 text-left"
+      style={{ backgroundColor: `${c.bg}`, borderColor: `${c.bg}` }}
+    >
+      <div
+        className="h-14 w-14 rounded-full flex items-center justify-center shrink-0"
+        style={{ backgroundColor: `${c.base}26` }}
+      >
+        <TierCrown tier={tier} size={44} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-extrabold tracking-wide" style={{ color: c.dark }}>
+          {t(`${tier.name.toUpperCase()} MEMBER`)}
+        </p>
+        <p className="text-sm font-bold text-gray-800">
+          {summary.available.toLocaleString()} {t("Available Points").toLowerCase()}
+        </p>
+        <p className="text-gray-500 text-xs truncate">
+          {tier.nextTier
+            ? `${tier.pointsToNextTier.toLocaleString()} ${t("points to reach")} ${t(tier.nextTier.name)}`
+            : t("You've reached our highest tier!")}
+        </p>
+        <div className="h-2 rounded-full bg-gray-200 overflow-hidden mt-2">
+          <div className="h-full rounded-full min-w-[6%]" style={{ width: `${progress}%`, backgroundColor: c.base }} />
+        </div>
+        <p className="text-xs font-medium mt-1.5" style={{ color: c.dark }}>
+          $1 = {tier.pointsPerDollar} {t("points")}
+        </p>
+      </div>
+      <ChevronRight className="w-6 h-6 text-gray-400 shrink-0" />
+    </button>
   );
 }
 
