@@ -9,7 +9,7 @@ import { cartContext, userContext, languageContext } from "./_app";
 import { Api, ApiFormData } from "@/services/service";
 import { cartQtyForProduct, getAvailableStock, rewardLimitError } from "@/services/rewardCart";
 import TierBadge, { tierColor } from "@/components/TierBadge";
-import TierTrophy from "@/components/TierTrophy";
+import TierCrown from "@/components/TierCrown";
 
 const TABS = [
   { key: "redeem", label: "Redeem" },
@@ -234,8 +234,7 @@ function Rewards(props) {
           <Leaf className="pointer-events-none absolute -right-6 top-2 w-20 md:w-28 opacity-[0.08] rotate-[35deg]" />
           <Leaf className="pointer-events-none absolute -right-2 bottom-2 w-16 md:w-24 opacity-[0.06] -rotate-[15deg]" />
           <div className="relative flex flex-col items-center">
-            <TierTrophy tier={summary?.tier} size={96} className="drop-shadow-md" />
-            <p className="text-[#0B4F3C] text-base md:text-lg font-semibold">Bách Hoá Houston</p>
+            <TierCrown tier={summary?.tier} size={96} className="drop-shadow-md" />
             <div className="relative mt-2 px-8">
               <Sparkle size={18} className="absolute -right-1 -top-1" />
               <Sparkle size={12} className="absolute left-0 top-6" />
@@ -391,7 +390,7 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
           <h2 className="text-[#0B4F8A] font-bold text-xl md:text-2xl mb-3">
             {lower.toLocaleString()} - {(lower + 99).toLocaleString()} {t("Points")}
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-3 gap-3">
             {rewards.map((reward) => {
               const state = rewardState(reward);
               return (
@@ -443,7 +442,6 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
   const stats = [
     { label: t("Total earned"), value: summary?.earned },
     { label: t("Redeemed"), value: summary?.redeemed },
-    { label: t("On hold"), value: summary?.pending },
     { label: t("Total spent"), value: summary ? `$${summary.lifetimeSpent.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : undefined },
   ];
 
@@ -472,7 +470,6 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
   const progress = nextMin
     ? Math.max(Math.min(((tier.qualifyingPoints - currentMin) / (nextMin - currentMin)) * 100, 100), 0)
     : 100;
-  const formatTierDate = (ymd) => (ymd ? moment(ymd, "YYYY-MM-DD").format("MMM D, YYYY") : "");
   const tierStyle = tierColor(tier) || { base: "#2E7D32", dark: "#1B5E20" };
   const nextTiers = (summary?.tiers || []).filter((x) => x.minPoints > currentMin);
 
@@ -484,16 +481,12 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
             <div>
               <p className="text-gray-500 text-sm">{t("Your membership")}</p>
               <p className="text-[#0B2F5E] font-extrabold text-3xl leading-tight">{t(tier.name)}</p>
-              {tier.validThrough && (
-                <p className="text-sm text-gray-500 mt-0.5">
-                  {t("Valid through")} {formatTierDate(tier.validThrough)}
-                </p>
-              )}
             </div>
             <span
-              className="text-sm font-semibold rounded-full px-4 py-1.5"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-full px-4 py-1.5"
               style={{ backgroundColor: `${tierStyle.base}22`, color: tierStyle.dark }}
             >
+              <TierCrown tier={tier} size={16} className="flex-shrink-0" />
               {t(tier.name)}
             </span>
           </div>
@@ -546,7 +539,7 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-3 gap-3">
         {stats.map((s) => (
           <div key={s.label} className="bg-white rounded-2xl border border-gray-200 p-4 text-center">
             <p className="text-[#0B4F8A] font-bold text-2xl tabular-nums">
