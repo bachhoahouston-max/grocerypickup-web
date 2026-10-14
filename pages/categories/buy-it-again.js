@@ -3,7 +3,10 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import GroceryCatories from "@/components/GroceryCatories";
-import { getBuyItAgainProducts } from "@/services/buyItAgain";
+import {
+  // getBuyItAgainProducts,
+  getPurchasedProducts,
+} from "@/services/buyItAgain";
 
 function BuyItAgain(props) {
   const router = useRouter();
@@ -20,7 +23,9 @@ function BuyItAgain(props) {
     }
 
     props.loader(true);
-    getBuyItAgainProducts(router)
+    // Previous process: only show products that were short during a completed order.
+    // getBuyItAgainProducts(router)
+    getPurchasedProducts(router)
       .then(setProducts)
       .catch((error) => {
         props.toaster({
@@ -31,13 +36,26 @@ function BuyItAgain(props) {
       .finally(() => props.loader(false));
   }, [router.isReady]);
 
+  /*
+  {products.map((item, index) => (
+    <div key={`${item._id}-${index}`} className="p-1 w-full md:mb-5 mb-2">
+      <GroceryCatories
+        loader={props.loader}
+        toaster={props.toaster}
+        item={item}
+        i={index}
+        url={`/product-details/${item?.slug}`}
+      />
+    </div>
+  ))}
+  */
   return (
     <>
       <Head>
         <title>{t("Buy it again")} | Bach Hoa Houston</title>
         <meta
           name="description"
-          content={t("Products that were unavailable in a previous order and are available again")}
+          content={t("Products purchased previously and available to buy again")}
         />
       </Head>
       <div className="bg-[var(--theme-var)] md:bg-[var(--theme-dek)] min-h-screen">
@@ -62,7 +80,7 @@ function BuyItAgain(props) {
           ) : (
             <div className="flex justify-center items-center h-[400px]">
               <p className="text-black text-center font-semibold text-xl">
-                {t("No buy it again products available")}
+                {t("No previously purchased products available")}
               </p>
             </div>
           )}
