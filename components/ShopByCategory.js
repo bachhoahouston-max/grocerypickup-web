@@ -3,10 +3,11 @@ import Image from "next/image";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingBag as Handbag, ShoppingCart } from "lucide-react";
 import { IoIosArrowForward } from "react-icons/io";
 import Link from "next/link";
 import { languageContext } from "@/pages/_app";
+import { BUY_IT_AGAIN_SLUG } from "@/services/buyItAgain";
 
 const CategoryCard = ({ item, url, router }) => {
   const { lang } = useContext(languageContext);
@@ -19,13 +20,16 @@ const CategoryCard = ({ item, url, router }) => {
     >
       <div className="relative mb-3">
         <div className="relative w-28 h-28 md:w-28 md:h-28 rounded-full group-hover:shadow-xl group-hover:scale-105 shadow-md transition-all duration-300">
-          <Image
-            src={item?.image}
-            alt={item?.name || "Category"}
-            fill
-            className="object-cover rounded-full"
-          // sizes="(max-width: 768px) 100px, 120px"
-          />
+          {item?.icon ? (
+            <item.icon className="w-full h-full p-7 text-custom-green" aria-label={item?.name} />
+          ) : (
+            <Image
+              src={item?.image}
+              alt={item?.name || "Category"}
+              fill
+              className="object-cover rounded-full"
+            />
+          )}
         </div>
       </div>
       <p className="text-black text-[14px] md:text-[16px] font-medium text-center">
@@ -106,6 +110,11 @@ function ShopByCategory() {
                 {t("New Arrivals")}
               </p>
             </Link>
+            <CategoryCard
+              item={{ name: "Buy it again", v_name: "Mua lại", icon: Handbag }}
+              url={`/categories/${BUY_IT_AGAIN_SLUG}`}
+              router={router}
+            />
 
             {/* <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"

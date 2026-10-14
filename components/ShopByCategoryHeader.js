@@ -3,9 +3,10 @@ import Image from "next/image";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingBag as Handbag, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { languageContext } from "@/pages/_app";
+import { BUY_IT_AGAIN_SLUG } from "@/services/buyItAgain";
 
 
 const CategoryCard = ({ item, url, router }) => {
@@ -20,17 +21,20 @@ const CategoryCard = ({ item, url, router }) => {
     >
       <div className="relative md:block hidden">
         <div className="relative w-14 h-14 md:w-14 md:h-14 rounded-full group-hover:shadow-xl group-hover:scale-105 shadow-md transition-all duration-300">
-          <Image
-            src={item?.image}
-            alt={item?.name || "Category"}
-            fill
-            className="object-cover rounded-full"
-          // sizes="(max-width: 768px) 100px, 120px"
-          />
+          {item?.icon ? (
+            <item.icon className="w-full h-full p-3 text-custom-green" aria-label={item?.name} />
+          ) : (
+            <Image
+              src={item?.image}
+              alt={item?.name || "Category"}
+              fill
+              className="object-cover rounded-full"
+            />
+          )}
         </div>
       </div>
       <p className="text-black text-[8px] md:text-[10px] font-medium text-center">
-      {lang === "en" ? item?.name : item?.v_name || item?.name}
+        {lang === "en" ? item?.name : item?.v_name || item?.name}
       </p>
     </Link>
   )
@@ -44,7 +48,7 @@ function ShopByCategoryHeader() {
 
   const [width, setWidth] = useState(360);
   console.log(router)
-const queryName = router?.query?.cat_id;
+  const queryName = router?.query?.cat_id;
 
   // useEffect(() => {
   //   const handleResize = () => {
@@ -107,6 +111,11 @@ const queryName = router?.query?.cat_id;
 
               </p>
             </Link>
+            <CategoryCard
+              item={{ name: "Buy it again", v_name: "Mua lại", icon: Handbag }}
+              url={`/categories/${BUY_IT_AGAIN_SLUG}`}
+              router={router}
+            />
 
             {/* <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
@@ -153,7 +162,7 @@ const queryName = router?.query?.cat_id;
 
             {/* New Arrival */}
             <div
-                className={`${(router?.pathname === '/categories/[cat_id]' &&  queryName === 'all') && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
+              className={`${(router?.pathname === '/categories/[cat_id]' && queryName === 'all') && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
               onClick={() =>
                 router.push("/categories/all?category=all&sort_by=new")
               }
@@ -175,7 +184,7 @@ const queryName = router?.query?.cat_id;
 
             {/* Category Items */}
             {categorys.map((category, index) => (
-              <div 
+              <div
                 key={index}
                 className={`${(router?.pathname === '/categories/[cat_id]' && category?.slug === queryName) && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
                 onClick={() => router.push(`/categories/${category?.slug}`)}
@@ -193,7 +202,7 @@ const queryName = router?.query?.cat_id;
 
                 <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
                   {/* {category?.name} */}
-                   {lang === "en" ? category?.name : category?.v_name || category?.name}
+                  {lang === "en" ? category?.name : category?.v_name || category?.name}
                 </p>
               </div>
             ))}
