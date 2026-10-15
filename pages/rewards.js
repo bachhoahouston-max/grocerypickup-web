@@ -387,10 +387,10 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
 
       {groups.map(([lower, rewards]) => (
         <section key={lower} className="mt-6">
-          <h2 className="text-[#0B4F8A] font-bold text-xl md:text-2xl mb-3">
+          {/* <h2 className="text-[#0B4F8A] font-bold text-xl md:text-2xl mb-3">
             {lower.toLocaleString()} - {(lower + 99).toLocaleString()} {t("Points")}
-          </h2>
-          <div className="grid grid-cols-3 gap-3">
+          </h2> */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {rewards.map((reward) => {
               const state = rewardState(reward);
               return (
@@ -408,7 +408,7 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
                     type="button"
                     disabled={state.disabled}
                     onClick={() => onRedeemClick(reward)}
-                    className={`mt-2 w-full rounded-full py-2 text-sm md:text-base font-semibold ${state.disabled
+                    className={`mt-2 w-full rounded-full py-2 text-sm md:text-base font-medium ${state.disabled
                       ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                       : "bg-[#1E9E4A] hover:bg-[#188a40] text-white cursor-pointer"
                       }`}

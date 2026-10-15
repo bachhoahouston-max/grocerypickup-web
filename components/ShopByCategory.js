@@ -6,16 +6,25 @@ import { useTranslation } from "react-i18next";
 import { ShoppingBag as Handbag, ShoppingCart } from "lucide-react";
 import { IoIosArrowForward } from "react-icons/io";
 import Link from "next/link";
-import { languageContext } from "@/pages/_app";
+import { languageContext, userContext } from "@/pages/_app";
 import { BUY_IT_AGAIN_SLUG } from "@/services/buyItAgain";
 
 const CategoryCard = ({ item, url, router }) => {
   const { lang } = useContext(languageContext);
+  const [user] = useContext(userContext);
+  const isBuyItAgain = url === `/categories/${BUY_IT_AGAIN_SLUG}`;
+
+  const handleClick = (event) => {
+    if (isBuyItAgain && !user?.token) {
+      event.preventDefault();
+      router.push("/rewards");
+    }
+  };
 
   return (
     <Link
       className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 "
-      // onClick={() => router.push(url)}
+      onClick={handleClick}
       href={url}
     >
       <div className="relative mb-3">
