@@ -286,7 +286,7 @@ const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
           {t("Reward")}
         </span>
         <span className="ml-2 text-blue-100 text-xs">
-          · {Number(item?.points || 0).toLocaleString()} {t("points")}
+          · {(Number(item?.points || 0) * Number(item?.qty || 1)).toLocaleString()} {t("points")}
         </span>
       </div>
       <div className="p-3 flex flex-row items-start md:items-center justify-between gap-4">
@@ -348,6 +348,7 @@ const NormalCartRow = ({
   formatPrice,
   saleExpired,
   onRedeemReward,
+  rewardPoints,
 }) => {
   const { t } = useTranslation();
 
@@ -398,7 +399,7 @@ const NormalCartRow = ({
               className="mt-2 rounded-full bg-[#2E7D32] px-3 py-1 text-xs font-semibold text-white hover:bg-[#256b29]"
               onClick={() => onRedeemReward(item, i)}
             >
-              🎁 {t("Redeem with points")}
+              🎁 {(Number(rewardPoints || 0) * Number(item?.qty || 1)).toLocaleString()} {t("points")} · {t("Redeem with points")}
             </button>
           )}
         </div>
@@ -947,8 +948,22 @@ export default function CartDrawer({
               saleExpired,
             };
 
-            if (!isRewardItem(item) && !isComboItem(item)) {
+            const hasRewardOffer = rewardCatalog.some(
+              (reward) =>
+                String(reward?.product?._id) ===
+                String(item?.id || item?._id),
+            );
+            const reward = hasRewardOffer
+              ? rewardCatalog.find(
+                (candidate) =>
+                  String(candidate?.product?._id) ===
+                  String(item?.id || item?._id),
+              )
+              : null;
+
+            if (!isRewardItem(item) && !isComboItem(item) && hasRewardOffer) {
               sharedProps.onRedeemReward = redeemReward;
+              sharedProps.rewardPoints = reward?.points;
             }
 
             if (isComboItem(item)) {
