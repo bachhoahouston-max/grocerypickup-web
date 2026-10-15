@@ -24,6 +24,9 @@ const TABS = [
 ];
 
 const BRAND_BLUE = "#0B4F8A";
+const productImage = (product) =>
+  product?.varients?.[0]?.image?.[0] || product?.image?.[0] || product?.image || "/Store.png";
+
 // Four-point sparkle used to decorate the points header.
 const Sparkle = ({ size = 16, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
