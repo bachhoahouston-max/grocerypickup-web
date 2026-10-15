@@ -7,7 +7,13 @@ import moment from "moment";
 import Compressor from "compressorjs";
 import { cartContext, userContext, languageContext } from "./_app";
 import { Api, ApiFormData } from "@/services/service";
-import { cartQtyForProduct, getAvailableStock, rewardLimitError } from "@/services/rewardCart";
+import {
+  buildRewardCartItem,
+  cartQtyForProduct,
+  getAvailableStock,
+  rewardCartId,
+  rewardLimitError,
+} from "@/services/rewardCart";
 import TierBadge, { tierColor } from "@/components/TierBadge";
 import TierCrown from "@/components/TierCrown";
 
@@ -31,43 +37,6 @@ const Leaf = ({ className = "" }) => (
     <path d="M50 10 V150" stroke="#fff" strokeOpacity="0.5" strokeWidth="2" />
   </svg>
 );
-
-const productImage = (product) => product?.varients?.[0]?.image?.[0] || "/placeholder.png";
-
-// Reward lines use their own cart id so other add-to-cart code (which looks up
-// items by product id) never merges them with a normal purchase of the product.
-const rewardCartId = (pointId) => `reward_${pointId}`;
-
-const buildRewardCartItem = (reward) => {
-  const product = reward.product;
-  const slot = product?.price_slot?.[0] || {};
-  return {
-    id: rewardCartId(reward._id),
-    product_id: product._id,
-    point_id: reward._id,
-    points: reward.points,
-    // Limits travel with the cart line so the cart's +/− can check them
-    perUserLimit: reward.perUserLimit || null,
-    remainingTotal: reward.remainingTotal ?? null,
-    productSource: "REWARD",
-    name: product.name,
-    vietnamiesName: product.vietnamiesName,
-    slug: product.slug,
-    selectedColor: product?.varients?.[0] || {},
-    selectedImage: productImage(product),
-    BarCode: product.BarCode || "",
-    tax_code: product.tax_code,
-    qty: 1,
-    price: 0,
-    total: 0,
-    price_slot: { value: slot.value, unit: slot.unit, other_price: slot.our_price, our_price: 0 },
-    isShipmentAvailable: product.isShipmentAvailable,
-    isNextDayDeliveryAvailable: product.isNextDayDeliveryAvailable,
-    isCurbSidePickupAvailable: product.isCurbSidePickupAvailable,
-    isInStoreAvailable: product.isInStoreAvailable,
-    isReturnAvailable: product.isReturnAvailable,
-  };
-};
 
 function Rewards(props) {
   const router = useRouter();

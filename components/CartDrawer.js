@@ -256,12 +256,18 @@ import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { produce } from "immer";
 import { useContext, useEffect, useState } from "react";
-import { cartContext, languageContext } from "@/pages/_app";
+import { cartContext, languageContext, userContext } from "@/pages/_app";
 import constant from "@/services/constant";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { Api } from "@/services/service";
-import { cartLineProductId, cartQtyForProduct, rewardLimitError } from "@/services/rewardCart";
+import {
+  buildRewardCartItem,
+  cartLineProductId,
+  cartQtyForProduct,
+  getAvailableStock,
+  rewardLimitError,
+} from "@/services/rewardCart";
 
 const isNormalItem = (item) => item?.productSource === "NORMAL";
 const isSaleItem = (item) => item?.productSource === "SALE";
@@ -341,6 +347,7 @@ const NormalCartRow = ({
   cartClose,
   formatPrice,
   saleExpired,
+  onRedeemReward,
 }) => {
   const { t } = useTranslation();
 
@@ -385,6 +392,15 @@ const NormalCartRow = ({
             pickupConfig={pickupConfig}
             pickupOption={pickupOption}
           />
+          {onRedeemReward && (
+            <button
+              type="button"
+              className="mt-2 rounded-full bg-[#2E7D32] px-3 py-1 text-xs font-semibold text-white hover:bg-[#256b29]"
+              onClick={() => onRedeemReward(item, i)}
+            >
+              🎁 {t("Redeem with points")}
+            </button>
+          )}
         </div>
 
         {/* Desktop controls */}
@@ -694,8 +710,21 @@ export default function CartDrawer({
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
   const { lang } = useContext(languageContext);
+  const [user] = useContext(userContext);
+  const [rewardCatalog, setRewardCatalog] = useState([]);
   const [data, setData] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!user?._id || !user?.token) {
+      setRewardCatalog([]);
+      return;
+    }
+
+    Api("get", "rewards/catalog", "", router)
+      .then((res) => setRewardCatalog(Array.isArray(res?.data) ? res.data : []))
+      .catch((err) => toaster?.({ type: "error", message: err?.message }));
+  }, [router, user?._id, user?.token]);
 
   const formatPrice = (value) => {
     const num = Number(value);
@@ -838,6 +867,65 @@ export default function CartDrawer({
     persistCart(nextState);
   };
 
+  const redeemReward = async (item, index) => {
+    const productId = item?.id || item?._id;
+    const reward = rewardCatalog.find(
+      (candidate) => String(candidate?.product?._id) === String(productId),
+    );
+
+    if (!reward) return;
+    if (
+      !window.confirm(
+        `${t("Redeem this item for")} ${Number(reward.points).toLocaleString()} ${t("points")}?`,
+      )
+    ) {
+      return;
+    }
+
+    try {
+      loader(true);
+      const [summaryResponse, stock] = await Promise.all([
+        Api("get", "rewards/summary", "", router),
+        getAvailableStock(productId, router),
+      ]);
+      const limitError = rewardLimitError(
+        { ...reward, qtyInCart: 0 },
+        summaryResponse?.data,
+        cartData,
+        t,
+      );
+
+      if (stock < 1) {
+        toaster?.({ type: "error", message: t("This item is currently out of stock.") });
+        return;
+      }
+      if (limitError) {
+        toaster?.({ type: "error", message: limitError });
+        return;
+      }
+
+      const nextState = produce(cartData, (draft) => {
+        const current = draft[index];
+        if (Number(current?.qty || 1) > 1) {
+          current.qty -= 1;
+          current.total = (Number(current.price) || 0) * current.qty;
+          draft.push(buildRewardCartItem(reward));
+        } else {
+          draft[index] = buildRewardCartItem(reward);
+        }
+      });
+      persistCart(nextState);
+      toaster?.({ type: "success", message: t("Reward added to cart") });
+    } catch (err) {
+      toaster?.({
+        type: "error",
+        message: err?.message || t("Unable to redeem this reward."),
+      });
+    } finally {
+      loader(false);
+    }
+  };
+
   return (
     <div className="bg-white w-full md:w-3/5 rounded-[5px]">
       {cartData && cartData.length > 0 && (
@@ -858,6 +946,10 @@ export default function CartDrawer({
               formatPrice,
               saleExpired,
             };
+
+            if (!isRewardItem(item) && !isComboItem(item)) {
+              sharedProps.onRedeemReward = redeemReward;
+            }
 
             if (isComboItem(item)) {
               return <ComboCartRow key={i} {...sharedProps} />;
