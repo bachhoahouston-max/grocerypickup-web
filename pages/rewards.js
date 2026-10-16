@@ -177,7 +177,7 @@ function Rewards(props) {
 
   return (
     <div className="bg-[#F4F8FC] w-full min-h-screen pb-32 md:pb-16">
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Tabs */}
         <div className="grid grid-cols-3 pt-14 md:pt-8">
           {TABS.map((x) => (
