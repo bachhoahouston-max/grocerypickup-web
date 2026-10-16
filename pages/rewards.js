@@ -357,13 +357,11 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
         </div>
       )}
 
-      {groups.map(([lower, rewards]) => (
-        <section key={lower} className="mt-6">
-          {/* <h2 className="text-[#0B4F8A] font-bold text-xl md:text-2xl mb-3">
-            {lower.toLocaleString()} - {(lower + 99).toLocaleString()} {t("Points")}
-          </h2> */}
+      {groups.length > 0 && (
+        <section className="mt-6">
+          {/* One continuous grid (sorted by point band) so cards fill every row with no gaps */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {rewards.map((reward) => {
+            {groups.flatMap(([, rewards]) => rewards).map((reward) => {
               const state = rewardState(reward);
               return (
                 <div key={reward._id} className="bg-white rounded-2xl border border-gray-200 p-3 flex flex-col items-center text-center">
@@ -392,7 +390,7 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
             })}
           </div>
         </section>
-      ))}
+      )}
     </>
   );
 }
