@@ -416,10 +416,14 @@ const NormalCartRow = ({
           {onRedeemReward && (
             <button
               type="button"
-              className="mt-2 self-start rounded-full bg-[#E8F5E9] px-3 py-1 text-xs font-semibold text-[#2E7D32] hover:bg-[#d7eed9]"
+              className="mt-2 self-start rounded-full border border-[#F5B82E] bg-[#FFF1C2] px-3 py-1 text-xs font-semibold text-[#6B4300] hover:bg-[#FFE9A3]"
               onClick={() => onRedeemReward(item, i)}
             >
-              🎁 {(Number(rewardPoints || 0) * Number(item?.qty || 1)).toLocaleString()} {t("points")} · {t("Redeem with points")}
+              🎁{" "}
+              <span className="font-bold text-[#E87500]">
+                {(Number(rewardPoints || 0) * Number(item?.qty || 1)).toLocaleString()} {t("points")}
+              </span>{" "}
+              · {t("Redeem with points")}
             </button>
           )}
         </div>
