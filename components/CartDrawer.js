@@ -255,6 +255,7 @@ import Image from "next/image";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
 import { produce } from "immer";
+import Swal from "sweetalert2";
 import { useContext, useEffect, useState } from "react";
 import { cartContext, languageContext, userContext } from "@/pages/_app";
 import constant from "@/services/constant";
@@ -277,6 +278,31 @@ const isRewardItem = (item) => item?.productSource === "REWARD";
 // ─── Reward Cart Row (redeemed with points, always $0) ────────────────────────
 const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty, increaseQty, cartClose }) => {
   const { t } = useTranslation();
+  const totalPoints = (Number(item?.points || 0) * Number(item?.qty || 1)).toLocaleString();
+
+  const stepper = (
+    <div className="flex items-center justify-center bg-[#0B4F8A] rounded-full px-3 py-1 w-28">
+      <button type="button" aria-label={t("Decrease quantity")} onClick={() => decreaseQty(i, item)}>
+        <IoRemoveSharp className="!text-white md:text-xl" />
+      </button>
+      <span className="mx-4 text-white font-medium text-base">{item?.qty || 1}</span>
+      <button type="button" aria-label={t("Increase quantity")} onClick={() => increaseQty(i, item)}>
+        <IoAddSharp className="!text-white md:text-xl" />
+      </button>
+    </div>
+  );
+
+  const pointsAndClose = (
+    <div className="flex items-center gap-3">
+      <p className="text-[#0B4F8A] font-semibold text-base whitespace-nowrap">
+        −{totalPoints} {t("pts")}
+      </p>
+      <IoMdClose
+        className="w-5 h-5 text-black cursor-pointer"
+        onClick={() => cartClose(item, i)}
+      />
+    </div>
+  );
 
   return (
     <div className="w-full bg-white rounded-xl shadow-md overflow-hidden">
@@ -286,48 +312,42 @@ const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
           {t("Reward")}
         </span>
         <span className="ml-2 text-blue-100 text-xs">
-          · {(Number(item?.points || 0) * Number(item?.qty || 1)).toLocaleString()} {t("points")}
+          · {totalPoints} {t("points")}
         </span>
       </div>
-      <div className="p-3 flex flex-row items-start md:items-center justify-between gap-4">
-        <CartImage item={item} />
-        <div className="flex flex-col flex-1 p-1 min-w-0">
-          <p className="text-black font-medium md:text-base text-sm">
-            {lang === "en" ? item?.name : item?.vietnamiesName || item?.name}
-          </p>
-          <div className="text-sm text-black mt-1 flex gap-3 items-center flex-wrap">
-            <span className="text-xs md:text-sm">
-              {item?.price_slot?.value ?? 1} {item?.price_slot?.unit ?? "unit"}
-            </span>
-            {item?.price_slot?.other_price && (
-              <span className="line-through text-xs text-gray-400">
-                {constant.currency}
-                {item.price_slot.other_price}
-              </span>
-            )}
-            <span className="font-black text-green-700 text-xs">FREE</span>
-          </div>
-          <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
-        </div>
-        <div className="flex flex-col md:flex-row items-end md:items-center gap-2 md:gap-3 flex-shrink-0">
-          <div className="flex items-center justify-center bg-[#0B4F8A] rounded-full px-3 py-1 w-28">
-            <button type="button" aria-label={t("Decrease quantity")} onClick={() => decreaseQty(i, item)}>
-              <IoRemoveSharp className="!text-white text-xl" />
-            </button>
-            <span className="mx-4 text-white font-medium text-base">{item?.qty || 1}</span>
-            <button type="button" aria-label={t("Increase quantity")} onClick={() => increaseQty(i, item)}>
-              <IoAddSharp className="!text-white text-xl" />
-            </button>
-          </div>
-          <div className="flex items-center gap-3">
-            <p className="text-[#0B4F8A] font-semibold text-sm md:text-base whitespace-nowrap">
-              −{(Number(item?.points || 0) * Number(item?.qty || 1)).toLocaleString()} {t("pts")}
+      <div className="p-3">
+        <div className="flex flex-row items-start md:items-center justify-between gap-4">
+          <CartImage item={item} />
+          <div className="flex flex-col flex-1 p-1 min-w-0">
+            <p className="text-black font-medium md:text-base text-sm">
+              {lang === "en" ? item?.name : item?.vietnamiesName || item?.name}
             </p>
-            <IoMdClose
-              className="w-5 h-5 text-black cursor-pointer"
-              onClick={() => cartClose(item, i)}
-            />
+            <div className="text-sm text-black mt-1 flex gap-3 items-center flex-wrap">
+              <span className="text-xs md:text-sm">
+                {item?.price_slot?.value ?? 1} {item?.price_slot?.unit ?? "unit"}
+              </span>
+              {item?.price_slot?.other_price && (
+                <span className="line-through text-xs text-gray-400">
+                  {constant.currency}
+                  {item.price_slot.other_price}
+                </span>
+              )}
+              <span className="font-black text-green-700 text-xs">FREE</span>
+            </div>
+            <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
           </div>
+
+          {/* Desktop controls */}
+          <div className="hidden md:flex flex-row items-center gap-3 flex-shrink-0">
+            {stepper}
+            {pointsAndClose}
+          </div>
+        </div>
+
+        {/* Mobile controls — same placement as CartControls (indented past image) */}
+        <div className="md:hidden flex flex-row items-center justify-between gap-3 mt-2 pl-[100px]">
+          {stepper}
+          {pointsAndClose}
         </div>
       </div>
     </div>
@@ -396,7 +416,7 @@ const NormalCartRow = ({
           {onRedeemReward && (
             <button
               type="button"
-              className="mt-2 rounded-full bg-[#2E7D32] px-3 py-1 text-xs font-semibold text-white hover:bg-[#256b29]"
+              className="mt-2 self-start rounded-full bg-[#E8F5E9] px-3 py-1 text-xs font-semibold text-[#2E7D32] hover:bg-[#d7eed9]"
               onClick={() => onRedeemReward(item, i)}
             >
               🎁 {(Number(rewardPoints || 0) * Number(item?.qty || 1)).toLocaleString()} {t("points")} · {t("Redeem with points")}
@@ -672,8 +692,9 @@ const CartControls = ({
   const Total = item.qty * item.regularPrice;
 
   return (
+    // Mobile: indent past the 80px image + gap-4 + p-1 so controls line up with the item text
     <div
-      className={`${isDesktop ? "md:flex hidden" : "md:hidden flex"} flex-row items-center ${isDesktop ? "flex-col md:flex-row" : ""} justify-center gap-3 mt-2 md:mt-0`}
+      className={`${isDesktop ? "md:flex hidden flex-col md:flex-row justify-center" : "md:hidden flex pl-[100px] justify-between"} flex-row items-center gap-3 mt-2 md:mt-0`}
     >
       <div className="flex items-center justify-center bg-custom-green rounded-full px-3 py-1 w-28">
         <button onClick={() => decreaseQty(i, item)}>
@@ -875,13 +896,26 @@ export default function CartDrawer({
     );
 
     if (!reward) return;
-    if (
-      !window.confirm(
-        `${t("Redeem this item for")} ${Number(reward.points).toLocaleString()} ${t("points")}?`,
-      )
-    ) {
-      return;
-    }
+    const { isConfirmed } = await Swal.fire({
+      text: `${t("Redeem this item for")} ${Number(reward.points).toLocaleString()} ${t("points")}?`,
+      showCancelButton: true,
+      confirmButtonText: t("Yes"),
+      cancelButtonText: t("No"),
+      confirmButtonColor: "#2e7d32",
+      cancelButtonColor: "#2e7d32",
+      customClass: {
+        confirmButton: "px-12 rounded-xl",
+        cancelButton:
+          "px-12 py-2 rounded-lg text-white border-[12px] border-custom-green hover:none",
+        text: "text-[20px] text-black",
+        actions: "swal2-actions-no-hover",
+        popup: "rounded-[15px] shadow-custom-green",
+      },
+      buttonsStyling: true,
+      reverseButtons: true,
+      width: "320px",
+    });
+    if (!isConfirmed) return;
 
     try {
       loader(true);

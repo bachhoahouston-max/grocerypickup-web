@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
-import { ShoppingBag as Handbag, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { IoIosArrowForward } from "react-icons/io";
 import Link from "next/link";
 import { languageContext, userContext } from "@/pages/_app";
@@ -29,16 +29,12 @@ const CategoryCard = ({ item, url, router }) => {
     >
       <div className="relative mb-3">
         <div className="relative w-28 h-28 md:w-28 md:h-28 rounded-full group-hover:shadow-xl group-hover:scale-105 shadow-md transition-all duration-300">
-          {item?.icon ? (
-            <item.icon className="w-full h-full p-7 text-custom-green" aria-label={item?.name} />
-          ) : (
-            <Image
-              src={item?.image}
-              alt={item?.name || "Category"}
-              fill
-              className="object-cover rounded-full"
-            />
-          )}
+          <Image
+            src={item?.image}
+            alt={item?.name || "Category"}
+            fill
+            className="object-cover rounded-full"
+          />
         </div>
       </div>
       <p className="text-black text-[14px] md:text-[16px] font-medium text-center">
@@ -53,6 +49,7 @@ function ShopByCategory() {
   const router = useRouter();
   const { t } = useTranslation();
   const { lang } = useContext(languageContext);
+  const [user] = useContext(userContext);
 
   const [width, setWidth] = useState(360);
   // useEffect(() => {
@@ -98,6 +95,11 @@ function ShopByCategory() {
           style={{ maxWidth: width - 80 }}
         >
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-6 md:gap-8 ">
+            <CategoryCard
+              item={{ name: "Buy it again", v_name: "Mua lại", image: "/BuyItAgain.png" }}
+              url={`/categories/${BUY_IT_AGAIN_SLUG}`}
+              router={router}
+            />
             <Link
               className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
               // onClick={() =>
@@ -119,11 +121,6 @@ function ShopByCategory() {
                 {t("New Arrivals")}
               </p>
             </Link>
-            <CategoryCard
-              item={{ name: "Buy it again", v_name: "Mua lại", icon: Handbag }}
-              url={`/categories/${BUY_IT_AGAIN_SLUG}`}
-              router={router}
-            />
 
             {/* <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
@@ -174,6 +171,26 @@ function ShopByCategory() {
         </div>
         <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
           <div className="flex gap-1.5 w-full min-w-0">
+            {/* Buy it again */}
+            <div
+              className="flex flex-col items-center bg-white rounded-[5px] shadow-sm p-2 min-w-[76px] flex-shrink-0 cursor-pointer transition-transform hover:-translate-y-1"
+              onClick={() =>
+                router.push(user?.token ? `/categories/${BUY_IT_AGAIN_SLUG}` : "/rewards")
+              }
+            >
+              <div className="relative w-[54px] h-[54px] mb-2">
+                <Image
+                  src="/BuyItAgain.png"
+                  alt={t("Buy it again")}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <p className="text-black text-[10px] font-semibold text-center leading-tight line-clamp-2 break-words">
+                {t("Buy it again")}
+              </p>
+            </div>
+
             {/* New Arrival */}
             <div
               className="flex flex-col items-center bg-white rounded-[5px] shadow-sm p-2 min-w-[76px] flex-shrink-0 cursor-pointer transition-transform hover:-translate-y-1"

@@ -3,9 +3,9 @@ import Image from "next/image";
 import { Api } from "@/services/service";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
-import { ShoppingBag as Handbag, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { languageContext } from "@/pages/_app";
+import { languageContext, userContext } from "@/pages/_app";
 import { BUY_IT_AGAIN_SLUG } from "@/services/buyItAgain";
 
 
@@ -21,16 +21,12 @@ const CategoryCard = ({ item, url, router }) => {
     >
       <div className="relative md:block hidden">
         <div className="relative w-14 h-14 md:w-14 md:h-14 rounded-full group-hover:shadow-xl group-hover:scale-105 shadow-md transition-all duration-300">
-          {item?.icon ? (
-            <item.icon className="w-full h-full p-3 text-custom-green" aria-label={item?.name} />
-          ) : (
-            <Image
-              src={item?.image}
-              alt={item?.name || "Category"}
-              fill
-              className="object-cover rounded-full"
-            />
-          )}
+          <Image
+            src={item?.image}
+            alt={item?.name || "Category"}
+            fill
+            className="object-cover rounded-full"
+          />
         </div>
       </div>
       <p className="text-black text-[8px] md:text-[10px] font-medium text-center">
@@ -45,6 +41,7 @@ function ShopByCategoryHeader() {
   const router = useRouter();
   const { t } = useTranslation();
   const { lang } = useContext(languageContext);
+  const [user] = useContext(userContext);
 
   const [width, setWidth] = useState(360);
   console.log(router)
@@ -89,6 +86,11 @@ function ShopByCategoryHeader() {
 
         <div className="overflow-x-auto scrollbar-hides" style={{ maxWidth: width - 80 }}>
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-4 md:gap-4 justify-center">
+            <CategoryCard
+              item={{ name: "Buy it again", v_name: "Mua lại", image: "/BuyItAgain.png" }}
+              url={`/categories/${BUY_IT_AGAIN_SLUG}`}
+              router={router}
+            />
             <Link
               className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
               // onClick={() =>
@@ -111,11 +113,6 @@ function ShopByCategoryHeader() {
 
               </p>
             </Link>
-            <CategoryCard
-              item={{ name: "Buy it again", v_name: "Mua lại", icon: Handbag }}
-              url={`/categories/${BUY_IT_AGAIN_SLUG}`}
-              router={router}
-            />
 
             {/* <div
             className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
@@ -159,6 +156,28 @@ function ShopByCategoryHeader() {
       <div className="md:hidden" style={{ maxWidth: width - 32 }}>
         <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
           <div className="flex gap-3 w-full min-w-0">
+
+            {/* Buy it again */}
+            <div
+              className={`${router?.pathname === `/categories/${BUY_IT_AGAIN_SLUG}` && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
+              onClick={() =>
+                router.push(user?.token ? `/categories/${BUY_IT_AGAIN_SLUG}` : "/rewards")
+              }
+            >
+              <div className="relative  ">
+                <div className="relative w-5 h-5 rounded-full group-hover:scale-105 transition-all duration-300">
+                  <Image
+                    src="/BuyItAgain.png"
+                    alt={t("Buy it again")}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+              <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
+                {t("Buy it again")}
+              </p>
+            </div>
 
             {/* New Arrival */}
             <div
