@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { languageContext } from "@/pages/_app";
+import { languageContext, userContext } from "@/pages/_app";
+import { BUY_IT_AGAIN_SLUG } from "@/services/buyItAgain";
 
 
 const CategoryCard = ({ item, url, router }) => {
@@ -25,12 +26,11 @@ const CategoryCard = ({ item, url, router }) => {
             alt={item?.name || "Category"}
             fill
             className="object-cover rounded-full"
-          // sizes="(max-width: 768px) 100px, 120px"
           />
         </div>
       </div>
       <p className="text-black text-[8px] md:text-[10px] font-medium text-center">
-      {lang === "en" ? item?.name : item?.v_name || item?.name}
+        {lang === "en" ? item?.name : item?.v_name || item?.name}
       </p>
     </Link>
   )
@@ -41,10 +41,11 @@ function ShopByCategoryHeader() {
   const router = useRouter();
   const { t } = useTranslation();
   const { lang } = useContext(languageContext);
+  const [user] = useContext(userContext);
 
   const [width, setWidth] = useState(360);
   console.log(router)
-const queryName = router?.query?.cat_id;
+  const queryName = router?.query?.cat_id;
 
   // useEffect(() => {
   //   const handleResize = () => {
@@ -85,6 +86,11 @@ const queryName = router?.query?.cat_id;
 
         <div className="overflow-x-auto scrollbar-hides" style={{ maxWidth: width - 80 }}>
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-4 md:gap-4 justify-center">
+            <CategoryCard
+              item={{ name: "Buy it again", v_name: "Mua lại", image: "/BuyItAgain.png" }}
+              url={`/categories/${BUY_IT_AGAIN_SLUG}`}
+              router={router}
+            />
             <Link
               className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
               // onClick={() =>
@@ -151,9 +157,31 @@ const queryName = router?.query?.cat_id;
         <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
           <div className="flex gap-3 w-full min-w-0">
 
+            {/* Buy it again */}
+            <div
+              className={`${router?.pathname === `/categories/${BUY_IT_AGAIN_SLUG}` && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
+              onClick={() =>
+                router.push(user?.token ? `/categories/${BUY_IT_AGAIN_SLUG}` : "/rewards")
+              }
+            >
+              <div className="relative  ">
+                <div className="relative w-5 h-5 rounded-full group-hover:scale-105 transition-all duration-300">
+                  <Image
+                    src="/BuyItAgain.png"
+                    alt={t("Buy it again")}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              </div>
+              <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
+                {t("Buy it again")}
+              </p>
+            </div>
+
             {/* New Arrival */}
             <div
-                className={`${(router?.pathname === '/categories/[cat_id]' &&  queryName === 'all') && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
+              className={`${(router?.pathname === '/categories/[cat_id]' && queryName === 'all') && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
               onClick={() =>
                 router.push("/categories/all?category=all&sort_by=new")
               }
@@ -175,7 +203,7 @@ const queryName = router?.query?.cat_id;
 
             {/* Category Items */}
             {categorys.map((category, index) => (
-              <div 
+              <div
                 key={index}
                 className={`${(router?.pathname === '/categories/[cat_id]' && category?.slug === queryName) && 'bg-green-100 p-2 rounded-full'} flex items-center justify-center gap-1 group cursor-pointer transition-transform hover:-translate-y-1 min-w-[90px] flex-shrink-0`}
                 onClick={() => router.push(`/categories/${category?.slug}`)}
@@ -193,7 +221,7 @@ const queryName = router?.query?.cat_id;
 
                 <p className="text-black text-[13px] font-semibold text-center max-w-[90px] break-words">
                   {/* {category?.name} */}
-                   {lang === "en" ? category?.name : category?.v_name || category?.name}
+                  {lang === "en" ? category?.name : category?.v_name || category?.name}
                 </p>
               </div>
             ))}

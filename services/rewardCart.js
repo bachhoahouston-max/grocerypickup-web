@@ -17,6 +17,44 @@ export const cartRewardPoints = (cart) =>
     .filter((line) => line?.productSource === "REWARD")
     .reduce((sum, line) => sum + Number(line?.points || 0) * Number(line?.qty || 1), 0);
 
+export const rewardCartId = (pointId) => `reward_${pointId}`;
+
+export const buildRewardCartItem = (reward) => {
+  const product = reward?.product;
+  const slot = product?.price_slot?.[0] || {};
+
+  return {
+    id: rewardCartId(reward._id),
+    product_id: product._id,
+    point_id: reward._id,
+    points: reward.points,
+    perUserLimit: reward.perUserLimit || null,
+    remainingTotal: reward.remainingTotal ?? null,
+    productSource: "REWARD",
+    name: product.name,
+    vietnamiesName: product.vietnamiesName,
+    slug: product.slug,
+    selectedColor: product?.varients?.[0] || {},
+    selectedImage: product?.varients?.[0]?.image?.[0] || "/placeholder.png",
+    BarCode: product.BarCode || "",
+    tax_code: product.tax_code,
+    qty: 1,
+    price: 0,
+    total: 0,
+    price_slot: {
+      value: slot.value,
+      unit: slot.unit,
+      other_price: slot.our_price,
+      our_price: 0,
+    },
+    isShipmentAvailable: product.isShipmentAvailable,
+    isNextDayDeliveryAvailable: product.isNextDayDeliveryAvailable,
+    isCurbSidePickupAvailable: product.isCurbSidePickupAvailable,
+    isInStoreAvailable: product.isInStoreAvailable,
+    isReturnAvailable: product.isReturnAvailable,
+  };
+};
+
 // Live stock for a product (same endpoint the normal add-to-cart buttons use)
 export const getAvailableStock = async (productId, router) => {
   const res = await Api("get", `checkQuantity/${productId}`, "", router);

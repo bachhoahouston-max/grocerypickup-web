@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { CheckCircle, Trash, X } from "lucide-react";
+import { CheckCircle, Mail, Trash, X } from "lucide-react";
 import { IoIosArrowBack, IoIosClose } from "react-icons/io";
 import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
@@ -9,7 +9,7 @@ import { Api } from "@/services/service";
 import { clearSyncedCart } from "@/services/cartSync";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
-import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCalendarAlt, FaRegCalendarCheck } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
@@ -38,7 +38,7 @@ function Cart(props) {
   const [discount, setDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
   const [isOnce, setIsOnce] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [cancelPopup, setCancelPopup] = useState(false);
   const isLoggedIn = user?._id || user?.token;
   const [open, setOpen] = useState(false);
@@ -530,7 +530,7 @@ function Cart(props) {
     const now = new Date();
     const currentHour = now.getHours();
 
-    if (currentHour >= 14) {
+    if (currentHour >= 17) {
       const tomorrow = new Date();
       tomorrow.setDate(now.getDate() + 1);
       return checkAvailabilityAndAddToCart(tomorrow);
@@ -1311,9 +1311,11 @@ function Cart(props) {
                                   <div className="font-semibold text-base md:text-lg text-orange-600">
                                     {opt.title}
                                   </div>
-                                  <div className="text-gray-500 text-sm ">
-                                    {opt.subtitle}
-                                  </div>
+                                  {!(selected && opt.id === "ShipmentDelivery") && (
+                                    <div className="text-gray-500 text-sm ">
+                                      {opt.subtitle}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
 
@@ -1329,12 +1331,9 @@ function Cart(props) {
                             </div>
 
                             {selected && opt.type === "pickup" && (
-                              <div className="bg-white pt-3">
-                                <p className=" mb-1 text-[13px] text-gray-700 text-start max-w-[430px md:text-[14px] font-semibold">
-                                  {t("Pick up in 2 Hours")}
-                                </p>
-                                <div className="flex flex-col items-center gap-2">
-                                  <div className="w-full max-w-[420px] relative">
+                              <div className="bg-white pt-3 w-full">
+                                <div className="flex flex-col gap-3 w-full">
+                                  <div className="w-full relative">
                                     <input
                                       type="text"
                                       value={
@@ -1344,14 +1343,14 @@ function Cart(props) {
                                       }
                                       readOnly
                                       onClick={handleIconClick}
-                                      className="w-full border-2 rounded-lg py-2 px-3 pr-5 text-gray-700 focus:outline-none focus:ring-2 "
+                                      className="w-full border-2 border-gray-200 rounded-xl py-2.5 px-4 pr-10 text-[15px] md:text-base text-[#1f2a5c] cursor-pointer focus:outline-none focus:ring-2 focus:ring-green-400"
                                     />
 
                                     <span
                                       onClick={handleIconClick}
-                                      className="absolute right-3 top-2 text-custom-green cursor-pointer"
+                                      className="absolute right-3 top-1/2 -translate-y-1/2 text-custom-green cursor-pointer"
                                     >
-                                      <FaRegCalendarAlt size={18} />
+                                      <FaRegCalendarAlt size={20} />
                                     </span>
 
                                     {isOpen && DatePicker && (
@@ -1367,14 +1366,39 @@ function Cart(props) {
                                     )}
                                   </div>
 
-                                  <p className="text-[12px] text-gray-700 text-start max-w-[430px]">
+                                  {date && (
+                                  <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
+                                    <FaRegCalendarCheck
+                                      size={30}
+                                      className="text-green-600 shrink-0 mt-0.5"
+                                    />
+                                    <div className="text-start">
+                                      <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
+                                        {opt.id === "driveUp"
+                                          ? t("Your Scheduled Curbside Pickup")
+                                          : t("Your Scheduled Pickup")}
+                                      </p>
+                                      <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
+                                        {opt.id === "driveUp"
+                                          ? t(
+                                            "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.",
+                                          )
+                                          : t(
+                                            "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.",
+                                          )}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  )}
+
+                                  <p className="text-[12px] md:text-[13px] text-[#3b4a8c] text-start">
                                     {t(
                                       "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee",
                                     )}
                                   </p>
-                                  <p className="text-[12px] text-gray-700 text-start max-w-[430px]">
+                                  <p className="text-[12px] md:text-[13px] text-[#3b4a8c] text-start">
                                     {t(
-                                      "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.",
+                                      "*Note: Orders placed before 5 PM can be picked up the same day. Orders placed after 5 PM will be ready for pickup the next day.",
                                     )}
                                   </p>
                                 </div>
@@ -1423,6 +1447,39 @@ function Cart(props) {
                                     </div>
                                   )}
 
+                                  {opt.id === "localDelivery" &&
+                                    localAddress.dateOfDelivery && (
+                                      <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
+                                        <FaRegCalendarCheck
+                                          size={30}
+                                          className="text-green-600 shrink-0 mt-0.5"
+                                        />
+                                        <div className="text-start">
+                                          <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
+                                            {t("Your Scheduled Delivery")}
+                                          </p>
+                                          <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
+                                            {new Date(
+                                              localAddress.dateOfDelivery,
+                                            ).toLocaleDateString(
+                                              i18n.language?.startsWith("vi")
+                                                ? "vi-VN"
+                                                : "en-US",
+                                              {
+                                                weekday: "long",
+                                                month: "long",
+                                                day: "numeric",
+                                                year: "numeric",
+                                              },
+                                            )}
+                                          </p>
+                                          <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
+                                            {t("Delivery by 8 PM")}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
+
                                   <ShippingInfoCard
                                     localAddress={localAddress}
                                     setOpen={setOpen}
@@ -1448,11 +1505,29 @@ function Cart(props) {
                                     </p>
                                   )}
                                   {opt.id === "ShipmentDelivery" && (
-                                    <p className="text-[12px] text-gray-700 text-start">
-                                      {t(
-                                        "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time",
-                                      )}
-                                    </p>
+                                    <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
+                                      <Mail
+                                        size={30}
+                                        className="text-green-600 shrink-0 mt-0.5"
+                                      />
+                                      <div className="text-start">
+                                        <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
+                                          {t(
+                                            "Packed within 24 hours • Arrives in 3–5 business days.",
+                                          )}
+                                        </p>
+                                        <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
+                                          {t(
+                                            "Please check your email for tracking information.",
+                                          )}
+                                        </p>
+                                        <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
+                                          {t(
+                                            "Note: We currently ship to the 48 contiguous U.S. states. We do not ship to Alaska or Hawaii.",
+                                          )}
+                                        </p>
+                                      </div>
+                                    </div>
                                   )}
                                 </div>
                               </div>

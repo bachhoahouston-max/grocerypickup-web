@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import Image from "next/image";
 import { languageContext } from "./_app";
+import { BUY_IT_AGAIN_SLUG } from "@/services/buyItAgain";
+import { ShoppingBag as Handbag } from "lucide-react";
 
 const Category = (props) => {
   const { t } = useTranslation();
@@ -63,6 +65,20 @@ const Category = (props) => {
             </p>
           </div>
           <div className="grid md:grid-cols-4 lg:grid-cols-5 sm:grid-cols-3 grid-cols-2 gap-6 mb-4">
+            <div
+              className="bg-white hover:shadow-lg transition-all duration-300 rounded-lg cursor-pointer flex flex-col items-center md:py-4"
+              onClick={() => router.push(`/categories/${BUY_IT_AGAIN_SLUG}`)}
+            >
+              <div className="relative w-full md:h-64 h-40 rounded-lg overflow-hidden mb-3 flex items-center justify-center">
+                <Handbag
+                  className="w-24 h-24 md:w-36 md:h-36 text-custom-green"
+                  aria-label={t("Buy it again")}
+                />
+              </div>
+              <p className="text-center text-black text-lg md:text-xl font-medium md:mb-0 mb-4">
+                {t("Buy it again")}
+              </p>
+            </div>
             {category.map((cat, index) => (
               <div
                 key={index}

@@ -12,6 +12,9 @@ import Link from "next/link";
 const SignUp = (props) => {
   const { t } = useTranslation();
   const router = useRouter();
+  // Only same-site paths, so the redirect can't send people off to another domain
+  const redirectTo = typeof router.query.redirect === "string" && /^\/(?![\/\\])/.test(router.query.redirect) ? router.query.redirect : "/";
+  const redirectQuery = redirectTo === "/" ? "" : `?redirect=${encodeURIComponent(redirectTo)}`;
   const [userDetail, setUserDetail] = useState({
     name: "",
     lastname: "",
@@ -25,7 +28,7 @@ const SignUp = (props) => {
 
   useEffect(() => {
     if (user?._id) {
-      router.push("/");
+      router.push(redirectTo);
     }
   }, [user, router]);
 
@@ -137,7 +140,7 @@ const SignUp = (props) => {
       (res) => {
         props?.loader?.(false);
         if (res?.success) {
-          router.push("/signIn");
+          router.push(`/signIn${redirectQuery}`);
           props?.toaster?.({
             type: "success",
             message: "Registered successfully",
@@ -334,7 +337,7 @@ const SignUp = (props) => {
                 {t("Already have an account?")}
                 <span
                   className="text-custom-green text-[14px] font-semibold hover:underline ml-1 whitespace-nowrap cursor-pointer"
-                  onClick={() => router.push("/signIn")}
+                  onClick={() => router.push(`/signIn${redirectQuery}`)}
                 >
                   {t("Sign in")}
                 </span>

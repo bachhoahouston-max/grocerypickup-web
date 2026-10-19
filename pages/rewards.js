@@ -2,12 +2,18 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { Upload, ImagePlus, X, ChevronRight } from "lucide-react";
+import { Upload, ImagePlus, ChevronRight, Camera, CheckCircle2, Loader2, Pencil, CalendarDays, Store, ReceiptText } from "lucide-react";
 import moment from "moment";
 import Compressor from "compressorjs";
 import { cartContext, userContext, languageContext } from "./_app";
 import { Api, ApiFormData } from "@/services/service";
-import { cartQtyForProduct, getAvailableStock, rewardLimitError } from "@/services/rewardCart";
+import {
+  buildRewardCartItem,
+  cartQtyForProduct,
+  getAvailableStock,
+  rewardCartId,
+  rewardLimitError,
+} from "@/services/rewardCart";
 import TierBadge, { tierColor } from "@/components/TierBadge";
 import TierCrown from "@/components/TierCrown";
 
@@ -18,6 +24,9 @@ const TABS = [
 ];
 
 const BRAND_BLUE = "#0B4F8A";
+const productImage = (product) =>
+  product?.varients?.[0]?.image?.[0] || product?.image?.[0] || product?.image || "/Store.png";
+
 // Four-point sparkle used to decorate the points header.
 const Sparkle = ({ size = 16, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden="true">
@@ -31,43 +40,6 @@ const Leaf = ({ className = "" }) => (
     <path d="M50 10 V150" stroke="#fff" strokeOpacity="0.5" strokeWidth="2" />
   </svg>
 );
-
-const productImage = (product) => product?.varients?.[0]?.image?.[0] || "/placeholder.png";
-
-// Reward lines use their own cart id so other add-to-cart code (which looks up
-// items by product id) never merges them with a normal purchase of the product.
-const rewardCartId = (pointId) => `reward_${pointId}`;
-
-const buildRewardCartItem = (reward) => {
-  const product = reward.product;
-  const slot = product?.price_slot?.[0] || {};
-  return {
-    id: rewardCartId(reward._id),
-    product_id: product._id,
-    point_id: reward._id,
-    points: reward.points,
-    // Limits travel with the cart line so the cart's +/− can check them
-    perUserLimit: reward.perUserLimit || null,
-    remainingTotal: reward.remainingTotal ?? null,
-    productSource: "REWARD",
-    name: product.name,
-    vietnamiesName: product.vietnamiesName,
-    slug: product.slug,
-    selectedColor: product?.varients?.[0] || {},
-    selectedImage: productImage(product),
-    BarCode: product.BarCode || "",
-    tax_code: product.tax_code,
-    qty: 1,
-    price: 0,
-    total: 0,
-    price_slot: { value: slot.value, unit: slot.unit, other_price: slot.our_price, our_price: 0 },
-    isShipmentAvailable: product.isShipmentAvailable,
-    isNextDayDeliveryAvailable: product.isNextDayDeliveryAvailable,
-    isCurbSidePickupAvailable: product.isCurbSidePickupAvailable,
-    isInStoreAvailable: product.isInStoreAvailable,
-    isReturnAvailable: product.isReturnAvailable,
-  };
-};
 
 function Rewards(props) {
   const router = useRouter();
@@ -205,7 +177,7 @@ function Rewards(props) {
 
   return (
     <div className="bg-[#F4F8FC] w-full min-h-screen pb-32 md:pb-16">
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4">
         {/* Tabs */}
         <div className="grid grid-cols-3 pt-14 md:pt-8">
           {TABS.map((x) => (
@@ -385,20 +357,18 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
         </div>
       )}
 
-      {groups.map(([lower, rewards]) => (
-        <section key={lower} className="mt-6">
-          <h2 className="text-[#0B4F8A] font-bold text-xl md:text-2xl mb-3">
-            {lower.toLocaleString()} - {(lower + 99).toLocaleString()} {t("Points")}
-          </h2>
-          <div className="grid grid-cols-3 gap-3">
-            {rewards.map((reward) => {
+      {groups.length > 0 && (
+        <section className="mt-6">
+          {/* One continuous grid (sorted by point band) so cards fill every row with no gaps */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {groups.flatMap(([, rewards]) => rewards).map((reward) => {
               const state = rewardState(reward);
               return (
-                <div key={reward._id} className="bg-white rounded-2xl border border-gray-200 p-3 flex flex-col items-center text-center">
-                  <div className="relative w-full h-24 md:h-28">
-                    <Image src={productImage(reward.product)} alt={rewardName(reward) || ""} fill className="object-contain" sizes="(max-width: 768px) 45vw, 220px" />
+                <div key={reward._id} className="bg-white rounded-2xl border border-gray-200 overflow-hidden px-2 pb-3 pt-2 flex flex-col items-center text-center">
+                  <div className="relative w-full h-48 md:h-68">
+                    <Image src={productImage(reward.product)} alt={rewardName(reward) || ""} fill className="md:object-contain object-cover rounded-xl" sizes="(max-width: 768px) 50vw, 300px" />
                   </div>
-                  <p className="text-[#0B4F8A] font-semibold mt-2 text-sm md:text-base line-clamp-2 min-h-[2.5rem]">
+                  <p className="text-[#0B4F8A] font-medium mt-1.5 md:text-md text-sm line-clamp-2 min-h-[40px]">
                     {rewardName(reward)}
                   </p>
                   <p className="text-gray-500 text-sm">
@@ -408,7 +378,7 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
                     type="button"
                     disabled={state.disabled}
                     onClick={() => onRedeemClick(reward)}
-                    className={`mt-2 w-full rounded-full py-2 text-sm md:text-base font-semibold ${state.disabled
+                    className={`mt-2 w-full rounded-full py-2 text-sm md:text-base font-medium ${state.disabled
                       ? "bg-gray-200 text-gray-500 cursor-not-allowed"
                       : "bg-[#1E9E4A] hover:bg-[#188a40] text-white cursor-pointer"
                       }`}
@@ -420,7 +390,7 @@ function RedeemTab({ t, router, groups, banner, catalogLoaded, rewardName, rewar
             })}
           </div>
         </section>
-      ))}
+      )}
     </>
   );
 }
@@ -583,8 +553,53 @@ function StatusTab({ t, lang, router, isLoggedIn, summary, toaster }) {
   );
 }
 
+// A guest's scan is kept here while they sign up, then restored on the Upload tab
+const PENDING_RECEIPT_KEY = "pendingRewardReceipt";
+const PENDING_RECEIPT_TTL = 20 * 60 * 60 * 1000;
+const EMPTY_RECEIPT = { image: "", amount: "", purchaseDate: "", storeName: "", receiptNumber: "", note: "" };
+const ALL_EDITABLE = { amount: true, purchaseDate: true, storeName: true, receiptNumber: true };
+
+const readPendingReceipt = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PENDING_RECEIPT_KEY) || "null");
+    if (saved && Date.now() - saved.savedAt < PENDING_RECEIPT_TTL) return saved;
+  } catch (e) { }
+  return null;
+};
+const writePendingReceipt = (value) => {
+  try {
+    if (value) localStorage.setItem(PENDING_RECEIPT_KEY, JSON.stringify({ ...value, savedAt: Date.now() }));
+    else localStorage.removeItem(PENDING_RECEIPT_KEY);
+  } catch (e) { }
+};
+
+// Read-only value with a pencil "Edit" that turns into an input
+function ReviewField({ t, icon: Icon, value, display, editing, onEdit, children }) {
+  const boxClass = "flex items-center gap-3 w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3";
+  if (editing) {
+    return (
+      <div className={`${boxClass} focus-within:border-[#0B4F8A]`}>
+        {Icon && <Icon size={20} className="text-gray-500 flex-shrink-0" />}
+        {children}
+      </div>
+    );
+  }
+  return (
+    <div className={boxClass}>
+      {Icon && <Icon size={20} className="text-gray-500 flex-shrink-0" />}
+      <span className="flex-1 text-black text-base truncate">{display || value}</span>
+      <button type="button" onClick={onEdit} className="flex items-center gap-1 text-[#0B4F8A] text-sm font-medium cursor-pointer">
+        <Pencil size={16} />
+        {t("Edit")}
+      </button>
+    </div>
+  );
+}
+
 function UploadTab({ t, router, isLoggedIn, loader, toaster, onUploaded }) {
-  const [form, setForm] = useState({ image: "", amount: "", purchaseDate: "", note: "" });
+  const [form, setForm] = useState(EMPTY_RECEIPT);
+  const [scan, setScan] = useState(null); // { status: "scanning" | "scanned" | "manual", ...scan response }
+  const [editing, setEditing] = useState({});
   const [receipts, setReceipts] = useState([]);
 
   const loadReceipts = () => {
@@ -595,10 +610,58 @@ function UploadTab({ t, router, isLoggedIn, loader, toaster, onUploaded }) {
   };
 
   useEffect(() => {
-    if (isLoggedIn) loadReceipts();
+    if (!isLoggedIn) return;
+    loadReceipts();
+    const pending = readPendingReceipt();
+    if (pending?.form?.image) {
+      setForm(pending.form);
+      setScan(pending.scan);
+      setEditing(Object.fromEntries(Object.keys(ALL_EDITABLE).map((k) => [k, !pending.form[k]])));
+      toaster?.({ type: "success", message: t("Welcome! Review your receipt and submit to claim your points.") });
+    }
   }, [isLoggedIn]);
 
-  if (!isLoggedIn) return <SignInPrompt t={t} router={router} />;
+  const reset = () => {
+    setForm(EMPTY_RECEIPT);
+    setScan(null);
+    setEditing({});
+    writePendingReceipt(null);
+  };
+
+  const runScan = (image) => {
+    setScan({ status: "scanning" });
+    Api("post", "rewards/receipt/scan", { image }, router).then(
+      (res) => {
+        const data = res?.data || {};
+        if (!data.scanned) {
+          setScan({ status: "manual", message: data.message });
+          setEditing(ALL_EDITABLE);
+          return;
+        }
+        const s = data.scan;
+        setScan({ status: "scanned", ...data });
+        // Anything the scan couldn't read starts as an input
+        setEditing({
+          amount: s.subtotal === null,
+          purchaseDate: !s.purchaseDate,
+          storeName: s.isStoreReceipt === false && !s.storeName,
+          receiptNumber: !s.receiptNumber,
+        });
+        setForm((f) => ({
+          ...f,
+          amount: s.subtotal !== null ? Number(s.subtotal).toFixed(2) : "",
+          purchaseDate: s.purchaseDate || "",
+          // Our own receipts are the only ones that earn points, so default to our store unless it's clearly another
+          storeName: s.storeName || (s.isStoreReceipt === false ? "" : "Bách Hoá Houston"),
+          receiptNumber: s.receiptNumber || "",
+        }));
+      },
+      (err) => {
+        setScan({ status: "manual", message: err?.message });
+        setEditing(ALL_EDITABLE);
+      },
+    );
+  };
 
   const handleFile = async (e) => {
     const file = e.target.files?.[0];
@@ -610,18 +673,33 @@ function UploadTab({ t, router, isLoggedIn, loader, toaster, onUploaded }) {
     }
     try {
       loader?.(true);
+      // Keep enough resolution for the scan to read small print
       const compressed = await new Promise((resolve, reject) => {
-        new Compressor(file, { quality: 0.7, maxWidth: 1600, maxHeight: 1600, success: resolve, error: reject });
+        new Compressor(file, { quality: 0.8, maxWidth: 2000, maxHeight: 2000, success: resolve, error: reject });
       });
       const data = new FormData();
       data.append("file", compressed, file.name);
       const res = await ApiFormData("post", "user/fileupload", data, router);
-      if (res?.status && res?.data?.file) setForm((f) => ({ ...f, image: res.data.file }));
+      if (res?.status && res?.data?.file) {
+        setForm({ ...EMPTY_RECEIPT, image: res.data.file });
+        runScan(res.data.file);
+      }
     } catch (err) {
       toaster?.({ type: "error", message: err?.message || t("Upload failed") });
     } finally {
       loader?.(false);
     }
+  };
+
+  const rate = scan?.pointsPerDollar || 10;
+  const estimatedPoints =
+    form.amount !== "" && Number(form.amount) > 0 ? Math.floor((Math.round(Number(form.amount) * 100) * rate) / 100) : 0;
+  const declined = scan?.scan?.paymentStatus === "declined";
+  const notOurStore = scan?.status === "scanned" && scan.scan.isStoreReceipt === false;
+
+  const joinToClaim = (path) => {
+    writePendingReceipt({ form, scan });
+    router.push({ pathname: path, query: { redirect: "/rewards?tab=upload" } });
   };
 
   const submit = (e) => {
@@ -630,12 +708,16 @@ function UploadTab({ t, router, isLoggedIn, loader, toaster, onUploaded }) {
       toaster?.({ type: "error", message: t("Please upload a receipt image.") });
       return;
     }
+    if (!isLoggedIn) {
+      joinToClaim("/signUp");
+      return;
+    }
     loader?.(true);
-    Api("post", "rewards/receipt", form, router).then(
+    Api("post", "rewards/receipt", { ...form, scanToken: scan?.scanToken }, router).then(
       (res) => {
         loader?.(false);
         toaster?.({ type: "success", message: res?.data?.message || t("Receipt uploaded") });
-        setForm({ image: "", amount: "", purchaseDate: "", note: "" });
+        reset();
         loadReceipts();
         onUploaded?.();
       },
@@ -652,108 +734,242 @@ function UploadTab({ t, router, isLoggedIn, loader, toaster, onUploaded }) {
     rejected: "bg-red-50 text-red-600 border-red-200",
   };
   const statusText = { pending: t("Under review"), approved: t("Approved"), rejected: t("Rejected") };
-  const inputClass = "w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-black outline-none focus:border-[#0B4F8A]";
+  const fieldInput = "flex-1 min-w-0 bg-transparent text-base text-black outline-none";
+  const editField = (key) => () => setEditing((s) => ({ ...s, [key]: true }));
 
   return (
     <div className="mt-6 space-y-6">
       <form onSubmit={submit} className="bg-white rounded-2xl border border-gray-200 p-4 md:p-6 space-y-4">
         <div>
-          <p className="font-semibold text-[#0B4F8A]">{t("Upload an in-store receipt")}</p>
+          <p className="font-semibold text-xl text-[#0B4F8A]">{t("Upload an in-store receipt")}</p>
           <p className="text-sm text-gray-500 mt-1">
-            {t("Shopped in store? Upload your receipt and we'll add points at your tier rate once it's reviewed.")}
+            {isLoggedIn
+              ? t("Shopped in store? Snap your receipt — we'll read it for you and add points at your tier rate once it's reviewed.")
+              : t("Shopped in store? Snap your receipt to see how many points you'd earn. Membership is free.")}
+          </p>
+          <p className="text-xs text-gray-400 mt-1">
+            {t("Bách Hoá Houston reserves the right to modify, suspend, or cancel the Rewards Program at any time, with or without notice.")}
           </p>
         </div>
 
-        {form.image ? (
-          <div className="relative w-full max-w-xs">
-            <img src={form.image} alt="Receipt" className="w-full max-h-72 object-contain rounded-xl border border-gray-200 bg-gray-50" />
-            <button
-              type="button"
-              onClick={() => setForm({ ...form, image: "" })}
-              aria-label={t("Remove image")}
-              className="absolute top-2 right-2 bg-white/90 rounded-full p-1 shadow cursor-pointer"
-            >
-              <X size={16} className="text-gray-700" />
-            </button>
+        {!form.image ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label className="flex flex-col items-center justify-center gap-2 bg-[#0B4F8A] hover:bg-[#093f6e] text-white rounded-2xl py-8 cursor-pointer transition">
+              <Camera size={36} />
+              <span className="font-semibold">{t("Scan receipt")}</span>
+              <span className="text-xs text-white/80">{t("Opens your camera")}</span>
+              <input type="file" accept="image/*" capture="environment" className="hidden" onChange={handleFile} />
+            </label>
+            <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-2xl py-8 cursor-pointer hover:border-[#0B4F8A] transition">
+              <ImagePlus className="text-[#0B4F8A]" size={36} />
+              <span className="text-sm text-gray-600 font-medium">{t("Choose a photo")}</span>
+              <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
+            </label>
           </div>
         ) : (
-          <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-2xl py-10 cursor-pointer hover:border-[#0B4F8A] transition">
-            <ImagePlus className="text-[#0B4F8A]" size={36} />
-            <span className="text-sm text-gray-600 font-medium">{t("Tap to choose a receipt photo")}</span>
-            <input type="file" accept="image/*" className="hidden" onChange={handleFile} />
-          </label>
+          <div
+            className={`flex items-center gap-4 md:gap-6 rounded-2xl border-2 border-dashed p-4 ${scan?.status === "scanned" ? "border-[#4CAF50] bg-[#EEF9EF]" : "border-gray-300 bg-gray-50"
+              }`}
+          >
+            <div className="relative flex-shrink-0">
+              <img src={form.image} alt={t("Receipt")} className="w-28 md:w-36 max-h-48 object-cover rounded-xl shadow" />
+              {scan?.status === "scanned" && (
+                <CheckCircle2 size={30} className="absolute -top-3 -right-3 text-white fill-[#1E8E3E]" />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              {scan?.status === "scanning" && (
+                <p className="flex items-center gap-2 text-[#0B4F8A] font-semibold">
+                  <Loader2 size={20} className="animate-spin" />
+                  {t("Reading your receipt…")}
+                </p>
+              )}
+              {scan?.status === "scanned" && (
+                <>
+                  <p className="flex items-center gap-2 text-[#1E8E3E] font-bold text-lg md:text-xl">
+                    <CheckCircle2 size={26} className="text-white fill-[#1E8E3E] flex-shrink-0" />
+                    {t("Receipt scanned")}
+                  </p>
+                  <p className="text-[#1E8E3E] mt-1">{t("Receipt details detected — please review.")}</p>
+                </>
+              )}
+              {scan?.status === "manual" && (
+                <p className="text-gray-600 text-sm">{scan.message || t("Please enter the receipt details below.")}</p>
+              )}
+              <button type="button" onClick={reset} className="mt-2 text-sm text-gray-500 underline cursor-pointer">
+                {t("Use a different photo")}
+              </button>
+            </div>
+          </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm text-gray-700 font-medium">{t("Receipt total ($)")}</label>
-            <input
-              type="text"
-              inputMode="decimal"
-              placeholder="0.00"
-              value={form.amount}
-              onChange={(e) => /^\d{0,5}(\.\d{0,2})?$/.test(e.target.value) && setForm({ ...form, amount: e.target.value })}
-              className={`${inputClass} mt-1`}
-            />
-          </div>
-          <div>
-            <label className="text-sm text-gray-700 font-medium">{t("Purchase date")}</label>
-            <input
-              type="date"
-              value={form.purchaseDate}
-              max={moment().format("YYYY-MM-DD")}
-              onChange={(e) => setForm({ ...form, purchaseDate: e.target.value })}
-              className={`${inputClass} mt-1`}
-            />
-          </div>
-        </div>
-        <div>
-          <label className="text-sm text-gray-700 font-medium">{t("Note (optional)")}</label>
-          <input
-            type="text"
-            value={form.note}
-            onChange={(e) => setForm({ ...form, note: e.target.value })}
-            className={`${inputClass} mt-1`}
-          />
-        </div>
+        {scan?.alreadySubmitted && (
+          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            {t("This receipt has already been submitted for points.")}
+          </p>
+        )}
+        {declined && (
+          <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+            {t("This receipt shows the payment was declined. Points are only given for completed purchases.")}
+          </p>
+        )}
+        {notOurStore && (
+          <p className="text-sm text-yellow-800 bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3">
+            {t("This doesn't look like a Bách Hoá Houston receipt. Only Bách Hoá Houston purchases earn points.")}
+          </p>
+        )}
 
-        <button
-          type="submit"
-          className="w-full md:w-auto flex items-center justify-center gap-2 bg-[#0B4F8A] hover:bg-[#093f6e] text-white font-semibold rounded-2xl px-8 py-3 cursor-pointer"
-        >
-          <Upload size={18} />
-          {t("Submit receipt")}
-        </button>
+        {form.image && scan?.status !== "scanning" && (
+          <>
+            <div>
+              <label className="text-sm text-gray-700 font-semibold">{t("Eligible subtotal before tax ($)")}</label>
+              <div className="mt-1">
+                <ReviewField t={t} value={form.amount} display={`$${form.amount}`} editing={editing.amount} onEdit={editField("amount")}>
+                  <span className="text-gray-500">$</span>
+                  <input
+                    type="text"
+                    inputMode="decimal"
+                    placeholder="0.00"
+                    autoFocus={editing.amount}
+                    value={form.amount}
+                    onChange={(e) => /^\d{0,5}(\.\d{0,2})?$/.test(e.target.value) && setForm({ ...form, amount: e.target.value })}
+                    className={fieldInput}
+                  />
+                </ReviewField>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">{t("Points are based on eligible purchases before tax.")}</p>
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-700 font-semibold">{t("Purchase date")}</label>
+              <div className="mt-1">
+                <ReviewField
+                  t={t}
+                  icon={CalendarDays}
+                  value={form.purchaseDate}
+                  display={form.purchaseDate && moment(form.purchaseDate, "YYYY-MM-DD").format("MMM D, YYYY")}
+                  editing={editing.purchaseDate}
+                  onEdit={editField("purchaseDate")}
+                >
+                  <input
+                    type="date"
+                    value={form.purchaseDate}
+                    max={moment().format("YYYY-MM-DD")}
+                    onChange={(e) => setForm({ ...form, purchaseDate: e.target.value })}
+                    className={fieldInput}
+                  />
+                </ReviewField>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-700 font-semibold">{t("Store")}</label>
+              <div className="mt-1">
+                <ReviewField t={t} icon={Store} value={form.storeName} editing={editing.storeName} onEdit={editField("storeName")}>
+                  <input
+                    type="text"
+                    placeholder="Bách Hoá Houston"
+                    autoFocus={editing.storeName}
+                    value={form.storeName}
+                    onChange={(e) => setForm({ ...form, storeName: e.target.value })}
+                    className={fieldInput}
+                  />
+                </ReviewField>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-700 font-semibold">{t("Receipt number")}</label>
+              <div className="mt-1">
+                <ReviewField t={t} icon={ReceiptText} value={form.receiptNumber} editing={editing.receiptNumber} onEdit={editField("receiptNumber")}>
+                  <input
+                    type="text"
+                    placeholder={t("Payment ID on the receipt")}
+                    autoFocus={editing.receiptNumber}
+                    value={form.receiptNumber}
+                    onChange={(e) => setForm({ ...form, receiptNumber: e.target.value })}
+                    className={fieldInput}
+                  />
+                </ReviewField>
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-700 font-semibold">{t("Note (optional)")}</label>
+              <input
+                type="text"
+                placeholder={t("Add a note (optional)")}
+                value={form.note}
+                onChange={(e) => setForm({ ...form, note: e.target.value })}
+                className="mt-1 w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-base text-black outline-none focus:border-[#0B4F8A]"
+              />
+            </div>
+
+            {estimatedPoints > 0 && !declined && (
+              <div className="flex items-center gap-2 rounded-xl bg-[#FFF8E6] border border-[#F5B82E]/40 px-4 py-3">
+                <Sparkle size={18} />
+                <p className="text-sm text-[#0B2F5E]">
+                  {isLoggedIn ? t("You'll earn about") : t("Members earn about")}{" "}
+                  <span className="font-bold">{estimatedPoints.toLocaleString()} {t("pts")}</span>{" "}
+                  {t("on this receipt once it's approved.")}
+                </p>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={scan?.alreadySubmitted}
+              className="w-full flex items-center justify-center gap-2 bg-[#0B4F8A] hover:bg-[#093f6e] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-2xl px-8 py-3.5 cursor-pointer"
+            >
+              <Upload size={18} />
+              {isLoggedIn
+                ? t("Submit receipt")
+                : estimatedPoints > 0
+                  ? `${t("Join free & claim")} ${estimatedPoints.toLocaleString()} ${t("pts")}`
+                  : t("Join free to earn points")}
+            </button>
+            {!isLoggedIn && (
+              <p className="text-center text-sm text-gray-500">
+                {t("Already a member?")}{" "}
+                <button type="button" onClick={() => joinToClaim("/signIn")} className="text-[#0B4F8A] font-semibold underline cursor-pointer">
+                  {t("Sign in")}
+                </button>
+              </p>
+            )}
+          </>
+        )}
       </form>
 
-      <div className="bg-white rounded-2xl border border-gray-200">
-        <p className="font-semibold text-[#0B4F8A] px-4 pt-4 pb-2">{t("My receipts")}</p>
-        {receipts.length === 0 && <p className="text-gray-400 text-sm text-center py-8">{t("No receipts uploaded yet.")}</p>}
-        <ul className="divide-y divide-gray-100">
-          {receipts.map((r) => (
-            <li key={r._id} className="flex items-center gap-3 px-4 py-3">
-              <a href={r.image} target="_blank" rel="noreferrer" className="flex-shrink-0">
-                <img src={r.image} alt="" className="w-12 h-12 object-cover rounded-lg border border-gray-200" />
-              </a>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-800 font-medium">
-                  {moment(r.createdAt).format("MMM D, YYYY")}
-                  {r.amount !== undefined && r.amount !== null && ` · $${Number(r.amount).toFixed(2)}`}
-                </p>
-                {r.adminNote && <p className="text-xs text-gray-400 truncate">{r.adminNote}</p>}
-              </div>
-              <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                <span className={`text-xs font-semibold border rounded-full px-2 py-0.5 ${statusBadge[r.status]}`}>
-                  {statusText[r.status]}
-                </span>
-                {r.status === "approved" && (
-                  <span className="text-xs font-bold text-[#1E9E4A]">+{r.approvedPoints} {t("pts")}</span>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {isLoggedIn && (
+        <div className="bg-white rounded-2xl border border-gray-200">
+          <p className="font-semibold text-[#0B4F8A] px-4 pt-4 pb-2">{t("My receipts")}</p>
+          {receipts.length === 0 && <p className="text-gray-400 text-sm text-center py-8">{t("No receipts uploaded yet.")}</p>}
+          <ul className="divide-y divide-gray-100">
+            {receipts.map((r) => (
+              <li key={r._id} className="flex items-center gap-3 px-4 py-3">
+                <a href={r.image} target="_blank" rel="noreferrer" className="flex-shrink-0">
+                  <img src={r.image} alt="" className="w-12 h-12 object-cover rounded-lg border border-gray-200" />
+                </a>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-gray-800 font-medium">
+                    {(r.purchaseDate ? moment.utc(r.purchaseDate) : moment(r.createdAt)).format("MMM D, YYYY")}
+                    {r.amount !== undefined && r.amount !== null && ` · $${Number(r.amount).toFixed(2)}`}
+                  </p>
+                  {r.adminNote && <p className="text-xs text-gray-400 truncate">{r.adminNote}</p>}
+                </div>
+                <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                  <span className={`text-xs font-semibold border rounded-full px-2 py-0.5 ${statusBadge[r.status]}`}>
+                    {statusText[r.status]}
+                  </span>
+                  {r.status === "approved" && (
+                    <span className="text-xs font-bold text-[#1E9E4A]">+{r.approvedPoints} {t("pts")}</span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

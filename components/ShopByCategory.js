@@ -6,15 +6,25 @@ import { useTranslation } from "react-i18next";
 import { ShoppingCart } from "lucide-react";
 import { IoIosArrowForward } from "react-icons/io";
 import Link from "next/link";
-import { languageContext } from "@/pages/_app";
+import { languageContext, userContext } from "@/pages/_app";
+import { BUY_IT_AGAIN_SLUG } from "@/services/buyItAgain";
 
 const CategoryCard = ({ item, url, router }) => {
   const { lang } = useContext(languageContext);
+  const [user] = useContext(userContext);
+  const isBuyItAgain = url === `/categories/${BUY_IT_AGAIN_SLUG}`;
+
+  const handleClick = (event) => {
+    if (isBuyItAgain && !user?.token) {
+      event.preventDefault();
+      router.push("/rewards");
+    }
+  };
 
   return (
     <Link
       className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1 "
-      // onClick={() => router.push(url)}
+      onClick={handleClick}
       href={url}
     >
       <div className="relative mb-3">
@@ -24,7 +34,6 @@ const CategoryCard = ({ item, url, router }) => {
             alt={item?.name || "Category"}
             fill
             className="object-cover rounded-full"
-          // sizes="(max-width: 768px) 100px, 120px"
           />
         </div>
       </div>
@@ -40,6 +49,7 @@ function ShopByCategory() {
   const router = useRouter();
   const { t } = useTranslation();
   const { lang } = useContext(languageContext);
+  const [user] = useContext(userContext);
 
   const [width, setWidth] = useState(360);
   // useEffect(() => {
@@ -85,6 +95,11 @@ function ShopByCategory() {
           style={{ maxWidth: width - 80 }}
         >
           <div className="sm:grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:flex gap-6 md:gap-8 ">
+            <CategoryCard
+              item={{ name: "Buy it again", v_name: "Mua lại", image: "/BuyItAgain.png" }}
+              url={`/categories/${BUY_IT_AGAIN_SLUG}`}
+              router={router}
+            />
             <Link
               className="flex flex-col items-center group cursor-pointer transition-transform hover:-translate-y-1"
               // onClick={() =>
@@ -156,6 +171,26 @@ function ShopByCategory() {
         </div>
         <div className=" overflow-x-auto scrollbar-hide px-1 w-full">
           <div className="flex gap-1.5 w-full min-w-0">
+            {/* Buy it again */}
+            <div
+              className="flex flex-col items-center bg-white rounded-[5px] shadow-sm p-2 min-w-[76px] flex-shrink-0 cursor-pointer transition-transform hover:-translate-y-1"
+              onClick={() =>
+                router.push(user?.token ? `/categories/${BUY_IT_AGAIN_SLUG}` : "/rewards")
+              }
+            >
+              <div className="relative w-[54px] h-[54px] mb-2">
+                <Image
+                  src="/BuyItAgain.png"
+                  alt={t("Buy it again")}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <p className="text-black text-[10px] font-semibold text-center leading-tight line-clamp-2 break-words">
+                {t("Buy it again")}
+              </p>
+            </div>
+
             {/* New Arrival */}
             <div
               className="flex flex-col items-center bg-white rounded-[5px] shadow-sm p-2 min-w-[76px] flex-shrink-0 cursor-pointer transition-transform hover:-translate-y-1"
