@@ -1366,6 +1366,7 @@ function Cart(props) {
                                     )}
                                   </div>
 
+                                  {date && (
                                   <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
                                     <FaRegCalendarCheck
                                       size={30}
@@ -1388,6 +1389,7 @@ function Cart(props) {
                                       </p>
                                     </div>
                                   </div>
+                                  )}
 
                                   <p className="text-[12px] md:text-[13px] text-[#3b4a8c] text-start">
                                     {t(
