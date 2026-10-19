@@ -9,7 +9,7 @@ import { Api } from "@/services/service";
 import { clearSyncedCart } from "@/services/cartSync";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
-import { FaRegCalendarAlt } from "react-icons/fa";
+import { FaRegCalendarAlt, FaRegCalendarCheck } from "react-icons/fa";
 import "react-datepicker/dist/react-datepicker.css";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
@@ -38,7 +38,7 @@ function Cart(props) {
   const [discount, setDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
   const [isOnce, setIsOnce] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [cancelPopup, setCancelPopup] = useState(false);
   const isLoggedIn = user?._id || user?.token;
   const [open, setOpen] = useState(false);
@@ -1422,6 +1422,39 @@ function Cart(props) {
                                       )}
                                     </div>
                                   )}
+
+                                  {opt.id === "localDelivery" &&
+                                    localAddress.dateOfDelivery && (
+                                      <div className="w-full max-w-[640px] flex items-center gap-4 bg-[#E8F3E8] border border-[#B9DDB9] rounded-lg px-4 py-3">
+                                        <FaRegCalendarCheck
+                                          size={40}
+                                          className="text-custom-green shrink-0"
+                                        />
+                                        <div>
+                                          <p className="text-[13px] font-semibold text-custom-green">
+                                            {t("Your Scheduled Delivery")}
+                                          </p>
+                                          <p className="text-[18px] md:text-[20px] font-bold text-custom-green leading-tight">
+                                            {new Date(
+                                              localAddress.dateOfDelivery,
+                                            ).toLocaleDateString(
+                                              i18n.language?.startsWith("vi")
+                                                ? "vi-VN"
+                                                : "en-US",
+                                              {
+                                                weekday: "long",
+                                                month: "long",
+                                                day: "numeric",
+                                                year: "numeric",
+                                              },
+                                            )}
+                                          </p>
+                                          <p className="text-[14px] text-custom-green">
+                                            {t("Delivery by 8 PM")}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    )}
 
                                   <ShippingInfoCard
                                     localAddress={localAddress}

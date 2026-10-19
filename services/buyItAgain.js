@@ -2,6 +2,20 @@ import { Api } from "@/services/service";
 
 export const BUY_IT_AGAIN_SLUG = "buy-it-again";
 
+// Unique, non-deleted products from the user's Completed / Delivered orders,
+// de-duplicated and sorted (most recently bought first) by the backend.
+export async function getBuyItAgainCategoryProducts(router, page = 1, limit = 24) {
+  const response = await Api("get", "getBuyItAgainProducts", "", router, {
+    page,
+    limit,
+  });
+
+  return {
+    products: Array.isArray(response?.data) ? response.data : [],
+    totalPages: response?.pagination?.totalPages || 0,
+  };
+}
+
 export async function getBuyItAgainProducts(router) {
   const response = await Api("get", "getStatusCompletedProducts", "", router);
   const products = new Map();

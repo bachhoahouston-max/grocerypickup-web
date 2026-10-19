@@ -3,15 +3,33 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import GroceryCatories from "@/components/GroceryCatories";
-import {
-  // getBuyItAgainProducts,
-  getPurchasedProducts,
-} from "@/services/buyItAgain";
+import { getBuyItAgainCategoryProducts } from "@/services/buyItAgain";
 
 function BuyItAgain(props) {
   const router = useRouter();
   const { t } = useTranslation();
   const [products, setProducts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const loadProducts = (pageToLoad) => {
+    props.loader(true);
+    getBuyItAgainCategoryProducts(router, pageToLoad)
+      .then((res) => {
+        setProducts((prev) =>
+          pageToLoad === 1 ? res.products : [...prev, ...res.products]
+        );
+        setTotalPages(res.totalPages);
+        setPage(pageToLoad);
+      })
+      .catch((error) => {
+        props.toaster({
+          type: "error",
+          message: error?.message || "Failed to load buy it again products",
+        });
+      })
+      .finally(() => props.loader(false));
+  };
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -22,18 +40,7 @@ function BuyItAgain(props) {
       return;
     }
 
-    props.loader(true);
-    // Previous process: only show products that were short during a completed order.
-    // getBuyItAgainProducts(router)
-    getPurchasedProducts(router)
-      .then(setProducts)
-      .catch((error) => {
-        props.toaster({
-          type: "error",
-          message: error?.message || "Failed to load buy it again products",
-        });
-      })
-      .finally(() => props.loader(false));
+    loadProducts(1);
   }, [router.isReady]);
 
   /*
@@ -64,6 +71,7 @@ function BuyItAgain(props) {
             {t("Buy it again")}
           </h1>
           {products.length > 0 ? (
+            <>
             <div className="grid lg:grid-cols-5 xl:grid-cols-6 md:grid-cols-6 grid-cols-2 mb-6 space-x-2">
               {products.map((item, index) => (
                 <div key={`${item._id}-${index}`} className="p-1 w-full md:mb-5 mb-2">
@@ -77,6 +85,17 @@ function BuyItAgain(props) {
                 </div>
               ))}
             </div>
+            {page < totalPages && (
+              <div className="flex justify-center">
+                <button
+                  className="bg-custom-green text-white font-semibold px-6 py-2 rounded-md"
+                  onClick={() => loadProducts(page + 1)}
+                >
+                  {t("Load more")}
+                </button>
+              </div>
+            )}
+            </>
           ) : (
             <div className="flex justify-center items-center h-[400px]">
               <p className="text-black text-center font-semibold text-xl">

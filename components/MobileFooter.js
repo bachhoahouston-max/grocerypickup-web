@@ -86,7 +86,10 @@ function MobileFooter() {
 function TabItem({ item, isActive, onClick }) {
   const color = isActive ? "text-custom-green" : "text-black";
   return (
-    <div className="flex flex-col justify-center items-center" onClick={onClick}>
+    <div
+      className={`flex flex-col justify-center items-center mx-1.5 py-1.5 rounded-xl cursor-pointer ${isActive ? "bg-[#E8F3E8]" : ""}`}
+      onClick={onClick}
+    >
       <div className="relative">
         <item.icon className={`w-5 h-5 ${color}`} strokeWidth={2} />
         {item.count > 0 && (
