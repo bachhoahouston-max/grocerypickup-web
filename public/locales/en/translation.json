@@ -244,7 +244,7 @@
   "Message": "Message",
   "Note: We currently deliver only to selected ZIP codes. Orders placed before 12pm noon are eligible for same day delivery. Orders placed after 12pm will be available for delivery the next business day": "Note: We currently deliver only to selected ZIP codes. Orders placed before 12pm noon are eligible for same day delivery. Orders placed after 12pm will be available for delivery the next business day",
   "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time": "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time",
-  "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.": "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.",
+  "*Note: Orders placed before 5 PM can be picked up the same day. Orders placed after 5 PM will be ready for pickup the next day.": "*Note: Orders placed before 5 PM can be picked up the same day. Orders placed after 5 PM will be ready for pickup the next day.",
   "Car Color": "Car Color",
   "Enter Car color": "Enter Car color",
   "Car Brand": "Car Brand",
@@ -500,5 +500,14 @@
   "on this receipt once it's approved.": "on this receipt once it's approved.",
   "Join free & claim": "Join free & claim",
   "Join free to earn points": "Join free to earn points",
-  "Already a member?": "Already a member?"
+  "Already a member?": "Already a member?",
+  "Your Scheduled Curbside Pickup": "Your Scheduled Curbside Pickup",
+  "Your Scheduled Pickup": "Your Scheduled Pickup",
+  "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.": "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.",
+  "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.": "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.",
+  "Packed within 24 hours • Arrives in 3–5 business days.": "Packed within 24 hours • Arrives in 3–5 business days.",
+  "Please check your email for tracking information.": "Please check your email for tracking information.",
+  "Note: We currently ship to the 48 contiguous U.S. states. We do not ship to Alaska or Hawaii.": "Note: We currently ship to the 48 contiguous U.S. states. We do not ship to Alaska or Hawaii.",
+  "Shipping Information": "Shipping Information",
+  "Add Address": "Add Address"
 }

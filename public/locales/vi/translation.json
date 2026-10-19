@@ -243,7 +243,7 @@
   "Message": "Tin nhắn",
   "Note: We currently deliver only to selected ZIP codes. Orders placed before 12pm noon are eligible for same day delivery. Orders placed after 12pm will be available for delivery the next business day": "Lưu ý: Hiện tại, chúng tôi chỉ giao hàng đến một số mã zipcode được chọn. Các đơn hàng được đặt trước 12:00 trưa sẽ đủ điều kiện giao hàng trong ngày. Các đơn hàng được đặt sau 12:00 trưa sẽ được giao vào ngày làm việc tiếp theo",
   "Note: We currently deliver to 49/50 U.S. states. Unfortunately, we do not deliver to Hawaii at this time": "Lưu ý: Hiện tại chúng tôi giao hàng đến 49/50 tiểu bang của Hoa Kỳ. Thật không may, chúng tôi không giao hàng đến Hawaii vào thời điểm này",
-  "*Note: Orders placed before 2 PM are eligible for same-day pickup. Orders placed after 2 PM will be available for pickup the next day.": "*Lưu ý: Đơn hàng đặt trước 2 giờ chiều sẽ được nhận trong ngày. Đơn hàng đặt sau 2 giờ chiều sẽ được nhận vào ngày hôm sau.",
+  "*Note: Orders placed before 5 PM can be picked up the same day. Orders placed after 5 PM will be ready for pickup the next day.": "*Lưu ý: Đơn hàng đặt trước 5 giờ chiều có thể nhận trong ngày. Đơn hàng đặt sau 5 giờ chiều sẽ sẵn sàng để nhận vào ngày hôm sau.",
   "Car Color": "Màu xe",
   "Enter Car color": "Nhập màu xe",
   "Car Brand": "Thương Hiệu Xe",
@@ -497,5 +497,14 @@
   "on this receipt once it's approved.": "cho hóa đơn này khi được duyệt.",
   "Join free & claim": "Đăng ký miễn phí & nhận",
   "Join free to earn points": "Đăng ký miễn phí để tích điểm",
-  "Already a member?": "Đã là thành viên?"
+  "Already a member?": "Đã là thành viên?",
+  "Your Scheduled Curbside Pickup": "Lịch Nhận Hàng Tại Xe Của Bạn",
+  "Your Scheduled Pickup": "Lịch Nhận Hàng Của Bạn",
+  "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.": "Đơn hàng sẵn sàng để nhận khoảng 2 giờ sau khi bạn đặt. Vui lòng chờ email xác nhận đơn hàng đã sẵn sàng. Khi bạn đến, chúng tôi sẽ mang hàng ra tận xe cho bạn.",
+  "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.": "Đơn hàng sẵn sàng để nhận khoảng 2 giờ sau khi bạn đặt. Vui lòng chờ email xác nhận đơn hàng đã sẵn sàng trước khi đến cửa hàng.",
+  "Packed within 24 hours • Arrives in 3–5 business days.": "Đóng gói trong vòng 24 giờ • Giao hàng trong 3–5 ngày làm việc.",
+  "Please check your email for tracking information.": "Vui lòng kiểm tra email để xem thông tin theo dõi đơn hàng.",
+  "Note: We currently ship to the 48 contiguous U.S. states. We do not ship to Alaska or Hawaii.": "Lưu ý: Hiện tại chúng tôi giao hàng đến 48 tiểu bang liền kề của Hoa Kỳ. Chúng tôi không giao hàng đến Alaska hoặc Hawaii.",
+  "Shipping Information": "Thông Tin Giao Hàng",
+  "Add Address": "Thêm Địa Chỉ"
 }
