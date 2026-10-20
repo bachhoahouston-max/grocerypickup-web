@@ -385,5 +385,14 @@
   "Please check your email for tracking information.": "Vui lòng kiểm tra email để xem thông tin theo dõi đơn hàng.",
   "Note: We currently ship to the 48 contiguous U.S. states. We do not ship to Alaska or Hawaii.": "Lưu ý: Hiện tại chúng tôi giao hàng đến 48 tiểu bang liền kề của Hoa Kỳ. Chúng tôi không giao hàng đến Alaska hoặc Hawaii.",
   "Shipping Information": "Thông Tin Giao Hàng",
-  "Add Address": "Thêm Địa Chỉ"
+  "Add Address": "Thêm Địa Chỉ",
+  "These items are unavailable. Remove them to continue.": "Các sản phẩm này hiện không có sẵn. Vui lòng xóa để tiếp tục.",
+  "Out of stock": "Hết hàng",
+  "Available quantity": "Số lượng còn lại",
+  "Set quantity to": "Đổi số lượng thành",
+  "Remove": "Xóa",
+  "Available Items": "Sản phẩm có sẵn",
+  "Price updated": "Giá đã được cập nhật",
+  "Remove out-of-stock items and review updated prices before continuing. Sale prices may have ended. Click “Proceed to Checkout” again to continue.": "Vui lòng xóa các sản phẩm hết hàng và kiểm tra lại giá đã cập nhật trước khi tiếp tục. Giá khuyến mãi có thể đã kết thúc. Nhấn “Tiến hành thanh toán” lần nữa để tiếp tục.",
+  "Remove all": "Xóa tất cả"
 }

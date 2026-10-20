@@ -509,5 +509,13 @@
   "Please check your email for tracking information.": "Please check your email for tracking information.",
   "Note: We currently ship to the 48 contiguous U.S. states. We do not ship to Alaska or Hawaii.": "Note: We currently ship to the 48 contiguous U.S. states. We do not ship to Alaska or Hawaii.",
   "Shipping Information": "Shipping Information",
-  "Add Address": "Add Address"
+  "Add Address": "Add Address",
+  "These items are unavailable. Remove them to continue.": "These items are unavailable. Remove them to continue.",
+  "Available quantity": "Available quantity",
+  "Set quantity to": "Set quantity to",
+  "Remove": "Remove",
+  "Available Items": "Available Items",
+  "Price updated": "Price updated",
+  "Remove out-of-stock items and review updated prices before continuing. Sale prices may have ended. Click “Proceed to Checkout” again to continue.": "Remove out-of-stock items and review updated prices before continuing. Sale prices may have ended. Click “Proceed to Checkout” again to continue.",
+  "Remove all": "Remove all"
 }
