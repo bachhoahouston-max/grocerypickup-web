@@ -7,6 +7,7 @@ import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
 import { Api } from "@/services/service";
 import { clearSyncedCart } from "@/services/cartSync";
+import { cartLineProductId } from "@/services/rewardCart";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
 import { FaRegCalendarAlt, FaRegCalendarCheck } from "react-icons/fa";
@@ -23,7 +24,6 @@ function Cart(props) {
   const [user, setUser] = useContext(userContext);
   const [CartTotal, setCartTotal] = useState(0);
   const [pincodes, setPincodes] = useState([]);
-  const [isPriceChanged, setIsPriceChanged] = useState(false);
 
   const [paymentChecked, setPaymentChecked] = useState(false);
   const [cancelDone, setCancelDone] = useState(false);
@@ -105,133 +105,129 @@ function Cart(props) {
       });
   };
 
-  const extractProductObjects = (cartData) => {
-    let result = [];
+  // Keep the latest cart for async validation results to land on
+  const cartRef = useRef(cartData);
+  cartRef.current = cartData;
+  const hasValidatedOnLoad = useRef(false);
 
-    cartData.forEach((item) => {
-      const source = item?.productSource || "NORMAL";
-      // Reward prices are always $0 and are validated server-side at order time
-      if (source === "REWARD") return;
+  const persistCart = (nextCart) => {
+    setCartData(nextCart);
+    localStorage.setItem("addCartDetail", JSON.stringify(nextCart));
+  };
 
-      const mainId = item?.product?._id || item?._id;
-      const currentPrice = item?.price || item?.our_price || 0;
+  const cartSignature = (lines) =>
+    JSON.stringify((lines || []).map((line) => [line?.id, line?.qty]));
 
-      let obj = {
-        productSource: source,
-        productId: mainId,
-        price: currentPrice,
-        priceSlotIndex: item.priceSlotIndex
+  // Asks the server for the live price and stock of every cart line and
+  // returns the cart with stockStatus / availableQty / updated prices applied.
+  const validateCart = async (lines) => {
+    const res = await Api(
+      "post",
+      "validateCart",
+      {
+        items: lines.map((line) => ({
+          productId:
+            cartLineProductId(line) || line?.product?._id || line?._id,
+          productSource: line?.productSource || "NORMAL",
+          priceSlotIndex: line?.priceSlotIndex,
+          qty: line?.qty,
+        })),
+      },
+      router,
+    );
+    const results = Array.isArray(res?.data) ? res.data : [];
+
+    return lines.map((line, i) => {
+      const result = results[i];
+      if (!result) return line;
+
+      const next = {
+        ...line,
+        stockStatus: result.stockStatus,
+        availableQty: result.availableQty,
       };
 
-      if (source === "COMBO" && item?.free_product?.length > 0) {
-        obj.freeProducts = item.free_product
-          .map((freeItem) => freeItem?.product?._id)
-          .filter(Boolean);
-      }
-
-      if (mainId) {
-        result.push(obj);
-      }
-    });
-
-    return result;
-  };
-
-  const updateCartWithLatestData = (cartData, latestData) => {
-    console.log("Latest Data:", latestData);
-    console.log("Cart Data:", cartData);
-    // return cartData
-    const updatedCart = cartData.map((item) => {
-      if (item?.productSource === "REWARD") return item;
-      const match = latestData.find(
-        (p) => String(p.productId) === String(item?.id || item?.product?._id) && item.priceSlotIndex === p.priceSlotIndex
-      );
-      console.log("Match Found:", match);
-      if (!match) return item;
-
-      let updatedItem = { ...item };
-      console.log("Match Found1:", match);
-      if (item.productSource === "Sale") {
-        if (item.price !== match.price) {
-          props.toaster({
-            type: "error",
-            message: t(
-              "Some sale items have expired. Prices have been updated. Please review you cart",
-            ),
-          });
+      // Reward lines come back without a price — they stay $0
+      if (result.price !== null && result.price !== undefined) {
+        if (Number(line?.price) !== Number(result.price)) {
+          next.previousPrice = line?.price;
+          next.priceReviewed = false;
+          next.price = result.price;
+          next.our_price = result.price;
         }
+        if (line?.productSource === "COMBO" && result.productSource !== "COMBO") {
+          next.free_product = [];
+        }
+        if (line?.productSource === "SALE" && result.productSource !== "SALE") {
+          next.SaleID = null;
+          next.isSaleExpired = true;
+        }
+        next.productSource = result.productSource;
+        next.total = Number(next.price || 0) * Number(line?.qty || 1);
       }
 
-      if (item.productSource === "COMBO" && match.productSource !== "COMBO") {
-        updatedItem.free_product = [];
-
-        props.toaster({
-          type: "warning",
-          message: "Combo offer expired. Free items removed.",
-        });
-      }
-      if (item.price !== match.price) {
-        updatedItem.price = match.price;
-        updatedItem.our_price = match.price;
-        updatedItem.total = match.price * (item.qty || 1);
-
-        updatedItem.productSource = match.productSource;
-      }
-      return updatedItem;
+      return next;
     });
-    console.log("Updated Cart:", updatedCart);
-    console.log("Original Cart:", cartData);
-    return updatedCart;
   };
 
-  // useEffect(() => {
-  //   if (cartData?.length) {
-  //     checkPRiceOFPRoduct(cartData);
-  //   }
-  // }, []);
+  const hasStockIssue = (line) =>
+    line?.stockStatus === "OUT_OF_STOCK" || line?.stockStatus === "LIMITED";
+  const hasUnreviewedPrice = (line) =>
+    line?.previousPrice !== undefined &&
+    line?.previousPrice !== null &&
+    !line?.priceReviewed;
 
-  const checkPRiceOFPRoduct = async (cartData) => {
+  // Check stock and prices as soon as the cart page opens (no message)
+  useEffect(() => {
+    if (hasValidatedOnLoad.current || !cartData?.length) return;
+    hasValidatedOnLoad.current = true;
+
+    const snapshot = cartData;
+    validateCart(snapshot)
+      .then((checked) => {
+        // Skip if the customer changed the cart while we were checking
+        if (cartSignature(cartRef.current) !== cartSignature(snapshot)) return;
+        persistCart(checked);
+      })
+      .catch((err) => console.log(err));
+  }, [cartData]);
+
+  const proceedToCheckout = async () => {
+    if (!cartData?.length) {
+      props.toaster({ type: "warning", message: t("Your cart is empty") });
+      return;
+    }
+
+    let checked;
     try {
       props.loader(true);
-
-      const res = await Api(
-        "post",
-        `checkPRiceOFPRoduct`,
-        extractProductObjects(cartData),
-        router,
-      );
-
-      props.loader(false);
-
-      const latestData = res.data || [];
-      console.log("Latest Data from API:", latestData);
-      const updatedCart = updateCartWithLatestData(cartData, latestData);
-
-      const isChanged =
-        JSON.stringify(cartData) !== JSON.stringify(updatedCart);
-
-      if (isChanged) {
-        setCartData(updatedCart);
-        localStorage.setItem("addCartDetail", JSON.stringify(updatedCart));
-
-        setIsPriceChanged(true);
-        props.toaster({
-          type: "error",
-          message: t(
-            "Some sale items have expired. Prices have been updated. Please review you cart",
-          ),
-        });
-
-        return false;
-      }
-
-      return true;
+      checked = await validateCart(cartData);
     } catch (err) {
-      props.loader(false);
-      console.log(err)
       props.toaster({ type: "error", message: err?.message });
-      return false;
+      return;
+    } finally {
+      props.loader(false);
     }
+
+    // One click shows every problem at once with a single message
+    if (checked.some(hasStockIssue) || checked.some(hasUnreviewedPrice)) {
+      persistCart(
+        checked.map((line) =>
+          hasUnreviewedPrice(line) ? { ...line, priceReviewed: true } : line,
+        ),
+      );
+      props.toaster({
+        type: "error",
+        message: t(
+          "Remove out-of-stock items and review updated prices before continuing. Sale prices may have ended. Click “Proceed to Checkout” again to continue.",
+        ),
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    persistCart(checked);
+    createProductRquest();
   };
 
   useEffect(() => {
@@ -555,6 +551,8 @@ function Cart(props) {
           price: item?.regularPrice,
           total: Number(item?.regularPrice || 0) * Number(item?.qty || 0),
           isSaleExpired: true,
+          previousPrice: item?.price,
+          priceReviewed: false,
         };
       }
 
@@ -645,6 +643,19 @@ function Cart(props) {
         draftState.splice(i, 1);
       }
     });
+
+    setCartData(nextState);
+    localStorage.setItem("addCartDetail", JSON.stringify(nextState));
+
+    if (nextState.length === 0) {
+      setSearchTerm("");
+      getProfileData();
+    }
+  };
+
+  // "Remove all" on the out-of-stock panel
+  const removeOutOfStock = () => {
+    const nextState = cartData.filter((line) => !hasStockIssue(line));
 
     setCartData(nextState);
     localStorage.setItem("addCartDetail", JSON.stringify(nextState));
@@ -764,8 +775,6 @@ function Cart(props) {
         });
       }
     }
-    await checkPRiceOFPRoduct(cartData);
-
     let data = [];
     let cart = localStorage.getItem("addCartDetail");
 
@@ -1239,6 +1248,7 @@ function Cart(props) {
               toaster={props.toaster}
               pickupOption={pickupOption}
               cartClose={cartClose}
+              removeOutOfStock={removeOutOfStock}
               loader={props.loader}
             />
             <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
@@ -1751,27 +1761,7 @@ function Cart(props) {
                         {isLoggedIn ? (
                           <button
                             className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
-                            onClick={async () => {
-                              if (cartData?.length === 0) {
-                                toaster?.({
-                                  type: "warning",
-                                  message: "Your cart is empty",
-                                });
-                                return;
-                              }
-
-                              if (isPriceChanged) {
-                                createProductRquest && createProductRquest();
-                                return;
-                              }
-
-                              const isValid =
-                                await checkPRiceOFPRoduct(cartData);
-
-                              if (isValid) {
-                                createProductRquest && createProductRquest();
-                              }
-                            }}
+                            onClick={proceedToCheckout}
                           >
                             {t("Proceed To Checkout")}
                           </button>

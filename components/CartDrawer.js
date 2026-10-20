@@ -254,6 +254,7 @@
 import Image from "next/image";
 import { IoRemoveSharp, IoAddSharp } from "react-icons/io5";
 import { IoMdClose } from "react-icons/io";
+import { AlertCircle, CheckCircle2, Trash2 } from "lucide-react";
 import { produce } from "immer";
 import Swal from "sweetalert2";
 import { useContext, useEffect, useState } from "react";
@@ -274,6 +275,63 @@ const isNormalItem = (item) => item?.productSource === "NORMAL";
 const isSaleItem = (item) => item?.productSource === "SALE";
 const isComboItem = (item) => item?.productSource === "COMBO";
 const isRewardItem = (item) => item?.productSource === "REWARD";
+const hasStockIssue = (item) =>
+  item?.stockStatus === "OUT_OF_STOCK" || item?.stockStatus === "LIMITED";
+const hasPriceUpdate = (item) =>
+  item?.previousPrice !== undefined &&
+  item?.previousPrice !== null &&
+  Number(item.previousPrice) !== Number(item?.price);
+
+// ─── Out-of-stock Row (set by the cart's stock check) ─────────────────────────
+const StockIssueRow = ({ item, i, lang, cartClose, setLineQty, otherLinesQty, formatPrice }) => {
+  const { t } = useTranslation();
+  const isLimited = item?.stockStatus === "LIMITED";
+  // Most of this line the customer can still keep (stock is shared with other lines)
+  const keepableQty = Number(item?.availableQty || 0) - otherLinesQty;
+
+  return (
+    <div className="flex flex-row items-center gap-4 py-3 border-b border-red-100 last:border-b-0">
+      <CartImage item={item} />
+      <div className="flex flex-col flex-1 min-w-0">
+        <p className="text-black font-medium md:text-base text-sm">
+          {lang === "en" ? item?.name : item?.vietnamiesName || item?.name}
+        </p>
+        <div className="text-sm text-black mt-1 flex gap-3 items-center flex-wrap">
+          <span className="text-xs md:text-sm">
+            {item?.qty} {item?.price_slot?.unit ?? "unit"}
+          </span>
+          <span className="font-medium">
+            {isRewardItem(item)
+              ? "FREE"
+              : `${constant.currency}${formatPrice(item?.price)}`}
+          </span>
+        </div>
+        <span className="mt-1 self-start bg-red-100 text-red-600 text-xs font-medium px-3 py-0.5 rounded-full">
+          {isLimited
+            ? `${t("Available quantity")}: ${item?.availableQty}`
+            : t("Out of stock")}
+        </span>
+        {isLimited && keepableQty >= 1 && (
+          <button
+            type="button"
+            className="mt-2 self-start text-xs font-semibold text-custom-green underline"
+            onClick={() => setLineQty(i, keepableQty)}
+          >
+            {t("Set quantity to")} {keepableQty}
+          </button>
+        )}
+      </div>
+      <button
+        type="button"
+        className="flex items-center gap-1 text-red-600 font-medium text-sm flex-shrink-0"
+        onClick={() => cartClose(item, i)}
+      >
+        <Trash2 size={18} />
+        {t("Remove")}
+      </button>
+    </div>
+  );
+};
 
 // ─── Reward Cart Row (redeemed with points, always $0) ────────────────────────
 const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty, increaseQty, cartClose }) => {
@@ -389,19 +447,31 @@ const NormalCartRow = ({
             </span>
             <span className="font-medium">
               {constant.currency}
-              {saleExpired ? item?.price_slot?.other_price : item?.price}
+              {item?.price}
             </span>
-            {item?.price_slot?.other_price && (
+            {hasPriceUpdate(item) ? (
               <span className="line-through text-xs text-gray-400">
                 {constant.currency}
-                {item?.price_slot?.other_price}
+                {item.previousPrice}
+              </span>
+            ) : (
+              item?.price_slot?.other_price &&
+              Number(item.price_slot.other_price) !== Number(item?.price) && (
+                <span className="line-through text-xs text-gray-400">
+                  {constant.currency}
+                  {item?.price_slot?.other_price}
+                </span>
+              )
+            )}
+            {hasPriceUpdate(item) && !item?.endDateTime && (
+              <span className="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">
+                {t("Price updated")}
               </span>
             )}
             {item?.endDateTime &&
-              (new Date(item.endDateTime) < new Date() ||
-                item.productSource === "NORMAL" ? (
+              (saleExpired || item.productSource === "NORMAL" ? (
                 <span className="bg-gray-100 text-gray-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-gray-200">
-                  {t(`Sale Ended – Price changed to regular price`)}
+                  {t("Sale Ended - Price changed to regular price")}
                 </span>
               ) : (
                 <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded-full border border-orange-200">
@@ -693,8 +763,6 @@ const CartControls = ({
 }) => {
   const isDesktop = device === "desktop";
 
-  const Total = item.qty * item.regularPrice;
-
   return (
     // Mobile: indent past the 80px image + gap-4 + p-1 so controls line up with the item text
     <div
@@ -716,7 +784,7 @@ const CartControls = ({
       <div className="flex items-center justify-center gap-3 w-30">
         <p className="text-black font-semibold text-base">
           {constant.currency}
-          {saleExpired ? formatPrice(Total) : formatPrice(item?.total)}
+          {formatPrice(item?.total)}
         </p>
         <IoMdClose
           className="w-5 h-5 text-black cursor-pointer"
@@ -731,6 +799,7 @@ export default function CartDrawer({
   pickupOption,
   toaster,
   cartClose,
+  removeOutOfStock,
   loader,
 }) {
   const { t } = useTranslation();
@@ -816,6 +885,16 @@ export default function CartDrawer({
       });
       persistCart(nextState);
     }
+  };
+
+  // Used by the out-of-stock panel to drop a line to what's in stock
+  const setLineQty = (index, qty) => {
+    const nextState = produce(cartData, (draft) => {
+      draft[index].qty = qty;
+      draft[index].total = (parseFloat(draft[index]?.price) || 0) * qty;
+      draft[index].stockStatus = "AVAILABLE";
+    });
+    persistCart(nextState);
   };
 
   const handleQuantity = async (items) => {
@@ -965,11 +1044,66 @@ export default function CartDrawer({
     }
   };
 
+  const stockIssueLines = (cartData || [])
+    .map((item, i) => ({ item, i }))
+    .filter(({ item }) => hasStockIssue(item));
+
   return (
     <div className="bg-white w-full md:w-3/5 rounded-[5px]">
+      {stockIssueLines.length > 0 && (
+        <div className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="text-red-600 flex-shrink-0" size={24} />
+            <p className="flex-1 min-w-0 text-red-600 font-bold text-lg">
+              {t("Out of Stock")} ({stockIssueLines.length})
+            </p>
+            {removeOutOfStock && (
+              <button
+                type="button"
+                className="flex items-center gap-1 flex-shrink-0 rounded-lg border border-red-300 bg-white px-3 py-1.5 text-sm font-semibold text-red-600 hover:bg-red-100"
+                onClick={removeOutOfStock}
+              >
+                <Trash2 size={16} />
+                {t("Remove all")}
+              </button>
+            )}
+          </div>
+          <p className="mt-1 text-gray-700 text-sm">
+            {t("These items are unavailable. Remove them to continue.")}
+          </p>
+          <div className="mt-2 bg-white rounded-lg px-3">
+            {stockIssueLines.map(({ item, i }) => (
+              <StockIssueRow
+                key={i}
+                item={item}
+                i={i}
+                lang={lang}
+                cartClose={cartClose}
+                setLineQty={setLineQty}
+                otherLinesQty={
+                  cartQtyForProduct(cartData, cartLineProductId(item)) -
+                  Number(item?.qty || 0)
+                }
+                formatPrice={formatPrice}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {stockIssueLines.length > 0 && stockIssueLines.length < cartData.length && (
+        <div className="mt-4 flex items-center gap-2">
+          <CheckCircle2 className="text-custom-green" size={24} />
+          <p className="text-custom-green font-bold text-lg">
+            {t("Available Items")}
+          </p>
+        </div>
+      )}
+
       {cartData && cartData.length > 0 && (
         <div className="mt-3 space-y-3">
           {cartData.map((item, i) => {
+            if (hasStockIssue(item)) return null;
             const pickupConfig = getPickupConfig(item);
             const saleExpired = isSaleExpired(item);
 
