@@ -178,18 +178,25 @@ function Cart(props) {
     !line?.priceReviewed;
 
   // Check stock and prices as soon as the cart page opens (no message)
+  const checkCartOnLoad = (snapshot, attempt = 0) => {
+    validateCart(snapshot)
+      .then((checked) => {
+        const latest = cartRef.current;
+        if (cartSignature(latest) === cartSignature(snapshot)) {
+          persistCart(checked);
+        } else if (latest?.length && attempt < 2) {
+          // The cart changed while we were checking (e.g. the synced server
+          // cart arrived) — check the new cart instead
+          checkCartOnLoad(latest, attempt + 1);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     if (hasValidatedOnLoad.current || !cartData?.length) return;
     hasValidatedOnLoad.current = true;
-
-    const snapshot = cartData;
-    validateCart(snapshot)
-      .then((checked) => {
-        // Skip if the customer changed the cart while we were checking
-        if (cartSignature(cartRef.current) !== cartSignature(snapshot)) return;
-        persistCart(checked);
-      })
-      .catch((err) => console.log(err));
+    checkCartOnLoad(cartData);
   }, [cartData]);
 
   const proceedToCheckout = async () => {

@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useRef } from "react";
-import { Api } from "@/services/service";
+import { Api, ConstantsUrl } from "@/services/service";
 import { getSyncedCart, saveSyncedCart } from "@/services/cartSync";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
@@ -32,34 +32,63 @@ function App({ Component, pageProps }) {
   const { t, i18n } = useTranslation();
 
   // ── Cross-platform cart sync (separate from the local-cart logic above) ──
-  // Tracks which account this device has already merged its local cart into.
-  // Persisted in localStorage (not just a ref) so a plain page reload/Stripe
-  // redirect — which remounts this component — is still recognized as "the
-  // same session" and just pulls the server's cart instead of re-merging
-  // with whatever happens to be in localStorage at that instant.
-  const getSyncedUserId = () =>
-    typeof window === "undefined" ? null : localStorage.getItem("cartSyncUserId");
-  const setSyncedUserId = (id) => {
+  // The server keeps one cart per account (last write wins). Each browser
+  // remembers which account its local cart belongs to ("cartSyncUserId") and
+  // whether it has edits the server hasn't received yet ("cartSyncDirty").
+  //
+  // On load: if this browser's cart already belongs to the account, the
+  // server copy wins unless there are unsent local edits — so items removed
+  // on another device/platform stay removed. Only a cart that belonged to a
+  // guest (or another account) is merged into the account's cart.
+  const CART_OWNER_KEY = "cartSyncUserId";
+  const CART_DIRTY_KEY = "cartSyncDirty";
+  const readLocal = (key) =>
+    typeof window === "undefined" ? null : localStorage.getItem(key);
+  const writeLocal = (key, value) => {
     if (typeof window === "undefined") return;
-    if (id) localStorage.setItem("cartSyncUserId", id);
-    else localStorage.removeItem("cartSyncUserId");
+    if (value) localStorage.setItem(key, value);
+    else localStorage.removeItem(key);
   };
-  // Blocks the "push on change" effect from firing for cart updates that
-  // came FROM the server (pull/merge), so we don't immediately echo them back.
+
+  // Blocks the "push on change" effect until the server cart has been pulled
   const cartHydrated = useRef(false);
   const cartPushTimer = useRef(null);
+  // Last cart the server is known to have (or that was loaded from storage);
+  // anything different is a local edit that still needs pushing
+  const cleanCartJson = useRef(null);
+  const pendingPush = useRef(null);
+  const latestCartJson = useRef(null);
+
+  const applyServerCart = (items) => {
+    cleanCartJson.current = JSON.stringify(items);
+    setCartData(items);
+    localStorage.setItem("addCartDetail", JSON.stringify(items));
+  };
+
+  const pushCart = async (items) => {
+    const json = JSON.stringify(items);
+    pendingPush.current = null;
+    await saveSyncedCart(items, router);
+    cleanCartJson.current = json;
+    // Only clear the flag if nothing changed while the request was in flight
+    if (latestCartJson.current === json) writeLocal(CART_DIRTY_KEY, null);
+  };
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     const userId = user?._id;
     if (!userId || !user?.token) {
-      setSyncedUserId(null);
-      cartHydrated.current = true;
+      // The user is read from localStorage right after the first render —
+      // don't treat that first, empty render as a guest session
+      if (!readLocal("token") || !readLocal("userDetail")) {
+        cartHydrated.current = true;
+      }
       return;
     }
 
     let cancelled = false;
+    cartHydrated.current = false;
 
     const syncCartOnLogin = async () => {
       try {
@@ -67,48 +96,50 @@ function App({ Component, pageProps }) {
         if (cancelled) return;
 
         const serverItems = res?.data?.items || [];
-        const isNewSessionForUser = getSyncedUserId() !== userId;
-        let finalItems = serverItems;
+        const localCart = JSON.parse(readLocal("addCartDetail") || "[]");
+        const ownedByThisUser = readLocal(CART_OWNER_KEY) === userId;
+        const hasUnsentEdits = readLocal(CART_DIRTY_KEY) === "1";
 
-        if (isNewSessionForUser) {
-          // Merge this device's local/guest cart into the account's synced
-          // cart on login, instead of discarding either side. Web items key
-          // on `id`, app items key on `productid` — fall back across both
-          // so a cart merged from the app still dedupes correctly.
-          const keyOf = (item) => item.id || item.productid;
-          const byId = new Map();
-          serverItems.forEach((item) => {
-            console.log("serverItems", item);
+        writeLocal(CART_OWNER_KEY, userId);
 
-            let nwtdata = { ...item };
-            if (nwtdata.productSource === "SALE") {
-              nwtdata.regularPrice = nwtdata.price
-              nwtdata.price = nwtdata.offer;
-              nwtdata.total = (nwtdata.price * nwtdata.qty).toFixed(2);
+        if (ownedByThisUser && !hasUnsentEdits) {
+          // Server is the source of truth
+          applyServerCart(serverItems);
+          return;
+        }
 
-            }
-            console.log("keys", nwtdata);
-            byId.set(keyOf(item), nwtdata)
+        if (ownedByThisUser) {
+          // Edits made here never reached the server (tab closed, offline)
+          await pushCart(localCart);
+          return;
+        }
+
+        // Guest / other-account cart: merge it into this account's cart.
+        // Web items key on `id`, app items key on `productid` — fall back
+        // across both so a cart merged from the app still dedupes correctly.
+        const keyOf = (item) => item.id || item.productid;
+        const byId = new Map();
+        serverItems.forEach((item) => {
+          let nwtdata = { ...item };
+          if (nwtdata.productSource === "SALE") {
+            nwtdata.regularPrice = nwtdata.price;
+            nwtdata.price = nwtdata.offer;
+            nwtdata.total = (nwtdata.price * nwtdata.qty).toFixed(2);
           }
-          );
-          cartData.forEach((item) => {
-            if (!byId.has(keyOf(item))) byId.set(keyOf(item), item);
-          });
-          finalItems = Array.from(byId.values());
-        }
+          byId.set(keyOf(item), nwtdata);
+        });
+        localCart.forEach((item) => {
+          if (!byId.has(keyOf(item))) byId.set(keyOf(item), item);
+        });
+        const finalItems = Array.from(byId.values());
 
-        cartHydrated.current = false;
-        setCartData(finalItems);
-        localStorage.setItem("addCartDetail", JSON.stringify(finalItems));
-        setSyncedUserId(userId);
-
-        if (isNewSessionForUser) {
-          await saveSyncedCart(finalItems, router);
-        }
+        applyServerCart(finalItems);
+        await pushCart(finalItems);
       } catch {
-        // Offline or sync failure — keep using the local cart as-is.
+        // Offline or sync failure — keep using the local cart as-is; the
+        // dirty flag (if any) makes the next load push it.
       } finally {
-        cartHydrated.current = true;
+        if (!cancelled) cartHydrated.current = true;
       }
     };
 
@@ -121,20 +152,65 @@ function App({ Component, pageProps }) {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    const json = JSON.stringify(cartData);
+    latestCartJson.current = json;
+    if (cleanCartJson.current === null) {
+      cleanCartJson.current = json;
+      return;
+    }
+    if (json === cleanCartJson.current) return;
+
+    // A real local edit (add/remove/qty) — remember it until the server has it
+    writeLocal(CART_DIRTY_KEY, "1");
+
     if (!user?._id || !user?.token) return;
     if (!cartHydrated.current) return;
 
     clearTimeout(cartPushTimer.current);
+    pendingPush.current = cartData;
     cartPushTimer.current = setTimeout(() => {
-      saveSyncedCart(cartData, router).catch(() => {
-        // Offline or sync failure — local cart already has the change,
-        // it'll be pushed again on the next cart edit.
+      pushCart(cartData).catch(() => {
+        // Offline or sync failure — the dirty flag keeps it for next time
       });
     }, 800);
 
     return () => clearTimeout(cartPushTimer.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartData]);
+
+  // Don't lose an edit made right before the tab is closed/hidden
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const flush = () => {
+      if (!pendingPush.current || !cartHydrated.current) return;
+      const token = readLocal("token");
+      if (!token) return;
+      const items = pendingPush.current;
+      pendingPush.current = null;
+      clearTimeout(cartPushTimer.current);
+      fetch(`${ConstantsUrl}cart-sync`, {
+        method: "PUT",
+        keepalive: true,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `jwt ${token}`,
+        },
+        body: JSON.stringify({ items, platform: "WEB" }),
+      }).catch(() => {});
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") flush();
+    };
+
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
 
   // ✅ getUserdetail with window guard
   const getUserdetail = () => {
@@ -144,7 +220,12 @@ function App({ Component, pageProps }) {
     if (user) setUser(JSON.parse(user));
 
     const cart = localStorage.getItem("addCartDetail");
-    if (cart) setCartData(JSON.parse(cart));
+    if (cart) {
+      const parsed = JSON.parse(cart);
+      // Loading the saved cart isn't a local edit — don't mark it unsent
+      cleanCartJson.current = JSON.stringify(parsed);
+      setCartData(parsed);
+    }
 
     const favorites = localStorage.getItem("favoriteProducts");
     if (favorites) setFavorite(JSON.parse(favorites));
