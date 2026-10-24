@@ -145,6 +145,7 @@ function Cart(props) {
         ...line,
         stockStatus: result.stockStatus,
         availableQty: result.availableQty,
+        productUnavailable: result.productUnavailable,
       };
 
       // Reward lines come back without a price — they stay $0
@@ -171,7 +172,9 @@ function Cart(props) {
   };
 
   const hasStockIssue = (line) =>
-    line?.stockStatus === "OUT_OF_STOCK" || line?.stockStatus === "LIMITED";
+    line?.stockStatus === "UNAVAILABLE" ||
+    line?.stockStatus === "OUT_OF_STOCK" ||
+    line?.stockStatus === "LIMITED";
   const hasUnreviewedPrice = (line) =>
     line?.previousPrice !== undefined &&
     line?.previousPrice !== null &&
@@ -217,6 +220,16 @@ function Cart(props) {
     }
 
     // One click shows every problem at once with a single message
+    if (checked.some((line) => line?.productUnavailable)) {
+      persistCart(checked);
+      props.toaster({
+        type: "error",
+        message: t("Product Unavailable. Remove it from your cart to continue."),
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     if (checked.some(hasStockIssue) || checked.some(hasUnreviewedPrice)) {
       persistCart(
         checked.map((line) =>

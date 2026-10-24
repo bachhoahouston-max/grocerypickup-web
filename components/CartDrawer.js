@@ -276,7 +276,9 @@ const isSaleItem = (item) => item?.productSource === "SALE";
 const isComboItem = (item) => item?.productSource === "COMBO";
 const isRewardItem = (item) => item?.productSource === "REWARD";
 const hasStockIssue = (item) =>
-  item?.stockStatus === "OUT_OF_STOCK" || item?.stockStatus === "LIMITED";
+  item?.stockStatus === "UNAVAILABLE" ||
+  item?.stockStatus === "OUT_OF_STOCK" ||
+  item?.stockStatus === "LIMITED";
 const hasPriceUpdate = (item) =>
   item?.previousPrice !== undefined &&
   item?.previousPrice !== null &&
@@ -307,7 +309,9 @@ const StockIssueRow = ({ item, i, lang, cartClose, setLineQty, otherLinesQty, fo
           </span>
         </div>
         <span className="mt-1 self-start bg-red-100 text-red-600 text-xs font-medium px-3 py-0.5 rounded-full">
-          {isLimited
+          {item?.productUnavailable || item?.stockStatus === "UNAVAILABLE"
+            ? t("Product Unavailable")
+            : isLimited
             ? `${t("Available quantity")}: ${item?.availableQty}`
             : t("Out of stock")}
         </span>
@@ -1055,7 +1059,13 @@ export default function CartDrawer({
           <div className="flex items-center gap-3">
             <AlertCircle className="text-red-600 flex-shrink-0" size={24} />
             <p className="flex-1 min-w-0 text-red-600 font-bold text-lg">
-              {t("Out of Stock")} ({stockIssueLines.length})
+              {stockIssueLines.some(
+                ({ item }) =>
+                  item?.productUnavailable || item?.stockStatus === "UNAVAILABLE",
+              )
+                ? t("Product Unavailable")
+                : t("Out of Stock")}{" "}
+              ({stockIssueLines.length})
             </p>
             {removeOutOfStock && (
               <button
