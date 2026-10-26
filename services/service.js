@@ -1,6 +1,46 @@
 import axios from "axios";
+import packageJson from "../package.json";
 // export const ConstantsUrl = "http://localhost:3005/v1/api/";
 export const ConstantsUrl = "https://api.bachhoahouston.com/v1/api/";
+export const APP_PLATFORM = "web";
+export const APP_VERSION = packageJson?.version || "0.1.0";
+
+const getClientLanguage = () => {
+  if (typeof window !== "undefined") {
+    const stored =
+      localStorage?.getItem("LANGUAGE") ||
+      localStorage?.getItem("i18nextLng");
+    if (stored && stored.toLowerCase().startsWith("vi")) {
+      return "vi";
+    }
+  }
+  return "en";
+};
+
+const getCommonHeaders = () => {
+  const lang = getClientLanguage();
+  return {
+    language: lang,
+    lang: lang,
+    "Accept-Language": lang,
+    platform: APP_PLATFORM,
+    Platform: APP_PLATFORM,
+    "x-platform": APP_PLATFORM,
+    "app-platform": APP_PLATFORM,
+    "app-version": APP_VERSION,
+    appversion: APP_VERSION,
+    "x-app-version": APP_VERSION,
+    version: APP_VERSION,
+  };
+};
+
+// Global interceptor: ensures language, platform, and app version headers are attached to every outgoing API header
+axios.interceptors.request.use((config) => {
+  const headers = getCommonHeaders();
+  config.headers = config.headers || {};
+  Object.assign(config.headers, headers);
+  return config;
+});
 
 function Api(method, url, data, router, params) {
   return new Promise(function (resolve, reject) {
@@ -13,7 +53,10 @@ function Api(method, url, data, router, params) {
       method,
       url: ConstantsUrl + url,
       data,
-      headers: { Authorization: `jwt ${token}` },
+      headers: {
+        Authorization: `jwt ${token}`,
+        ...getCommonHeaders(),
+      },
       params,
     }).then(
       (res) => {
@@ -60,6 +103,7 @@ function ApiFormData(method, url, data, router) {
       headers: {
         Authorization: `jwt ${token}`,
         "Content-Type": "multipart/form-data",
+        ...getCommonHeaders(),
       },
     }).then(
       (res) => {
@@ -94,7 +138,10 @@ function ApiGetPdf(url, data, router, params) {
       method: "POST",
       url: ConstantsUrl + url,
       data,
-      headers: { Authorization: `jwt ${token}` },
+      headers: {
+        Authorization: `jwt ${token}`,
+        ...getCommonHeaders(),
+      },
       params,
       responseType: "blob",
     }).then(

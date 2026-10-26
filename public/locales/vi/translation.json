@@ -516,5 +516,7 @@
   "Available Items": "Sản phẩm có sẵn",
   "Price updated": "Giá đã được cập nhật",
   "Remove out-of-stock items and review updated prices before continuing. Sale prices may have ended. Click “Proceed to Checkout” again to continue.": "Vui lòng xóa các sản phẩm hết hàng và kiểm tra lại giá đã cập nhật trước khi tiếp tục. Giá khuyến mãi có thể đã kết thúc. Nhấn “Tiến hành thanh toán” lần nữa để tiếp tục.",
-  "Remove all": "Xóa tất cả"
+  "Remove all": "Xóa tất cả",
+  "Order save failed": "Lưu đơn hàng thất bại",
+  "is deleted. Remove the item to continue.": "đã bị xóa. Vui lòng xóa sản phẩm để tiếp tục."
 }

@@ -936,6 +936,7 @@ function Cart(props) {
       serviceFee: servicefee.toString(),
       extraFees,
       order_platform: "web",
+      lang: i18n.language?.startsWith("vi") ? "vi" : "en",
     };
 
     localStorage.setItem("checkoutData", JSON.stringify(newData));
@@ -961,11 +962,22 @@ function Cart(props) {
         }
       } else {
         props.loader && props.loader(false);
-        props.toaster({ type: "error", message: "Order save failed" });
+        props.toaster({ type: "error", message: t("Order save failed") });
       }
     } catch (err) {
       props.loader && props.loader(false);
-      props.toaster({ type: "error", message: err?.message });
+      let errorMsg = err?.message || t("Order save failed");
+      if (
+        i18n.language?.startsWith("vi") &&
+        typeof errorMsg === "string" &&
+        errorMsg.includes("is deleted. Remove the item to continue.")
+      ) {
+        errorMsg = errorMsg.replace(
+          "is deleted. Remove the item to continue.",
+          "đã bị xóa. Vui lòng xóa sản phẩm để tiếp tục."
+        );
+      }
+      props.toaster({ type: "error", message: errorMsg });
     }
 
     // if (createRes.status) {

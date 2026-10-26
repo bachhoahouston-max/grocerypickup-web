@@ -9,7 +9,7 @@ import {
   favoriteProductContext,
   languageContext,
 } from "../_app";
-import { Api, ConstantsUrl } from "@/services/service";
+import { Api, ConstantsUrl, APP_PLATFORM, APP_VERSION } from "@/services/service";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { produce } from "immer";
@@ -900,7 +900,17 @@ export async function getServerSideProps(context) {
     const product = productRes.data;
 
     const relatedRes = await fetch(
-      `${baseUrl}getProductBycategoryId?category=${product.category.slug}&product_id=${product._id}`
+      `${baseUrl}getProductBycategoryId?category=${product.category.slug}&product_id=${product._id}`,
+      {
+        headers: {
+          platform: APP_PLATFORM || "web",
+          Platform: APP_PLATFORM || "web",
+          "x-platform": APP_PLATFORM || "web",
+          "app-version": APP_VERSION || "0.1.0",
+          appversion: APP_VERSION || "0.1.0",
+          "x-app-version": APP_VERSION || "0.1.0",
+        },
+      }
     );
 
     const relatedProducts = await relatedRes.json();

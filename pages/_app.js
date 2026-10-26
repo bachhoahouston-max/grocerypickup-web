@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useRef } from "react";
-import { Api, ConstantsUrl } from "@/services/service";
+import { Api, ConstantsUrl, APP_PLATFORM, APP_VERSION } from "@/services/service";
 import { getSyncedCart, saveSyncedCart } from "@/services/cartSync";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
@@ -190,12 +190,27 @@ function App({ Component, pageProps }) {
       const items = pendingPush.current;
       pendingPush.current = null;
       clearTimeout(cartPushTimer.current);
+      const clientLang =
+        readLocal("LANGUAGE") ||
+        (i18n?.language?.startsWith("vi") ? "vi" : "en") ||
+        "en";
       fetch(`${ConstantsUrl}cart-sync`, {
         method: "PUT",
         keepalive: true,
         headers: {
           "Content-Type": "application/json",
           Authorization: `jwt ${token}`,
+          language: clientLang,
+          lang: clientLang,
+          "Accept-Language": clientLang,
+          platform: APP_PLATFORM || "web",
+          Platform: APP_PLATFORM || "web",
+          "x-platform": APP_PLATFORM || "web",
+          "app-platform": APP_PLATFORM || "web",
+          "app-version": APP_VERSION || "0.1.0",
+          appversion: APP_VERSION || "0.1.0",
+          "x-app-version": APP_VERSION || "0.1.0",
+          version: APP_VERSION || "0.1.0",
         },
         body: JSON.stringify({ items, platform: "WEB" }),
       }).catch(() => {});

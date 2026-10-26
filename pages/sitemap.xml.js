@@ -1,4 +1,5 @@
 import axios from "axios";
+import "@/services/service";
 
 const staticPages = [
     { url: "https://www.bachhoahouston.com/", priority: 1.0 },
