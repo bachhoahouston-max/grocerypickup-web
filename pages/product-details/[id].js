@@ -10,6 +10,7 @@ import {
   languageContext,
 } from "../_app";
 import { Api, ConstantsUrl, APP_PLATFORM, APP_VERSION } from "@/services/service";
+import { getProductReferralCode } from "@/services/affiliateReferral";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { produce } from "immer";
@@ -206,6 +207,8 @@ function ProductDetails(props) {
         productSource: "NORMAL",
         percentageDifference: Number(percentageDifference || 0).toFixed(2),
       };
+      const referralCode = getProductReferralCode(productsId.slug);
+      if (referralCode) newProduct.referralCode = referralCode;
 
       const updatedCart = [...cartData, newProduct];
       setCartData(updatedCart);

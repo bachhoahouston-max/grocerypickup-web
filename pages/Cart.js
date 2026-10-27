@@ -7,6 +7,7 @@ import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
 import { Api } from "@/services/service";
 import { clearSyncedCart } from "@/services/cartSync";
+import { getReferralCode, getProductReferralCode } from "@/services/affiliateReferral";
 import { cartLineProductId } from "@/services/rewardCart";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
@@ -830,6 +831,9 @@ function Cart(props) {
         isInStoreAvailable: element?.isInStoreAvailable,
         free_product: element?.free_product?._id,
         combo_id: element?.combo_id,
+        referralCode: isReward
+          ? ""
+          : element?.referralCode || getProductReferralCode(element?.slug),
       });
     });
 
@@ -924,6 +928,7 @@ function Cart(props) {
       subtotal: CartTotal,
       discount: discount,
       discountCode: discountCode,
+      referralCode: getReferralCode(),
       user: user._id,
       Email: user.email,
       isOrderPickup,

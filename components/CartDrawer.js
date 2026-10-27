@@ -263,6 +263,7 @@ import constant from "@/services/constant";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { Api } from "@/services/service";
+import { getProductReferralCode } from "@/services/affiliateReferral";
 import {
   buildRewardCartItem,
   cartLineProductId,
@@ -483,6 +484,11 @@ const NormalCartRow = ({
                 </span>
               ))}
           </div>
+          {(item?.referralCode || getProductReferralCode(item?.slug)) && (
+            <span className="mt-1 self-start bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">
+              {t("Referral code applied")}
+            </span>
+          )}
           <PickupAvailability
             pickupConfig={pickupConfig}
             pickupOption={pickupOption}

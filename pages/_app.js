@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useRef } from "react";
 import { Api, ConstantsUrl, APP_PLATFORM, APP_VERSION } from "@/services/service";
 import { getSyncedCart, saveSyncedCart } from "@/services/cartSync";
+import { saveReferralFromRoute } from "@/services/affiliateReferral";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
@@ -30,6 +31,10 @@ function App({ Component, pageProps }) {
 
   // ✅ useTranslation ek hi baar call karo
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    if (router.isReady) saveReferralFromRoute(router);
+  }, [router.isReady, router.asPath]);
 
   // ── Cross-platform cart sync (separate from the local-cart logic above) ──
   // The server keeps one cart per account (last write wins). Each browser
