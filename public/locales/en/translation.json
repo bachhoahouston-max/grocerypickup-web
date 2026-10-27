@@ -522,5 +522,10 @@
   "Remove all": "Remove all",
   "Order save failed": "Order save failed",
   "is deleted. Remove the item to continue.": "is deleted. Remove the item to continue.",
-  "Referral code applied": "Referral code applied"
+  "Referral code applied": "Referral code applied",
+  "Enter referral code": "Enter referral code",
+  "Referral code applied successfully": "Referral code applied successfully",
+  "Invalid referral code": "Invalid referral code",
+  "Please enter a referral code": "Please enter a referral code",
+  "Applied": "Applied"
 }

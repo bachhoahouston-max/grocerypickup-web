@@ -432,6 +432,7 @@ const NormalCartRow = ({
   saleExpired,
   onRedeemReward,
   rewardPoints,
+  referralApplied,
 }) => {
   const { t } = useTranslation();
 
@@ -484,7 +485,7 @@ const NormalCartRow = ({
                 </span>
               ))}
           </div>
-          {(item?.referralCode || getProductReferralCode(item?.slug)) && (
+          {referralApplied && (
             <span className="mt-1 self-start bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">
               {t("Referral code applied")}
             </span>
@@ -811,6 +812,7 @@ export default function CartDrawer({
   cartClose,
   removeOutOfStock,
   loader,
+  appliedReferralCode,
 }) {
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
@@ -1162,7 +1164,16 @@ export default function CartDrawer({
               return <RewardCartRow key={i} {...sharedProps} />;
             }
 
-            return <NormalCartRow key={i} {...sharedProps} />;
+            return (
+              <NormalCartRow
+                key={i}
+                {...sharedProps}
+                referralApplied={
+                  !!appliedReferralCode ||
+                  !!(item?.referralCode || getProductReferralCode(item?.slug))
+                }
+              />
+            );
           })}
         </div>
       )}

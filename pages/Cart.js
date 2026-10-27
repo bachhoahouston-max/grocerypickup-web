@@ -38,6 +38,8 @@ function Cart(props) {
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
+  const [referralInput, setReferralInput] = useState("");
+  const [appliedReferralCode, setAppliedReferralCode] = useState("");
   const [isOnce, setIsOnce] = useState(false);
   const { t, i18n } = useTranslation();
   const [cancelPopup, setCancelPopup] = useState(false);
@@ -104,6 +106,41 @@ function Cart(props) {
       .finally(() => {
         props.loader(false);
       });
+  };
+
+  const handleApplyReferral = () => {
+    const code = referralInput.trim().toUpperCase().replace(/\s+/g, "");
+    if (!code) {
+      props.toaster({ type: "error", message: t("Please enter a referral code") });
+      return;
+    }
+    props.loader(true);
+    Api("get", `affiliation/referral/${encodeURIComponent(code)}`, "", router)
+      .then((res) => {
+        if (res?.status) {
+          const applied = res.data?.referralCode || code;
+          setAppliedReferralCode(applied);
+          setReferralInput(applied);
+          props.toaster({ type: "success", message: t("Referral code applied successfully") });
+        } else {
+          props.toaster({ type: "error", message: t("Invalid referral code") });
+        }
+      })
+      .catch((err) => {
+        props.toaster({
+          type: "error",
+          message:
+            err?.message && err.message !== "Referral code not found."
+              ? err.message
+              : t("Invalid referral code"),
+        });
+      })
+      .finally(() => props.loader(false));
+  };
+
+  const removeReferral = () => {
+    setAppliedReferralCode("");
+    setReferralInput("");
   };
 
   // Keep the latest cart for async validation results to land on
@@ -929,6 +966,7 @@ function Cart(props) {
       discount: discount,
       discountCode: discountCode,
       referralCode: getReferralCode(),
+      appliedReferralCode,
       user: user._id,
       Email: user.email,
       isOrderPickup,
@@ -1287,6 +1325,7 @@ function Cart(props) {
               cartClose={cartClose}
               removeOutOfStock={removeOutOfStock}
               loader={props.loader}
+              appliedReferralCode={appliedReferralCode}
             />
             <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
               {cartData.length > 0 && (
@@ -1642,6 +1681,49 @@ function Cart(props) {
                               message: "Coupon removed successfully",
                             });
                           }}
+                          className="text-custom-green cursor-pointer text-sm ml-4"
+                        >
+                          <X size={22} />
+                        </button>
+                      </div>
+                    )}
+
+                    {pickupOption && (
+                      <div className="bg-white rounded-lg flex flex-row gap-2 mt-3">
+                        <div className="relative flex-1">
+                          <input
+                            type="text"
+                            placeholder={t("Enter referral code")}
+                            value={referralInput}
+                            disabled={!!appliedReferralCode}
+                            onChange={(e) => setReferralInput(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && handleApplyReferral()}
+                            className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 uppercase placeholder:normal-case focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50"
+                          />
+                          {referralInput && (
+                            <X
+                              onClick={removeReferral}
+                              size={22}
+                              className="cursor-pointer absolute text-custom-green top-2.5 right-2"
+                            />
+                          )}
+                        </div>
+                        <button
+                          className="bg-custom-green text-white md:px-8 px-4 py-2.5 cursor-pointer text-sm rounded-md disabled:opacity-60 disabled:cursor-default"
+                          onClick={handleApplyReferral}
+                          disabled={!!appliedReferralCode}
+                        >
+                          {appliedReferralCode ? t("Applied") : t("Apply")}
+                        </button>
+                      </div>
+                    )}
+                    {appliedReferralCode && (
+                      <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full">
+                        <span className="text-base">
+                          {t("Referral code applied")}: {appliedReferralCode}
+                        </span>
+                        <button
+                          onClick={removeReferral}
                           className="text-custom-green cursor-pointer text-sm ml-4"
                         >
                           <X size={22} />

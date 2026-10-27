@@ -519,5 +519,10 @@
   "Remove all": "Xóa tất cả",
   "Order save failed": "Lưu đơn hàng thất bại",
   "is deleted. Remove the item to continue.": "đã bị xóa. Vui lòng xóa sản phẩm để tiếp tục.",
-  "Referral code applied": "Đã áp dụng mã giới thiệu"
+  "Referral code applied": "Đã áp dụng mã giới thiệu",
+  "Enter referral code": "Nhập mã giới thiệu",
+  "Referral code applied successfully": "Áp dụng mã giới thiệu thành công",
+  "Invalid referral code": "Mã giới thiệu không hợp lệ",
+  "Please enter a referral code": "Vui lòng nhập mã giới thiệu",
+  "Applied": "Đã áp dụng"
 }
