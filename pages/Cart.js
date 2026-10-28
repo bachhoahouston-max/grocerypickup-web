@@ -114,8 +114,16 @@ function Cart(props) {
       props.toaster({ type: "error", message: t("Please enter a referral code") });
       return;
     }
+    const productIds = (cartData || [])
+      .filter((item) => item?.productSource !== "REWARD" && item?.id)
+      .map((item) => item.id);
     props.loader(true);
-    Api("get", `affiliation/referral/${encodeURIComponent(code)}`, "", router)
+    Api(
+      "get",
+      `affiliation/referral/${encodeURIComponent(code)}?products=${encodeURIComponent(productIds.join(","))}`,
+      "",
+      router
+    )
       .then((res) => {
         if (res?.status) {
           const applied = res.data?.referralCode || code;
@@ -131,7 +139,7 @@ function Cart(props) {
           type: "error",
           message:
             err?.message && err.message !== "Referral code not found."
-              ? err.message
+              ? t(err.message)
               : t("Invalid referral code"),
         });
       })

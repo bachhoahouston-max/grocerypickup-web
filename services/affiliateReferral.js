@@ -48,7 +48,7 @@ const saveProductReferral = (slug, code) => {
 };
 
 // Saves ?ref= and, on a product page, counts one click per browser session.
-export const saveReferralFromRoute = (router) => {
+export const saveReferralFromRoute = (router, onInvalid) => {
   const code = normalize(Array.isArray(router.query.ref) ? router.query.ref[0] : router.query.ref);
   if (!code) return;
 
@@ -57,14 +57,22 @@ export const saveReferralFromRoute = (router) => {
     localStorage.setItem(KEY, JSON.stringify({ code, at: Date.now() }));
     return;
   }
-  saveProductReferral(slug, code);
 
   const clickKey = `affiliateClick:${code}:${slug}`;
-  if (sessionStorage.getItem(clickKey)) return;
-  sessionStorage.setItem(clickKey, "1");
+  const counted = !!sessionStorage.getItem(clickKey);
   fetch(`${ConstantsUrl}affiliation/link-click`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ref: code, slug }),
-  }).catch(() => {});
+    body: JSON.stringify({ ref: code, slug, count: !counted }),
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      if (res?.data?.valid === false) {
+        onInvalid?.();
+        return;
+      }
+      saveProductReferral(slug, code);
+      sessionStorage.setItem(clickKey, "1");
+    })
+    .catch(() => saveProductReferral(slug, code));
 };

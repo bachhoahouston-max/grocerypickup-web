@@ -33,7 +33,9 @@ function App({ Component, pageProps }) {
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
-    if (router.isReady) saveReferralFromRoute(router);
+    if (router.isReady) {
+      saveReferralFromRoute(router, () => toast.error(t("Not a valid referral code")));
+    }
   }, [router.isReady, router.asPath]);
 
   // ── Cross-platform cart sync (separate from the local-cart logic above) ──

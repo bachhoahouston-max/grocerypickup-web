@@ -526,6 +526,7 @@
   "Enter referral code": "Enter referral code",
   "Referral code applied successfully": "Referral code applied successfully",
   "Invalid referral code": "Invalid referral code",
+  "Not a valid referral code": "Not a valid referral code",
   "Please enter a referral code": "Please enter a referral code",
   "Applied": "Applied"
 }
