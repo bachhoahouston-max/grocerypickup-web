@@ -520,12 +520,15 @@
   "Remove out-of-stock items and review updated prices before continuing. Sale prices may have ended. Click “Proceed to Checkout” again to continue.": "Vui lòng xóa các sản phẩm hết hàng và kiểm tra lại giá đã cập nhật trước khi tiếp tục. Giá khuyến mãi có thể đã kết thúc. Nhấn “Tiến hành thanh toán” lần nữa để tiếp tục.",
   "Remove all": "Xóa tất cả",
   "Order save failed": "Lưu đơn hàng thất bại",
-  "is deleted. Remove the item to continue.": "đã bị xóa. Vui lòng xóa sản phẩm để tiếp tục.",
+  "is deleted. Remove the item to continue.": "đã bị xóa. Vui lòng xóa sản phẩm để tiếp tục.",
   "Referral code applied": "Đã áp dụng mã giới thiệu",
   "Enter referral code": "Nhập mã giới thiệu",
   "Referral code applied successfully": "Áp dụng mã giới thiệu thành công",
   "Invalid referral code": "Mã giới thiệu không hợp lệ",
   "Not a valid referral code": "Mã giới thiệu không hợp lệ",
   "Please enter a referral code": "Vui lòng nhập mã giới thiệu",
-  "Applied": "Đã áp dụng"
+  "Applied": "Đã áp dụng",
+  "Explore Houston": "Khám phá Houston",
+  "Local businesses and places recommended by the community": "Doanh nghiệp địa phương được cộng đồng giới thiệu tin dùng",
+  "Explore": "Khám phá"
 }

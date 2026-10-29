@@ -17,6 +17,7 @@ import { Loader2 } from "lucide-react";
 import NewArrival from "@/components/NewArrival";
 import { usePathname } from "next/navigation";
 import ComboOfferCards from "@/components/ComboOffer";
+import ExploreHoustonBanner from "@/components/ExploreHoustonBanner";
 
 export default function Home(props) {
   const { t } = useTranslation();
@@ -70,6 +71,7 @@ export default function Home(props) {
               <ShopByCategory loader={props.loader} toaster={props.toaster} />
             </Suspense>
           </div>
+          <ExploreHoustonBanner />
           <div className="">
             <Suspense fallback={<div>Loading.....</div>}>
               <ComboOfferCards loader={props.loader} toaster={props.toaster} />
