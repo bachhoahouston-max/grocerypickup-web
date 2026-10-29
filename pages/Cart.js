@@ -67,10 +67,28 @@ function Cart(props) {
       .catch((err) => console.log(err));
   }, [isLoggedIn]);
 
-  const pointsToEarn = Math.max(
-    Math.floor((Math.round(Number(mainTotal || 0) * 100) * pointsPerDollar) / 100),
-    0,
+  const isRestaurantLine = (line) =>
+    line?.isRestaurant ?? line?.vendorType === "restaurant";
+  const purchasedLines = (cartData || []).filter(
+    (line) => line?.productSource !== "REWARD",
   );
+  const restaurantAmount = purchasedLines
+    .filter(isRestaurantLine)
+    .reduce(
+      (sum, line) =>
+        sum + (Number(line?.total) || Number(line?.price || 0) * Number(line?.qty || 1)),
+      0,
+    );
+  const pointsToEarn = purchasedLines.some((line) => !isRestaurantLine(line))
+    ? Math.max(
+      Math.floor(
+        (Math.round(Math.max(Number(mainTotal || 0) - restaurantAmount, 0) * 100) *
+          pointsPerDollar) /
+        100,
+      ),
+      0,
+    )
+    : 0;
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -209,6 +227,7 @@ function Cart(props) {
         stockStatus: result.stockStatus,
         availableQty: result.availableQty,
         productUnavailable: result.productUnavailable,
+        isRestaurant: result.isRestaurant,
       };
 
       // Reward lines come back without a price — they stay $0
