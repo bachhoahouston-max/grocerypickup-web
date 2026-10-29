@@ -54,6 +54,23 @@ function Cart(props) {
   const [closureDates, setClosureDates] = useState([]);
   const [extraFees, setExtrafees] = useState(0);
   const [ExtraFeesObj, setExtraFeesObj] = useState({});
+  const [pointsPerDollar, setPointsPerDollar] = useState(10);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    Api("get", "rewards/summary", "", router)
+      .then((res) => {
+        if (res?.status && res?.data?.pointsPerDollar) {
+          setPointsPerDollar(res.data.pointsPerDollar);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [isLoggedIn]);
+
+  const pointsToEarn = Math.max(
+    Math.floor((Math.round(Number(mainTotal || 0) * 100) * pointsPerDollar) / 100),
+    0,
+  );
 
   const handleApplyCoupon = () => {
     if (!user?._id) {
@@ -1770,6 +1787,19 @@ function Cart(props) {
                     <h4 className="text-xl font-bold text-gray-800 mb-4">
                       {t("Bill Summary")}
                     </h4>
+
+                    {pointsToEarn > 0 && (
+                      <div className="flex items-center gap-2 bg-green-50 border border-green-100 rounded-lg px-3 py-2 mb-4">
+                        <span className="text-xl">🎁</span>
+                        <p className="text-sm text-green-700">
+                          {t("You will receive")}{" "}
+                          <span className="font-bold">
+                            {pointsToEarn.toLocaleString()} {t("points")}
+                          </span>{" "}
+                          {t("for this purchase.")}
+                        </p>
+                      </div>
+                    )}
 
                     <div className="space-y-3">
                       {/* Subtotal */}
