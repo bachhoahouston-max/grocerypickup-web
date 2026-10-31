@@ -1,7 +1,7 @@
 import axios from "axios";
 import packageJson from "../package.json";
 // export const ConstantsUrl = "http://localhost:3005/v1/api/";
-export const ConstantsUrl = "https://api.bachhoahouston.com/v1/api/";
+export const ConstantsUrl = process.env.NEXT_PUBLIC_API_URL || "https://api.bachhoahouston.com/v1/api/";
 export const APP_PLATFORM = "web";
 export const APP_VERSION = packageJson?.version || "0.1.0";
 
