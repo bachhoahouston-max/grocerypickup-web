@@ -1,0 +1,173 @@
+import React, { useEffect, useMemo, useState } from "react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
+import {
+  ArrowLeft,
+  Building2,
+  CheckCircle2,
+  Globe,
+  Mail,
+  MapPin,
+  Phone,
+  Tag,
+} from "lucide-react";
+import { Api } from "@/services/service";
+
+function StoreDetails({ loader, toaster }) {
+  const router = useRouter();
+  const { t, i18n } = useTranslation();
+  const [store, setStore] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const isVietnamese = i18n.language?.toLowerCase().startsWith("vi");
+  const getText = (englishKey, vietnameseKey) =>
+    isVietnamese
+      ? store?.[vietnameseKey] || store?.[englishKey]
+      : store?.[englishKey] || store?.[vietnameseKey];
+  const category = useMemo(
+    () => (typeof store?.category === "object" ? store.category : null),
+    [store]
+  );
+  const categoryName = isVietnamese
+    ? category?.v_name || category?.name
+    : category?.name || category?.v_name;
+  const title = getText("title", "title_v") || t("Store details");
+
+  useEffect(() => {
+    if (!router.isReady || !router.query.id) return;
+
+    let active = true;
+    loader?.(true);
+    Api("get", `getStoreById/${router.query.id}`, null, router)
+      .then((response) => {
+        if (!active) return;
+        if (response?.status && response?.data) {
+          setStore(response.data);
+        } else {
+          throw new Error(response?.message || t("Store not found"));
+        }
+      })
+      .catch((error) => {
+        if (active) {
+          toaster?.({
+            type: "error",
+            message: error?.message || t("Unable to load store"),
+          });
+        }
+      })
+      .finally(() => {
+        if (active) {
+          setLoading(false);
+          loader?.(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [router.isReady, router.query.id]);
+
+  const details = [
+    { label: t("Address"), value: getText("address", "address_v"), icon: MapPin },
+    { label: t("Phone"), value: store?.phone, icon: Phone, href: `tel:${store?.phone}` },
+    { label: t("Email"), value: store?.email, icon: Mail, href: `mailto:${store?.email}` },
+    { label: t("Website"), value: store?.website, icon: Globe, href: store?.website },
+    { label: t("City"), value: store?.city, icon: Building2 },
+    { label: t("Company"), value: store?.companyName, icon: Building2 },
+  ].filter((detail) => detail.value);
+
+  return (
+    <>
+      <Head>
+        <title>{title} | Bach Hoa Houston</title>
+        <meta
+          name="description"
+          content={getText("shortDescription", "shortDescription_v") || title}
+        />
+      </Head>
+      <main className="min-h-screen bg-[var(--theme-var)] px-4 py-8 md:px-10 md:py-12">
+        <div className="mx-auto max-w-5xl">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-[#206B3A] hover:underline"
+          >
+            <ArrowLeft size={18} />
+            {t("Back to stores")}
+          </button>
+
+          {loading ? (
+            <div className="rounded-2xl bg-white px-6 py-20 text-center shadow-sm">
+              <p className="text-gray-600">{t("Loading...")}</p>
+            </div>
+          ) : store ? (
+            <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
+              <div className="relative h-64 bg-[#edf6ef] md:h-96">
+                {store.image ? (
+                  <img src={store.image} alt={title} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-[#206B3A]">
+                    <Tag size={88} strokeWidth={1.2} />
+                  </div>
+                )}
+                {categoryName && (
+                  <span className="absolute left-5 top-5 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-[#206B3A] shadow-sm">
+                    {categoryName}
+                  </span>
+                )}
+              </div>
+              <div className="p-6 md:p-10">
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">{title}</h1>
+                    {store.verification && (
+                      <p className="mt-3 inline-flex items-center gap-2 text-sm text-[#206B3A]">
+                        <CheckCircle2 size={17} />
+                        {store.verification}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
+                  {getText("shortDescription", "shortDescription_v")}
+                </p>
+                {details.length > 0 && (
+                  <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                    {details.map(({ label, value, icon: Icon, href }) => (
+                      <div key={label} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          <Icon size={16} className="text-[#206B3A]" />
+                          {label}
+                        </p>
+                        {href ? (
+                          <a
+                            href={href}
+                            target={href.startsWith("http") ? "_blank" : undefined}
+                            rel={href.startsWith("http") ? "noreferrer" : undefined}
+                            className="mt-2 block break-words text-sm text-gray-800 hover:text-[#206B3A] hover:underline"
+                          >
+                            {value}
+                          </a>
+                        ) : (
+                          <p className="mt-2 text-sm text-gray-800">{value}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </article>
+          ) : (
+            <div className="rounded-2xl bg-white px-6 py-20 text-center shadow-sm">
+              <h1 className="text-xl font-semibold text-gray-800">{t("Store not found")}</h1>
+              <p className="mt-2 text-sm text-gray-500">{t("Please return to the store list")}</p>
+            </div>
+          )}
+        </div>
+      </main>
+    </>
+  );
+}
+
+export default StoreDetails;

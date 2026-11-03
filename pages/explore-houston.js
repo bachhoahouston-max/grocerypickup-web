@@ -201,16 +201,27 @@ function ExploreHouston({ loader, toaster }) {
               {filteredStores.map((store) => {
                 const storeCategory = getStoreCategory(store);
                 const Icon = ICON_MAP[storeCategory?.icon] || Tag;
+                const storeTitle = getText(store, "title", "title_v");
                 return (
                   <article
                     key={store._id}
-                    className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                    role="link"
+                    tabIndex={0}
+                    aria-label={`${t("View details for")} ${storeTitle}`}
+                    onClick={() => router.push(`/explore-houston/${store._id}`)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        router.push(`/explore-houston/${store._id}`);
+                      }
+                    }}
+                    className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:shadow-md"
                   >
                     <div className="relative h-52 bg-[#edf6ef]">
                       {store.image ? (
                         <img
                           src={store.image}
-                          alt={getText(store, "title", "title_v")}
+                          alt={storeTitle}
                           className="h-full w-full object-cover"
                         />
                       ) : (
@@ -226,7 +237,7 @@ function ExploreHouston({ loader, toaster }) {
                     </div>
                     <div className="p-5">
                       <h2 className="text-xl font-bold text-gray-900">
-                        {getText(store, "title", "title_v")}
+                        {storeTitle}
                       </h2>
                       <p className="mt-2 line-clamp-3 text-sm leading-6 text-gray-600">
                         {getText(store, "shortDescription", "shortDescription_v")}
@@ -238,16 +249,16 @@ function ExploreHouston({ loader, toaster }) {
                         </p>
                         {store.phone && <p>{store.phone}</p>}
                       </div>
-                      {store.website && (
-                        <a
-                          href={store.website}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="mt-4 inline-block font-semibold text-[#206B3A] hover:underline"
-                        >
-                          {t("Visit website")}
-                        </a>
-                      )}
+                      <button
+                        type="button"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          router.push(`/explore-houston/${store._id}`);
+                        }}
+                        className="mt-4 rounded-lg bg-[#206B3A] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#18542d] focus:outline-none focus:ring-2 focus:ring-[#206B3A] focus:ring-offset-2"
+                      >
+                        {t("View Store")}
+                      </button>
                     </div>
                   </article>
                 );
