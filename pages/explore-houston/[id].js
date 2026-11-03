@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   Building2,
   CheckCircle2,
+  Eye,
   Globe,
   Mail,
   MapPin,
@@ -19,6 +20,7 @@ function StoreDetails({ loader, toaster }) {
   const { t, i18n } = useTranslation();
   const [store, setStore] = useState(null);
   const [loading, setLoading] = useState(true);
+  const viewRecordedRef = useRef("");
 
   const isVietnamese = i18n.language?.toLowerCase().startsWith("vi");
   const getText = (englishKey, vietnameseKey) =>
@@ -44,6 +46,26 @@ function StoreDetails({ loader, toaster }) {
         if (!active) return;
         if (response?.status && response?.data) {
           setStore(response.data);
+          if (viewRecordedRef.current !== router.query.id) {
+            viewRecordedRef.current = router.query.id;
+            Api("post", `recordStoreView/${router.query.id}`, null, router)
+              .then((viewResponse) => {
+                if (active && viewResponse?.status && viewResponse?.data) {
+                  setStore((current) => ({
+                    ...current,
+                    viewCount: viewResponse.data.viewCount,
+                  }));
+                }
+              })
+              .catch((error) => {
+                if (active) {
+                  toaster?.({
+                    type: "error",
+                    message: error?.message || t("Unable to record store view"),
+                  });
+                }
+              });
+          }
         } else {
           throw new Error(response?.message || t("Store not found"));
         }
@@ -121,16 +143,20 @@ function StoreDetails({ loader, toaster }) {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">{title}</h1>
-                    {store.verification && (
+                    {/* {store.verification && (
                       <p className="mt-3 inline-flex items-center gap-2 text-sm text-[#206B3A]">
                         <CheckCircle2 size={17} />
                         {store.verification}
                       </p>
-                    )}
+                    )} */}
                   </div>
                 </div>
                 <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
                   {getText("shortDescription", "shortDescription_v")}
+                </p>
+                <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-gray-600">
+                  <Eye size={18} className="text-[#206B3A]" />
+                  {store.viewCount || 0} {t("views")}
                 </p>
                 {details.length > 0 && (
                   <div className="mt-8 grid gap-4 sm:grid-cols-2">

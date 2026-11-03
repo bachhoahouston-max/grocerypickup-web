@@ -39,6 +39,8 @@
   "City": "City",
   "Company": "Company",
   "Loading...": "Loading...",
+  "views": "views",
+  "Unable to record store view": "Unable to record store view",
   "No stores found": "No stores found",
   "Try a different search or category": "Try a different search or category",
   "Unable to load stores": "Unable to load stores",

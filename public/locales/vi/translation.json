@@ -39,6 +39,8 @@
   "City": "Thành phố",
   "Company": "Công ty",
   "Loading...": "Đang tải...",
+  "views": "lượt xem",
+  "Unable to record store view": "Không thể ghi nhận lượt xem cửa hàng",
   "No stores found": "Không tìm thấy cửa hàng",
   "Try a different search or category": "Hãy thử tìm kiếm hoặc danh mục khác",
   "Unable to load stores": "Không thể tải danh sách cửa hàng",

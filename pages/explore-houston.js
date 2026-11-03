@@ -9,6 +9,7 @@ import {
   Carrot,
   Coffee,
   Cookie,
+  Eye,
   Egg,
   Fish,
   IceCreamBowl,
@@ -248,6 +249,12 @@ function ExploreHouston({ loader, toaster }) {
                           <span>{getText(store, "address", "address_v")}</span>
                         </p>
                         {store.phone && <p>{store.phone}</p>}
+                        <p className="flex items-center gap-2">
+                          <Eye size={18} className="shrink-0 text-[#206B3A]" />
+                          <span>
+                            {store.viewCount || 0} {t("views")}
+                          </span>
+                        </p>
                       </div>
                       <button
                         type="button"
