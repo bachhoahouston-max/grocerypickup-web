@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
@@ -10,15 +10,23 @@ import {
   Globe,
   Mail,
   MapPin,
+  MessageCircle,
   Phone,
+  Send,
   Tag,
 } from "lucide-react";
 import { Api } from "@/services/service";
+import { userContext } from "@/pages/_app";
 
 function StoreDetails({ loader, toaster }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
+  const [user] = useContext(userContext);
   const [store, setStore] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [commentText, setCommentText] = useState("");
+  const [commentsLoading, setCommentsLoading] = useState(true);
+  const [commentSubmitting, setCommentSubmitting] = useState(false);
   const [loading, setLoading] = useState(true);
   const viewRecordedRef = useRef("");
 
@@ -35,6 +43,19 @@ function StoreDetails({ loader, toaster }) {
     ? category?.v_name || category?.name
     : category?.name || category?.v_name;
   const title = getText("title", "title_v") || t("Store details");
+  const isLoggedIn = Boolean(user?._id || user?.id || user?.token);
+
+  const loadComments = (storeId) => {
+    setCommentsLoading(true);
+    return Api("get", `getStoreComments/${storeId}`, null, router)
+      .then((response) => {
+        if (response?.status) setComments(Array.isArray(response.data) ? response.data : []);
+      })
+      .catch((error) => {
+        toaster?.({ type: "error", message: error?.message || t("Unable to load comments") });
+      })
+      .finally(() => setCommentsLoading(false));
+  };
 
   useEffect(() => {
     if (!router.isReady || !router.query.id) return;
@@ -46,6 +67,7 @@ function StoreDetails({ loader, toaster }) {
         if (!active) return;
         if (response?.status && response?.data) {
           setStore(response.data);
+          loadComments(router.query.id);
           if (viewRecordedRef.current !== router.query.id) {
             viewRecordedRef.current = router.query.id;
             Api("post", `recordStoreView/${router.query.id}`, null, router)
@@ -90,6 +112,27 @@ function StoreDetails({ loader, toaster }) {
     };
   }, [router.isReady, router.query.id]);
 
+  const submitComment = (event) => {
+    event.preventDefault();
+    const comment = commentText.trim();
+    if (!isLoggedIn) {
+      router.push(`/signIn?redirect=${encodeURIComponent(router.asPath)}`);
+      return;
+    }
+    if (!comment) return;
+
+    setCommentSubmitting(true);
+    Api("post", `createStoreComment/${router.query.id}`, { comment }, router)
+      .then((response) => {
+        if (!response?.status) throw new Error(response?.message || t("Unable to submit comment"));
+        setCommentText("");
+        return loadComments(router.query.id);
+      })
+      .then(() => toaster?.({ type: "success", message: t("Comment submitted successfully") }))
+      .catch((error) => toaster?.({ type: "error", message: error?.message || t("Unable to submit comment") }))
+      .finally(() => setCommentSubmitting(false));
+  };
+
   const details = [
     { label: t("Address"), value: getText("address", "address_v"), icon: MapPin },
     { label: t("Phone"), value: store?.phone, icon: Phone, href: `tel:${store?.phone}` },
@@ -124,7 +167,8 @@ function StoreDetails({ loader, toaster }) {
               <p className="text-gray-600">{t("Loading...")}</p>
             </div>
           ) : store ? (
-            <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
+            <div>
+              <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
               <div className="relative h-64 bg-[#edf6ef] md:h-96">
                 {store.image ? (
                   <img src={store.image} alt={title} className="h-full w-full object-cover" />
@@ -183,7 +227,56 @@ function StoreDetails({ loader, toaster }) {
                   </div>
                 )}
               </div>
-            </article>
+              </article>
+              <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
+              <div className="flex items-center gap-2">
+                <MessageCircle size={21} className="text-[#206B3A]" />
+                <h2 className="text-2xl font-bold text-gray-900">{t("Comments")}</h2>
+                <span className="text-sm text-gray-500">({comments.length})</span>
+              </div>
+              <div className="mt-5 space-y-4">
+                {commentsLoading ? (
+                  <p className="text-sm text-gray-500">{t("Loading comments...")}</p>
+                ) : comments.length ? (
+                  comments.map((item) => (
+                    <div key={item._id} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                      <p className="font-semibold text-gray-900">
+                        {[item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
+                          t("Customer")}
+                      </p>
+                      <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-gray-700">{item.comment}</p>
+                      <p className="mt-2 text-xs text-gray-500">
+                        {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ""}
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-500">
+                    {t("No comments yet")}
+                  </p>
+                )}
+              </div>
+              <form onSubmit={submitComment} className="mt-6">
+                <textarea
+                  value={commentText}
+                  onChange={(event) => setCommentText(event.target.value)}
+                  placeholder={isLoggedIn ? t("Write a comment") : t("Sign in to comment")}
+                  disabled={!isLoggedIn || commentSubmitting}
+                  maxLength={2000}
+                  rows={4}
+                  className="w-full rounded-xl border border-gray-200 p-4 text-sm outline-none focus:border-[#206B3A] disabled:bg-gray-100"
+                />
+                <button
+                  type="submit"
+                  disabled={commentSubmitting || (isLoggedIn && !commentText.trim())}
+                  className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#206B3A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#18532d] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Send size={16} />
+                  {isLoggedIn ? t("Post comment") : t("Sign in to comment")}
+                </button>
+              </form>
+              </section>
+            </div>
           ) : (
             <div className="rounded-2xl bg-white px-6 py-20 text-center shadow-sm">
               <h1 className="text-xl font-semibold text-gray-800">{t("Store not found")}</h1>
