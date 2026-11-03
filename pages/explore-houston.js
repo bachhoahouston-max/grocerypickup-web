@@ -62,26 +62,10 @@ function ExploreHouston({ loader, toaster }) {
   useEffect(() => {
     let active = true;
     loader?.(true);
-    Promise.allSettled([
-      Api("get", "getStore", null, router),
-      Api("get", "getStoreCategories", null, router),
-    ])
-      .then(([storesResult, categoriesResult]) => {
+    Api("get", "getStore", null, router)
+      .then((response) => {
         if (!active) return;
-        if (storesResult.status === "fulfilled") {
-          setStores(
-            Array.isArray(storesResult.value?.data) ? storesResult.value.data : []
-          );
-        } else {
-          throw storesResult.reason;
-        }
-        if (categoriesResult.status === "fulfilled") {
-          setStoreCategories(
-            Array.isArray(categoriesResult.value?.data)
-              ? categoriesResult.value.data
-              : []
-          );
-        }
+        setStores(Array.isArray(response?.data) ? response.data : []);
       })
       .catch((error) => {
         if (active) {
@@ -98,10 +82,20 @@ function ExploreHouston({ loader, toaster }) {
         }
       });
 
+    Api("get", "getStoreCategories", null, router)
+      .then((response) => {
+        if (active && Array.isArray(response?.data)) {
+          setStoreCategories(response.data);
+        }
+      })
+      .catch(() => {
+        // Categories are optional; stores remain usable without them.
+      });
+
     return () => {
       active = false;
     };
-  }, [router, loader, toaster, t]);
+  }, []);
 
   const categories = useMemo(() => {
     return [...storeCategories].sort((first, second) =>
