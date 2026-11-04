@@ -1521,28 +1521,28 @@ function Cart(props) {
                                   </div>
 
                                   {date && (
-                                  <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
-                                    <FaRegCalendarCheck
-                                      size={30}
-                                      className="text-green-600 shrink-0 mt-0.5"
-                                    />
-                                    <div className="text-start">
-                                      <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
-                                        {opt.id === "driveUp"
-                                          ? t("Your Scheduled Curbside Pickup")
-                                          : t("Your Scheduled Pickup")}
-                                      </p>
-                                      <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
-                                        {opt.id === "driveUp"
-                                          ? t(
-                                            "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.",
-                                          )
-                                          : t(
-                                            "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.",
-                                          )}
-                                      </p>
+                                    <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
+                                      <FaRegCalendarCheck
+                                        size={30}
+                                        className="text-green-600 shrink-0 mt-0.5"
+                                      />
+                                      <div className="text-start">
+                                        <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
+                                          {opt.id === "driveUp"
+                                            ? t("Your Scheduled Curbside Pickup")
+                                            : t("Your Scheduled Pickup")}
+                                        </p>
+                                        <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
+                                          {opt.id === "driveUp"
+                                            ? t(
+                                              "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.",
+                                            )
+                                            : t(
+                                              "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.",
+                                            )}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
                                   )}
 
                                   <p className="text-[12px] md:text-[13px] text-[#3b4a8c] text-start">
@@ -1731,11 +1731,11 @@ function Cart(props) {
                     )}
                     {(appliedCoupon || appliedReferralCode) && (
                       <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
-                        <span className="text-base">
+                        {/* <span className="text-base">
                           {appliedReferralCode
                             ? `${t("Referral code applied")}: ${appliedReferralCode}`
                             : `${t("Coupon")} ${t("applied!")}`}
-                        </span>
+                        </span> */}
 
                         <button
                           onClick={() => {
