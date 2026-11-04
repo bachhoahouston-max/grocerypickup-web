@@ -39,7 +39,6 @@ function Cart(props) {
   const [discount, setDiscount] = useState(0);
   const [referralDiscount, setReferralDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
-  const [referralInput, setReferralInput] = useState("");
   const [appliedReferralCode, setAppliedReferralCode] = useState("");
   const [isOnce, setIsOnce] = useState(false);
   const { t, i18n } = useTranslation();
@@ -91,11 +90,11 @@ function Cart(props) {
     )
     : 0;
 
-  const handleApplyCoupon = () => {
+  const handleApplyCoupon = async () => {
     if (!user?._id) {
       props.toaster({
         type: "error",
-        message: "Please log in to apply the coupon.",
+        message: "Please log in to apply a coupon or referral code.",
       });
       return;
     }
@@ -113,20 +112,67 @@ function Cart(props) {
       return;
     }
 
+    const code = searchTerm.trim().toUpperCase().replace(/\s+/g, "");
+    if (!code) {
+      props.toaster({ type: "error", message: t("Please enter a coupon or referral code") });
+      return;
+    }
+
+    props.loader(true);
+
+    try {
+      const productIds = (cartData || [])
+        .filter((item) => item?.productSource !== "REWARD" && item?.id)
+        .map((item) => item.id);
+      const referralResponse = await Api(
+        "get",
+        `affiliation/referral/${encodeURIComponent(code)}?products=${encodeURIComponent(productIds.join(","))}`,
+        "",
+        router,
+      );
+
+      if (referralResponse?.status) {
+        const applied = referralResponse.data?.referralCode || code;
+        const eligibleProducts = referralResponse.data?.eligibleProducts;
+        const eligibleAmount = (cartData || [])
+          .filter((item) =>
+            item?.productSource !== "REWARD" &&
+            (!Array.isArray(eligibleProducts) || eligibleProducts.includes(item?.id)),
+          )
+          .reduce(
+            (sum, item) =>
+              sum + (Number(item?.total) || Number(item?.price || 0) * Number(item?.qty || 0)),
+            0,
+          );
+        const rate = Number(referralResponse.data?.customerDiscountRate || 0);
+        setAppliedCoupon(false);
+        setDiscount(0);
+        setDiscountCode("");
+        setAppliedReferralCode(applied);
+        setReferralDiscount(Number(((eligibleAmount * rate) / 100).toFixed(2)));
+        setSearchTerm(applied);
+        props.toaster({ type: "success", message: t("Referral code applied successfully") });
+        props.loader(false);
+        return;
+      }
+    } catch (err) {
+      // A failed referral lookup falls through to the regular coupon validator.
+    }
+
     const newData = {
-      code: searchTerm,
+      code,
       cartValue: CartTotal,
       userId: user._id,
       option: pickupOption,
     };
 
-    props.loader(true);
-
     Api("post", "ValidateCouponforUser", newData, router)
       .then((res) => {
         if (res.status) {
+          setAppliedReferralCode("");
+          setReferralDiscount(0);
           setDiscount(res.data?.discount);
-          setDiscountCode(searchTerm);
+          setDiscountCode(code);
           setAppliedCoupon(true);
           props.toaster({
             type: "success",
@@ -144,56 +190,8 @@ function Cart(props) {
       });
   };
 
-  const handleApplyReferral = () => {
-    const code = referralInput.trim().toUpperCase().replace(/\s+/g, "");
-    if (!code) {
-      props.toaster({ type: "error", message: t("Please enter a referral code") });
-      return;
-    }
-    const productIds = (cartData || [])
-      .filter((item) => item?.productSource !== "REWARD" && item?.id)
-      .map((item) => item.id);
-    props.loader(true);
-    Api(
-      "get",
-      `affiliation/referral/${encodeURIComponent(code)}?products=${encodeURIComponent(productIds.join(","))}`,
-      "",
-      router
-    )
-      .then((res) => {
-        if (res?.status) {
-          const applied = res.data?.referralCode || code;
-          const eligibleProducts = res.data?.eligibleProducts;
-          const eligibleAmount = (cartData || [])
-            .filter((item) =>
-              item?.productSource !== "REWARD" &&
-              (!Array.isArray(eligibleProducts) || eligibleProducts.includes(item?.id)),
-            )
-            .reduce((sum, item) => sum + (Number(item?.total) || Number(item?.price || 0) * Number(item?.qty || 0)), 0);
-          const rate = Number(res.data?.customerDiscountRate || 0);
-          setAppliedReferralCode(applied);
-          setReferralInput(applied);
-          setReferralDiscount(Number(((eligibleAmount * rate) / 100).toFixed(2)));
-          props.toaster({ type: "success", message: t("Referral code applied successfully") });
-        } else {
-          props.toaster({ type: "error", message: t("Invalid referral code") });
-        }
-      })
-      .catch((err) => {
-        props.toaster({
-          type: "error",
-          message:
-            err?.message && err.message !== "Referral code not found."
-              ? t(err.message)
-              : t("Invalid referral code"),
-        });
-      })
-      .finally(() => props.loader(false));
-  };
-
   const removeReferral = () => {
     setAppliedReferralCode("");
-    setReferralInput("");
     setReferralDiscount(0);
   };
 
@@ -1704,7 +1702,7 @@ function Cart(props) {
                         <div className="relative flex-1 ">
                           <input
                             type="text"
-                            placeholder={t("Enter coupon code")}
+                            placeholder={t("Enter coupon or referral code")}
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1716,10 +1714,7 @@ function Cart(props) {
                                 setSearchTerm("");
                                 setDiscountCode("");
                                 setDiscount(0);
-                                props.toaster({
-                                  type: "success",
-                                  message: "Coupon removed successfully",
-                                });
+                                removeReferral();
                               }}
                               size={22}
                               className=" cursor-pointer absolute text-custom-green top-2.5 right-2"
@@ -1734,10 +1729,12 @@ function Cart(props) {
                         </button>
                       </div>
                     )}
-                    {appliedCoupon && (
+                    {(appliedCoupon || appliedReferralCode) && (
                       <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
                         <span className="text-base">
-                          {t("Coupon")} {t("applied!")}
+                          {appliedReferralCode
+                            ? `${t("Referral code applied")}: ${appliedReferralCode}`
+                            : `${t("Coupon")} ${t("applied!")}`}
                         </span>
 
                         <button
@@ -1746,10 +1743,7 @@ function Cart(props) {
                             setSearchTerm("");
                             setDiscountCode("");
                             setDiscount(0);
-                            props.toaster({
-                              type: "success",
-                              message: "Coupon removed successfully",
-                            });
+                            removeReferral();
                           }}
                           className="text-custom-green cursor-pointer text-sm ml-4"
                         >
@@ -1758,48 +1752,6 @@ function Cart(props) {
                       </div>
                     )}
 
-                    {pickupOption && (
-                      <div className="bg-white rounded-lg flex flex-row gap-2 mt-3">
-                        <div className="relative flex-1">
-                          <input
-                            type="text"
-                            placeholder={t("Enter referral code")}
-                            value={referralInput}
-                            disabled={!!appliedReferralCode}
-                            onChange={(e) => setReferralInput(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && handleApplyReferral()}
-                            className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 uppercase placeholder:normal-case focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50"
-                          />
-                          {referralInput && (
-                            <X
-                              onClick={removeReferral}
-                              size={22}
-                              className="cursor-pointer absolute text-custom-green top-2.5 right-2"
-                            />
-                          )}
-                        </div>
-                        <button
-                          className="bg-custom-green text-white md:px-8 px-4 py-2.5 cursor-pointer text-sm rounded-md disabled:opacity-60 disabled:cursor-default"
-                          onClick={handleApplyReferral}
-                          disabled={!!appliedReferralCode}
-                        >
-                          {appliedReferralCode ? t("Applied") : t("Apply")}
-                        </button>
-                      </div>
-                    )}
-                    {appliedReferralCode && (
-                      <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full">
-                        <span className="text-base">
-                          {t("Referral code applied")}: {appliedReferralCode}
-                        </span>
-                        <button
-                          onClick={removeReferral}
-                          className="text-custom-green cursor-pointer text-sm ml-4"
-                        >
-                          <X size={22} />
-                        </button>
-                      </div>
-                    )}
                   </div>
 
                   <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
