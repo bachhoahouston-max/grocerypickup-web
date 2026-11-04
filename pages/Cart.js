@@ -7,7 +7,7 @@ import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
 import { Api } from "@/services/service";
 import { clearSyncedCart } from "@/services/cartSync";
-import { getReferralCode, getProductReferralCode } from "@/services/affiliateReferral";
+import { getReferralCode, getProductReferralCode, getProductReferralDiscountRate } from "@/services/affiliateReferral";
 import { cartLineProductId } from "@/services/rewardCart";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
@@ -37,8 +37,8 @@ function Cart(props) {
   const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [referralDiscount, setReferralDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
-  const [referralInput, setReferralInput] = useState("");
   const [appliedReferralCode, setAppliedReferralCode] = useState("");
   const [isOnce, setIsOnce] = useState(false);
   const { t, i18n } = useTranslation();
@@ -90,11 +90,11 @@ function Cart(props) {
     )
     : 0;
 
-  const handleApplyCoupon = () => {
+  const handleApplyCoupon = async () => {
     if (!user?._id) {
       props.toaster({
         type: "error",
-        message: "Please log in to apply the coupon.",
+        message: "Please log in to apply a coupon or referral code.",
       });
       return;
     }
@@ -112,20 +112,67 @@ function Cart(props) {
       return;
     }
 
+    const code = searchTerm.trim().toUpperCase().replace(/\s+/g, "");
+    if (!code) {
+      props.toaster({ type: "error", message: t("Please enter a coupon or referral code") });
+      return;
+    }
+
+    props.loader(true);
+
+    try {
+      const productIds = (cartData || [])
+        .filter((item) => item?.productSource !== "REWARD" && item?.id)
+        .map((item) => item.id);
+      const referralResponse = await Api(
+        "get",
+        `affiliation/referral/${encodeURIComponent(code)}?products=${encodeURIComponent(productIds.join(","))}`,
+        "",
+        router,
+      );
+
+      if (referralResponse?.status) {
+        const applied = referralResponse.data?.referralCode || code;
+        const eligibleProducts = referralResponse.data?.eligibleProducts;
+        const eligibleAmount = (cartData || [])
+          .filter((item) =>
+            item?.productSource !== "REWARD" &&
+            (!Array.isArray(eligibleProducts) || eligibleProducts.includes(item?.id)),
+          )
+          .reduce(
+            (sum, item) =>
+              sum + (Number(item?.total) || Number(item?.price || 0) * Number(item?.qty || 0)),
+            0,
+          );
+        const rate = Number(referralResponse.data?.customerDiscountRate || 0);
+        setAppliedCoupon(false);
+        setDiscount(0);
+        setDiscountCode("");
+        setAppliedReferralCode(applied);
+        setReferralDiscount(Number(((eligibleAmount * rate) / 100).toFixed(2)));
+        setSearchTerm(applied);
+        props.toaster({ type: "success", message: t("Referral code applied successfully") });
+        props.loader(false);
+        return;
+      }
+    } catch (err) {
+      // A failed referral lookup falls through to the regular coupon validator.
+    }
+
     const newData = {
-      code: searchTerm,
+      code,
       cartValue: CartTotal,
       userId: user._id,
       option: pickupOption,
     };
 
-    props.loader(true);
-
     Api("post", "ValidateCouponforUser", newData, router)
       .then((res) => {
         if (res.status) {
+          setAppliedReferralCode("");
+          setReferralDiscount(0);
           setDiscount(res.data?.discount);
-          setDiscountCode(searchTerm);
+          setDiscountCode(code);
           setAppliedCoupon(true);
           props.toaster({
             type: "success",
@@ -143,48 +190,24 @@ function Cart(props) {
       });
   };
 
-  const handleApplyReferral = () => {
-    const code = referralInput.trim().toUpperCase().replace(/\s+/g, "");
-    if (!code) {
-      props.toaster({ type: "error", message: t("Please enter a referral code") });
-      return;
-    }
-    const productIds = (cartData || [])
-      .filter((item) => item?.productSource !== "REWARD" && item?.id)
-      .map((item) => item.id);
-    props.loader(true);
-    Api(
-      "get",
-      `affiliation/referral/${encodeURIComponent(code)}?products=${encodeURIComponent(productIds.join(","))}`,
-      "",
-      router
-    )
-      .then((res) => {
-        if (res?.status) {
-          const applied = res.data?.referralCode || code;
-          setAppliedReferralCode(applied);
-          setReferralInput(applied);
-          props.toaster({ type: "success", message: t("Referral code applied successfully") });
-        } else {
-          props.toaster({ type: "error", message: t("Invalid referral code") });
-        }
-      })
-      .catch((err) => {
-        props.toaster({
-          type: "error",
-          message:
-            err?.message && err.message !== "Referral code not found."
-              ? t(err.message)
-              : t("Invalid referral code"),
-        });
-      })
-      .finally(() => props.loader(false));
-  };
-
   const removeReferral = () => {
     setAppliedReferralCode("");
-    setReferralInput("");
+    setReferralDiscount(0);
   };
+
+  const totalDiscount = Number(discount || 0) + Number(referralDiscount || 0);
+
+  useEffect(() => {
+    if (appliedReferralCode) return;
+    const linkedDiscount = (cartData || [])
+      .filter((item) => item?.productSource !== "REWARD")
+      .reduce((sum, item) => {
+        const rate = getProductReferralDiscountRate(item?.slug);
+        const amount = Number(item?.total) || Number(item?.price || 0) * Number(item?.qty || 0);
+        return sum + (amount * rate) / 100;
+      }, 0);
+    setReferralDiscount(Number(linkedDiscount.toFixed(2)));
+  }, [cartData, appliedReferralCode]);
 
   // Keep the latest cart for async validation results to land on
   const cartRef = useRef(cartData);
@@ -699,7 +722,7 @@ function Cart(props) {
     setServiceFee(fee.toFixed(2));
     setDeliveryCharge(delivery.toFixed(2));
 
-    const cartAfterDiscount = sumWithInitial - discount;
+    const cartAfterDiscount = sumWithInitial - totalDiscount;
     let finalTotal;
 
     if (pickupOption === "localDelivery") {
@@ -723,7 +746,7 @@ function Cart(props) {
 
     setCartTotal(sumWithInitial.toFixed(2));
     setMainTotal(finalTotal.toFixed(2));
-  }, [cartData, pickupOption, deliverytip, discount, extraFees]);
+  }, [cartData, pickupOption, deliverytip, discount, referralDiscount, extraFees]);
 
   const emptyCart = async () => {
     setCartData([]);
@@ -1007,7 +1030,8 @@ function Cart(props) {
       productDetail: data,
       total: mainTotal,
       subtotal: CartTotal,
-      discount: discount,
+      discount: totalDiscount,
+      referralDiscount,
       discountCode: discountCode,
       referralCode: getReferralCode(),
       appliedReferralCode,
@@ -1497,28 +1521,28 @@ function Cart(props) {
                                   </div>
 
                                   {date && (
-                                  <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
-                                    <FaRegCalendarCheck
-                                      size={30}
-                                      className="text-green-600 shrink-0 mt-0.5"
-                                    />
-                                    <div className="text-start">
-                                      <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
-                                        {opt.id === "driveUp"
-                                          ? t("Your Scheduled Curbside Pickup")
-                                          : t("Your Scheduled Pickup")}
-                                      </p>
-                                      <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
-                                        {opt.id === "driveUp"
-                                          ? t(
-                                            "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.",
-                                          )
-                                          : t(
-                                            "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.",
-                                          )}
-                                      </p>
+                                    <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
+                                      <FaRegCalendarCheck
+                                        size={30}
+                                        className="text-green-600 shrink-0 mt-0.5"
+                                      />
+                                      <div className="text-start">
+                                        <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
+                                          {opt.id === "driveUp"
+                                            ? t("Your Scheduled Curbside Pickup")
+                                            : t("Your Scheduled Pickup")}
+                                        </p>
+                                        <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
+                                          {opt.id === "driveUp"
+                                            ? t(
+                                              "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.",
+                                            )
+                                            : t(
+                                              "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.",
+                                            )}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
                                   )}
 
                                   <p className="text-[12px] md:text-[13px] text-[#3b4a8c] text-start">
@@ -1678,7 +1702,7 @@ function Cart(props) {
                         <div className="relative flex-1 ">
                           <input
                             type="text"
-                            placeholder={t("Enter coupon code")}
+                            placeholder={t("Enter coupon or referral code")}
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1690,10 +1714,7 @@ function Cart(props) {
                                 setSearchTerm("");
                                 setDiscountCode("");
                                 setDiscount(0);
-                                props.toaster({
-                                  type: "success",
-                                  message: "Coupon removed successfully",
-                                });
+                                removeReferral();
                               }}
                               size={22}
                               className=" cursor-pointer absolute text-custom-green top-2.5 right-2"
@@ -1708,11 +1729,13 @@ function Cart(props) {
                         </button>
                       </div>
                     )}
-                    {appliedCoupon && (
+                    {(appliedCoupon || appliedReferralCode) && (
                       <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
-                        <span className="text-base">
-                          {t("Coupon")} {t("applied!")}
-                        </span>
+                        {/* <span className="text-base">
+                          {appliedReferralCode
+                            ? `${t("Referral code applied")}: ${appliedReferralCode}`
+                            : `${t("Coupon")} ${t("applied!")}`}
+                        </span> */}
 
                         <button
                           onClick={() => {
@@ -1720,10 +1743,7 @@ function Cart(props) {
                             setSearchTerm("");
                             setDiscountCode("");
                             setDiscount(0);
-                            props.toaster({
-                              type: "success",
-                              message: "Coupon removed successfully",
-                            });
+                            removeReferral();
                           }}
                           className="text-custom-green cursor-pointer text-sm ml-4"
                         >
@@ -1732,48 +1752,6 @@ function Cart(props) {
                       </div>
                     )}
 
-                    {pickupOption && (
-                      <div className="bg-white rounded-lg flex flex-row gap-2 mt-3">
-                        <div className="relative flex-1">
-                          <input
-                            type="text"
-                            placeholder={t("Enter referral code")}
-                            value={referralInput}
-                            disabled={!!appliedReferralCode}
-                            onChange={(e) => setReferralInput(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && handleApplyReferral()}
-                            className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 uppercase placeholder:normal-case focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50"
-                          />
-                          {referralInput && (
-                            <X
-                              onClick={removeReferral}
-                              size={22}
-                              className="cursor-pointer absolute text-custom-green top-2.5 right-2"
-                            />
-                          )}
-                        </div>
-                        <button
-                          className="bg-custom-green text-white md:px-8 px-4 py-2.5 cursor-pointer text-sm rounded-md disabled:opacity-60 disabled:cursor-default"
-                          onClick={handleApplyReferral}
-                          disabled={!!appliedReferralCode}
-                        >
-                          {appliedReferralCode ? t("Applied") : t("Apply")}
-                        </button>
-                      </div>
-                    )}
-                    {appliedReferralCode && (
-                      <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full">
-                        <span className="text-base">
-                          {t("Referral code applied")}: {appliedReferralCode}
-                        </span>
-                        <button
-                          onClick={removeReferral}
-                          className="text-custom-green cursor-pointer text-sm ml-4"
-                        >
-                          <X size={22} />
-                        </button>
-                      </div>
-                    )}
                   </div>
 
                   <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
@@ -1829,11 +1807,20 @@ function Cart(props) {
                         </p>
                       </div>
 
-                      {appliedCoupon && (
+                      {discount > 0 && (
                         <div className="flex justify-between items-center text-black">
-                          <p className="text-base">{t("Discount amount")}</p>
+                          <p className="text-base">{t("Coupon Discount")}</p>
                           <p className="text-base font-medium">
-                            - {constant.currency} {discount}
+                            - {constant.currency} {Number(discount).toFixed(2)}
+                          </p>
+                        </div>
+                      )}
+
+                      {referralDiscount > 0 && (
+                        <div className="flex justify-between items-center text-black">
+                          <p className="text-base">{t("Referral Discount")}</p>
+                          <p className="text-base font-medium">
+                            - {constant.currency} {Number(referralDiscount).toFixed(2)}
                           </p>
                         </div>
                       )}

@@ -38,12 +38,18 @@ export const getProductReferralCode = (slug) => {
   return saved?.code && Date.now() - saved.at < TTL_MS ? saved.code : "";
 };
 
-const saveProductReferral = (slug, code) => {
+export const getProductReferralDiscountRate = (slug) => {
+  if (typeof window === "undefined" || !slug) return 0;
+  const saved = readProductReferrals()[slug];
+  return Number(saved?.discountRate || 0);
+};
+
+const saveProductReferral = (slug, code, discountRate = 0) => {
   const now = Date.now();
   const referrals = Object.fromEntries(
     Object.entries(readProductReferrals()).filter(([, value]) => now - value?.at < TTL_MS)
   );
-  referrals[slug] = { code, at: now };
+  referrals[slug] = { code, discountRate, at: now };
   localStorage.setItem(PRODUCT_KEY, JSON.stringify(referrals));
 };
 
@@ -71,7 +77,7 @@ export const saveReferralFromRoute = (router, onInvalid) => {
         onInvalid?.();
         return;
       }
-      saveProductReferral(slug, code);
+      saveProductReferral(slug, code, res?.data?.customerDiscountRate || 0);
       sessionStorage.setItem(clickKey, "1");
     })
     .catch(() => saveProductReferral(slug, code));
