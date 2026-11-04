@@ -7,7 +7,7 @@ import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
 import { Api } from "@/services/service";
 import { clearSyncedCart } from "@/services/cartSync";
-import { getReferralCode, getProductReferralCode } from "@/services/affiliateReferral";
+import { getReferralCode, getProductReferralCode, getProductReferralDiscountRate } from "@/services/affiliateReferral";
 import { cartLineProductId } from "@/services/rewardCart";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
@@ -37,6 +37,7 @@ function Cart(props) {
   const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [referralDiscount, setReferralDiscount] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
   const [referralInput, setReferralInput] = useState("");
   const [appliedReferralCode, setAppliedReferralCode] = useState("");
@@ -162,8 +163,17 @@ function Cart(props) {
       .then((res) => {
         if (res?.status) {
           const applied = res.data?.referralCode || code;
+          const eligibleProducts = res.data?.eligibleProducts;
+          const eligibleAmount = (cartData || [])
+            .filter((item) =>
+              item?.productSource !== "REWARD" &&
+              (!Array.isArray(eligibleProducts) || eligibleProducts.includes(item?.id)),
+            )
+            .reduce((sum, item) => sum + (Number(item?.total) || Number(item?.price || 0) * Number(item?.qty || 0)), 0);
+          const rate = Number(res.data?.customerDiscountRate || 0);
           setAppliedReferralCode(applied);
           setReferralInput(applied);
+          setReferralDiscount(Number(((eligibleAmount * rate) / 100).toFixed(2)));
           props.toaster({ type: "success", message: t("Referral code applied successfully") });
         } else {
           props.toaster({ type: "error", message: t("Invalid referral code") });
@@ -184,7 +194,22 @@ function Cart(props) {
   const removeReferral = () => {
     setAppliedReferralCode("");
     setReferralInput("");
+    setReferralDiscount(0);
   };
+
+  const totalDiscount = Number(discount || 0) + Number(referralDiscount || 0);
+
+  useEffect(() => {
+    if (appliedReferralCode) return;
+    const linkedDiscount = (cartData || [])
+      .filter((item) => item?.productSource !== "REWARD")
+      .reduce((sum, item) => {
+        const rate = getProductReferralDiscountRate(item?.slug);
+        const amount = Number(item?.total) || Number(item?.price || 0) * Number(item?.qty || 0);
+        return sum + (amount * rate) / 100;
+      }, 0);
+    setReferralDiscount(Number(linkedDiscount.toFixed(2)));
+  }, [cartData, appliedReferralCode]);
 
   // Keep the latest cart for async validation results to land on
   const cartRef = useRef(cartData);
@@ -699,7 +724,7 @@ function Cart(props) {
     setServiceFee(fee.toFixed(2));
     setDeliveryCharge(delivery.toFixed(2));
 
-    const cartAfterDiscount = sumWithInitial - discount;
+    const cartAfterDiscount = sumWithInitial - totalDiscount;
     let finalTotal;
 
     if (pickupOption === "localDelivery") {
@@ -723,7 +748,7 @@ function Cart(props) {
 
     setCartTotal(sumWithInitial.toFixed(2));
     setMainTotal(finalTotal.toFixed(2));
-  }, [cartData, pickupOption, deliverytip, discount, extraFees]);
+  }, [cartData, pickupOption, deliverytip, discount, referralDiscount, extraFees]);
 
   const emptyCart = async () => {
     setCartData([]);
@@ -1007,7 +1032,8 @@ function Cart(props) {
       productDetail: data,
       total: mainTotal,
       subtotal: CartTotal,
-      discount: discount,
+      discount: totalDiscount,
+      referralDiscount,
       discountCode: discountCode,
       referralCode: getReferralCode(),
       appliedReferralCode,
@@ -1833,7 +1859,7 @@ function Cart(props) {
                         <div className="flex justify-between items-center text-black">
                           <p className="text-base">{t("Discount amount")}</p>
                           <p className="text-base font-medium">
-                            - {constant.currency} {discount}
+                            - {constant.currency} {totalDiscount}
                           </p>
                         </div>
                       )}
