@@ -1807,11 +1807,20 @@ function Cart(props) {
                         </p>
                       </div>
 
-                      {appliedCoupon && (
+                      {discount > 0 && (
                         <div className="flex justify-between items-center text-black">
-                          <p className="text-base">{t("Discount amount")}</p>
+                          <p className="text-base">{t("Coupon Discount")}</p>
                           <p className="text-base font-medium">
-                            - {constant.currency} {totalDiscount}
+                            - {constant.currency} {Number(discount).toFixed(2)}
+                          </p>
+                        </div>
+                      )}
+
+                      {referralDiscount > 0 && (
+                        <div className="flex justify-between items-center text-black">
+                          <p className="text-base">{t("Referral Discount")}</p>
+                          <p className="text-base font-medium">
+                            - {constant.currency} {Number(referralDiscount).toFixed(2)}
                           </p>
                         </div>
                       )}
