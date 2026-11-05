@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { CheckCircle, Mail, Trash, X } from "lucide-react";
+import { CheckCircle, ChevronDown, ChevronUp, Mail, Trash, X } from "lucide-react";
 import { IoIosArrowBack, IoIosClose } from "react-icons/io";
 import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
@@ -38,8 +38,11 @@ function Cart(props) {
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [referralDiscount, setReferralDiscount] = useState(0);
+  const [appliedReferralDiscountRate, setAppliedReferralDiscountRate] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
   const [appliedReferralCode, setAppliedReferralCode] = useState("");
+  const [appliedReferralProductIds, setAppliedReferralProductIds] = useState([]);
+  const [showAppliedReferralProducts, setShowAppliedReferralProducts] = useState(false);
   const [isOnce, setIsOnce] = useState(false);
   const { t, i18n } = useTranslation();
   const [cancelPopup, setCancelPopup] = useState(false);
@@ -149,6 +152,18 @@ function Cart(props) {
         setDiscount(0);
         setDiscountCode("");
         setAppliedReferralCode(applied);
+        setAppliedReferralDiscountRate(rate);
+        setAppliedReferralProductIds(
+          (cartData || [])
+            .filter(
+              (item) =>
+                item?.productSource !== "REWARD" &&
+                (!Array.isArray(eligibleProducts) ||
+                  eligibleProducts.some((id) => String(id) === String(item?.id))),
+            )
+            .map((item) => item.id),
+        );
+        setShowAppliedReferralProducts(false);
         setReferralDiscount(Number(((eligibleAmount * rate) / 100).toFixed(2)));
         setSearchTerm(applied);
         props.toaster({ type: "success", message: t("Referral code applied successfully") });
@@ -170,6 +185,9 @@ function Cart(props) {
       .then((res) => {
         if (res.status) {
           setAppliedReferralCode("");
+          setAppliedReferralDiscountRate(0);
+          setAppliedReferralProductIds([]);
+          setShowAppliedReferralProducts(false);
           setReferralDiscount(0);
           setDiscount(res.data?.discount);
           setDiscountCode(code);
@@ -192,10 +210,18 @@ function Cart(props) {
 
   const removeReferral = () => {
     setAppliedReferralCode("");
+    setAppliedReferralDiscountRate(0);
+    setAppliedReferralProductIds([]);
+    setShowAppliedReferralProducts(false);
     setReferralDiscount(0);
   };
 
   const totalDiscount = Number(discount || 0) + Number(referralDiscount || 0);
+  const appliedReferralProducts = (cartData || []).filter(
+    (item) =>
+      item?.productSource !== "REWARD" &&
+      appliedReferralProductIds.some((id) => String(id) === String(item?.id)),
+  );
 
   useEffect(() => {
     if (appliedReferralCode) return;
@@ -1729,7 +1755,7 @@ function Cart(props) {
                         </button>
                       </div>
                     )}
-                    {/* {(appliedCoupon || appliedReferralCode) && (
+                    {(appliedCoupon || appliedReferralCode) && (
                       <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
                         <span className="text-base">
                           {appliedReferralCode
@@ -1737,8 +1763,7 @@ function Cart(props) {
                             : `${t("Coupon")} ${t("applied!")}: ${appliedCoupon}`}
                         </span>
                       </div>
-                    )} */}
-
+                    )}
                   </div>
 
                   <div className="bg-white rounded-lg shadow-sm p-4 md:p-5">
@@ -1809,6 +1834,54 @@ function Cart(props) {
                           <p className="text-base font-medium">
                             - {constant.currency} {Number(referralDiscount).toFixed(2)}
                           </p>
+                        </div>
+                      )}
+
+                      {appliedReferralCode && appliedReferralProducts.length > 0 && (
+                        <div className="w-full">
+                          <button
+                            type="button"
+                            className="flex items-center justify-between w-full text-left text-sm font-medium text-custom-green border border-green-200 bg-green-100 px-2 p-1 rounded-md"
+                            onClick={() =>
+                              setShowAppliedReferralProducts((isOpen) => !isOpen)
+                            }
+                            aria-expanded={showAppliedReferralProducts}
+                          >
+                            <span>{t("Discount summary")}</span>
+                            {showAppliedReferralProducts ? (
+                              <ChevronUp size={18} />
+                            ) : (
+                              <ChevronDown size={18} />
+                            )}
+                          </button>
+                          {showAppliedReferralProducts && (
+                            <div className="mt-2 rounded-md border border-green-100 bg-green-50 px-3 py-2">
+                              {appliedReferralProducts.map((item) => {
+                                const amount =
+                                  Number(item?.total) ||
+                                  Number(item?.price || 0) * Number(item?.qty || 0);
+                                return (
+                                  <div
+                                    key={item.id}
+                                    className="flex justify-between gap-3 text-sm text-gray-700"
+                                  >
+                                    <span className="truncate">
+                                      {i18n.language?.startsWith("vi")
+                                        ? item?.vietnamiesName || item?.name
+                                        : item?.name || item?.vietnamiesName}
+                                    </span>
+                                    <span className="shrink-0">
+                                      - {constant.currency}{" "}
+                                      {(
+                                        (amount * appliedReferralDiscountRate) /
+                                        100
+                                      ).toFixed(2)}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
                       )}
 
