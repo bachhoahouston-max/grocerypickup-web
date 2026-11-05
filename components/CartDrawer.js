@@ -313,8 +313,8 @@ const StockIssueRow = ({ item, i, lang, cartClose, setLineQty, otherLinesQty, fo
           {item?.productUnavailable || item?.stockStatus === "UNAVAILABLE"
             ? t("Product Unavailable")
             : isLimited
-            ? `${t("Available quantity")}: ${item?.availableQty}`
-            : t("Out of stock")}
+              ? `${t("Available quantity")}: ${item?.availableQty}`
+              : t("Out of stock")}
         </span>
         {isLimited && keepableQty >= 1 && (
           <button
@@ -485,11 +485,11 @@ const NormalCartRow = ({
                 </span>
               ))}
           </div>
-          {referralApplied && (
+          {/* {referralApplied && (
             <span className="mt-1 self-start bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">
               {t("Referral code applied")}
             </span>
-          )}
+          )} */}
           <PickupAvailability
             pickupConfig={pickupConfig}
             pickupOption={pickupOption}
