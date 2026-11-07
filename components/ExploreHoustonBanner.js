@@ -4,7 +4,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 export const EXPLORE_HOUSTON_URL = "/explore-houston";
 
-const StoreCommunityIcon = ({ className }) => (
+export const StoreCommunityIcon = ({ className }) => (
   <svg viewBox="0 0 64 64" className={className} aria-hidden="true">
     {/* awning */}
     <path d="M8 10h48l4 12H4z" fill="#F97316" />

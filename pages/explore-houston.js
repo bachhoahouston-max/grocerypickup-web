@@ -49,6 +49,7 @@ import {
   Phone,
 } from "lucide-react";
 import { Api } from "@/services/service";
+import { StoreCommunityIcon } from "@/components/ExploreHoustonBanner";
 
 const ICON_MAP = {
   Store,
@@ -212,13 +213,17 @@ function ExploreHouston({ loader, toaster }) {
       </Head>
       <main className="min-h-screen bg-[var(--theme-var)] px-4 py-8 md:px-10 md:py-12">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-8 text-center">
-            <h1 className="text-2xl font-bold text-gray-900 md:text-4xl">
-              {t("Explore Houston")}
-            </h1>
-            <p className="mt-2 text-sm text-gray-600 md:text-base">
-              {t("Discover local stores and businesses in Houston")}
-            </p>
+          <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#cfe8cf] bg-[#e8f6e6] px-3 py-3 shadow-sm md:mb-8 md:gap-6 md:px-8 md:py-5">
+            <StoreCommunityIcon className="h-14 w-14 shrink-0 md:h-20 md:w-20" />
+            <div className="h-14 w-px bg-[#bcdcbc] md:h-16" />
+            <div className="min-w-0 flex-1">
+              <h1 className="text-[22px] font-bold leading-tight text-[#1f3d1f] md:text-4xl">
+                {t("Explore Houston")}
+              </h1>
+              <p className="mt-1 text-xs leading-snug text-gray-600 md:text-base">
+                {t("Local businesses and places recommended by the community")}
+              </p>
+            </div>
           </div>
 
           <div className="mb-4 grid gap-3 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1fr_260px]">
@@ -261,9 +266,8 @@ function ExploreHouston({ loader, toaster }) {
                 type="button"
                 onClick={() => setCategory("")}
                 aria-pressed={!category}
-                className={`flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${
-                  !category ? "bg-[#edf6ef] text-[#206B3A]" : "text-gray-600 hover:bg-gray-50"
-                }`}
+                className={`flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${!category ? "bg-[#edf6ef] text-[#206B3A]" : "text-gray-600 hover:bg-gray-50"
+                  }`}
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#edf6ef] text-[#206B3A]">
                   <Store size={22} />
@@ -278,11 +282,10 @@ function ExploreHouston({ loader, toaster }) {
                     type="button"
                     onClick={() => setCategory(item._id)}
                     aria-pressed={category === item._id}
-                    className={`flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${
-                      category === item._id
-                        ? "bg-[#edf6ef] text-[#206B3A]"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
+                    className={`flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${category === item._id
+                      ? "bg-[#edf6ef] text-[#206B3A]"
+                      : "text-gray-600 hover:bg-gray-50"
+                      }`}
                   >
                     {item.image ? (
                       <img src={item.image} alt="" className="h-11 w-11 rounded-full object-cover" />
@@ -384,7 +387,7 @@ function ExploreHouston({ loader, toaster }) {
                           event.stopPropagation();
                           router.push(`/explore-houston/${store._id}`);
                         }}
-                        className="mt-3 cursor-pointer text-sm font-semibold text-[#206B3A] transition hover:underline focus:outline-none focus:ring-2 focus:ring-[#206B3A] focus:ring-offset-2"
+                        className="mt-3 cursor-pointer text-sm font-semibold bg-[#206B3A] text-white px-3 py-1.5 rounded transition focus:outline-none focus:ring-2 focus:ring-[#206B3A] focus:ring-offset-2"
                       >
                         {t("View Store")}
                       </button>
