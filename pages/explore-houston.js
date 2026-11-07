@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
@@ -10,6 +10,7 @@ import {
   Building2,
   Camera,
   Car,
+  ChevronDown,
   Coffee,
   Cookie,
   Carrot,
@@ -98,6 +99,18 @@ function ExploreHouston({ loader, toaster }) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
+  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
+  const categoryMenuRef = useRef(null);
+
+  useEffect(() => {
+    const closeCategoryMenu = (event) => {
+      if (!categoryMenuRef.current?.contains(event.target)) {
+        setCategoryMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", closeCategoryMenu);
+    return () => document.removeEventListener("mousedown", closeCategoryMenu);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -219,21 +232,85 @@ function ExploreHouston({ loader, toaster }) {
                 className="h-12 w-full rounded-lg border border-gray-200 pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               />
             </label>
-            <label>
+            <div ref={categoryMenuRef} className="relative">
               <span className="sr-only">{t("Filter by category")}</span>
-              <select
-                value={category}
-                onChange={(event) => setCategory(event.target.value)}
-                className="h-12 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
+              <button
+                type="button"
+                onClick={() => setCategoryMenuOpen((current) => !current)}
+                aria-haspopup="listbox"
+                aria-expanded={categoryMenuOpen}
+                className="flex h-12 w-full items-center justify-between rounded-lg border border-gray-200 bg-white px-4 text-left text-sm text-gray-700 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               >
-                <option value="">{t("All categories")}</option>
-                {categories.map((item) => (
-                  <option key={item._id} value={item._id}>
-                    {getCategoryName(item)}
-                  </option>
-                ))}
-              </select>
-            </label>
+                {(() => {
+                  const selectedCategory = categories.find((item) => item._id === category);
+                  const Icon = ICON_MAP[selectedCategory?.icon] || Store;
+                  return selectedCategory ? (
+                    <span className="flex min-w-0 items-center gap-3">
+                      {selectedCategory.image ? (
+                        <img src={selectedCategory.image} alt="" className="h-8 w-8 rounded-md object-cover" />
+                      ) : (
+                        <span
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#206B3A]"
+                          style={{ backgroundColor: selectedCategory.iconBackground || DEFAULT_ICON_BACKGROUND }}
+                        >
+                          <Icon size={18} />
+                        </span>
+                      )}
+                      <span className="truncate">{getCategoryName(selectedCategory)}</span>
+                    </span>
+                  ) : (
+                    <span>{t("All categories")}</span>
+                  );
+                })()}
+                <ChevronDown size={18} className="shrink-0" />
+              </button>
+              {categoryMenuOpen && (
+                <div className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white p-1 shadow-lg" role="listbox">
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={!category}
+                    onClick={() => {
+                      setCategory("");
+                      setCategoryMenuOpen(false);
+                    }}
+                    className="w-full rounded-md px-3 py-2 text-left text-gray-700 hover:bg-[#edf6ef]"
+                  >
+                    {t("All categories")}
+                  </button>
+                  {categories.map((item) => {
+                    const Icon = ICON_MAP[item.icon] || Store;
+                    return (
+                      <button
+                        key={item._id}
+                        type="button"
+                        role="option"
+                        aria-selected={category === item._id}
+                        onClick={() => {
+                          setCategory(item._id);
+                          setCategoryMenuOpen(false);
+                        }}
+                        className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-gray-700 hover:bg-[#edf6ef] ${
+                          category === item._id ? "bg-[#edf6ef]" : ""
+                        }`}
+                      >
+                        {item.image ? (
+                          <img src={item.image} alt="" className="h-8 w-8 rounded-md object-cover" />
+                        ) : (
+                          <span
+                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#206B3A]"
+                            style={{ backgroundColor: item.iconBackground || DEFAULT_ICON_BACKGROUND }}
+                          >
+                            <Icon size={18} />
+                          </span>
+                        )}
+                        <span className="truncate">{getCategoryName(item)}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
 
           {loading ? null : filteredStores.length > 0 ? (
