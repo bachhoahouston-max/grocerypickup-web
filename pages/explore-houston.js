@@ -88,6 +88,8 @@ const ICON_MAP = {
   Wine,
 };
 
+const DEFAULT_ICON_BACKGROUND = "#edf6ef";
+
 function ExploreHouston({ loader, toaster }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
@@ -263,7 +265,10 @@ function ExploreHouston({ loader, toaster }) {
                           className="h-full w-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-full items-center justify-center text-[#206B3A]">
+                        <div
+                          className="flex h-full items-center justify-center text-[#206B3A]"
+                          style={{ backgroundColor: storeCategory?.iconBackground || DEFAULT_ICON_BACKGROUND }}
+                        >
                           <Icon size={64} strokeWidth={1.3} />
                         </div>
                       )}
