@@ -45,6 +45,7 @@ import {
   Wheat,
   Wine,
   Wrench,
+  Phone,
 } from "lucide-react";
 import { Api } from "@/services/service";
 
@@ -229,7 +230,7 @@ function ExploreHouston({ loader, toaster }) {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder={t("Search stores")}
-                className="h-12 w-full rounded-lg border border-gray-200 pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
+                className="h-12 w-full placeholder-gray-400 rounded-lg border border-gray-200 pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               />
             </label>
             <div ref={categoryMenuRef} className="relative">
@@ -290,9 +291,8 @@ function ExploreHouston({ loader, toaster }) {
                           setCategory(item._id);
                           setCategoryMenuOpen(false);
                         }}
-                        className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-gray-700 hover:bg-[#edf6ef] ${
-                          category === item._id ? "bg-[#edf6ef]" : ""
-                        }`}
+                        className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-gray-700 hover:bg-[#edf6ef] ${category === item._id ? "bg-[#edf6ef]" : ""
+                          }`}
                       >
                         {item.image ? (
                           <img src={item.image} alt="" className="h-8 w-8 rounded-md object-cover" />
@@ -367,7 +367,9 @@ function ExploreHouston({ loader, toaster }) {
                           <MapPin size={18} className="mt-0.5 shrink-0 text-[#206B3A]" />
                           <span>{getText(store, "address", "address_v")}</span>
                         </p>
-                        {store.phone && <p>{store.phone}</p>}
+
+                        {store.phone && <p className="flex gap-2"> <Phone size={16} className="mt-0.5 shrink-0 text-[#206B3A]" /> {store.phone}</p>}
+
                         <p className="flex items-center gap-2">
                           <Eye size={18} className="shrink-0 text-[#206B3A]" />
                           <span>
