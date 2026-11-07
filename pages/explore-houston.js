@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
@@ -26,6 +26,7 @@ import {
   Landmark,
   Leaf,
   MapPin,
+  MessageCircle,
   Milk,
   Package,
   PawPrint,
@@ -99,19 +100,8 @@ function ExploreHouston({ loader, toaster }) {
   const [storeCategories, setStoreCategories] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
   const [loading, setLoading] = useState(true);
-  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
-  const categoryMenuRef = useRef(null);
-
-  useEffect(() => {
-    const closeCategoryMenu = (event) => {
-      if (!categoryMenuRef.current?.contains(event.target)) {
-        setCategoryMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", closeCategoryMenu);
-    return () => document.removeEventListener("mousedown", closeCategoryMenu);
-  }, []);
 
   useEffect(() => {
     let active = true;
@@ -168,7 +158,7 @@ function ExploreHouston({ loader, toaster }) {
 
   const filteredStores = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return stores.filter((store) => {
+    const matchingStores = stores.filter((store) => {
       const storeCategory = getStoreCategory(store);
       const matchesCategory = !category || storeCategory?._id === category;
       const searchableText = [
@@ -186,7 +176,20 @@ function ExploreHouston({ loader, toaster }) {
         .toLowerCase();
       return matchesCategory && (!query || searchableText.includes(query));
     });
-  }, [category, search, stores, categoryById]);
+
+    return [...matchingStores].sort((first, second) => {
+      if (sortBy === "oldest") {
+        return new Date(first.createdAt || 0) - new Date(second.createdAt || 0);
+      }
+      if (sortBy === "mostViewed") {
+        return (second.viewCount || 0) - (first.viewCount || 0);
+      }
+      if (sortBy === "name") {
+        return (first.title || "").localeCompare(second.title || "");
+      }
+      return new Date(second.createdAt || 0) - new Date(first.createdAt || 0);
+    });
+  }, [category, search, sortBy, stores, categoryById]);
 
   const isVietnamese = i18n.language?.toLowerCase().startsWith("vi");
   const getText = (store, englishKey, vietnameseKey) =>
@@ -218,7 +221,7 @@ function ExploreHouston({ loader, toaster }) {
             </p>
           </div>
 
-          <div className="mb-8 grid gap-3 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1fr_260px]">
+          <div className="mb-4 grid gap-3 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1fr_260px]">
             <label className="relative block">
               <span className="sr-only">{t("Search stores")}</span>
               <Search
@@ -233,88 +236,73 @@ function ExploreHouston({ loader, toaster }) {
                 className="h-12 w-full placeholder-gray-400 rounded-lg border border-gray-200 pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               />
             </label>
-            <div ref={categoryMenuRef} className="relative">
-              <span className="sr-only">{t("Filter by category")}</span>
+            <label className="relative block">
+              <span className="sr-only">{t("Sort By")}</span>
+              <select
+                value={sortBy}
+                onChange={(event) => setSortBy(event.target.value)}
+                className="h-12 w-full appearance-none rounded-lg border border-gray-200 bg-white px-4 pr-10 text-sm text-gray-700 outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
+              >
+                <option value="newest">{t("Newest")}</option>
+                <option value="oldest">{t("Oldest")}</option>
+                <option value="mostViewed">{t("Most viewed")}</option>
+                <option value="name">{t("Name A-Z")}</option>
+              </select>
+              <ChevronDown
+                size={18}
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+              />
+            </label>
+          </div>
+
+          <div className="mb-8 overflow-hidden rounded-2xl bg-white px-4 py-3 shadow-sm">
+            <div className="flex gap-3 overflow-x-auto pb-1">
               <button
                 type="button"
-                onClick={() => setCategoryMenuOpen((current) => !current)}
-                aria-haspopup="listbox"
-                aria-expanded={categoryMenuOpen}
-                className="flex h-12 w-full items-center justify-between rounded-lg border border-gray-200 bg-white px-4 text-left text-sm text-gray-700 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
+                onClick={() => setCategory("")}
+                aria-pressed={!category}
+                className={`flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${
+                  !category ? "bg-[#edf6ef] text-[#206B3A]" : "text-gray-600 hover:bg-gray-50"
+                }`}
               >
-                {(() => {
-                  const selectedCategory = categories.find((item) => item._id === category);
-                  const Icon = ICON_MAP[selectedCategory?.icon] || Store;
-                  return selectedCategory ? (
-                    <span className="flex min-w-0 items-center gap-3">
-                      {selectedCategory.image ? (
-                        <img src={selectedCategory.image} alt="" className="h-8 w-8 rounded-md object-cover" />
-                      ) : (
-                        <span
-                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#206B3A]"
-                          style={{ backgroundColor: selectedCategory.iconBackground || DEFAULT_ICON_BACKGROUND }}
-                        >
-                          <Icon size={18} />
-                        </span>
-                      )}
-                      <span className="truncate">{getCategoryName(selectedCategory)}</span>
-                    </span>
-                  ) : (
-                    <span>{t("All categories")}</span>
-                  );
-                })()}
-                <ChevronDown size={18} className="shrink-0" />
+                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#edf6ef] text-[#206B3A]">
+                  <Store size={22} />
+                </span>
+                <span className="max-w-24 truncate">{t("All categories")}</span>
               </button>
-              {categoryMenuOpen && (
-                <div className="absolute z-20 mt-1 max-h-64 w-full overflow-y-auto rounded-lg border border-gray-200 bg-white p-1 shadow-lg" role="listbox">
+              {categories.map((item) => {
+                const Icon = ICON_MAP[item.icon] || Store;
+                return (
                   <button
+                    key={item._id}
                     type="button"
-                    role="option"
-                    aria-selected={!category}
-                    onClick={() => {
-                      setCategory("");
-                      setCategoryMenuOpen(false);
-                    }}
-                    className="w-full rounded-md px-3 py-2 text-left text-gray-700 hover:bg-[#edf6ef]"
+                    onClick={() => setCategory(item._id)}
+                    aria-pressed={category === item._id}
+                    className={`flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${
+                      category === item._id
+                        ? "bg-[#edf6ef] text-[#206B3A]"
+                        : "text-gray-600 hover:bg-gray-50"
+                    }`}
                   >
-                    {t("All categories")}
-                  </button>
-                  {categories.map((item) => {
-                    const Icon = ICON_MAP[item.icon] || Store;
-                    return (
-                      <button
-                        key={item._id}
-                        type="button"
-                        role="option"
-                        aria-selected={category === item._id}
-                        onClick={() => {
-                          setCategory(item._id);
-                          setCategoryMenuOpen(false);
-                        }}
-                        className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-gray-700 hover:bg-[#edf6ef] ${category === item._id ? "bg-[#edf6ef]" : ""
-                          }`}
+                    {item.image ? (
+                      <img src={item.image} alt="" className="h-11 w-11 rounded-full object-cover" />
+                    ) : (
+                      <span
+                        className="flex h-11 w-11 items-center justify-center rounded-full text-[#206B3A]"
+                        style={{ backgroundColor: item.iconBackground || DEFAULT_ICON_BACKGROUND }}
                       >
-                        {item.image ? (
-                          <img src={item.image} alt="" className="h-8 w-8 rounded-md object-cover" />
-                        ) : (
-                          <span
-                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md text-[#206B3A]"
-                            style={{ backgroundColor: item.iconBackground || DEFAULT_ICON_BACKGROUND }}
-                          >
-                            <Icon size={18} />
-                          </span>
-                        )}
-                        <span className="truncate">{getCategoryName(item)}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
+                        <Icon size={22} />
+                      </span>
+                    )}
+                    <span className="max-w-24 truncate">{getCategoryName(item)}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           {loading ? null : filteredStores.length > 0 ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid max-w-7xl gap-4">
               {filteredStores.map((store) => {
                 const storeCategory = getStoreCategory(store);
                 const Icon = ICON_MAP[storeCategory?.icon] || Store;
@@ -332,9 +320,9 @@ function ExploreHouston({ loader, toaster }) {
                         router.push(`/explore-houston/${store._id}`);
                       }
                     }}
-                    className="overflow-hidden rounded-2xl bg-white shadow-sm transition hover:shadow-md"
+                    className="group cursor-pointer w-full relative flex min-h-[170px] overflow-hidden rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md"
                   >
-                    <div className="relative h-52 bg-[#edf6ef]">
+                    <div className="relative h-[154px] w-[38%] min-w-[132px] overflow-hidden rounded-xl bg-[#edf6ef] sm:w-[230px]">
                       {store.image ? (
                         <img
                           src={store.image}
@@ -349,33 +337,46 @@ function ExploreHouston({ loader, toaster }) {
                           <Icon size={64} strokeWidth={1.3} />
                         </div>
                       )}
-                      {storeCategory && (
-                        <span className="absolute left-3 top-3 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-[#206B3A] shadow-sm">
-                          {getCategoryName(storeCategory)}
-                        </span>
-                      )}
                     </div>
-                    <div className="p-5">
-                      <h2 className="text-xl font-bold text-gray-900">
-                        {storeTitle}
-                      </h2>
-                      <p className="mt-2 line-clamp-3 text-sm leading-6 text-gray-600">
+                    <div className="min-w-0 flex-1 px-3 pb-2 sm:px-5">
+                      <div className="flex items-start gap-3">
+                        <div className="min-w-0">
+                          <div className="mb-1 flex flex-wrap items-center gap-2">
+                            <h2 className="truncate text-lg font-bold text-gray-900 sm:text-xl">
+                              {storeTitle}
+                            </h2>
+                          </div>
+                          {storeCategory && (
+                            <span className="rounded-md bg-[#fff3e8] px-2.5 py-1 text-[11px] font-semibold text-[#c87831]">
+                              {getCategoryName(storeCategory)}
+                            </span>
+                          )}
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 mt-2">
+                            <span className="inline-flex items-center gap-1">
+                              <Eye size={14} className="text-gray-500" />
+                              {store.viewCount || 0} {t("views")}
+                            </span>
+                            <span className="inline-flex items-center gap-1">
+                              <MessageCircle size={14} className="text-gray-500" />
+                              {store.commentCount || 0}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <p className="mt-2 line-clamp-2 text-sm leading-5 text-gray-600">
                         {getText(store, "shortDescription", "shortDescription_v")}
                       </p>
-                      <div className="mt-4 space-y-2 text-sm text-gray-600">
-                        <p className="flex gap-2">
-                          <MapPin size={18} className="mt-0.5 shrink-0 text-[#206B3A]" />
-                          <span>{getText(store, "address", "address_v")}</span>
+                      <div className="mt-3 space-y-1 text-xs text-gray-600">
+                        <p className="flex items-start gap-2">
+                          <MapPin size={15} className="mt-0.5 shrink-0 text-gray-500" />
+                          <span className="line-clamp-2">{getText(store, "address", "address_v")}</span>
                         </p>
-
-                        {store.phone && <p className="flex gap-2"> <Phone size={16} className="mt-0.5 shrink-0 text-[#206B3A]" /> {store.phone}</p>}
-
-                        <p className="flex items-center gap-2">
-                          <Eye size={18} className="shrink-0 text-[#206B3A]" />
-                          <span>
-                            {store.viewCount || 0} {t("views")}
-                          </span>
-                        </p>
+                        {store.phone && (
+                          <p className="flex items-center gap-2">
+                            <Phone size={14} className="shrink-0 text-gray-500" />
+                            <span>{store.phone}</span>
+                          </p>
+                        )}
                       </div>
                       <button
                         type="button"
@@ -383,11 +384,17 @@ function ExploreHouston({ loader, toaster }) {
                           event.stopPropagation();
                           router.push(`/explore-houston/${store._id}`);
                         }}
-                        className="mt-4 rounded-lg bg-[#206B3A] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#18542d] focus:outline-none focus:ring-2 focus:ring-[#206B3A] focus:ring-offset-2"
+                        className="mt-3 cursor-pointer text-sm font-semibold text-[#206B3A] transition hover:underline focus:outline-none focus:ring-2 focus:ring-[#206B3A] focus:ring-offset-2"
                       >
                         {t("View Store")}
                       </button>
                     </div>
+                    {/* <span
+                      aria-hidden="true"
+                      className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-gray-500 shadow-sm transition group-hover:text-[#206B3A]"
+                    >
+                      <Heart size={18} />
+                    </span> */}
                   </article>
                 );
               })}
