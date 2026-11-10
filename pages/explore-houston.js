@@ -354,13 +354,13 @@ function ExploreHouston({ loader, toaster }) {
                               {getCategoryName(storeCategory)}
                             </span>
                           )}
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 mt-2">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-bold text-gray-600 mt-2">
                             <span className="inline-flex items-center gap-1">
-                              <Eye size={14} className="text-gray-500" />
+                              <Eye size={16} />
                               {store.viewCount || 0} {t("views")}
                             </span>
                             <span className="inline-flex items-center gap-1">
-                              <MessageCircle size={14} className="text-gray-500" />
+                              <MessageCircle size={16} />
                               {store.commentCount || 0}
                             </span>
                           </div>

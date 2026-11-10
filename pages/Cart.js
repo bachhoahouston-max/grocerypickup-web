@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { CheckCircle, ChevronDown, ChevronUp, Mail, Trash, X } from "lucide-react";
+import { CheckCircle, ChevronDown, ChevronUp, Mail, Package, Trash, X } from "lucide-react";
 import { IoIosArrowBack, IoIosClose } from "react-icons/io";
 import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
@@ -1423,7 +1423,12 @@ function Cart(props) {
             />
             <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
               {cartData.length > 0 && (
-                <div className="bg-transparent rounded-lg shadow-sm ">
+                <div className="bg-green-100 rounded-lg shadow-sm px-4 py-4">
+                  <h4 className="text-xl font-bold text-gray-800 mb-4 flex gap-2 items-center">
+                    <Package />
+                    {t("Choose how to receive")}
+                  </h4>
+
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
                       {[
@@ -1487,7 +1492,7 @@ function Cart(props) {
                                   className="hidden mt-1 form-radio h-4 w-4 text-green-600"
                                 />
 
-                                <div>
+                                <div className="border-l-2 pl-3">
                                   <div className="font-semibold text-base md:text-lg text-orange-600">
                                     {opt.title}
                                   </div>
