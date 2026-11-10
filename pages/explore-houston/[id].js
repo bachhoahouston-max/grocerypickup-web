@@ -148,7 +148,7 @@ function StoreDetails({ loader, toaster }) {
         <title>{title} | Bach Hoa Houston</title>
         <meta
           name="description"
-          content={getText("shortDescription", "shortDescription_v") || title}
+          content={store?.shortDescription || title}
         />
       </Head>
       <main className="min-h-screen bg-[var(--theme-var)] px-4 py-8 md:px-10 md:py-12">
@@ -196,7 +196,7 @@ function StoreDetails({ loader, toaster }) {
                   </div>
                 </div>
                 <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
-                  {getText("shortDescription", "shortDescription_v")}
+                  {store.shortDescription}
                 </p>
                 <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-gray-600">
                   <Eye size={18} className="text-[#206B3A]" />
