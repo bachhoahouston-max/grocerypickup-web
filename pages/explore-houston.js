@@ -173,6 +173,7 @@ function ExploreHouston({ loader, toaster }) {
         store?.title,
         store?.title_v,
         store?.shortDescription,
+        store?.shortDescription_v,
         store?.address,
         store?.address_v,
         storeCategory?.name,
@@ -372,7 +373,7 @@ function ExploreHouston({ loader, toaster }) {
                         </div>
                       </div>
                       <p className="mt-2 line-clamp-2 text-sm leading-5 text-gray-600">
-                        {store.shortDescription}
+                        {getText(store, "shortDescription", "shortDescription_v")}
                       </p>
                       <div className="mt-3 space-y-1 text-xs text-gray-600">
                         <p className="flex items-start gap-2">
