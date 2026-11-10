@@ -175,7 +175,6 @@ function ExploreHouston({ loader, toaster }) {
         store?.shortDescription,
         store?.shortDescription_v,
         store?.address,
-        store?.address_v,
         storeCategory?.name,
         storeCategory?.v_name,
       ]
@@ -378,7 +377,7 @@ function ExploreHouston({ loader, toaster }) {
                       <div className="mt-3 space-y-1 text-xs text-gray-600">
                         <p className="flex items-start gap-2">
                           <MapPin size={15} className="mt-0.5 shrink-0 text-gray-500" />
-                          <span className="line-clamp-2">{getText(store, "address", "address_v")}</span>
+                          <span className="line-clamp-2">{store.address}</span>
                         </p>
                         {store.phone && (
                           <p className="flex items-center gap-2">

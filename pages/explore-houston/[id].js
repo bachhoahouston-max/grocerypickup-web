@@ -134,7 +134,7 @@ function StoreDetails({ loader, toaster }) {
   };
 
   const details = [
-    { label: t("Address"), value: getText("address", "address_v"), icon: MapPin },
+    { label: t("Address"), value: store?.address, icon: MapPin },
     { label: t("Phone"), value: store?.phone, icon: Phone, href: `tel:${store?.phone}` },
     { label: t("Email"), value: store?.email, icon: Mail, href: `mailto:${store?.email}` },
     { label: t("Website"), value: store?.website, icon: Globe, href: store?.website },
