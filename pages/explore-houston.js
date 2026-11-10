@@ -94,6 +94,13 @@ const ICON_MAP = {
 
 const DEFAULT_ICON_BACKGROUND = "#edf6ef";
 
+const normalizeSearchText = (value) =>
+  String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[đĐ]/g, "d")
+    .toLowerCase();
+
 function ExploreHouston({ loader, toaster }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
@@ -158,7 +165,7 @@ function ExploreHouston({ loader, toaster }) {
       : categoryById.get(store?.category);
 
   const filteredStores = useMemo(() => {
-    const query = search.trim().toLowerCase();
+    const query = normalizeSearchText(search.trim());
     const matchingStores = stores.filter((store) => {
       const storeCategory = getStoreCategory(store);
       const matchesCategory = !category || storeCategory?._id === category;
@@ -172,9 +179,8 @@ function ExploreHouston({ loader, toaster }) {
         storeCategory?.name,
         storeCategory?.v_name,
       ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
+        .map(normalizeSearchText)
+        .join(" ");
       return matchesCategory && (!query || searchableText.includes(query));
     });
 
@@ -238,7 +244,7 @@ function ExploreHouston({ loader, toaster }) {
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder={t("Search stores")}
-                className="h-12 w-full placeholder-gray-400 rounded-lg border border-gray-200 pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
+                className="h-12 w-full placeholder-gray-500 text-gray-500 rounded-lg border border-gray-200 pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               />
             </label>
             <label className="relative block">
