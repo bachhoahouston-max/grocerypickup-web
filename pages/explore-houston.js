@@ -265,8 +265,8 @@ function ExploreHouston({ loader, toaster }) {
             </label>
           </div>
 
-          <div className="mb-8 overflow-hidden rounded-2xl bg-white px-4 py-3 shadow-sm">
-            <div className="flex gap-3 overflow-x-auto pb-1">
+          <div className={`${category ? "mb-8" : "mb-3"} overflow-hidden rounded-2xl bg-white px-4 py-3 shadow-sm`}>
+            <div className="flex gap-4 overflow-x-auto pb-1">
               <button
                 type="button"
                 onClick={() => setCategory("")}
@@ -308,6 +308,37 @@ function ExploreHouston({ loader, toaster }) {
               })}
             </div>
           </div>
+
+          {!category && (
+            <div className="mb-8 overflow-hidden rounded-2xl bg-white px-4 py-3 shadow-sm">
+              <div className="flex flex-wrap gap-3 overflow--auto pb-1">
+                {categories.map((item) => {
+                  const Icon = ICON_MAP[item.icon] || Store;
+                  return (
+                    <button
+                      key={item._id}
+                      type="button"
+                      onClick={() => setCategory(item._id)}
+                      aria-pressed={category === item._id}
+                      className="flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-gray-600 transition"
+                    >
+                      {item.image ? (
+                        <img src={item.image} alt="" className="h-11 w-11 rounded-full object-cover" />
+                      ) : (
+                        <span
+                          className="flex h-11 w-11 items-center justify-center rounded-full text-[#206B3A]"
+                          style={{ backgroundColor: item.iconBackground || DEFAULT_ICON_BACKGROUND }}
+                        >
+                          <Icon size={22} />
+                        </span>
+                      )}
+                      <span className="max-w-24 truncate">{getCategoryName(item)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {loading ? null : filteredStores.length > 0 ? (
             <div className="mx-auto grid max-w-7xl gap-4">
