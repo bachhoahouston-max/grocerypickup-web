@@ -52,7 +52,7 @@ function StoreDetails({ loader, toaster }) {
         if (response?.status) setComments(Array.isArray(response.data) ? response.data : []);
       })
       .catch((error) => {
-        toaster?.({ type: "error", message: error?.message || t("Unable to load comments") });
+        toaster?.({ type: "error", message: error?.message || t("Unable to load live chat") });
       })
       .finally(() => setCommentsLoading(false));
   };
@@ -124,12 +124,12 @@ function StoreDetails({ loader, toaster }) {
     setCommentSubmitting(true);
     Api("post", `createStoreComment/${router.query.id}`, { comment }, router)
       .then((response) => {
-        if (!response?.status) throw new Error(response?.message || t("Unable to submit comment"));
+        if (!response?.status) throw new Error(response?.message || t("Unable to send message"));
         setCommentText("");
         return loadComments(router.query.id);
       })
-      .then(() => toaster?.({ type: "success", message: t("Comment submitted successfully") }))
-      .catch((error) => toaster?.({ type: "error", message: error?.message || t("Unable to submit comment") }))
+      .then(() => toaster?.({ type: "success", message: t("Message sent successfully") }))
+      .catch((error) => toaster?.({ type: "error", message: error?.message || t("Unable to send message") }))
       .finally(() => setCommentSubmitting(false));
   };
 
@@ -169,112 +169,128 @@ function StoreDetails({ loader, toaster }) {
           ) : store ? (
             <div>
               <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
-              <div className="relative h-64 bg-[#edf6ef] md:h-96">
-                {store.image ? (
-                  <img src={store.image} alt={title} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-[#206B3A]">
-                    <Tag size={88} strokeWidth={1.2} />
-                  </div>
-                )}
-                {categoryName && (
-                  <span className="absolute left-5 top-5 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-[#206B3A] shadow-sm">
-                    {categoryName}
-                  </span>
-                )}
-              </div>
-              <div className="p-6 md:p-10">
-                <div className="flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">{title}</h1>
-                    {/* {store.verification && (
+                <div className="relative h-64 bg-[#edf6ef] md:h-96">
+                  {store.image ? (
+                    <img src={store.image} alt={title} className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-[#206B3A]">
+                      <Tag size={88} strokeWidth={1.2} />
+                    </div>
+                  )}
+                  {categoryName && (
+                    <span className="absolute left-5 top-5 rounded-full bg-white/95 px-4 py-2 text-sm font-semibold text-[#206B3A] shadow-sm">
+                      {categoryName}
+                    </span>
+                  )}
+                </div>
+                <div className="p-6 md:p-10">
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <div>
+                      <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">{title}</h1>
+                      {/* {store.verification && (
                       <p className="mt-3 inline-flex items-center gap-2 text-sm text-[#206B3A]">
                         <CheckCircle2 size={17} />
                         {store.verification}
                       </p>
                     )} */}
+                    </div>
                   </div>
+                  <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
+                    {getText("shortDescription", "shortDescription_v")}
+                  </p>
+                  <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-gray-600">
+                    <Eye size={18} className="text-[#206B3A]" />
+                    {store.viewCount || 0} {t("views")}
+                  </p>
+                  {details.length > 0 && (
+                    <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                      {details.map(({ label, value, icon: Icon, href }) => (
+                        <div key={label} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                          <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            <Icon size={16} className="text-[#206B3A]" />
+                            {label}
+                          </p>
+                          {href ? (
+                            <a
+                              href={href}
+                              target={href.startsWith("http") ? "_blank" : undefined}
+                              rel={href.startsWith("http") ? "noreferrer" : undefined}
+                              className="mt-2 block break-words text-sm text-gray-800 hover:text-[#206B3A] hover:underline"
+                            >
+                              {value}
+                            </a>
+                          ) : (
+                            <p className="mt-2 text-sm text-gray-800">{value}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
-                  {getText("shortDescription", "shortDescription_v")}
-                </p>
-                <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-gray-600">
-                  <Eye size={18} className="text-[#206B3A]" />
-                  {store.viewCount || 0} {t("views")}
-                </p>
-                {details.length > 0 && (
-                  <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                    {details.map(({ label, value, icon: Icon, href }) => (
-                      <div key={label} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
-                          <Icon size={16} className="text-[#206B3A]" />
-                          {label}
-                        </p>
-                        {href ? (
-                          <a
-                            href={href}
-                            target={href.startsWith("http") ? "_blank" : undefined}
-                            rel={href.startsWith("http") ? "noreferrer" : undefined}
-                            className="mt-2 block break-words text-sm text-gray-800 hover:text-[#206B3A] hover:underline"
-                          >
-                            {value}
-                          </a>
-                        ) : (
-                          <p className="mt-2 text-sm text-gray-800">{value}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
               </article>
               <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
-              <div className="flex items-center gap-2">
-                <MessageCircle size={21} className="text-[#206B3A]" />
-                <h2 className="text-2xl font-bold text-gray-900">{t("Comments")}</h2>
-                <span className="text-sm text-gray-500">({comments.length})</span>
-              </div>
-              <div className="mt-5 space-y-4">
-                {commentsLoading ? (
-                  <p className="text-sm text-gray-500">{t("Loading comments...")}</p>
-                ) : comments.length ? (
-                  comments.map((item) => (
-                    <div key={item._id} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                      <p className="font-semibold text-gray-900">
-                        {[item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
-                          t("Customer")}
-                      </p>
-                      <p className="mt-1 whitespace-pre-wrap text-sm leading-6 text-gray-700">{item.comment}</p>
-                      <p className="mt-2 text-xs text-gray-500">
-                        {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ""}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-500">
-                    {t("No comments yet")}
-                  </p>
-                )}
-              </div>
-              <form onSubmit={submitComment} className="mt-6">
-                <textarea
-                  value={commentText}
-                  onChange={(event) => setCommentText(event.target.value)}
-                  placeholder={isLoggedIn ? t("Write a comment") : t("Sign in to comment")}
-                  disabled={!isLoggedIn || commentSubmitting}
-                  maxLength={2000}
-                  rows={4}
-                  className="w-full rounded-xl border border-gray-200 p-4 text-sm outline-none focus:border-[#206B3A] disabled:bg-gray-100"
-                />
-                <button
-                  type="submit"
-                  disabled={commentSubmitting || (isLoggedIn && !commentText.trim())}
-                  className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#206B3A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#18532d] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  <Send size={16} />
-                  {isLoggedIn ? t("Post comment") : t("Sign in to comment")}
-                </button>
-              </form>
+                <div className="flex items-center gap-2">
+                  {/* <MessageCircle size={21} className="text-[#206B3A]" /> */}
+                  <h2 className="text-2xl font-bold text-gray-900">{t("Live chat")}</h2>
+                  <span className="text-sm text-gray-500">({comments.length})</span>
+
+                  <span className="text-[#206B3A] text-sm bg-green-200 px-3 py-0.5 rounded font-medium flex gap-1.5 items-center">
+                    <span className="bg-[#206B3A] rounded-full w-1.5 h-1.5 animate-pulse"></span>
+                    Live
+                  </span>
+                </div>
+                <div>
+                  <p className="text-base font-medium text-gray-500">{t("Join the Conversation")}</p>
+                </div>
+                <div className="mt-5 space-y-4">
+                  {commentsLoading ? (
+                    <p className="text-sm text-gray-500">{t("Loading live chat...")}</p>
+                  ) : comments.length ? (
+                    comments.map((item) => (
+                      <div key={item._id} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 bg-custom-green rounded-full flex items-center justify-center">
+                            <p className="text-white font-medium text-sm">
+                              {user?.username?.charAt(0).toUpperCase() || "T"}
+                            </p>
+                          </div>
+                          <p className="font-semibold text-gray-900">
+                            {[item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
+                              t("Customer")}
+                          </p>
+                          <span className="bg-gray-400 w-1 h-1 rounded-full"></span>
+                          <p className="text-xs text-gray-500">
+                            {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ""}
+                          </p>
+                        </div>
+                        <p className="ml-10 whitespace-pre-wrap text-sm leading-6 text-gray-700">{item.comment}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-500">
+                      {t("No messages yet")}
+                    </p>
+                  )}
+                </div>
+                <form onSubmit={submitComment} className="mt-6">
+                  <textarea
+                    value={commentText}
+                    onChange={(event) => setCommentText(event.target.value)}
+                    placeholder={isLoggedIn ? t("Write a message") : t("Sign in to live chat")}
+                    disabled={!isLoggedIn || commentSubmitting}
+                    maxLength={2000}
+                    rows={1}
+                    className="w-full placeholder-gray-500 text-gray-500 rounded-md border border-gray-200 p-4 text-sm outline-none focus:border-[#206B3A] disabled:bg-gray-100"
+                  />
+                  <button
+                    type="submit"
+                    disabled={commentSubmitting || (isLoggedIn && !commentText.trim())}
+                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#206B3A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#18532d] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Send size={16} />
+                    {isLoggedIn ? t("Send live chat") : t("Sign in to live chat")}
+                  </button>
+                </form>
               </section>
             </div>
           ) : (
