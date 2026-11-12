@@ -250,9 +250,9 @@ function ExploreHouston({ loader, toaster }) {
           content={t("Local businesses and places recommended by the community")}
         />
       </Head>
-      <main className="min-h-screen bg-[#faf9f6] px-4 py-8 md:px-10 md:py-12">
+      <main className="min-h-screen bg-white px-4 py-8 md:px-10 md:py-12">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#cfe8cf] bg-[#e8f6e6] px-3 py-3 shadow-sm md:mb-8 md:gap-6 md:px-8 md:py-5">
+          <div className="flex items-center gap-3 rounded-2xl border border-[#cfe8cf] bg-[#e8f6e6] px-3 py-3 shadow-sm md:mb-8 md:gap-6 md:px-8 md:py-5">
             <StoreCommunityIcon className="h-14 w-14 shrink-0 md:h-20 md:w-20" />
             <div className="h-14 w-px bg-[#bcdcbc] md:h-16" />
             <div className="min-w-0 flex-1">
@@ -280,23 +280,7 @@ function ExploreHouston({ loader, toaster }) {
                 className="h-12 w-full placeholder-gray-500 text-gray-500 rounded-lg border border-gray-200 pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               />
             </label>
-            <label className="relative block">
-              <span className="sr-only">{t("Sort By")}</span>
-              <select
-                value={sortBy}
-                onChange={(event) => setSortBy(event.target.value)}
-                className="h-12 w-full appearance-none rounded-lg border border-gray-200 bg-white px-4 pr-10 text-sm text-gray-700 outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
-              >
-                <option value="newest">{t("Newest")}</option>
-                <option value="oldest">{t("Oldest")}</option>
-                <option value="mostViewed">{t("Most viewed")}</option>
-                <option value="name">{t("Name A-Z")}</option>
-              </select>
-              <ChevronDown
-                size={18}
-                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-              />
-            </label>
+
           </div>
 
           <div className="relative mb-3 flex items-center gap-1 py-1">
@@ -355,7 +339,7 @@ function ExploreHouston({ loader, toaster }) {
                     type="button"
                     onClick={() => setCategory(item._id)}
                     aria-pressed={active}
-                    className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold transition md:text-sm ${active
+                    className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 text-xs font-semibold transition md:text-sm ${active
                       ? "border-[#206B3A] bg-[#206B3A] text-white"
                       : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
                       }`}
@@ -373,7 +357,7 @@ function ExploreHouston({ loader, toaster }) {
           </div>
 
           {!category && categories.length > 0 && (
-            <div className="mb-8 grid grid-cols-3 gap-2 md:grid-cols-4 md:gap-3 lg:grid-cols-6">
+            <div className="mb-2 grid grid-cols-3 gap-1 md:grid-cols-4 md:gap-3 lg:grid-cols-6">
               {categories.map((item, index) => {
                 const Icon = ICON_MAP[item.icon] || Store;
                 const tone = CATEGORY_TONES[index % CATEGORY_TONES.length];
@@ -382,7 +366,7 @@ function ExploreHouston({ loader, toaster }) {
                     key={item._id}
                     type="button"
                     onClick={() => setCategory(item._id)}
-                    className="flex min-w-0 items-center gap-2 rounded-xl border border-[#ebe9e2] bg-[#f5f4ef] px-2 py-2.5 text-left shadow-sm transition hover:bg-[#efeee8] hover:shadow-md md:gap-3 md:px-3 md:py-3"
+                    className="flex min-w-0 items-center gap-2 py-0.5 rounded-lg border border-[#ebe9e2] bg-white px-2 text-left shadow-sm transition hover:bg-[#efeee8] hover:shadow-md md:gap-3 md:px-3 md:py-3"
                   >
                     {item.image ? (
                       <img src={item.image} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover md:h-11 md:w-11" />
@@ -397,7 +381,7 @@ function ExploreHouston({ loader, toaster }) {
                         <Icon size={18} />
                       </span>
                     )}
-                    <span className="min-w-0 break-words text-[11px] font-semibold leading-tight text-gray-700 md:text-sm">
+                    <span className="min-w-0 break-words text-[10px] font-normal leading-tight text-black md:text-sm">
                       {getCategoryName(item)}
                     </span>
                   </button>
@@ -407,7 +391,7 @@ function ExploreHouston({ loader, toaster }) {
           )}
 
           {loading ? null : filteredStores.length > 0 ? (
-            <div className="mx-auto grid max-w-7xl gap-4">
+            <div className="mx-auto grid max-w-7xl gap-2">
               {filteredStores.map((store) => {
                 const storeCategory = getStoreCategory(store);
                 const Icon = ICON_MAP[storeCategory?.icon] || Store;
@@ -426,9 +410,9 @@ function ExploreHouston({ loader, toaster }) {
                         router.push(`/explore-houston/${store._id}`);
                       }
                     }}
-                    className="group cursor-pointer w-full relative flex items-center overflow-hidden rounded-2xl border border-gray-100 bg-white p-3 shadow-sm hover:shadow-md sm:p-4"
+                    className="group cursor-pointer w-full relative flex items-center overflow-hidden rounded-2xl border border-gray-100 bg-white p-1 shadow-sm hover:shadow-md sm:p-1"
                   >
-                    <div className="relative h-[120px] w-[36%] min-w-[110px] shrink-0 overflow-hidden rounded-xl bg-[#edf6ef] sm:h-[150px] sm:w-[230px]">
+                    <div className="relative h-[170px] w-[42%] min-w-[130px] shrink-0 overflow-hidden rounded-xl bg-[#edf6ef] sm:h-[210px] sm:w-[320px]">
                       {store.image ? (
                         <img
                           src={store.image}
