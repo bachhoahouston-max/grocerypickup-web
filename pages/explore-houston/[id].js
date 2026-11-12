@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   Building2,
   CheckCircle2,
+  Clock,
   Eye,
   Globe,
   Mail,
@@ -17,6 +18,9 @@ import {
 } from "lucide-react";
 import { Api } from "@/services/service";
 import { userContext } from "@/pages/_app";
+import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
+
+const DAY_LABELS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function StoreDetails({ loader, toaster }) {
   const router = useRouter();
@@ -44,6 +48,8 @@ function StoreDetails({ loader, toaster }) {
     : category?.name || category?.v_name;
   const title = getText("title", "title_v") || t("Store details");
   const isLoggedIn = Boolean(user?._id || user?.id || user?.token);
+  const openStatus = getStoreOpenStatus(store);
+  const hasHours = Array.isArray(store?.openingHours) && store.openingHours.length > 0;
 
   const loadComments = (storeId) => {
     setCommentsLoading(true);
@@ -198,10 +204,47 @@ function StoreDetails({ loader, toaster }) {
                   <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
                     {getText("shortDescription", "shortDescription_v")}
                   </p>
-                  <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-gray-600">
-                    <Eye size={18} className="text-[#206B3A]" />
-                    {store.viewCount || 0} {t("views")}
-                  </p>
+                  <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+                    <p className="inline-flex items-center gap-2 text-sm font-medium text-gray-600">
+                      <Eye size={18} className="text-[#206B3A]" />
+                      {store.viewCount || 0} {t("views")}
+                    </p>
+                    {openStatus && (
+                      <p
+                        className={`inline-flex items-center gap-2 text-sm font-semibold ${openStatus.isOpen ? "text-green-600" : "text-red-500"}`}
+                      >
+                        <Clock size={18} />
+                        {openStatus.isOpen ? t("Open") : t("Closed")}
+                      </p>
+                    )}
+                  </div>
+                  {hasHours && (
+                    <div className="mt-6 max-w-md rounded-xl border border-gray-100 bg-gray-50 p-4">
+                      <p className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        <Clock size={16} className="text-[#206B3A]" />
+                        {t("Opening hours")}
+                      </p>
+                      <ul className="space-y-1 text-sm">
+                        {[1, 2, 3, 4, 5, 6, 0].map((day) => {
+                          const entry = store.openingHours.find((item) => item.day === day);
+                          const isToday = openStatus?.todayHours?.day === day;
+                          return (
+                            <li
+                              key={day}
+                              className={`flex justify-between gap-4 ${isToday ? "font-semibold text-gray-900" : "text-gray-600"}`}
+                            >
+                              <span>{t(DAY_LABELS[day])}</span>
+                              <span>
+                                {!entry || entry.isClosed
+                                  ? t("Closed")
+                                  : `${formatTime(entry.open)} - ${formatTime(entry.close)}`}
+                              </span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
                   {details.length > 0 && (
                     <div className="mt-8 grid gap-4 sm:grid-cols-2">
                       {details.map(({ label, value, icon: Icon, href }) => (

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ import {
   Camera,
   Car,
   ChevronDown,
+  Clock,
   Coffee,
   Cookie,
   Carrot,
@@ -49,6 +50,7 @@ import {
   Phone,
 } from "lucide-react";
 import { Api } from "@/services/service";
+import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 import { StoreCommunityIcon } from "@/components/ExploreHoustonBanner";
 
 const ICON_MAP = {
@@ -94,6 +96,17 @@ const ICON_MAP = {
 
 const DEFAULT_ICON_BACKGROUND = "#edf6ef";
 
+// Pastel icon tones cycled across category cards when a category has no custom color.
+const CATEGORY_TONES = [
+  { bg: "#fde8dc", fg: "#e0742f" },
+  { bg: "#fbe3e3", fg: "#d64545" },
+  { bg: "#ece3f8", fg: "#7e4fc4" },
+  { bg: "#dfeaf8", fg: "#3a73c4" },
+  { bg: "#e1f0e3", fg: "#3f8f55" },
+  { bg: "#fdf0d5", fg: "#d9a31f" },
+  { bg: "#d9f0f3", fg: "#2a97a8" },
+];
+
 const normalizeSearchText = (value) =>
   String(value || "")
     .normalize("NFD")
@@ -110,6 +123,27 @@ function ExploreHouston({ loader, toaster }) {
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [loading, setLoading] = useState(true);
+  const chipRowRef = useRef(null);
+  const dragRef = useRef(null);
+  const suppressClickRef = useRef(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  // Mouse wheel scrolls the chip row sideways (needs a non-passive listener to stop page scroll).
+  useEffect(() => {
+    const row = chipRowRef.current;
+    if (!row) return undefined;
+    const onWheel = (event) => {
+      const canScroll = row.scrollWidth > row.clientWidth;
+      if (!canScroll || Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      const atStart = row.scrollLeft <= 0 && event.deltaY < 0;
+      const atEnd = row.scrollLeft + row.clientWidth >= row.scrollWidth - 1 && event.deltaY > 0;
+      if (atStart || atEnd) return;
+      event.preventDefault();
+      row.scrollLeft += event.deltaY;
+    };
+    row.addEventListener("wheel", onWheel, { passive: false });
+    return () => row.removeEventListener("wheel", onWheel);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -216,7 +250,7 @@ function ExploreHouston({ loader, toaster }) {
           content={t("Local businesses and places recommended by the community")}
         />
       </Head>
-      <main className="min-h-screen bg-[var(--theme-var)] px-4 py-8 md:px-10 md:py-12">
+      <main className="min-h-screen bg-[#faf9f6] px-4 py-8 md:px-10 md:py-12">
         <div className="mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#cfe8cf] bg-[#e8f6e6] px-3 py-3 shadow-sm md:mb-8 md:gap-6 md:px-8 md:py-5">
             <StoreCommunityIcon className="h-14 w-14 shrink-0 md:h-20 md:w-20" />
@@ -231,7 +265,7 @@ function ExploreHouston({ loader, toaster }) {
             </div>
           </div>
 
-          <div className="mb-4 grid gap-3 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1fr_260px]">
+          <div className="mb-3 grid gap-3 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1fr_260px]">
             <label className="relative block">
               <span className="sr-only">{t("Search stores")}</span>
               <Search
@@ -265,78 +299,110 @@ function ExploreHouston({ loader, toaster }) {
             </label>
           </div>
 
-          <div className={`${category ? "mb-8" : "mb-3"} overflow-hidden rounded-2xl bg-white px-4 py-3 shadow-sm`}>
-            <div className="flex gap-4 overflow-x-auto pb-1">
+          <div className="relative mb-3 flex items-center gap-1 py-1">
+            <div
+              ref={chipRowRef}
+              onPointerDown={(event) => {
+                if (event.pointerType !== "mouse" || event.button !== 0) return;
+                const row = chipRowRef.current;
+                dragRef.current = { startX: event.clientX, startLeft: row.scrollLeft, moved: false };
+              }}
+              onPointerMove={(event) => {
+                const drag = dragRef.current;
+                if (!drag) return;
+                const delta = event.clientX - drag.startX;
+                if (!drag.moved && Math.abs(delta) > 5) {
+                  drag.moved = true;
+                  setIsDragging(true);
+                }
+                if (drag.moved) chipRowRef.current.scrollLeft = drag.startLeft - delta;
+              }}
+              onPointerUp={() => {
+                suppressClickRef.current = !!dragRef.current?.moved;
+                dragRef.current = null;
+                setIsDragging(false);
+              }}
+              onPointerLeave={() => {
+                dragRef.current = null;
+                setIsDragging(false);
+              }}
+              onClickCapture={(event) => {
+                if (suppressClickRef.current) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  suppressClickRef.current = false;
+                }
+              }}
+              className={`flex min-w-0 flex-1 gap-2 overflow-x-auto pb-1 select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+            >
               <button
                 type="button"
                 onClick={() => setCategory("")}
                 aria-pressed={!category}
-                className={`flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${!category ? "bg-[#edf6ef] text-[#206B3A]" : "text-gray-600 hover:bg-gray-50"
+                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition md:text-sm ${!category
+                  ? "border-[#206B3A] bg-[#206B3A] text-white"
+                  : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
                   }`}
               >
-                <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#edf6ef] text-[#206B3A]">
-                  <Store size={22} />
-                </span>
-                <span className="max-w-24 truncate">{t("All categories")}</span>
+                {t("All")}
               </button>
               {categories.map((item) => {
                 const Icon = ICON_MAP[item.icon] || Store;
+                const active = category === item._id;
                 return (
                   <button
                     key={item._id}
                     type="button"
                     onClick={() => setCategory(item._id)}
-                    aria-pressed={category === item._id}
-                    className={`flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition ${category === item._id
-                      ? "bg-[#edf6ef] text-[#206B3A]"
-                      : "text-gray-600 hover:bg-gray-50"
+                    aria-pressed={active}
+                    className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold transition md:text-sm ${active
+                      ? "border-[#206B3A] bg-[#206B3A] text-white"
+                      : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
                       }`}
                   >
                     {item.image ? (
-                      <img src={item.image} alt="" className="h-11 w-11 rounded-full object-cover" />
+                      <img src={item.image} alt="" className="h-4 w-4 rounded-full object-cover" />
                     ) : (
-                      <span
-                        className="flex h-11 w-11 items-center justify-center rounded-full text-[#206B3A]"
-                        style={{ backgroundColor: item.iconBackground || DEFAULT_ICON_BACKGROUND }}
-                      >
-                        <Icon size={22} />
-                      </span>
+                      <Icon size={15} className={active ? "text-white" : "text-[#206B3A]"} />
                     )}
-                    <span className="max-w-24 truncate">{getCategoryName(item)}</span>
+                    {getCategoryName(item)}
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {!category && (
-            <div className="mb-8 overflow-hidden rounded-2xl bg-white px-4 py-3 shadow-sm">
-              <div className="flex flex-wrap gap-3 overflow--auto pb-1">
-                {categories.map((item) => {
-                  const Icon = ICON_MAP[item.icon] || Store;
-                  return (
-                    <button
-                      key={item._id}
-                      type="button"
-                      onClick={() => setCategory(item._id)}
-                      aria-pressed={category === item._id}
-                      className="flex min-w-[78px] shrink-0 flex-col items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-gray-600 transition"
-                    >
-                      {item.image ? (
-                        <img src={item.image} alt="" className="h-11 w-11 rounded-full object-cover" />
-                      ) : (
-                        <span
-                          className="flex h-11 w-11 items-center justify-center rounded-full text-[#206B3A]"
-                          style={{ backgroundColor: item.iconBackground || DEFAULT_ICON_BACKGROUND }}
-                        >
-                          <Icon size={22} />
-                        </span>
-                      )}
-                      <span className="max-w-24 truncate">{getCategoryName(item)}</span>
-                    </button>
-                  );
-                })}
-              </div>
+          {!category && categories.length > 0 && (
+            <div className="mb-8 grid grid-cols-3 gap-2 md:grid-cols-4 md:gap-3 lg:grid-cols-6">
+              {categories.map((item, index) => {
+                const Icon = ICON_MAP[item.icon] || Store;
+                const tone = CATEGORY_TONES[index % CATEGORY_TONES.length];
+                return (
+                  <button
+                    key={item._id}
+                    type="button"
+                    onClick={() => setCategory(item._id)}
+                    className="flex min-w-0 items-center gap-2 rounded-xl border border-[#ebe9e2] bg-[#f5f4ef] px-2 py-2.5 text-left shadow-sm transition hover:bg-[#efeee8] hover:shadow-md md:gap-3 md:px-3 md:py-3"
+                  >
+                    {item.image ? (
+                      <img src={item.image} alt="" className="h-9 w-9 shrink-0 rounded-full object-cover md:h-11 md:w-11" />
+                    ) : (
+                      <span
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full md:h-11 md:w-11"
+                        style={{
+                          backgroundColor: item.iconBackground || tone.bg,
+                          color: item.iconBackground ? "#206B3A" : tone.fg,
+                        }}
+                      >
+                        <Icon size={18} />
+                      </span>
+                    )}
+                    <span className="min-w-0 break-words text-[11px] font-semibold leading-tight text-gray-700 md:text-sm">
+                      {getCategoryName(item)}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -346,6 +412,7 @@ function ExploreHouston({ loader, toaster }) {
                 const storeCategory = getStoreCategory(store);
                 const Icon = ICON_MAP[storeCategory?.icon] || Store;
                 const storeTitle = getText(store, "title", "title_v");
+                const openStatus = getStoreOpenStatus(store);
                 return (
                   <article
                     key={store._id}
@@ -359,9 +426,9 @@ function ExploreHouston({ loader, toaster }) {
                         router.push(`/explore-houston/${store._id}`);
                       }
                     }}
-                    className="group cursor-pointer w-full relative flex min-h-[170px] overflow-hidden rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md"
+                    className="group cursor-pointer w-full relative flex items-center overflow-hidden rounded-2xl border border-gray-100 bg-white p-3 shadow-sm hover:shadow-md sm:p-4"
                   >
-                    <div className="relative h-[154px] w-[38%] min-w-[132px] overflow-hidden rounded-xl bg-[#edf6ef] sm:w-[230px]">
+                    <div className="relative h-[120px] w-[36%] min-w-[110px] shrink-0 overflow-hidden rounded-xl bg-[#edf6ef] sm:h-[150px] sm:w-[230px]">
                       {store.image ? (
                         <img
                           src={store.image}
@@ -378,34 +445,27 @@ function ExploreHouston({ loader, toaster }) {
                       )}
                     </div>
                     <div className="min-w-0 flex-1 px-3 pb-2 sm:px-5">
-                      <div className="flex items-start gap-3">
-                        <div className="min-w-0">
-                          <div className="mb-1 flex flex-wrap items-center gap-2">
-                            <h2 className="truncate text-lg font-bold text-gray-900 sm:text-xl">
-                              {storeTitle}
-                            </h2>
-                          </div>
-                          {storeCategory && (
-                            <span className="rounded-md bg-[#fff3e8] px-2.5 py-1 text-[11px] font-semibold text-[#c87831]">
-                              {getCategoryName(storeCategory)}
-                            </span>
-                          )}
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm font-bold text-gray-600 mt-2">
-                            <span className="inline-flex items-center gap-1">
-                              <Eye size={16} />
-                              {store.viewCount || 0} {t("views")}
-                            </span>
-                            <span className="inline-flex items-center gap-1">
-                              <MessageCircle size={16} />
-                              {store.commentCount || 0}
-                            </span>
-                          </div>
-                        </div>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                        <h2 className="min-w-0 max-w-full truncate text-base font-bold text-gray-900 sm:text-xl">
+                          {storeTitle}
+                        </h2>
+                        {storeCategory && (
+                          <span className="shrink-0 rounded-full bg-[#fff3e8] px-2.5 py-0.5 text-[11px] font-semibold text-[#c87831]">
+                            {getCategoryName(storeCategory)}
+                          </span>
+                        )}
                       </div>
-                      <p className="mt-2 line-clamp-2 text-sm leading-5 text-gray-600">
-                        {getText(store, "shortDescription", "shortDescription_v")}
-                      </p>
-                      <div className="mt-3 space-y-1 text-xs text-gray-600">
+                      <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-gray-500 sm:text-sm">
+                        <span className="inline-flex items-center gap-1">
+                          <Eye size={15} />
+                          {store.viewCount || 0} {t("views")}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <MessageCircle size={15} />
+                          {store.commentCount || 0}
+                        </span>
+                      </div>
+                      <div className="mt-2 space-y-1 text-xs text-gray-600 sm:text-sm">
                         <p className="flex items-start gap-2">
                           <MapPin size={15} className="mt-0.5 shrink-0 text-gray-500" />
                           <span className="line-clamp-2">{store.address}</span>
@@ -416,17 +476,20 @@ function ExploreHouston({ loader, toaster }) {
                             <span>{store.phone}</span>
                           </p>
                         )}
+                        {openStatus && (
+                          <p className="flex items-center gap-2 font-semibold">
+                            <Clock size={14} className={`shrink-0 ${openStatus.isOpen ? "text-green-600" : "text-red-500"}`} />
+                            <span className={openStatus.isOpen ? "text-green-600" : "text-red-500"}>
+                              {openStatus.isOpen ? t("Open") : t("Closed")}
+                            </span>
+                            {openStatus.todayHours && !openStatus.todayHours.isClosed && (
+                              <span className="font-normal text-gray-500">
+                                {formatTime(openStatus.todayHours.open)} - {formatTime(openStatus.todayHours.close)}
+                              </span>
+                            )}
+                          </p>
+                        )}
                       </div>
-                      <button
-                        type="button"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          router.push(`/explore-houston/${store._id}`);
-                        }}
-                        className="mt-3 cursor-pointer text-sm font-semibold bg-[#206B3A] text-white px-3 py-1.5 rounded transition focus:outline-none focus:ring-2 focus:ring-[#206B3A] focus:ring-offset-2"
-                      >
-                        {t("View Store")}
-                      </button>
                     </div>
                     {/* <span
                       aria-hidden="true"
