@@ -391,7 +391,7 @@ function ExploreHouston({ loader, toaster }) {
           )}
 
           {loading ? null : filteredStores.length > 0 ? (
-            <div className="mx-auto grid max-w-7xl gap-2">
+            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
               {filteredStores.map((store) => {
                 const storeCategory = getStoreCategory(store);
                 const Icon = ICON_MAP[storeCategory?.icon] || Store;
@@ -412,7 +412,7 @@ function ExploreHouston({ loader, toaster }) {
                     }}
                     className="group cursor-pointer w-full relative flex items-center overflow-hidden rounded-2xl border border-gray-100 bg-white p-1 shadow-sm hover:shadow-md sm:p-1"
                   >
-                    <div className="relative h-[170px] w-[42%] min-w-[130px] shrink-0 overflow-hidden rounded-xl bg-[#edf6ef] sm:h-[210px] sm:w-[320px]">
+                    <div className="relative h-[170px] w-[42%] min-w-[130px] shrink-0 overflow-hidden rounded-xl bg-[#edf6ef] sm:h-[210px] sm:w-[320px] lg:w-[230px]">
                       {store.image ? (
                         <img
                           src={store.image}
