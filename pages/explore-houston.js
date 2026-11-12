@@ -410,14 +410,14 @@ function ExploreHouston({ loader, toaster }) {
                         router.push(`/explore-houston/${store._id}`);
                       }
                     }}
-                    className="group cursor-pointer w-full relative flex items-center overflow-hidden rounded-2xl border border-gray-100 bg-white p-1 shadow-sm hover:shadow-md sm:p-1"
+                    className="group cursor-pointer w-full relative flex items-stretch overflow-hidden rounded-2xl border border-gray-100 bg-white p-1 shadow-sm hover:shadow-md sm:p-1"
                   >
-                    <div className="relative h-[170px] w-[42%] min-w-[130px] shrink-0 overflow-hidden rounded-xl bg-[#edf6ef] sm:h-[210px] sm:w-[320px] lg:w-[230px]">
+                    <div className="relative min-h-[150px] w-[46%] min-w-[140px] shrink-0 self-stretch overflow-hidden rounded-xl bg-[#edf6ef] sm:min-h-[190px] sm:w-[340px] lg:w-[250px]">
                       {store.image ? (
                         <img
                           src={store.image}
                           alt={storeTitle}
-                          className="h-full w-full object-cover"
+                          className="absolute inset-0 h-full w-full object-cover"
                         />
                       ) : (
                         <div
@@ -428,7 +428,7 @@ function ExploreHouston({ loader, toaster }) {
                         </div>
                       )}
                     </div>
-                    <div className="min-w-0 flex-1 px-3 pb-2 sm:px-5">
+                    <div className="min-w-0 flex-1 px-3 py-2 sm:px-5">
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <h2 className="min-w-0 max-w-full truncate text-base font-bold text-gray-900 sm:text-xl">
                           {storeTitle}
