@@ -231,6 +231,36 @@ function ExploreHouston({ loader, toaster }) {
     });
   }, [category, search, sortBy, stores, categoryById]);
 
+  // Back button: first press clears active filters, next press leaves the page.
+  // While a filter is active we push one extra history entry; popping it (back)
+  // clears the filters instead of navigating away.
+  const hasFilter = Boolean(category || search.trim());
+  const filterEntryRef = useRef(false);
+
+  useEffect(() => {
+    if (hasFilter && !filterEntryRef.current) {
+      window.history.pushState({ ...(window.history.state || {}), exploreFilter: true }, "", window.location.href);
+      filterEntryRef.current = true;
+    } else if (!hasFilter && filterEntryRef.current) {
+      // Filters were cleared manually: drop the extra entry so back works normally.
+      filterEntryRef.current = false;
+      window.history.back();
+    }
+  }, [hasFilter]);
+
+  useEffect(() => {
+    router.beforePopState(() => {
+      if (filterEntryRef.current) {
+        filterEntryRef.current = false;
+        setSearch("");
+        setCategory("");
+        return false;
+      }
+      return true;
+    });
+    return () => router.beforePopState(() => true);
+  }, [router]);
+
   const isVietnamese = i18n.language?.toLowerCase().startsWith("vi");
   const getText = (store, englishKey, vietnameseKey) =>
     isVietnamese
