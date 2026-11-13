@@ -249,16 +249,22 @@ function ExploreHouston({ loader, toaster }) {
   }, [hasFilter]);
 
   useEffect(() => {
-    router.beforePopState(() => {
-      if (filterEntryRef.current) {
-        filterEntryRef.current = false;
-        setSearch("");
-        setCategory("");
-        return false;
-      }
-      return true;
-    });
-    return () => router.beforePopState(() => true);
+    // Next.js skips beforePopState on the first popstate of a page load, so we
+    // listen to popstate ourselves. Next's own listener is registered first and
+    // runs before ours: beforePopState stops it from re-routing while our
+    // extra entry is being popped, then our listener clears the filters.
+    router.beforePopState(() => !filterEntryRef.current);
+    const onPopState = () => {
+      if (!filterEntryRef.current) return;
+      filterEntryRef.current = false;
+      setSearch("");
+      setCategory("");
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+      router.beforePopState(() => true);
+    };
   }, [router]);
 
   const isVietnamese = i18n.language?.toLowerCase().startsWith("vi");
@@ -282,7 +288,7 @@ function ExploreHouston({ loader, toaster }) {
       </Head>
       <main className="min-h-screen bg-white px-4 py-8 md:px-10 md:py-12">
         <div className="mx-auto max-w-7xl">
-          <div className="flex items-center gap-3 rounded-2xl border border-[#cfe8cf] bg-[#e8f6e6] px-3 py-3 shadow-sm md:mb-8 md:gap-6 md:px-8 md:py-5">
+          <div className="flex items-center gap-3 rounded-2xl border border-[#cfe8cf] bg-[#e8f6e6] px-3 py-3 shadow-sm md:mb-5 md:gap-6 md:px-8 md:py-5">
             <StoreCommunityIcon className="h-14 w-14 shrink-0 md:h-20 md:w-20" />
             <div className="h-14 w-px bg-[#bcdcbc] md:h-16" />
             <div className="min-w-0 flex-1">
@@ -295,7 +301,7 @@ function ExploreHouston({ loader, toaster }) {
             </div>
           </div>
 
-          <div className="mb-3 grid gap-3 rounded-2xl bg-white p-4 shadow-sm md:grid-cols-[1fr_260px]">
+          <div className="mb-3 mt-4 grid gap-3 md:mt-0 md:grid-cols-[1fr_260px]">
             <label className="relative block">
               <span className="sr-only">{t("Search stores")}</span>
               <Search

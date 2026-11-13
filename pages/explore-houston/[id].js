@@ -22,6 +22,20 @@ import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 
 const DAY_LABELS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+const timeAgo = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  const minutes = Math.floor((Date.now() - date.getTime()) / 60000);
+  if (!Number.isFinite(minutes)) return "";
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes} min ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hr ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days} day${days > 1 ? "s" : ""} ago`;
+  return date.toLocaleDateString();
+};
+
 function StoreDetails({ loader, toaster }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
@@ -272,43 +286,40 @@ function StoreDetails({ loader, toaster }) {
                 </div>
               </article>
               <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
-                <div className="flex items-center gap-2">
-                  {/* <MessageCircle size={21} className="text-[#206B3A]" /> */}
-                  <h2 className="text-2xl font-bold text-gray-900">{t("Live chat")}</h2>
-                  <span className="text-sm text-gray-500">({comments.length})</span>
-
-                  <span className="text-[#206B3A] text-sm bg-green-200 px-3 py-0.5 rounded font-medium flex gap-1.5 items-center">
-                    <span className="bg-[#206B3A] rounded-full w-1.5 h-1.5 animate-pulse"></span>
-                    Live
+                <div className="flex flex-wrap items-center gap-3">
+                  <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Live chat")}</h2>
+                  <span className="flex items-center gap-1.5 rounded-md bg-[#dff1df] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#206B3A]">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-[#206B3A]"></span>
+                    {t("Live")}
                   </span>
+                  <span className="text-sm text-gray-500">({comments.length})</span>
                 </div>
-                <div>
-                  <p className="text-base font-medium text-gray-500">{t("Join the Conversation")}</p>
-                </div>
-                <div className="mt-5 space-y-4">
+                <p className="mt-1 text-base font-medium text-gray-500">{t("Join the Conversation")}</p>
+                <div className="mt-5 max-h-[420px] space-y-4 overflow-y-auto pr-1">
                   {commentsLoading ? (
                     <p className="text-sm text-gray-500">{t("Loading live chat...")}</p>
                   ) : comments.length ? (
-                    comments.map((item) => (
-                      <div key={item._id} className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 bg-custom-green rounded-full flex items-center justify-center">
-                            <p className="text-white font-medium text-sm">
-                              {user?.username?.charAt(0).toUpperCase() || "T"}
+                    comments.map((item) => {
+                      const name =
+                        [item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
+                        t("Customer");
+                      return (
+                        <div key={item._id} className="flex items-start gap-3">
+                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-base font-semibold text-white md:h-12 md:w-12">
+                            {name.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="flex flex-wrap items-baseline gap-x-2 text-sm">
+                              <span className="font-semibold text-[#1f3d1f]">{name}</span>
+                              <span className="text-xs text-gray-400">· {timeAgo(item.createdAt)}</span>
+                            </p>
+                            <p className="mt-1 inline-block max-w-full whitespace-pre-wrap break-words rounded-2xl bg-gray-100 px-4 py-2 text-sm leading-6 text-gray-800">
+                              {item.comment}
                             </p>
                           </div>
-                          <p className="font-semibold text-gray-900">
-                            {[item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
-                              t("Customer")}
-                          </p>
-                          <span className="bg-gray-400 w-1 h-1 rounded-full"></span>
-                          <p className="text-xs text-gray-500">
-                            {item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ""}
-                          </p>
                         </div>
-                        <p className="ml-10 whitespace-pre-wrap text-sm leading-6 text-gray-700">{item.comment}</p>
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
                     <p className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-500">
                       {t("No messages yet")}
@@ -323,7 +334,7 @@ function StoreDetails({ loader, toaster }) {
                     disabled={!isLoggedIn || commentSubmitting}
                     maxLength={2000}
                     rows={1}
-                    className="w-full placeholder-gray-500 text-gray-500 rounded-md border border-gray-200 p-4 text-sm outline-none focus:border-[#206B3A] disabled:bg-gray-100"
+                    className="w-full rounded-2xl border border-gray-200 bg-gray-100 px-4 py-3 text-sm text-gray-700 placeholder-gray-500 outline-none focus:border-[#206B3A] disabled:bg-gray-100"
                   />
                   <button
                     type="submit"
