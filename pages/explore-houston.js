@@ -38,6 +38,7 @@ import {
   Shirt,
   ShoppingBag,
   Search,
+  Star,
   ShoppingBasket,
   Soup,
   Smartphone,
@@ -476,6 +477,11 @@ function ExploreHouston({ loader, toaster }) {
                         )}
                       </div>
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-gray-500 sm:text-sm">
+                        <span className="inline-flex items-center gap-1 text-amber-500">
+                          <Star size={15} fill="currentColor" />
+                          <span>{Number(store.averageRating || 0).toFixed(1)}</span>
+                          <span className="font-normal text-gray-500">({store.reviewCount || 0})</span>
+                        </span>
                         <span className="inline-flex items-center gap-1">
                           <Eye size={15} />
                           {store.viewCount || 0} {t("views")}
