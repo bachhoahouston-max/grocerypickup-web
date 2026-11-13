@@ -69,6 +69,7 @@ function StoreDetails({ loader, toaster }) {
     : category?.name || category?.v_name;
   const title = getText("title", "title_v") || t("Store details");
   const isLoggedIn = Boolean(user?._id || user?.id || user?.token);
+  const ownReview = reviews.find((review) => review.isMine);
   const openStatus = getStoreOpenStatus(store);
   const hasHours = Array.isArray(store?.openingHours) && store.openingHours.length > 0;
 
@@ -199,6 +200,33 @@ function StoreDetails({ loader, toaster }) {
       })
       .then(() => toaster?.({ type: "success", message: t("Review submitted successfully") }))
       .catch((error) => toaster?.({ type: "error", message: error?.message || t("Unable to submit review") }))
+      .finally(() => setReviewSubmitting(false));
+  };
+
+  const openReviewModal = () => {
+    setSelectedRating(ownReview?.rating || 0);
+    setReviewFeedback(ownReview?.feedback || "");
+    setReviewModalOpen(true);
+  };
+
+  const deleteReview = () => {
+    if (!ownReview?._id || !window.confirm(t("Delete your review?"))) return;
+    setReviewSubmitting(true);
+    Api("delete", `deleteStoreReview/${ownReview._id}`, null, router)
+      .then((response) => {
+        if (!response?.status) throw new Error(response?.message || t("Unable to delete review"));
+        setSelectedRating(0);
+        setReviewFeedback("");
+        setReviewModalOpen(false);
+        setStore((current) => ({
+          ...current,
+          averageRating: response.data.averageRating,
+          reviewCount: response.data.reviewCount,
+        }));
+        return loadReviews(router.query.id);
+      })
+      .then(() => toaster?.({ type: "success", message: t("Review deleted successfully") }))
+      .catch((error) => toaster?.({ type: "error", message: error?.message || t("Unable to delete review") }))
       .finally(() => setReviewSubmitting(false));
   };
 
@@ -411,10 +439,10 @@ function StoreDetails({ loader, toaster }) {
                   </div>
                   <button
                     type="button"
-                    onClick={() => setReviewModalOpen(true)}
+                    onClick={openReviewModal}
                     className="rounded-lg bg-[#206B3A] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#18532d]"
                   >
-                    {t("Add Review")}
+                    {ownReview ? t("Edit your review") : t("Add Review")}
                   </button>
                 </div>
                 <div className="mt-6 space-y-4">
@@ -423,7 +451,14 @@ function StoreDetails({ loader, toaster }) {
                     return (
                       <article key={review._id} className="border-t border-gray-100 pt-4">
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="font-semibold text-gray-800">{name}</span>
+                          <span className="flex flex-wrap items-center gap-2 font-semibold text-gray-800">
+                            {name}
+                            {review.isMine && (
+                              <span className="rounded-full bg-[#dff1df] px-2 py-0.5 text-xs font-semibold text-[#206B3A]">
+                                {t("Your review")}
+                              </span>
+                            )}
+                          </span>
                           <span className="flex items-center gap-1 text-amber-500">
                             <Star size={15} fill="currentColor" /> {review.rating}/5
                           </span>
@@ -453,7 +488,7 @@ function StoreDetails({ loader, toaster }) {
                   >
                     <div className="flex items-center justify-between gap-4">
                       <h2 id="store-review-title" className="text-xl font-bold text-[#1f3d1f]">
-                        {t("Add Review")}
+                        {ownReview ? t("Edit your review") : t("Add Review")}
                       </h2>
                       <button
                         type="button"
@@ -500,8 +535,22 @@ function StoreDetails({ loader, toaster }) {
                         disabled={reviewSubmitting}
                         className="mt-6 w-full rounded-lg bg-[#206B3A] px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
                       >
-                        {isLoggedIn ? t("Submit review") : t("Sign in to review")}
+                        {isLoggedIn
+                          ? ownReview
+                            ? t("Update review")
+                            : t("Submit review")
+                          : t("Sign in to review")}
                       </button>
+                      {ownReview && (
+                        <button
+                          type="button"
+                          onClick={deleteReview}
+                          disabled={reviewSubmitting}
+                          className="mt-3 w-full rounded-lg border border-red-200 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {t("Delete review")}
+                        </button>
+                      )}
                     </form>
                   </div>
                 </div>
