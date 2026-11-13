@@ -46,6 +46,7 @@ function StoreDetails({ loader, toaster }) {
   const [comments, setComments] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
+  const [reviewFeedback, setReviewFeedback] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -178,7 +179,12 @@ function StoreDetails({ loader, toaster }) {
     }
     if (!selectedRating) return;
     setReviewSubmitting(true);
-    Api("post", `createStoreReview/${router.query.id}`, { rating: selectedRating }, router)
+    Api(
+      "post",
+      `createStoreReview/${router.query.id}`,
+      { rating: selectedRating, feedback: reviewFeedback.trim() },
+      router
+    )
       .then((response) => {
         if (!response?.status) throw new Error(response?.message || t("Unable to submit review"));
         setStore((current) => ({
@@ -187,6 +193,7 @@ function StoreDetails({ loader, toaster }) {
           reviewCount: response.data.reviewCount,
         }));
         setSelectedRating(0);
+        setReviewFeedback("");
         setReviewModalOpen(false);
         return loadReviews(router.query.id);
       })
@@ -331,95 +338,7 @@ function StoreDetails({ loader, toaster }) {
                   )}
                 </div>
               </article>
-              <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Store reviews")}</h2>
-                    <span className="text-sm font-semibold text-amber-500">
-                      {Number(store.averageRating || 0).toFixed(1)} / 5 ({store.reviewCount || 0})
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setReviewModalOpen(true)}
-                    className="rounded-lg bg-[#206B3A] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#18532d]"
-                  >
-                    {t("Add Review")}
-                  </button>
-                </div>
-                <div className="mt-6 space-y-4">
-                  {reviews.length ? reviews.map((review) => {
-                    const name = [review.posted_by?.username, review.posted_by?.lastname].filter(Boolean).join(" ") || t("Customer");
-                    return (
-                      <article key={review._id} className="border-t border-gray-100 pt-4">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="font-semibold text-gray-800">{name}</span>
-                          <span className="flex items-center gap-1 text-amber-500">
-                            <Star size={15} fill="currentColor" /> {review.rating}/5
-                          </span>
-                        </div>
-                        <p className="mt-1 text-xs text-gray-400">{timeAgo(review.createdAt)}</p>
-                      </article>
-                    );
-                  }) : <p className="text-sm text-gray-500">{t("No reviews yet")}</p>}
-                </div>
-              </section>
-              {reviewModalOpen && (
-                <div
-                  className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6"
-                  role="presentation"
-                  onMouseDown={(event) => {
-                    if (event.target === event.currentTarget) setReviewModalOpen(false);
-                  }}
-                >
-                  <div
-                    role="dialog"
-                    aria-modal="true"
-                    aria-labelledby="store-review-title"
-                    className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
-                  >
-                    <div className="flex items-center justify-between gap-4">
-                      <h2 id="store-review-title" className="text-xl font-bold text-[#1f3d1f]">
-                        {t("Add Review")}
-                      </h2>
-                      <button
-                        type="button"
-                        onClick={() => setReviewModalOpen(false)}
-                        aria-label={t("Close")}
-                        className="rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-                      >
-                        <X size={20} />
-                      </button>
-                    </div>
-                    <p className="mt-5 text-sm font-medium text-gray-600">
-                      {isLoggedIn ? t("Rate this store") : t("Sign in to review this store")}
-                    </p>
-                    <form onSubmit={submitReview}>
-                      <div className="mt-3 flex items-center justify-center gap-2" role="radiogroup" aria-label={t("Store rating")}>
-                        {[1, 2, 3, 4, 5].map((rating) => (
-                          <button
-                            key={rating}
-                            type="button"
-                            onClick={() => setSelectedRating(rating)}
-                            disabled={!isLoggedIn || reviewSubmitting}
-                            aria-label={`${rating} ${t("stars")}`}
-                            className="rounded p-1 text-amber-400 transition hover:scale-110 disabled:cursor-not-allowed disabled:opacity-50"
-                          >
-                            <Star size={32} fill={rating <= selectedRating ? "currentColor" : "none"} />
-                          </button>
-                        ))}
-                      </div>
-                      <button
-                        type="submit"
-                        disabled={reviewSubmitting}
-                        className="mt-6 w-full rounded-lg bg-[#206B3A] px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        {isLoggedIn ? t("Submit review") : t("Sign in to review")}
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              )}
+
               <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
                 <div className="flex flex-wrap items-center gap-3">
                   <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Live chat")}</h2>
@@ -481,6 +400,112 @@ function StoreDetails({ loader, toaster }) {
                   </button>
                 </form>
               </section>
+
+              <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Store reviews")}</h2>
+                    <span className="text-sm font-semibold text-amber-500">
+                      {Number(store.averageRating || 0).toFixed(1)} / 5 ({store.reviewCount || 0})
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setReviewModalOpen(true)}
+                    className="rounded-lg bg-[#206B3A] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#18532d]"
+                  >
+                    {t("Add Review")}
+                  </button>
+                </div>
+                <div className="mt-6 space-y-4">
+                  {reviews.length ? reviews.map((review) => {
+                    const name = [review.posted_by?.username, review.posted_by?.lastname].filter(Boolean).join(" ") || t("Customer");
+                    return (
+                      <article key={review._id} className="border-t border-gray-100 pt-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="font-semibold text-gray-800">{name}</span>
+                          <span className="flex items-center gap-1 text-amber-500">
+                            <Star size={15} fill="currentColor" /> {review.rating}/5
+                          </span>
+                        </div>
+                        {review.feedback && (
+                          <p className="mt-2 whitespace-pre-wrap break-words text-sm text-gray-600">{review.feedback}</p>
+                        )}
+                        <p className="mt-1 text-xs text-gray-400">{timeAgo(review.createdAt)}</p>
+                      </article>
+                    );
+                  }) : <p className="text-sm text-gray-500">{t("No reviews yet")}</p>}
+                </div>
+              </section>
+              {reviewModalOpen && (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6"
+                  role="presentation"
+                  onMouseDown={(event) => {
+                    if (event.target === event.currentTarget) setReviewModalOpen(false);
+                  }}
+                >
+                  <div
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="store-review-title"
+                    className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <h2 id="store-review-title" className="text-xl font-bold text-[#1f3d1f]">
+                        {t("Add Review")}
+                      </h2>
+                      <button
+                        type="button"
+                        onClick={() => setReviewModalOpen(false)}
+                        aria-label={t("Close")}
+                        className="rounded-full p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+                    <p className="mt-5 text-sm font-medium text-gray-600">
+                      {isLoggedIn ? t("Rate this store") : t("Sign in to review this store")}
+                    </p>
+                    <form onSubmit={submitReview}>
+                      <div className="mt-3 flex items-center justify-center gap-2" role="radiogroup" aria-label={t("Store rating")}>
+                        {[1, 2, 3, 4, 5].map((rating) => (
+                          <button
+                            key={rating}
+                            type="button"
+                            onClick={() => setSelectedRating(rating)}
+                            disabled={!isLoggedIn || reviewSubmitting}
+                            aria-label={`${rating} ${t("stars")}`}
+                            className="rounded p-1 text-amber-400 transition hover:scale-110 disabled:cursor-not-allowed disabled:opacity-50"
+                          >
+                            <Star size={32} fill={rating <= selectedRating ? "currentColor" : "none"} />
+                          </button>
+                        ))}
+                      </div>
+                      <label htmlFor="store-review-feedback" className="mt-5 block text-sm font-medium text-gray-600">
+                        {t("Feedback")} <span className="font-normal text-gray-400">({t("optional")})</span>
+                      </label>
+                      <textarea
+                        id="store-review-feedback"
+                        value={reviewFeedback}
+                        onChange={(event) => setReviewFeedback(event.target.value)}
+                        maxLength={2000}
+                        rows={4}
+                        placeholder={t("Share your feedback")}
+                        disabled={reviewSubmitting}
+                        className="mt-2 w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A] disabled:bg-gray-100"
+                      />
+                      <button
+                        type="submit"
+                        disabled={reviewSubmitting}
+                        className="mt-6 w-full rounded-lg bg-[#206B3A] px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {isLoggedIn ? t("Submit review") : t("Sign in to review")}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="rounded-2xl bg-white px-6 py-20 text-center shadow-sm">
