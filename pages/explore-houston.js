@@ -307,14 +307,14 @@ function ExploreHouston({ loader, toaster }) {
               <span className="sr-only">{t("Search stores")}</span>
               <Search
                 size={19}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#1f3d1f]"
               />
               <input
                 type="search"
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder={t("Search stores")}
-                className="h-12 w-full placeholder-gray-500 text-gray-500 rounded-lg border border-gray-200 pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
+                className="h-12 w-full placeholder-gray-500 text-gray-500 rounded-xl border-2 border-[#206B3A] pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               />
             </label>
 

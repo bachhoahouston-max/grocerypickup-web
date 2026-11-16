@@ -49,6 +49,7 @@ function StoreDetails({ loader, toaster }) {
   const [selectedRating, setSelectedRating] = useState(0);
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const chatListRef = useRef(null);
   const [commentText, setCommentText] = useState("");
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [commentSubmitting, setCommentSubmitting] = useState(false);
@@ -166,6 +167,9 @@ function StoreDetails({ loader, toaster }) {
         if (!response?.status) throw new Error(response?.message || t("Unable to send message"));
         setCommentText("");
         return loadComments(router.query.id);
+      })
+      .then(() => {
+        if (chatListRef.current) chatListRef.current.scrollTop = 0;
       })
       .then(() => toaster?.({ type: "success", message: t("Message sent successfully") }))
       .catch((error) => toaster?.({ type: "error", message: error?.message || t("Unable to send message") }))
@@ -373,8 +377,8 @@ function StoreDetails({ loader, toaster }) {
                   </span>
                   <span className="text-sm text-gray-500">({comments.length})</span>
                 </div>
-                <p className="mt-1 text-base font-medium text-gray-500">{t("Join the Conversation")}</p>
-                <div className="mt-5 max-h-[420px] space-y-4 overflow-y-auto pr-1">
+                <p className="text-base font-medium text-gray-500">{t("Join the Conversation")}</p>
+                <div ref={chatListRef} className="mt-5 max-h-[420px] space-y-3 overflow-y-auto pr-1">
                   {commentsLoading ? (
                     <p className="text-sm text-gray-500">{t("Loading live chat...")}</p>
                   ) : comments.length ? (
@@ -388,12 +392,12 @@ function StoreDetails({ loader, toaster }) {
                             {name.charAt(0).toUpperCase()}
                           </div>
                           <div className="min-w-0">
-                            <p className="flex items-center flex-wrap gap-x-2 text-sm">
+                            <p className="flex items-center flex-wrap gap-x-2 text-sm leading-4">
                               <span className="font-semibold text-[#1f3d1f]">{name}</span>
                               <span className="bg-gray-400 w-1 h-1 rounded-full"></span>
                               <span className="text-xs text-gray-400">{timeAgo(item.createdAt)}</span>
                             </p>
-                            <p className="mt-1 inline-block max-w-full whitespace-pre-wrap break-words rounded-lg bg-green-50 px-4 py-1.5 text-sm leading-6 text-gray-800">
+                            <p className="mt-0.5 inline-block max-w-full whitespace-pre-wrap break-words rounded-lg bg-green-50 px-4 py-0.5 text-sm leading-5 text-gray-800">
                               {item.comment}
                             </p>
                           </div>

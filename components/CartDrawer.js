@@ -357,8 +357,13 @@ const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
 
   const pointsAndClose = (
     <div className="flex items-center gap-3">
-      <p className="text-[#0B4F8A] font-semibold text-base whitespace-nowrap">
-        −{totalPoints} {t("pts")}
+      <p className="text-[#0B4F8A] font-semibold text-xs md:text-base whitespace-nowrap">
+        <span className="md:hidden">
+          {totalPoints} {t("pts used")}
+        </span>
+        <span className="hidden md:inline">
+          −{totalPoints} {t("pts")}
+        </span>
       </p>
       <IoMdClose
         className="w-5 h-5 text-black cursor-pointer"
@@ -395,7 +400,7 @@ const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
                   {item.price_slot.other_price}
                 </span>
               )}
-              <span className="font-black text-green-700 text-xs">FREE</span>
+              <span className="font-black text-green-700 text-base md:text-xs">FREE</span>
             </div>
             <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
           </div>
