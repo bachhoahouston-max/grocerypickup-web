@@ -46,7 +46,6 @@ function StoreDetails({ loader, toaster }) {
   const [comments, setComments] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
-  const [reviewFeedback, setReviewFeedback] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
@@ -183,7 +182,7 @@ function StoreDetails({ loader, toaster }) {
     Api(
       "post",
       `createStoreReview/${router.query.id}`,
-      { rating: selectedRating, feedback: reviewFeedback.trim() },
+      { rating: selectedRating },
       router
     )
       .then((response) => {
@@ -194,7 +193,6 @@ function StoreDetails({ loader, toaster }) {
           reviewCount: response.data.reviewCount,
         }));
         setSelectedRating(0);
-        setReviewFeedback("");
         setReviewModalOpen(false);
         return loadReviews(router.query.id);
       })
@@ -205,7 +203,6 @@ function StoreDetails({ loader, toaster }) {
 
   const openReviewModal = () => {
     setSelectedRating(ownReview?.rating || 0);
-    setReviewFeedback(ownReview?.feedback || "");
     setReviewModalOpen(true);
   };
 
@@ -216,7 +213,6 @@ function StoreDetails({ loader, toaster }) {
       .then((response) => {
         if (!response?.status) throw new Error(response?.message || t("Unable to delete review"));
         setSelectedRating(0);
-        setReviewFeedback("");
         setReviewModalOpen(false);
         setStore((current) => ({
           ...current,
@@ -370,8 +366,8 @@ function StoreDetails({ loader, toaster }) {
               <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
                 <div className="flex flex-wrap items-center gap-3">
                   <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Live chat")}</h2>
-                  <span className="flex items-center gap-1.5 rounded-md bg-[#dff1df] px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#206B3A]">
-                    <span className="h-2 w-2 animate-pulse rounded-full bg-[#206B3A]"></span>
+                  <span className="flex items-center gap-1.5 rounded-md bg-[#dff1df] px-3 py-1 text-sm font-bold uppercase tracking-wide text-[#206B3A]">
+                    <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#206B3A]"></span>
                     {t("Live")}
                   </span>
                   <span className="text-sm text-gray-500">({comments.length})</span>
@@ -391,11 +387,12 @@ function StoreDetails({ loader, toaster }) {
                             {name.charAt(0).toUpperCase()}
                           </div>
                           <div className="min-w-0">
-                            <p className="flex flex-wrap items-baseline gap-x-2 text-sm">
+                            <p className="flex items-center flex-wrap gap-x-2 text-sm">
                               <span className="font-semibold text-[#1f3d1f]">{name}</span>
-                              <span className="text-xs text-gray-400">· {timeAgo(item.createdAt)}</span>
+                              <span className="bg-gray-400 w-1 h-1 rounded-full"></span>
+                              <span className="text-xs text-gray-400">{timeAgo(item.createdAt)}</span>
                             </p>
-                            <p className="mt-1 inline-block max-w-full whitespace-pre-wrap break-words rounded-2xl bg-gray-100 px-4 py-2 text-sm leading-6 text-gray-800">
+                            <p className="mt-1 inline-block max-w-full whitespace-pre-wrap break-words rounded-lg bg-green-50 px-4 py-1.5 text-sm leading-6 text-gray-800">
                               {item.comment}
                             </p>
                           </div>
@@ -517,19 +514,6 @@ function StoreDetails({ loader, toaster }) {
                           </button>
                         ))}
                       </div>
-                      <label htmlFor="store-review-feedback" className="mt-5 block text-sm font-medium text-gray-600">
-                        {t("Feedback")} <span className="font-normal text-gray-400">({t("optional")})</span>
-                      </label>
-                      <textarea
-                        id="store-review-feedback"
-                        value={reviewFeedback}
-                        onChange={(event) => setReviewFeedback(event.target.value)}
-                        maxLength={2000}
-                        rows={4}
-                        placeholder={t("Share your feedback")}
-                        disabled={reviewSubmitting}
-                        className="mt-2 w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A] disabled:bg-gray-100"
-                      />
                       <button
                         type="submit"
                         disabled={reviewSubmitting}

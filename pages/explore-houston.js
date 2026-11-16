@@ -418,7 +418,7 @@ function ExploreHouston({ loader, toaster }) {
                         <Icon size={18} />
                       </span>
                     )}
-                    <span className="min-w-0 break-words text-[10px] font-normal leading-tight text-black md:text-sm">
+                    <span className="min-w-0 break-words text-[11px] font-normal leading-tight text-black md:text-sm">
                       {getCategoryName(item)}
                     </span>
                   </button>
