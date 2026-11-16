@@ -460,9 +460,9 @@ function StoreDetails({ loader, toaster }) {
                             <Star size={15} fill="currentColor" /> {review.rating}/5
                           </span>
                         </div>
-                        {review.feedback && (
+                        {/* {review.feedback && (
                           <p className="mt-2 whitespace-pre-wrap break-words text-sm text-gray-600">{review.feedback}</p>
-                        )}
+                        )} */}
                         <p className="mt-1 text-xs text-gray-400">{timeAgo(review.createdAt)}</p>
                       </article>
                     );
