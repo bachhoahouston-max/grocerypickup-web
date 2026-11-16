@@ -14,6 +14,7 @@ import {
   MessageCircle,
   Phone,
   Send,
+  SendHorizonal,
   Star,
   Tag,
   X,
@@ -405,23 +406,23 @@ function StoreDetails({ loader, toaster }) {
                     </p>
                   )}
                 </div>
-                <form onSubmit={submitComment} className="mt-6">
-                  <textarea
+                <form onSubmit={submitComment} className="mt-6 flex items-center gap-3">
+                  <input
+                    type="text"
                     value={commentText}
                     onChange={(event) => setCommentText(event.target.value)}
-                    placeholder={isLoggedIn ? t("Write a message") : t("Sign in to live chat")}
+                    placeholder={isLoggedIn ? t("Add a comment...") : t("Sign in to live chat")}
                     disabled={!isLoggedIn || commentSubmitting}
                     maxLength={2000}
-                    rows={1}
-                    className="w-full rounded-2xl border border-gray-200 bg-gray-100 px-4 py-3 text-sm text-gray-700 placeholder-gray-500 outline-none focus:border-[#206B3A] disabled:bg-gray-100"
+                    className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-white px-5 py-3.5 text-sm text-gray-700 placeholder-gray-500 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A] disabled:bg-gray-100"
                   />
                   <button
                     type="submit"
                     disabled={commentSubmitting || (isLoggedIn && !commentText.trim())}
-                    className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#206B3A] px-5 py-3 text-sm font-semibold text-white hover:bg-[#18532d] disabled:cursor-not-allowed disabled:opacity-50"
+                    aria-label={isLoggedIn ? t("Send live chat") : t("Sign in to live chat")}
+                    className="inline-flex cursor-pointer p-3 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-white hover:bg-[#104936] disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <Send size={16} />
-                    {isLoggedIn ? t("Send live chat") : t("Sign in to live chat")}
+                    <SendHorizonal size={25} strokeWidth={1.8} />
                   </button>
                 </form>
               </section>
