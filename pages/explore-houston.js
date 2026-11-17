@@ -287,7 +287,7 @@ function ExploreHouston({ loader, toaster }) {
           content={t("Local businesses and places recommended by the community")}
         />
       </Head>
-      <main className="min-h-screen bg-white px-4 py-8 md:px-10 md:py-12">
+      <main className="min-h-screen px-4 py-8 md:px-10 md:py-12">
         <div className="mx-auto max-w-7xl">
           <div className="flex items-center gap-3 rounded-2xl border border-[#cfe8cf] bg-[#e8f6e6] px-3 py-3 shadow-sm md:mb-5 md:gap-6 md:px-8 md:py-5">
             <StoreCommunityIcon className="h-14 w-14 shrink-0 md:h-20 md:w-20" />
