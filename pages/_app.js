@@ -13,6 +13,8 @@ import { Toaster as SonnerToaster, toast } from "sonner";
 import Script from "next/script";
 import ScrollToTop from "@/components/ScrollToTo";
 
+const DEFAULT_WEB_BACKGROUND_COLOR = "#fff";
+
 export const userContext = createContext();
 export const openCartContext = createContext();
 export const cartContext = createContext();
@@ -28,9 +30,41 @@ function App({ Component, pageProps }) {
   const [cartData, setCartData] = useState([]);
   const [Favorite, setFavorite] = useState([]);
   const [lang, setLang] = useState("vi");
+  const [webBackgroundColor, setWebBackgroundColor] = useState(
+    DEFAULT_WEB_BACKGROUND_COLOR
+  );
 
   // ✅ useTranslation ek hi baar call karo
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadWebBackgroundColor = async () => {
+      try {
+        const res = await Api("get", "getsetting", "", router);
+        const color = res?.setting?.[0]?.webBackgroundColor;
+        if (!cancelled && typeof color === "string" &&
+          /^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(color)) {
+          setWebBackgroundColor(color.toLowerCase());
+        }
+      } catch (error) {
+        console.error("Unable to load web background setting", error);
+      }
+    };
+
+    loadWebBackgroundColor();
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.style.setProperty("--web-background", webBackgroundColor);
+    document.documentElement.style.setProperty("--theme-var", webBackgroundColor);
+    document.documentElement.style.setProperty("--theme-dek", webBackgroundColor);
+  }, [webBackgroundColor]);
 
   useEffect(() => {
     if (router.isReady) {
@@ -398,7 +432,7 @@ function App({ Component, pageProps }) {
   };
 
   return (
-    <div>
+    <div style={{ backgroundColor: webBackgroundColor }}>
       {/* Google Analytics */}
       <Script
         strategy="afterInteractive"
