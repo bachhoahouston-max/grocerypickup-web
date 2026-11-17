@@ -83,7 +83,7 @@ function ShopByCategory() {
   }, [router]);
 
   return (
-    <div className="bg-transparent px-4 mt-4 mb-0  ">
+    <div className="bg-transparent mt-4 mb-0  ">
       <div className="hidden md:block md:w-full mx-auto">
         <h1 className="text-xl md:text-[28px] text-[#2E7D32] font-semibold  leading-[36px] tracking-[0]  md:mb-5 mb-2 py-2 hidden md:flex">
           {/* {t("Shop By Category")} */}

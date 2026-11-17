@@ -431,7 +431,7 @@ function StoreDetails({ loader, toaster }) {
                 </form>
               </section>
 
-              <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
+              <section className="mt-1 rounded-3xl bg-white p-6 shadow-sm md:p-10">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-3">
                     <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Store reviews")}</h2>
@@ -447,11 +447,11 @@ function StoreDetails({ loader, toaster }) {
                     {ownReview ? t("Edit your review") : t("Add Review")}
                   </button>
                 </div>
-                <div className="mt-6 space-y-4">
+                <div className="mt-1 space-y-1">
                   {reviews.length ? reviews.map((review) => {
                     const name = [review.posted_by?.username, review.posted_by?.lastname].filter(Boolean).join(" ") || t("Customer");
                     return (
-                      <article key={review._id} className="border-t border-gray-100 pt-4">
+                      <article key={review._id} className="border-t border-gray-100 pt-1">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <span className="flex flex-wrap items-center gap-2 font-semibold text-gray-800">
                             {name}

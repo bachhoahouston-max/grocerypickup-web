@@ -189,13 +189,14 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
         </Link> */}
 
-        <div className="relative w-full md:h-68 h-48"> //mb-4
+        <div className="relative mx-2 md:h-68 h-48">
           <Link href={url}>
             <Image
               src={item?.varients[0]?.image[0]}
               alt={item.imageAltName || "Product Image"}
               fill
-              className="md:object-contain object-cover rounded-xl cursor-pointer" //object-contain
+              sizes="(max-width: 768px) 50vw, 300px"
+              className="md:object-contain object-cover rounded-xl cursor-pointer"
             // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
             />
           </Link>

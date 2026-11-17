@@ -26,7 +26,7 @@ export default function ExploreHoustonBanner() {
   const { t } = useTranslation();
 
   return (
-    <div className="px-4 md:px-0 my-3 md:my-6">
+    <div className="my-3 md:my-6">
       <Link
         href={EXPLORE_HOUSTON_URL}
         className="group flex items-center gap-3 md:gap-6 rounded-2xl border border-[#cfe8cf] bg-[#e8f6e6] px-3 py-3 md:px-8 md:py-5 shadow-sm transition-shadow hover:shadow-md"

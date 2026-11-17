@@ -62,7 +62,7 @@ export default function Home(props) {
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
       <div className="bg-[var(--theme-var)] md:bg-[var(--theme-dek)]">
-        <div className="mx-auto md:w-full md:px-10 mt-1">
+        <div className="max-w-7xl mx-auto px-4 mt-1">
           <Suspense fallback={<div>Loading.....</div>}>
             <MainHeader />
           </Suspense>
@@ -88,7 +88,7 @@ export default function Home(props) {
 
           <div className="bg-transparent w-full md:block hidden">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
-              <div className=" mx-auto px-2 md:px-0">
+              <div className=" mx-auto px-0">
                 <Suspense fallback={<div>Loading.....</div>}>
                   <BestSeller loader={props.loader} toaster={props.toaster} />
                 </Suspense>
@@ -98,7 +98,7 @@ export default function Home(props) {
 
           <div className="bg-transparent w-full md:block hidden">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
-              <div className=" mx-auto px-2 md:px-0">
+              <div className=" mx-auto px-0">
                 <Suspense fallback={<div>Loading.....</div>}>
                   <NewArrival loader={props.loader} toaster={props.toaster} />
                 </Suspense>
@@ -108,7 +108,7 @@ export default function Home(props) {
 
           <div className="bg-transparent w-full ">
             <section className="bg-transparent w-full relative flex flex-col justify-center items-center">
-              <div className=" mx-auto px-2 md:px-0">
+              <div className=" mx-auto px-0">
                 <Suspense fallback={<div>Loading.....</div>}>
                   <AllProducts loader={props.loader} toaster={props.toaster} />
                 </Suspense>

@@ -225,7 +225,7 @@ const SellProduct = ({ loader, toaster }) => {
   return (
     <>
       {saleData.length > 0 && (
-        <div className="mb-4 bg-transparent md:px-0 px-2 ">
+        <div className="mb-4 bg-transparent">
           <p className="text-[#2E7D32] md:flex justify-start items-center gap-2 md:text-[24px] text-xl font-semibold w-full px-1 md:px-0 hidden ">
             {/* {t("Offer of the Week")} */}
             🔥 {t("BHH Weekly Deals")}
@@ -267,13 +267,14 @@ const SellProduct = ({ loader, toaster }) => {
                     <div className="relative">
                       {/* Sale Timer */}
 
-                      <div className="relative w-full md:h-68 h-48"> //mb-4
+                      <div className="relative mx-2 md:h-68 h-48">
                         <Link href={`/SaleDetails/${item?.product?.slug}`}>
                           <Image
                             src={item.product?.varients[0]?.image[0]}
                             alt={item.product?.name || "Product Image"}
                             fill
-                            className="md:object-contain object-cover rounded-xl cursor-pointer" //object-contain
+                            sizes="(max-width: 768px) 50vw, 300px"
+                            className="md:object-contain object-cover rounded-xl cursor-pointer"
                           // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
                           />
                         </Link>
