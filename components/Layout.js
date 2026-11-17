@@ -44,7 +44,7 @@ const Layout = ({ children, loader, toaster }) => {
   return (
     <>
 
-      <div className="flex-1 flex-col bg-white relative">
+      <div className="flex-1 flex-col bg-[var(--web-background)] relative">
         <div className="fixed w-full top-0 z-50 bg-white transition-all duration-300">
 
           <div
@@ -83,7 +83,7 @@ const Layout = ({ children, loader, toaster }) => {
 
         </div>
 
-        <div id="layout-scroll" className="pt-[88px] md:pt-[170px] max-w-screen overflow-x-hidden z-0 bg-[var(--theme-var)] md:bg-[var(--theme-dek)]">
+        <div id="layout-scroll" className="pt-[88px] md:pt-[170px] max-w-screen overflow-x-hidden z-0 bg-[var(--web-background)]">
           {/* <ScrollToTop /> */}
           <main className="flex-1">{children}</main>
         </div>

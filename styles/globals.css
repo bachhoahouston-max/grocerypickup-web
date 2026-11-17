@@ -14,13 +14,14 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--web-background);
   color: var(--foreground);
   font-family: var(--font-poppins);
   /* ✅ Default site-wide font */
 }
 
 :root {
+  --web-background: #fff;
   --background: #ffffff;
   --foreground: #0a0a0a;
   --radius: 0.625rem;
@@ -53,8 +54,8 @@ body {
   --sidebar-accent-foreground: #171717;
   --sidebar-border: #e5e5e5;
   --sidebar-ring: #a1a1a1;
-  --theme-var: #EAF4EC;
-  --theme-dek: #ffffff;
+  --theme-var: #fff;
+  --theme-dek: #fff;
 }
 
 @theme inline {
