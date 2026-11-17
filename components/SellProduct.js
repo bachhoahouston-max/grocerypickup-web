@@ -366,7 +366,7 @@ const SellProduct = ({ loader, toaster }) => {
                     )}
 
                     <div className="flex md:justify-start md:items-center md:px-1">
-                      <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 ">
+                      <h3 className="text-black font-medium text-sm md:text-md min-h-[40px] line-clamp-2 text-center">
                         {lang === "en"
                           ? item.product?.name
                           : item.product?.vietnamiesName || item.product?.name}
