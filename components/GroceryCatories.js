@@ -315,7 +315,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         {/* Price and Add to Cart */}
         <div className="md:flex justify-between items-center gap-3 ml-1">
           {/* Price */}
-          <div className="flex flex-col">
+          <div className="flex flex-row flex-wrap items-baseline gap-x-2">
             {!isVendorClosed && (
               <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
                 {constant.currency}{" "}
@@ -335,7 +335,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
 
-        <h3 className="text-black md:text-md text-sm font-medium min-h-[40px] line-clamp-2 px-2">
+        <h3 className="text-black md:text-md text-sm font-medium min-h-[40px] line-clamp-2 px-2 text-center">
           {lang === "en" ? item.name : item.vietnamiesName || item.name}
         </h3>
 

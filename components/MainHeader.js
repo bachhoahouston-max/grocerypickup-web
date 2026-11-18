@@ -99,7 +99,7 @@ function MainHeader() {
 
   return (
     <div className="relative md:mt-0 grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <div className="md:col-span-2">
+      <div className="md:col-span-2 -mx-4 md:mx-0">
         <Carousel
           responsive={responsive}
           infinite
