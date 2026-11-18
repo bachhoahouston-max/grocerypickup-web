@@ -52,7 +52,10 @@ import {
 } from "lucide-react";
 import { Api } from "@/services/service";
 import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
+import { getStoreModulePageProps } from "@/services/storeModule";
 import { StoreCommunityIcon } from "@/components/ExploreHoustonBanner";
+
+export const getServerSideProps = getStoreModulePageProps;
 
 const ICON_MAP = {
   Store,

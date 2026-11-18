@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IoIosArrowForward } from "react-icons/io";
+import { isStoreModuleVisible } from "@/services/storeModule";
 
 export const EXPLORE_HOUSTON_URL = "/explore-houston";
 
@@ -24,6 +26,21 @@ export const StoreCommunityIcon = ({ className }) => (
 
 export default function ExploreHoustonBanner() {
   const { t } = useTranslation();
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    isStoreModuleVisible()
+      .then((visible) => {
+        if (active) setIsVisible(visible);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (!isVisible) return null;
 
   return (
     <div className="my-3 md:my-6">
