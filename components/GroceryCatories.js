@@ -189,13 +189,14 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
 
         </Link> */}
 
-        <div className="relative w-full md:h-68 h-48"> //mb-4
+        <div className="relative mx-2 md:h-68 h-48">
           <Link href={url}>
             <Image
               src={item?.varients[0]?.image[0]}
               alt={item.imageAltName || "Product Image"}
               fill
-              className="md:object-contain object-cover rounded-xl cursor-pointer" //object-contain
+              sizes="(max-width: 768px) 50vw, 300px"
+              className="md:object-contain object-cover rounded-xl cursor-pointer"
             // onClick={() => router.push(`/SaleDetails/${item?.product?.slug}`)}
             />
           </Link>
@@ -314,7 +315,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         {/* Price and Add to Cart */}
         <div className="md:flex justify-between items-center gap-3 ml-1">
           {/* Price */}
-          <div className="flex flex-col">
+          <div className="flex flex-row flex-wrap items-baseline gap-x-2">
             {!isVendorClosed && (
               <p className="text-[#E53935] md:text-xl text-[17px] font-bold">
                 {constant.currency}{" "}
@@ -334,7 +335,7 @@ const GroceryCatories = ({ item, i, url, loader, toaster }) => {
         </div>
 
 
-        <h3 className="text-black md:text-md text-sm font-medium min-h-[40px] line-clamp-2 px-2">
+        <h3 className="text-black md:text-md text-sm font-medium min-h-[40px] line-clamp-2 px-2 text-center">
           {lang === "en" ? item.name : item.vietnamiesName || item.name}
         </h3>
 

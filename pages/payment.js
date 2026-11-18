@@ -13,7 +13,7 @@ function Payment(props) {
   const [mainTotal, setMainTotal] = useState(0);
   const [cartData, setCartData] = useContext(cartContext);
   const [sessionInitiated, setSessionInitiated] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     try {
@@ -98,7 +98,8 @@ function Payment(props) {
       customerDetails: stripeRes.customer_details || {},
       isOnce: localCheckoutData.isOnce,
       discountCode: localCheckoutData.discountCode,
-      from: "website"
+      from: "website",
+      lang: i18n?.language?.startsWith("vi") ? "vi" : "en",
     };
 
     const createRes = await Api(
@@ -119,7 +120,18 @@ function Payment(props) {
       });
       props.loader(false);
     } else {
-      props.toaster({ type: "error", message: "Order save failed" });
+      let errorMsg = createRes?.message || t("Order save failed");
+      if (
+        i18n?.language?.startsWith("vi") &&
+        typeof errorMsg === "string" &&
+        errorMsg.includes("is deleted. Remove the item to continue.")
+      ) {
+        errorMsg = errorMsg.replace(
+          "is deleted. Remove the item to continue.",
+          "đã bị xóa. Vui lòng xóa sản phẩm để tiếp tục."
+        );
+      }
+      props.toaster({ type: "error", message: errorMsg });
     }
   };
 

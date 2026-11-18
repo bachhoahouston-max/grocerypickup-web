@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { CheckCircle, Mail, Trash, X } from "lucide-react";
+import { CheckCircle, ChevronDown, ChevronUp, Mail, Package, Trash, X } from "lucide-react";
 import { IoIosArrowBack, IoIosClose } from "react-icons/io";
 import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
 import { Api } from "@/services/service";
 import { clearSyncedCart } from "@/services/cartSync";
+import { getReferralCode, getProductReferralCode, getProductReferralDiscountRate } from "@/services/affiliateReferral";
 import { cartLineProductId } from "@/services/rewardCart";
 import Swal from "sweetalert2";
 import DatePicker from "react-datepicker";
@@ -36,7 +37,12 @@ function Cart(props) {
   const [appliedCoupon, setAppliedCoupon] = useState(false);
   const [deliverytip, setdeliverytip] = useState(0);
   const [discount, setDiscount] = useState(0);
+  const [referralDiscount, setReferralDiscount] = useState(0);
+  const [appliedReferralDiscountRate, setAppliedReferralDiscountRate] = useState(0);
   const [discountCode, setDiscountCode] = useState(0);
+  const [appliedReferralCode, setAppliedReferralCode] = useState("");
+  const [appliedReferralProductIds, setAppliedReferralProductIds] = useState([]);
+  const [showAppliedReferralProducts, setShowAppliedReferralProducts] = useState(false);
   const [isOnce, setIsOnce] = useState(false);
   const { t, i18n } = useTranslation();
   const [cancelPopup, setCancelPopup] = useState(false);
@@ -51,12 +57,47 @@ function Cart(props) {
   const [closureDates, setClosureDates] = useState([]);
   const [extraFees, setExtrafees] = useState(0);
   const [ExtraFeesObj, setExtraFeesObj] = useState({});
+  const [pointsPerDollar, setPointsPerDollar] = useState(10);
 
-  const handleApplyCoupon = () => {
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    Api("get", "rewards/summary", "", router)
+      .then((res) => {
+        if (res?.status && res?.data?.pointsPerDollar) {
+          setPointsPerDollar(res.data.pointsPerDollar);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, [isLoggedIn]);
+
+  const isRestaurantLine = (line) =>
+    line?.isRestaurant ?? line?.vendorType === "restaurant";
+  const purchasedLines = (cartData || []).filter(
+    (line) => line?.productSource !== "REWARD",
+  );
+  const restaurantAmount = purchasedLines
+    .filter(isRestaurantLine)
+    .reduce(
+      (sum, line) =>
+        sum + (Number(line?.total) || Number(line?.price || 0) * Number(line?.qty || 1)),
+      0,
+    );
+  const pointsToEarn = purchasedLines.some((line) => !isRestaurantLine(line))
+    ? Math.max(
+      Math.floor(
+        (Math.round(Math.max(Number(mainTotal || 0) - restaurantAmount, 0) * 100) *
+          pointsPerDollar) /
+        100,
+      ),
+      0,
+    )
+    : 0;
+
+  const handleApplyCoupon = async () => {
     if (!user?._id) {
       props.toaster({
         type: "error",
-        message: "Please log in to apply the coupon.",
+        message: "Please log in to apply a coupon or referral code.",
       });
       return;
     }
@@ -74,20 +115,82 @@ function Cart(props) {
       return;
     }
 
+    const code = searchTerm.trim().toUpperCase().replace(/\s+/g, "");
+    if (!code) {
+      props.toaster({ type: "error", message: t("Please enter a coupon or referral code") });
+      return;
+    }
+
+    props.loader(true);
+
+    try {
+      const productIds = (cartData || [])
+        .filter((item) => item?.productSource !== "REWARD" && item?.id)
+        .map((item) => item.id);
+      const referralResponse = await Api(
+        "get",
+        `affiliation/referral/${encodeURIComponent(code)}?products=${encodeURIComponent(productIds.join(","))}`,
+        "",
+        router,
+      );
+
+      if (referralResponse?.status) {
+        const applied = referralResponse.data?.referralCode || code;
+        const eligibleProducts = referralResponse.data?.eligibleProducts;
+        const eligibleAmount = (cartData || [])
+          .filter((item) =>
+            item?.productSource !== "REWARD" &&
+            (!Array.isArray(eligibleProducts) || eligibleProducts.includes(item?.id)),
+          )
+          .reduce(
+            (sum, item) =>
+              sum + (Number(item?.total) || Number(item?.price || 0) * Number(item?.qty || 0)),
+            0,
+          );
+        const rate = Number(referralResponse.data?.customerDiscountRate || 0);
+        setAppliedCoupon(false);
+        setDiscount(0);
+        setDiscountCode("");
+        setAppliedReferralCode(applied);
+        setAppliedReferralDiscountRate(rate);
+        setAppliedReferralProductIds(
+          (cartData || [])
+            .filter(
+              (item) =>
+                item?.productSource !== "REWARD" &&
+                (!Array.isArray(eligibleProducts) ||
+                  eligibleProducts.some((id) => String(id) === String(item?.id))),
+            )
+            .map((item) => item.id),
+        );
+        setShowAppliedReferralProducts(false);
+        setReferralDiscount(Number(((eligibleAmount * rate) / 100).toFixed(2)));
+        setSearchTerm(applied);
+        props.toaster({ type: "success", message: t("Referral code applied successfully") });
+        props.loader(false);
+        return;
+      }
+    } catch (err) {
+      // A failed referral lookup falls through to the regular coupon validator.
+    }
+
     const newData = {
-      code: searchTerm,
+      code,
       cartValue: CartTotal,
       userId: user._id,
       option: pickupOption,
     };
 
-    props.loader(true);
-
     Api("post", "ValidateCouponforUser", newData, router)
       .then((res) => {
         if (res.status) {
+          setAppliedReferralCode("");
+          setAppliedReferralDiscountRate(0);
+          setAppliedReferralProductIds([]);
+          setShowAppliedReferralProducts(false);
+          setReferralDiscount(0);
           setDiscount(res.data?.discount);
-          setDiscountCode(searchTerm);
+          setDiscountCode(code);
           setAppliedCoupon(true);
           props.toaster({
             type: "success",
@@ -104,6 +207,33 @@ function Cart(props) {
         props.loader(false);
       });
   };
+
+  const removeReferral = () => {
+    setAppliedReferralCode("");
+    setAppliedReferralDiscountRate(0);
+    setAppliedReferralProductIds([]);
+    setShowAppliedReferralProducts(false);
+    setReferralDiscount(0);
+  };
+
+  const totalDiscount = Number(discount || 0) + Number(referralDiscount || 0);
+  const appliedReferralProducts = (cartData || []).filter(
+    (item) =>
+      item?.productSource !== "REWARD" &&
+      appliedReferralProductIds.some((id) => String(id) === String(item?.id)),
+  );
+
+  useEffect(() => {
+    if (appliedReferralCode) return;
+    const linkedDiscount = (cartData || [])
+      .filter((item) => item?.productSource !== "REWARD")
+      .reduce((sum, item) => {
+        const rate = getProductReferralDiscountRate(item?.slug);
+        const amount = Number(item?.total) || Number(item?.price || 0) * Number(item?.qty || 0);
+        return sum + (amount * rate) / 100;
+      }, 0);
+    setReferralDiscount(Number(linkedDiscount.toFixed(2)));
+  }, [cartData, appliedReferralCode]);
 
   // Keep the latest cart for async validation results to land on
   const cartRef = useRef(cartData);
@@ -145,6 +275,8 @@ function Cart(props) {
         ...line,
         stockStatus: result.stockStatus,
         availableQty: result.availableQty,
+        productUnavailable: result.productUnavailable,
+        isRestaurant: result.isRestaurant,
       };
 
       // Reward lines come back without a price — they stay $0
@@ -171,7 +303,9 @@ function Cart(props) {
   };
 
   const hasStockIssue = (line) =>
-    line?.stockStatus === "OUT_OF_STOCK" || line?.stockStatus === "LIMITED";
+    line?.stockStatus === "UNAVAILABLE" ||
+    line?.stockStatus === "OUT_OF_STOCK" ||
+    line?.stockStatus === "LIMITED";
   const hasUnreviewedPrice = (line) =>
     line?.previousPrice !== undefined &&
     line?.previousPrice !== null &&
@@ -217,6 +351,16 @@ function Cart(props) {
     }
 
     // One click shows every problem at once with a single message
+    if (checked.some((line) => line?.productUnavailable)) {
+      persistCart(checked);
+      props.toaster({
+        type: "error",
+        message: t("Product Unavailable. Remove it from your cart to continue."),
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
     if (checked.some(hasStockIssue) || checked.some(hasUnreviewedPrice)) {
       persistCart(
         checked.map((line) =>
@@ -604,7 +748,7 @@ function Cart(props) {
     setServiceFee(fee.toFixed(2));
     setDeliveryCharge(delivery.toFixed(2));
 
-    const cartAfterDiscount = sumWithInitial - discount;
+    const cartAfterDiscount = sumWithInitial - totalDiscount;
     let finalTotal;
 
     if (pickupOption === "localDelivery") {
@@ -628,7 +772,7 @@ function Cart(props) {
 
     setCartTotal(sumWithInitial.toFixed(2));
     setMainTotal(finalTotal.toFixed(2));
-  }, [cartData, pickupOption, deliverytip, discount, extraFees]);
+  }, [cartData, pickupOption, deliverytip, discount, referralDiscount, extraFees]);
 
   const emptyCart = async () => {
     setCartData([]);
@@ -817,6 +961,9 @@ function Cart(props) {
         isInStoreAvailable: element?.isInStoreAvailable,
         free_product: element?.free_product?._id,
         combo_id: element?.combo_id,
+        referralCode: isReward
+          ? ""
+          : element?.referralCode || getProductReferralCode(element?.slug),
       });
     });
 
@@ -909,8 +1056,11 @@ function Cart(props) {
       productDetail: data,
       total: mainTotal,
       subtotal: CartTotal,
-      discount: discount,
+      discount: totalDiscount,
+      referralDiscount,
       discountCode: discountCode,
+      referralCode: getReferralCode(),
+      appliedReferralCode,
       user: user._id,
       Email: user.email,
       isOrderPickup,
@@ -923,6 +1073,7 @@ function Cart(props) {
       serviceFee: servicefee.toString(),
       extraFees,
       order_platform: "web",
+      lang: i18n.language?.startsWith("vi") ? "vi" : "en",
     };
 
     localStorage.setItem("checkoutData", JSON.stringify(newData));
@@ -948,11 +1099,22 @@ function Cart(props) {
         }
       } else {
         props.loader && props.loader(false);
-        props.toaster({ type: "error", message: "Order save failed" });
+        props.toaster({ type: "error", message: t("Order save failed") });
       }
     } catch (err) {
       props.loader && props.loader(false);
-      props.toaster({ type: "error", message: err?.message });
+      let errorMsg = err?.message || t("Order save failed");
+      if (
+        i18n.language?.startsWith("vi") &&
+        typeof errorMsg === "string" &&
+        errorMsg.includes("is deleted. Remove the item to continue.")
+      ) {
+        errorMsg = errorMsg.replace(
+          "is deleted. Remove the item to continue.",
+          "đã bị xóa. Vui lòng xóa sản phẩm để tiếp tục."
+        );
+      }
+      props.toaster({ type: "error", message: errorMsg });
     }
 
     // if (createRes.status) {
@@ -1257,10 +1419,16 @@ function Cart(props) {
               cartClose={cartClose}
               removeOutOfStock={removeOutOfStock}
               loader={props.loader}
+              appliedReferralCode={appliedReferralCode}
             />
             <div className="w-full md:w-[40%] flex flex-col gap-4 px-0 md:px-0">
               {cartData.length > 0 && (
-                <div className="bg-transparent rounded-lg shadow-sm ">
+                <div className="bg-green-100 rounded-lg shadow-sm px-4 py-4">
+                  <h4 className="text-xl font-bold text-gray-800 mb-4 flex gap-2 items-center">
+                    <Package />
+                    {t("Choose how to receive")}
+                  </h4>
+
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
                       {[
@@ -1324,7 +1492,7 @@ function Cart(props) {
                                   className="hidden mt-1 form-radio h-4 w-4 text-green-600"
                                 />
 
-                                <div>
+                                <div className="border-l-2 pl-3">
                                   <div className="font-semibold text-base md:text-lg text-orange-600">
                                     {opt.title}
                                   </div>
@@ -1384,28 +1552,28 @@ function Cart(props) {
                                   </div>
 
                                   {date && (
-                                  <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
-                                    <FaRegCalendarCheck
-                                      size={30}
-                                      className="text-green-600 shrink-0 mt-0.5"
-                                    />
-                                    <div className="text-start">
-                                      <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
-                                        {opt.id === "driveUp"
-                                          ? t("Your Scheduled Curbside Pickup")
-                                          : t("Your Scheduled Pickup")}
-                                      </p>
-                                      <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
-                                        {opt.id === "driveUp"
-                                          ? t(
-                                            "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.",
-                                          )
-                                          : t(
-                                            "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.",
-                                          )}
-                                      </p>
+                                    <div className="flex items-start gap-3 bg-green-50 border border-green-200 rounded-xl p-3 md:p-4">
+                                      <FaRegCalendarCheck
+                                        size={30}
+                                        className="text-green-600 shrink-0 mt-0.5"
+                                      />
+                                      <div className="text-start">
+                                        <p className="font-semibold text-[14px] md:text-[15px] text-green-800">
+                                          {opt.id === "driveUp"
+                                            ? t("Your Scheduled Curbside Pickup")
+                                            : t("Your Scheduled Pickup")}
+                                        </p>
+                                        <p className="text-[13px] md:text-[14px] text-green-800 leading-snug">
+                                          {opt.id === "driveUp"
+                                            ? t(
+                                              "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready. When you arrive, we’ll bring it to your car.",
+                                            )
+                                            : t(
+                                              "Ready for pickup about 2 hours after you order. Please wait for an email confirming your order is ready before coming to the store.",
+                                            )}
+                                        </p>
+                                      </div>
                                     </div>
-                                  </div>
                                   )}
 
                                   <p className="text-[12px] md:text-[13px] text-[#3b4a8c] text-start">
@@ -1565,7 +1733,7 @@ function Cart(props) {
                         <div className="relative flex-1 ">
                           <input
                             type="text"
-                            placeholder={t("Enter coupon code")}
+                            placeholder={t("Enter coupon or referral code")}
                             value={searchTerm}
                             onChange={handleSearchChange}
                             className="w-full text-[15px] shadow-md text-black border-2 rounded-md py-2.5 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1577,10 +1745,7 @@ function Cart(props) {
                                 setSearchTerm("");
                                 setDiscountCode("");
                                 setDiscount(0);
-                                props.toaster({
-                                  type: "success",
-                                  message: "Coupon removed successfully",
-                                });
+                                removeReferral();
                               }}
                               size={22}
                               className=" cursor-pointer absolute text-custom-green top-2.5 right-2"
@@ -1595,27 +1760,13 @@ function Cart(props) {
                         </button>
                       </div>
                     )}
-                    {appliedCoupon && (
+                    {(appliedCoupon || appliedReferralCode) && (
                       <div className="m-2 text-custom-green rounded-md flex items-center justify-between md:w-[490px] mt-2 w-full ">
                         <span className="text-base">
-                          {t("Coupon")} {t("applied!")}
+                          {appliedReferralCode
+                            ? `${t("Referral code applied")}: ${appliedReferralCode}`
+                            : `${t("Coupon")} ${t("applied!")}: ${appliedCoupon}`}
                         </span>
-
-                        <button
-                          onClick={() => {
-                            setAppliedCoupon(false);
-                            setSearchTerm("");
-                            setDiscountCode("");
-                            setDiscount(0);
-                            props.toaster({
-                              type: "success",
-                              message: "Coupon removed successfully",
-                            });
-                          }}
-                          className="text-custom-green cursor-pointer text-sm ml-4"
-                        >
-                          <X size={22} />
-                        </button>
                       </div>
                     )}
                   </div>
@@ -1651,6 +1802,19 @@ function Cart(props) {
                       {t("Bill Summary")}
                     </h4>
 
+                    {pointsToEarn > 0 && (
+                      <div className="flex items-center gap-2 bg-green-50 border border-green-100 rounded-lg px-3 py-2 mb-4">
+                        <span className="text-xl">🎁</span>
+                        <p className="text-sm text-green-700">
+                          {t("You will receive")}{" "}
+                          <span className="font-bold">
+                            {pointsToEarn.toLocaleString()} {t("points")}
+                          </span>{" "}
+                          {t("for this purchase.")}
+                        </p>
+                      </div>
+                    )}
+
                     <div className="space-y-3">
                       {/* Subtotal */}
                       <div className="flex justify-between items-center text-black">
@@ -1660,12 +1824,69 @@ function Cart(props) {
                         </p>
                       </div>
 
-                      {appliedCoupon && (
+                      {discount > 0 && (
                         <div className="flex justify-between items-center text-black">
                           <p className="text-base">{t("Discount amount")}</p>
                           <p className="text-base font-medium">
-                            - {constant.currency} {discount}
+                            - {constant.currency} {Number(discount).toFixed(2)}
                           </p>
+                        </div>
+                      )}
+
+                      {referralDiscount > 0 && (
+                        <div className="flex justify-between items-center text-black">
+                          <p className="text-base">{t("Discount amount")}</p>
+                          <p className="text-base font-medium">
+                            - {constant.currency} {Number(referralDiscount).toFixed(2)}
+                          </p>
+                        </div>
+                      )}
+
+                      {appliedReferralCode && appliedReferralProducts.length > 0 && (
+                        <div className="w-full">
+                          <button
+                            type="button"
+                            className="flex items-center justify-between w-full text-left text-sm font-medium text-custom-green border border-green-200 bg-green-100 px-2 p-1 rounded-md"
+                            onClick={() =>
+                              setShowAppliedReferralProducts((isOpen) => !isOpen)
+                            }
+                            aria-expanded={showAppliedReferralProducts}
+                          >
+                            <span>{t("Discount summary")}</span>
+                            {showAppliedReferralProducts ? (
+                              <ChevronUp size={18} />
+                            ) : (
+                              <ChevronDown size={18} />
+                            )}
+                          </button>
+                          {showAppliedReferralProducts && (
+                            <div className="mt-2 rounded-md border border-green-100 bg-green-50 px-3 py-2">
+                              {appliedReferralProducts.map((item) => {
+                                const amount =
+                                  Number(item?.total) ||
+                                  Number(item?.price || 0) * Number(item?.qty || 0);
+                                return (
+                                  <div
+                                    key={item.id}
+                                    className="flex justify-between gap-3 text-sm text-gray-700"
+                                  >
+                                    <span className="truncate">
+                                      {i18n.language?.startsWith("vi")
+                                        ? item?.vietnamiesName || item?.name
+                                        : item?.name || item?.vietnamiesName}
+                                    </span>
+                                    <span className="shrink-0">
+                                      - {constant.currency}{" "}
+                                      {(
+                                        (amount * appliedReferralDiscountRate) /
+                                        100
+                                      ).toFixed(2)}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                         </div>
                       )}
 

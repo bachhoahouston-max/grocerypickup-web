@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect, useRef } from "react";
-import { Api, ConstantsUrl } from "@/services/service";
+import { Api, ConstantsUrl, APP_PLATFORM, APP_VERSION } from "@/services/service";
 import { getSyncedCart, saveSyncedCart } from "@/services/cartSync";
+import { saveReferralFromRoute } from "@/services/affiliateReferral";
 import "@/styles/globals.css";
 import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
@@ -11,6 +12,8 @@ import { ni18nConfig } from "../ni18n.config";
 import { Toaster as SonnerToaster, toast } from "sonner";
 import Script from "next/script";
 import ScrollToTop from "@/components/ScrollToTo";
+
+const DEFAULT_WEB_BACKGROUND_COLOR = "#fff";
 
 export const userContext = createContext();
 export const openCartContext = createContext();
@@ -27,9 +30,47 @@ function App({ Component, pageProps }) {
   const [cartData, setCartData] = useState([]);
   const [Favorite, setFavorite] = useState([]);
   const [lang, setLang] = useState("vi");
+  const [webBackgroundColor, setWebBackgroundColor] = useState(
+    DEFAULT_WEB_BACKGROUND_COLOR
+  );
 
   // ✅ useTranslation ek hi baar call karo
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadWebBackgroundColor = async () => {
+      try {
+        const res = await Api("get", "getsetting", "", router);
+        const color = res?.setting?.[0]?.webBackgroundColor;
+        if (!cancelled && typeof color === "string" &&
+          /^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(color)) {
+          setWebBackgroundColor(color.toLowerCase());
+        }
+      } catch (error) {
+        console.error("Unable to load web background setting", error);
+      }
+    };
+
+    loadWebBackgroundColor();
+    return () => {
+      cancelled = true;
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    document.documentElement.style.setProperty("--web-background", webBackgroundColor);
+    document.documentElement.style.setProperty("--theme-var", webBackgroundColor);
+    document.documentElement.style.setProperty("--theme-dek", webBackgroundColor);
+  }, [webBackgroundColor]);
+
+  useEffect(() => {
+    if (router.isReady) {
+      saveReferralFromRoute(router, () => toast.error(t("Not a valid referral code")));
+    }
+  }, [router.isReady, router.asPath]);
 
   // ── Cross-platform cart sync (separate from the local-cart logic above) ──
   // The server keeps one cart per account (last write wins). Each browser
@@ -190,12 +231,27 @@ function App({ Component, pageProps }) {
       const items = pendingPush.current;
       pendingPush.current = null;
       clearTimeout(cartPushTimer.current);
+      const clientLang =
+        readLocal("LANGUAGE") ||
+        (i18n?.language?.startsWith("vi") ? "vi" : "en") ||
+        "en";
       fetch(`${ConstantsUrl}cart-sync`, {
         method: "PUT",
         keepalive: true,
         headers: {
           "Content-Type": "application/json",
           Authorization: `jwt ${token}`,
+          language: clientLang,
+          lang: clientLang,
+          "Accept-Language": clientLang,
+          platform: APP_PLATFORM || "web",
+          Platform: APP_PLATFORM || "web",
+          "x-platform": APP_PLATFORM || "web",
+          "app-platform": APP_PLATFORM || "web",
+          "app-version": APP_VERSION || "0.1.0",
+          appversion: APP_VERSION || "0.1.0",
+          "x-app-version": APP_VERSION || "0.1.0",
+          version: APP_VERSION || "0.1.0",
         },
         body: JSON.stringify({ items, platform: "WEB" }),
       }).catch(() => {});
@@ -376,7 +432,7 @@ function App({ Component, pageProps }) {
   };
 
   return (
-    <div>
+    <div style={{ backgroundColor: webBackgroundColor }}>
       {/* Google Analytics */}
       <Script
         strategy="afterInteractive"

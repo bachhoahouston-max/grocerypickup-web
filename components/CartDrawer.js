@@ -263,6 +263,7 @@ import constant from "@/services/constant";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import { Api } from "@/services/service";
+import { getProductReferralCode } from "@/services/affiliateReferral";
 import {
   buildRewardCartItem,
   cartLineProductId,
@@ -276,7 +277,9 @@ const isSaleItem = (item) => item?.productSource === "SALE";
 const isComboItem = (item) => item?.productSource === "COMBO";
 const isRewardItem = (item) => item?.productSource === "REWARD";
 const hasStockIssue = (item) =>
-  item?.stockStatus === "OUT_OF_STOCK" || item?.stockStatus === "LIMITED";
+  item?.stockStatus === "UNAVAILABLE" ||
+  item?.stockStatus === "OUT_OF_STOCK" ||
+  item?.stockStatus === "LIMITED";
 const hasPriceUpdate = (item) =>
   item?.previousPrice !== undefined &&
   item?.previousPrice !== null &&
@@ -307,9 +310,11 @@ const StockIssueRow = ({ item, i, lang, cartClose, setLineQty, otherLinesQty, fo
           </span>
         </div>
         <span className="mt-1 self-start bg-red-100 text-red-600 text-xs font-medium px-3 py-0.5 rounded-full">
-          {isLimited
-            ? `${t("Available quantity")}: ${item?.availableQty}`
-            : t("Out of stock")}
+          {item?.productUnavailable || item?.stockStatus === "UNAVAILABLE"
+            ? t("Product Unavailable")
+            : isLimited
+              ? `${t("Available quantity")}: ${item?.availableQty}`
+              : t("Out of stock")}
         </span>
         {isLimited && keepableQty >= 1 && (
           <button
@@ -352,8 +357,13 @@ const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
 
   const pointsAndClose = (
     <div className="flex items-center gap-3">
-      <p className="text-[#0B4F8A] font-semibold text-base whitespace-nowrap">
-        −{totalPoints} {t("pts")}
+      <p className="text-[#0B4F8A] font-semibold text-xs md:text-base whitespace-nowrap">
+        <span className="md:hidden">
+          {totalPoints} {t("pts used")}
+        </span>
+        <span className="hidden md:inline">
+          −{totalPoints} {t("pts")}
+        </span>
       </p>
       <IoMdClose
         className="w-5 h-5 text-black cursor-pointer"
@@ -390,7 +400,7 @@ const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
                   {item.price_slot.other_price}
                 </span>
               )}
-              <span className="font-black text-green-700 text-xs">FREE</span>
+              <span className="font-black text-green-700 text-base md:text-xs">FREE</span>
             </div>
             <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
           </div>
@@ -427,6 +437,7 @@ const NormalCartRow = ({
   saleExpired,
   onRedeemReward,
   rewardPoints,
+  referralApplied,
 }) => {
   const { t } = useTranslation();
 
@@ -479,6 +490,11 @@ const NormalCartRow = ({
                 </span>
               ))}
           </div>
+          {/* {referralApplied && (
+            <span className="mt-1 self-start bg-green-50 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-200">
+              {t("Referral code applied")}
+            </span>
+          )} */}
           <PickupAvailability
             pickupConfig={pickupConfig}
             pickupOption={pickupOption}
@@ -801,6 +817,7 @@ export default function CartDrawer({
   cartClose,
   removeOutOfStock,
   loader,
+  appliedReferralCode,
 }) {
   const { t } = useTranslation();
   const [cartData, setCartData] = useContext(cartContext);
@@ -1055,7 +1072,13 @@ export default function CartDrawer({
           <div className="flex items-center gap-3">
             <AlertCircle className="text-red-600 flex-shrink-0" size={24} />
             <p className="flex-1 min-w-0 text-red-600 font-bold text-lg">
-              {t("Out of Stock")} ({stockIssueLines.length})
+              {stockIssueLines.some(
+                ({ item }) =>
+                  item?.productUnavailable || item?.stockStatus === "UNAVAILABLE",
+              )
+                ? t("Product Unavailable")
+                : t("Out of Stock")}{" "}
+              ({stockIssueLines.length})
             </p>
             {removeOutOfStock && (
               <button
@@ -1146,7 +1169,16 @@ export default function CartDrawer({
               return <RewardCartRow key={i} {...sharedProps} />;
             }
 
-            return <NormalCartRow key={i} {...sharedProps} />;
+            return (
+              <NormalCartRow
+                key={i}
+                {...sharedProps}
+                referralApplied={
+                  !!appliedReferralCode ||
+                  !!(item?.referralCode || getProductReferralCode(item?.slug))
+                }
+              />
+            );
           })}
         </div>
       )}
