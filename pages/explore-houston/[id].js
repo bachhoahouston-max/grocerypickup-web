@@ -22,6 +22,9 @@ import {
 import { Api } from "@/services/service";
 import { userContext } from "@/pages/_app";
 import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
+import { getStoreModulePageProps } from "@/services/storeModule";
+
+export const getServerSideProps = getStoreModulePageProps;
 
 const DAY_LABELS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
