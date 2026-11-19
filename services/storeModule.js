@@ -1,7 +1,7 @@
-import { ConstantsUrl } from "@/services/service";
+import { APP_PLATFORM, ConstantsUrl } from "@/services/service";
 
 export async function isStoreModuleVisible(signal = AbortSignal.timeout(5000)) {
-  const response = await fetch(`${ConstantsUrl}storeModuleVisibility`, {
+  const response = await fetch(`${ConstantsUrl}storeModuleVisibility?platform=${APP_PLATFORM}`, {
     cache: "no-store",
     signal,
   });
