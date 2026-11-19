@@ -62,7 +62,7 @@ export default function Home(props) {
         <link rel="canonical" href="https://www.bachhoahouston.com/" />
       </Head>
       <div className="bg-[var(--theme-var)] md:bg-[var(--theme-dek)]">
-        <div className="max-w-7xl mx-auto px-4 mt-1">
+        <div className="mx-auto px-4 mt-1">
           <Suspense fallback={<div>Loading.....</div>}>
             <MainHeader />
           </Suspense>
