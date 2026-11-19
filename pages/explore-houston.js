@@ -54,6 +54,7 @@ import { Api } from "@/services/service";
 import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 import { getStoreModulePageProps } from "@/services/storeModule";
 import { StoreCommunityIcon } from "@/components/ExploreHoustonBanner";
+import RequireStorefrontSignIn from "@/components/RequireStorefrontSignIn";
 
 export const getServerSideProps = getStoreModulePageProps;
 
@@ -546,4 +547,10 @@ function ExploreHouston({ loader, toaster }) {
   );
 }
 
-export default ExploreHouston;
+export default function ExploreHoustonPage(props) {
+  return (
+    <RequireStorefrontSignIn>
+      <ExploreHouston {...props} />
+    </RequireStorefrontSignIn>
+  );
+}
