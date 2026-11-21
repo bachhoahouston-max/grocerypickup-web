@@ -42,6 +42,20 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
+// Global interceptor: the backend (passport-jwt) answers 401 "No auth token" when the user
+// is not logged in. Show a friendly message instead.
+axios.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    const data = err?.response?.data;
+    const message = typeof data?.message === "string" ? data.message : "";
+    if (err?.response?.status === 401 && message.toLowerCase().includes("no auth token")) {
+      data.message = "Please log in to continue";
+    }
+    return Promise.reject(err);
+  }
+);
+
 function Api(method, url, data, router, params) {
   return new Promise(function (resolve, reject) {
     let token = "";
