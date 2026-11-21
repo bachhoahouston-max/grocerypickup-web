@@ -23,6 +23,7 @@ import { Api } from "@/services/service";
 import { userContext } from "@/pages/_app";
 import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 import { getStoreModulePageProps } from "@/services/storeModule";
+import RequireStorefrontSignIn from "@/components/RequireStorefrontSignIn";
 
 export const getServerSideProps = getStoreModulePageProps;
 
@@ -560,4 +561,10 @@ function StoreDetails({ loader, toaster }) {
   );
 }
 
-export default StoreDetails;
+export default function StoreDetailsPage(props) {
+  return (
+    <RequireStorefrontSignIn>
+      <StoreDetails {...props} />
+    </RequireStorefrontSignIn>
+  );
+}
