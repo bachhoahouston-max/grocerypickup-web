@@ -9,6 +9,7 @@ import {
   Beef,
   CakeSlice,
   BookOpen,
+  Bookmark,
   Building2,
   Camera,
   Car,
@@ -59,6 +60,7 @@ import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 import { getStoreModulePageProps } from "@/services/storeModule";
 import { StoreCommunityIcon } from "@/components/ExploreHoustonBanner";
 import RequireStorefrontSignIn from "@/components/RequireStorefrontSignIn";
+import { StoreBookmarkButton, StoreBookmarksError, useStoreBookmarks } from "@/components/StoreBookmarks";
 
 export const getServerSideProps = getStoreModulePageProps;
 
@@ -183,6 +185,7 @@ function StoreCardCarousel({ photos, href, detailsLabel }) {
 function ExploreHouston({ loader, toaster }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
+  const { bookmarks, showBookmarks, setShowBookmarks } = useStoreBookmarks();
   const [stores, setStores] = useState([]);
   const [storeCategories, setStoreCategories] = useState([]);
   const [search, setSearch] = useState("");
@@ -267,6 +270,7 @@ function ExploreHouston({ loader, toaster }) {
   const filteredStores = useMemo(() => {
     const query = normalizeSearchText(search.trim());
     const matchingStores = stores.filter((store) => {
+      if (showBookmarks && !bookmarks?.has(store._id)) return false;
       const storeCategory = getStoreCategory(store);
       const matchesCategory = !category || storeCategory?._id === category;
       const searchableText = [
@@ -298,7 +302,13 @@ function ExploreHouston({ loader, toaster }) {
       }
       return new Date(second.createdAt || 0) - new Date(first.createdAt || 0);
     });
-  }, [category, search, sortBy, stores, categoryById]);
+  }, [category, search, sortBy, stores, categoryById, showBookmarks, bookmarks]);
+
+  const toggleBookmarksView = () => {
+    setSearch("");
+    setCategory("");
+    setShowBookmarks((current) => !current);
+  };
 
   const hasFilter = Boolean(category || search.trim());
   const filterEntryRef = useRef(false);
@@ -367,8 +377,8 @@ function ExploreHouston({ loader, toaster }) {
             </div>
           </div>
 
-          <div className="mb-3 mt-4 grid gap-3 md:mt-0 md:grid-cols-[1fr_260px]">
-            <label className="relative block">
+          <div className="mb-3 mt-4 flex items-center gap-2 md:mt-0">
+            <label className="relative block min-w-0 flex-1">
               <span className="sr-only">{t("Search stores")}</span>
               <Search
                 size={19}
@@ -382,10 +392,21 @@ function ExploreHouston({ loader, toaster }) {
                 className="h-12 w-full placeholder-gray-500 text-gray-500 rounded-xl border-2 border-[#206B3A] pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               />
             </label>
-
+            <button
+              type="button"
+              aria-pressed={showBookmarks}
+              onClick={toggleBookmarksView}
+              disabled={!bookmarks}
+              className="inline-flex h-12 shrink-0 items-center justify-center gap-1.5 rounded-xl border-2 border-[#206B3A] bg-white px-2.5 text-xs font-semibold text-[#206B3A] transition hover:bg-[#edf6ef] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A] aria-pressed:bg-[#206B3A] aria-pressed:text-white disabled:opacity-60 sm:px-4 sm:text-sm"
+            >
+              <Bookmark size={17} fill={showBookmarks ? "currentColor" : "none"} aria-hidden="true" />
+              {t("Bookmarks")}
+            </button>
           </div>
 
-          <div className="relative mb-3 flex items-center gap-1 py-1">
+          <StoreBookmarksError />
+
+          <div className={`relative mb-3 items-center gap-1 py-1 ${showBookmarks ? "hidden" : "flex"}`}>
             <div
               ref={chipRowRef}
               onPointerDown={(event) => {
@@ -458,7 +479,7 @@ function ExploreHouston({ loader, toaster }) {
             </div>
           </div>
 
-          {!category && categories.length > 0 && (
+          {!showBookmarks && !category && categories.length > 0 && (
             <div className="mb-2 grid grid-cols-3 gap-1 md:grid-cols-4 md:gap-3 lg:grid-cols-6">
               {categories.map((item, index) => {
                 const Icon = ICON_MAP[item.icon] || Store;
@@ -527,6 +548,7 @@ function ExploreHouston({ loader, toaster }) {
                           )}
                         </Link>
                       )}
+                      <StoreBookmarkButton storeId={store._id} storeName={storeTitle} className="absolute right-2 top-2 z-20" />
                     </div>
                     <Link href={detailsHref} prefetch={false} aria-label={detailsLabel} aria-describedby={specialtyId} className="min-w-0 flex-1 rounded-xl px-3 py-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#206B3A] sm:px-5">
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
@@ -585,15 +607,14 @@ function ExploreHouston({ loader, toaster }) {
                         )}
                       </div>
                     </Link>
-                    {/* <span
-                      aria-hidden="true"
-                      className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-gray-500 shadow-sm transition group-hover:text-[#206B3A]"
-                    >
-                      <Heart size={18} />
-                    </span> */}
                   </article>
                 );
               })}
+            </div>
+          ) : showBookmarks && !stores.some((store) => bookmarks?.has(store._id)) ? (
+            <div className="rounded-2xl bg-white px-6 py-16 text-center shadow-sm">
+              <h2 className="text-xl font-semibold text-gray-800">{t("No bookmarked stores yet")}</h2>
+              <p className="mt-2 text-sm text-gray-500">{t("Bookmark stores to find them here.")}</p>
             </div>
           ) : (
             <div className="rounded-2xl bg-white px-6 py-16 text-center shadow-sm">

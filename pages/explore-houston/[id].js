@@ -24,6 +24,7 @@ import { userContext } from "@/pages/_app";
 import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 import { getStoreModulePageProps } from "@/services/storeModule";
 import RequireStorefrontSignIn from "@/components/RequireStorefrontSignIn";
+import { StoreBookmarkButton, StoreBookmarksError } from "@/components/StoreBookmarks";
 
 export const getServerSideProps = getStoreModulePageProps;
 
@@ -309,6 +310,7 @@ function StoreDetails({ loader, toaster }) {
                       ))}
                     </div>
                   )}
+                  <StoreBookmarksError />
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">{title}</h1>
@@ -319,6 +321,7 @@ function StoreDetails({ loader, toaster }) {
                       </p>
                     )} */}
                     </div>
+                    <StoreBookmarkButton storeId={store._id} storeName={title} showLabel className="px-3 text-sm font-semibold" />
                   </div>
                   <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
                     {getText("shortDescription", "shortDescription_v")}

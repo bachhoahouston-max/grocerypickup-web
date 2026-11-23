@@ -12,6 +12,7 @@ import { ni18nConfig } from "../ni18n.config";
 import { Toaster as SonnerToaster, toast } from "sonner";
 import Script from "next/script";
 import ScrollToTop from "@/components/ScrollToTo";
+import { StoreBookmarksProvider } from "@/components/StoreBookmarks";
 
 const DEFAULT_WEB_BACKGROUND_COLOR = "#fff";
 
@@ -431,6 +432,21 @@ function App({ Component, pageProps }) {
     }
   };
 
+  const isExploreHouston = ["/explore-houston", "/explore-houston/[id]"].includes(router.pathname);
+  const bookmarkAccountId = user?._id || user?.id;
+  const page = (
+    <Component
+      toaster={(t) => {
+        if (t.type === "error") toast.error(t.message);
+        else if (t.type === "success") toast.success(t.message);
+        else toast(t.message);
+      }}
+      {...pageProps}
+      loader={setOpen}
+      user={user}
+    />
+  );
+
   return (
     <div style={{ backgroundColor: webBackgroundColor }}>
       {/* Google Analytics */}
@@ -482,16 +498,11 @@ function App({ Component, pageProps }) {
                   {open && <Loader open={open} />}
 
 
-                  <Component
-                    toaster={(t) => {
-                      if (t.type === "error") toast.error(t.message);
-                      else if (t.type === "success") toast.success(t.message);
-                      else toast(t.message);
-                    }}
-                    {...pageProps}
-                    loader={setOpen}
-                    user={user}
-                  />
+                  {isExploreHouston ? (
+                    <StoreBookmarksProvider key={bookmarkAccountId} accountId={bookmarkAccountId}>
+                      {page}
+                    </StoreBookmarksProvider>
+                  ) : page}
                 </Layout>
               </favoriteProductContext.Provider>
             </cartContext.Provider>
