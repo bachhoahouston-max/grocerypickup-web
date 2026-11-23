@@ -59,7 +59,6 @@ import { Api } from "@/services/service";
 import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 import { getStoreModulePageProps } from "@/services/storeModule";
 import { StoreCommunityIcon } from "@/components/ExploreHoustonBanner";
-import RequireStorefrontSignIn from "@/components/RequireStorefrontSignIn";
 import { StoreBookmarkButton, StoreBookmarksError, useStoreBookmarks } from "@/components/StoreBookmarks";
 
 export const getServerSideProps = getStoreModulePageProps;
@@ -182,10 +181,10 @@ function StoreCardCarousel({ photos, href, detailsLabel }) {
   );
 }
 
-function ExploreHouston({ loader, toaster }) {
+export default function ExploreHouston({ loader, toaster }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
-  const { bookmarks, showBookmarks, setShowBookmarks } = useStoreBookmarks();
+  const { bookmarks, showBookmarks, setShowBookmarks, isSignedIn, signInHref } = useStoreBookmarks();
   const [stores, setStores] = useState([]);
   const [storeCategories, setStoreCategories] = useState([]);
   const [search, setSearch] = useState("");
@@ -305,6 +304,10 @@ function ExploreHouston({ loader, toaster }) {
   }, [category, search, sortBy, stores, categoryById, showBookmarks, bookmarks]);
 
   const toggleBookmarksView = () => {
+    if (!isSignedIn) {
+      router.push(signInHref);
+      return;
+    }
     setSearch("");
     setCategory("");
     setShowBookmarks((current) => !current);
@@ -394,9 +397,10 @@ function ExploreHouston({ loader, toaster }) {
             </label>
             <button
               type="button"
-              aria-pressed={showBookmarks}
+              aria-pressed={isSignedIn ? showBookmarks : undefined}
+              aria-label={isSignedIn ? undefined : t("Sign in to view bookmarks")}
               onClick={toggleBookmarksView}
-              disabled={!bookmarks}
+              disabled={isSignedIn && !bookmarks}
               className="inline-flex h-12 shrink-0 items-center justify-center gap-1.5 rounded-xl border-2 border-[#206B3A] bg-white px-2.5 text-xs font-semibold text-[#206B3A] transition hover:bg-[#edf6ef] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A] aria-pressed:bg-[#206B3A] aria-pressed:text-white disabled:opacity-60 sm:px-4 sm:text-sm"
             >
               <Bookmark size={17} fill={showBookmarks ? "currentColor" : "none"} aria-hidden="true" />
@@ -629,13 +633,5 @@ function ExploreHouston({ loader, toaster }) {
         </div>
       </main>
     </>
-  );
-}
-
-export default function ExploreHoustonPage(props) {
-  return (
-    <RequireStorefrontSignIn>
-      <ExploreHouston {...props} />
-    </RequireStorefrontSignIn>
   );
 }

@@ -433,7 +433,7 @@ function App({ Component, pageProps }) {
   };
 
   const isExploreHouston = ["/explore-houston", "/explore-houston/[id]"].includes(router.pathname);
-  const bookmarkAccountId = user?._id || user?.id;
+  const bookmarkAccountId = user?.token ? user._id || user.id : undefined;
   const page = (
     <Component
       toaster={(t) => {

@@ -15,6 +15,8 @@ export function StoreBookmarksProvider({ accountId, children }) {
   const [loadFailed, setLoadFailed] = useState(false);
   const [loadAttempt, setLoadAttempt] = useState(0);
   const [showBookmarks, setShowBookmarks] = useState(false);
+  const isSignedIn = Boolean(accountId);
+  const signInHref = `/signIn?redirect=${encodeURIComponent(router.asPath)}`;
 
   useEffect(() => {
     if (!accountId || !localStorage.getItem("token")) return;
@@ -38,6 +40,10 @@ export function StoreBookmarksProvider({ accountId, children }) {
   };
 
   const toggleBookmark = async (storeId) => {
+    if (!isSignedIn) {
+      router.push(signInHref);
+      return;
+    }
     if (!bookmarks || pending.has(storeId)) return;
     const bookmarked = !bookmarks.has(storeId);
     setPending((current) => new Set(current).add(storeId));
@@ -63,7 +69,7 @@ export function StoreBookmarksProvider({ accountId, children }) {
 
   return (
     <StoreBookmarksContext.Provider value={{
-      bookmarks, pending, toggleBookmark, loadFailed, retry, showBookmarks, setShowBookmarks,
+      bookmarks, pending, toggleBookmark, loadFailed, retry, showBookmarks, setShowBookmarks, isSignedIn, signInHref,
     }}>
       {children}
     </StoreBookmarksContext.Provider>
@@ -76,21 +82,21 @@ export function useStoreBookmarks() {
 
 export function StoreBookmarkButton({ storeId, storeName, showLabel = false, className = "" }) {
   const { t } = useTranslation();
-  const { bookmarks, pending, toggleBookmark } = useStoreBookmarks();
+  const { bookmarks, pending, toggleBookmark, isSignedIn } = useStoreBookmarks();
   const bookmarked = bookmarks?.has(storeId) ?? false;
-  const label = t("Bookmark {{store}}", { store: storeName });
+  const label = t(isSignedIn ? "Bookmark {{store}}" : "Sign in to bookmark {{store}}", { store: storeName });
 
   return (
     <button
       type="button"
       aria-label={label}
-      aria-pressed={bookmarked}
-      disabled={!bookmarks || pending.has(storeId)}
+      aria-pressed={isSignedIn ? bookmarked : undefined}
+      disabled={isSignedIn && (!bookmarks || pending.has(storeId))}
       onClick={() => toggleBookmark(storeId)}
       className={`inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center gap-2 rounded-full border border-[#206B3A]/20 bg-white text-[#206B3A] shadow-sm transition hover:bg-[#edf6ef] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A] aria-pressed:bg-[#edf6ef] disabled:opacity-60 ${className}`}
     >
       <Bookmark size={18} fill={bookmarked ? "currentColor" : "none"} aria-hidden="true" />
-      {showLabel && <span>{t("Bookmark")}</span>}
+      {showLabel && <span>{t(isSignedIn ? "Bookmark" : "Sign in to bookmark")}</span>}
     </button>
   );
 }

@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import {
@@ -20,11 +21,9 @@ import {
   X,
 } from "lucide-react";
 import { Api } from "@/services/service";
-import { userContext } from "@/pages/_app";
 import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 import { getStoreModulePageProps } from "@/services/storeModule";
-import RequireStorefrontSignIn from "@/components/RequireStorefrontSignIn";
-import { StoreBookmarkButton, StoreBookmarksError } from "@/components/StoreBookmarks";
+import { StoreBookmarkButton, StoreBookmarksError, useStoreBookmarks } from "@/components/StoreBookmarks";
 
 export const getServerSideProps = getStoreModulePageProps;
 
@@ -44,15 +43,16 @@ const timeAgo = (value) => {
   return date.toLocaleDateString();
 };
 
-function StoreDetails({ loader, toaster }) {
+export default function StoreDetails({ loader, toaster }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
-  const [user] = useContext(userContext);
+  const { isSignedIn, signInHref } = useStoreBookmarks();
   const [store, setStore] = useState(null);
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [comments, setComments] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
+  const [reviewFeedback, setReviewFeedback] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const chatListRef = useRef(null);
@@ -78,7 +78,6 @@ function StoreDetails({ loader, toaster }) {
   const additionalImages = Array.isArray(store?.additionalImages) ? store.additionalImages : [];
   const storePhotos = [store?.image, ...additionalImages].filter(Boolean);
   const mainPhoto = storePhotos[selectedPhotoIndex] || storePhotos[0];
-  const isLoggedIn = Boolean(user?._id || user?.id || user?.token);
   const ownReview = reviews.find((review) => review.isMine);
   const openStatus = getStoreOpenStatus(store);
   const hasHours = Array.isArray(store?.openingHours) && store.openingHours.length > 0;
@@ -165,11 +164,7 @@ function StoreDetails({ loader, toaster }) {
   const submitComment = (event) => {
     event.preventDefault();
     const comment = commentText.trim();
-    if (!isLoggedIn) {
-      router.push(`/signIn?redirect=${encodeURIComponent(router.asPath)}`);
-      return;
-    }
-    if (!comment) return;
+    if (!isSignedIn || !comment) return;
 
     setCommentSubmitting(true);
     Api("post", `createStoreComment/${router.query.id}`, { comment }, router)
@@ -188,16 +183,12 @@ function StoreDetails({ loader, toaster }) {
 
   const submitReview = (event) => {
     event.preventDefault();
-    if (!isLoggedIn) {
-      router.push(`/signIn?redirect=${encodeURIComponent(router.asPath)}`);
-      return;
-    }
-    if (!selectedRating) return;
+    if (!isSignedIn || !selectedRating) return;
     setReviewSubmitting(true);
     Api(
       "post",
       `createStoreReview/${router.query.id}`,
-      { rating: selectedRating },
+      { rating: selectedRating, feedback: reviewFeedback.trim() },
       router
     )
       .then((response) => {
@@ -217,12 +208,17 @@ function StoreDetails({ loader, toaster }) {
   };
 
   const openReviewModal = () => {
+    if (!isSignedIn) {
+      router.push(signInHref);
+      return;
+    }
     setSelectedRating(ownReview?.rating || 0);
+    setReviewFeedback(ownReview?.feedback || "");
     setReviewModalOpen(true);
   };
 
   const deleteReview = () => {
-    if (!ownReview?._id || !window.confirm(t("Delete your review?"))) return;
+    if (!isSignedIn || !ownReview?._id || !window.confirm(t("Delete your review?"))) return;
     setReviewSubmitting(true);
     Api("delete", `deleteStoreReview/${ownReview._id}`, null, router)
       .then((response) => {
@@ -457,25 +453,31 @@ function StoreDetails({ loader, toaster }) {
                     </p>
                   )}
                 </div>
-                <form onSubmit={submitComment} className="mt-6 flex items-center gap-3">
-                  <input
-                    type="text"
-                    value={commentText}
-                    onChange={(event) => setCommentText(event.target.value)}
-                    placeholder={isLoggedIn ? t("Add a comment...") : t("Sign in to live chat")}
-                    disabled={!isLoggedIn || commentSubmitting}
-                    maxLength={2000}
-                    className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-white px-5 py-3.5 text-sm text-gray-700 placeholder-gray-500 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A] disabled:bg-gray-100"
-                  />
-                  <button
-                    type="submit"
-                    disabled={commentSubmitting || (isLoggedIn && !commentText.trim())}
-                    aria-label={isLoggedIn ? t("Send live chat") : t("Sign in to live chat")}
-                    className="inline-flex cursor-pointer p-3 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-white hover:bg-[#104936] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <SendHorizonal size={25} strokeWidth={1.8} />
-                  </button>
-                </form>
+                {isSignedIn ? (
+                  <form onSubmit={submitComment} className="mt-6 flex items-center gap-3">
+                    <input
+                      type="text"
+                      value={commentText}
+                      onChange={(event) => setCommentText(event.target.value)}
+                      placeholder={t("Add a comment...")}
+                      disabled={commentSubmitting}
+                      maxLength={2000}
+                      className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-white px-5 py-3.5 text-sm text-gray-700 placeholder-gray-500 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A] disabled:bg-gray-100"
+                    />
+                    <button
+                      type="submit"
+                      disabled={commentSubmitting || !commentText.trim()}
+                      aria-label={t("Send live chat")}
+                      className="inline-flex cursor-pointer p-3 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-white hover:bg-[#104936] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <SendHorizonal size={25} strokeWidth={1.8} />
+                    </button>
+                  </form>
+                ) : (
+                  <Link href={signInHref} className="mt-6 inline-block rounded-lg bg-[#206B3A] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#18532d]">
+                    {t("Sign in to live chat")}
+                  </Link>
+                )}
               </section>
 
               <section className="mt-1 rounded-3xl bg-white p-6 shadow-sm md:p-10">
@@ -491,7 +493,7 @@ function StoreDetails({ loader, toaster }) {
                     onClick={openReviewModal}
                     className="rounded-lg bg-[#206B3A] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#18532d]"
                   >
-                    {ownReview ? t("Edit your review") : t("Add Review")}
+                    {isSignedIn ? (ownReview ? t("Edit your review") : t("Add Review")) : t("Sign in to review")}
                   </button>
                 </div>
                 <div className="mt-1 space-y-1">
@@ -521,7 +523,7 @@ function StoreDetails({ loader, toaster }) {
                   }) : <p className="text-sm text-gray-500">{t("No reviews yet")}</p>}
                 </div>
               </section>
-              {reviewModalOpen && (
+              {isSignedIn && reviewModalOpen && (
                 <div
                   className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6"
                   role="presentation"
@@ -549,7 +551,7 @@ function StoreDetails({ loader, toaster }) {
                       </button>
                     </div>
                     <p className="mt-5 text-sm font-medium text-gray-600">
-                      {isLoggedIn ? t("Rate this store") : t("Sign in to review this store")}
+                      {t("Rate this store")}
                     </p>
                     <form onSubmit={submitReview}>
                       <div className="mt-3 flex items-center justify-center gap-2" role="radiogroup" aria-label={t("Store rating")}>
@@ -558,7 +560,7 @@ function StoreDetails({ loader, toaster }) {
                             key={rating}
                             type="button"
                             onClick={() => setSelectedRating(rating)}
-                            disabled={!isLoggedIn || reviewSubmitting}
+                            disabled={reviewSubmitting}
                             aria-label={`${rating} ${t("stars")}`}
                             className="rounded p-1 text-amber-400 transition hover:scale-110 disabled:cursor-not-allowed disabled:opacity-50"
                           >
@@ -566,16 +568,25 @@ function StoreDetails({ loader, toaster }) {
                           </button>
                         ))}
                       </div>
+                      <label htmlFor="store-review-feedback" className="mt-5 block text-sm font-medium text-gray-600">
+                        {t("Feedback")} <span className="font-normal text-gray-400">({t("optional")})</span>
+                      </label>
+                      <textarea
+                        id="store-review-feedback"
+                        value={reviewFeedback}
+                        onChange={(event) => setReviewFeedback(event.target.value)}
+                        maxLength={2000}
+                        rows={4}
+                        placeholder={t("Share your feedback")}
+                        disabled={reviewSubmitting}
+                        className="mt-2 w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:border-[#206B3A] disabled:bg-gray-100"
+                      />
                       <button
                         type="submit"
                         disabled={reviewSubmitting}
                         className="mt-6 w-full rounded-lg bg-[#206B3A] px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
                       >
-                        {isLoggedIn
-                          ? ownReview
-                            ? t("Update review")
-                            : t("Submit review")
-                          : t("Sign in to review")}
+                        {ownReview ? t("Update review") : t("Submit review")}
                       </button>
                       {ownReview && (
                         <button
@@ -601,13 +612,5 @@ function StoreDetails({ loader, toaster }) {
         </div>
       </main>
     </>
-  );
-}
-
-export default function StoreDetailsPage(props) {
-  return (
-    <RequireStorefrontSignIn>
-      <StoreDetails {...props} />
-    </RequireStorefrontSignIn>
   );
 }
