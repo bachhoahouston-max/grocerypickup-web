@@ -421,6 +421,8 @@ function StoreDetails({ loader, toaster }) {
                       const name =
                         [item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
                         t("Customer");
+                      const createdAt = new Date(item.createdAt ?? "");
+                      const hasTimestamp = Number.isFinite(createdAt.getTime());
                       return (
                         <div key={item._id} className="flex items-start gap-3">
                           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-base font-semibold text-white md:h-12 md:w-12">
@@ -429,8 +431,18 @@ function StoreDetails({ loader, toaster }) {
                           <div className="min-w-0">
                             <p className="flex items-center flex-wrap gap-x-2 text-sm leading-4">
                               <span className="font-semibold text-[#1f3d1f]">{name}</span>
-                              <span className="bg-gray-400 w-1 h-1 rounded-full"></span>
-                              <span className="text-xs text-gray-400">{timeAgo(item.createdAt)}</span>
+                              {hasTimestamp && (
+                                <>
+                                  <span className="bg-gray-400 w-1 h-1 rounded-full" aria-hidden="true"></span>
+                                  <time dateTime={createdAt.toISOString()} className="text-xs text-gray-400">
+                                    {createdAt.toLocaleString(isVietnamese ? "vi-VN" : "en-US", {
+                                      dateStyle: "medium",
+                                      timeStyle: "short",
+                                      timeZone: "America/Chicago",
+                                    })}
+                                  </time>
+                                </>
+                              )}
                             </p>
                             <p className="mt-0.5 inline-block max-w-full whitespace-pre-wrap break-words rounded-lg bg-green-50 px-4 py-0.5 text-sm leading-5 text-gray-800">
                               {item.comment}
