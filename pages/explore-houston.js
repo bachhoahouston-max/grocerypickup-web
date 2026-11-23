@@ -284,6 +284,9 @@ function ExploreHouston({ loader, toaster }) {
     });
 
     return [...matchingStores].sort((first, second) => {
+      const personalOrder = Number(second.isPersonal === true) - Number(first.isPersonal === true);
+      if (personalOrder) return personalOrder;
+
       if (sortBy === "oldest") {
         return new Date(first.createdAt || 0) - new Date(second.createdAt || 0);
       }
