@@ -11,6 +11,8 @@ import {
   Camera,
   Car,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   Coffee,
   Cookie,
@@ -100,6 +102,8 @@ const ICON_MAP = {
 };
 
 const DEFAULT_ICON_BACKGROUND = "#edf6ef";
+const STORES_PER_PAGE = 20;
+const PAGE_BUTTON_CLASS = "inline-flex min-h-11 items-center gap-1 rounded-lg border border-[#206B3A] bg-white px-3 text-sm font-semibold text-[#206B3A] transition enabled:hover:bg-[#edf6ef] disabled:opacity-50";
 
 // Pastel icon tones cycled across category cards when a category has no custom color.
 const CATEGORY_TONES = [
@@ -127,8 +131,10 @@ function ExploreHouston({ loader, toaster }) {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+  const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const chipRowRef = useRef(null);
+  const storeListRef = useRef(null);
   const dragRef = useRef(null);
   const suppressClickRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -236,6 +242,23 @@ function ExploreHouston({ loader, toaster }) {
     });
   }, [category, search, sortBy, stores, categoryById]);
 
+  const totalPages = Math.ceil(filteredStores.length / STORES_PER_PAGE);
+  const page = Math.min(currentPage, Math.max(1, totalPages));
+  const pageStart = (page - 1) * STORES_PER_PAGE;
+  const pageStores = filteredStores.slice(pageStart, pageStart + STORES_PER_PAGE);
+
+  const changePage = (nextPage) => {
+    setCurrentPage(nextPage);
+    storeListRef.current?.focus({ preventScroll: true });
+    storeListRef.current?.scrollIntoView({ block: "start" });
+  };
+
+  const changeCategory = (nextCategory) => {
+    if (nextCategory === category) return;
+    setCategory(nextCategory);
+    setCurrentPage(1);
+  };
+
   // Back button: first press clears active filters, next press leaves the page.
   // While a filter is active we push one extra history entry; popping it (back)
   // clears the filters instead of navigating away.
@@ -264,6 +287,7 @@ function ExploreHouston({ loader, toaster }) {
       filterEntryRef.current = false;
       setSearch("");
       setCategory("");
+      setCurrentPage(1);
     };
     window.addEventListener("popstate", onPopState);
     return () => {
@@ -316,7 +340,10 @@ function ExploreHouston({ loader, toaster }) {
               <input
                 type="search"
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setCurrentPage(1);
+                }}
                 placeholder={t("Search stores")}
                 className="h-12 w-full placeholder-gray-500 text-gray-500 rounded-xl border-2 border-[#206B3A] pl-10 pr-4 text-sm outline-none transition focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A]"
               />
@@ -362,7 +389,7 @@ function ExploreHouston({ loader, toaster }) {
             >
               <button
                 type="button"
-                onClick={() => setCategory("")}
+                onClick={() => changeCategory("")}
                 aria-pressed={!category}
                 className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition md:text-sm ${!category
                   ? "border-[#206B3A] bg-[#206B3A] text-white"
@@ -378,7 +405,7 @@ function ExploreHouston({ loader, toaster }) {
                   <button
                     key={item._id}
                     type="button"
-                    onClick={() => setCategory(item._id)}
+                    onClick={() => changeCategory(item._id)}
                     aria-pressed={active}
                     className={`inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 text-xs font-semibold transition md:text-sm ${active
                       ? "border-[#206B3A] bg-[#206B3A] text-white"
@@ -406,7 +433,7 @@ function ExploreHouston({ loader, toaster }) {
                   <button
                     key={item._id}
                     type="button"
-                    onClick={() => setCategory(item._id)}
+                    onClick={() => changeCategory(item._id)}
                     className="flex min-w-0 items-center gap-2 py-0.5 rounded-lg border border-[#ebe9e2] bg-white px-2 text-left shadow-sm transition hover:bg-[#efeee8] hover:shadow-md md:gap-3 md:px-3 md:py-3"
                   >
                     {item.image ? (
@@ -431,9 +458,9 @@ function ExploreHouston({ loader, toaster }) {
             </div>
           )}
 
-          {loading ? null : filteredStores.length > 0 ? (
-            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
-              {filteredStores.map((store) => {
+          {loading ? null : pageStores.length > 0 ? (
+            <div ref={storeListRef} tabIndex={-1} className="mx-auto grid max-w-7xl scroll-mt-28 grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
+              {pageStores.map((store) => {
                 const storeCategory = getStoreCategory(store);
                 const Icon = ICON_MAP[storeCategory?.icon] || Store;
                 const storeTitle = getText(store, "title", "title_v");
@@ -540,6 +567,21 @@ function ExploreHouston({ loader, toaster }) {
                 {t("Try a different search or category")}
               </p>
             </div>
+          )}
+          {!loading && totalPages > 1 && (
+            <nav aria-label={t("Store pagination")} className="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+              <button type="button" className={PAGE_BUTTON_CLASS} disabled={page === 1} onClick={() => changePage(page - 1)}>
+                <ChevronLeft size={16} aria-hidden="true" />
+                {t("Previous")}
+              </button>
+              <p role="status" className="text-sm font-medium text-gray-600">
+                {t("Page {{page}} of {{totalPages}}", { page, totalPages })}
+              </p>
+              <button type="button" className={PAGE_BUTTON_CLASS} disabled={page === totalPages} onClick={() => changePage(page + 1)}>
+                {t("Next")}
+                <ChevronRight size={16} aria-hidden="true" />
+              </button>
+            </nav>
           )}
         </div>
       </main>
