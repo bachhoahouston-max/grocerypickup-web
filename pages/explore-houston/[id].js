@@ -48,6 +48,7 @@ function StoreDetails({ loader, toaster }) {
   const { t, i18n } = useTranslation();
   const [user] = useContext(userContext);
   const [store, setStore] = useState(null);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [comments, setComments] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
@@ -73,6 +74,9 @@ function StoreDetails({ loader, toaster }) {
     ? category?.v_name || category?.name
     : category?.name || category?.v_name;
   const title = getText("title", "title_v") || t("Store details");
+  const additionalImages = Array.isArray(store?.additionalImages) ? store.additionalImages : [];
+  const storePhotos = [store?.image, ...additionalImages].filter(Boolean);
+  const mainPhoto = storePhotos[selectedPhotoIndex] || storePhotos[0];
   const isLoggedIn = Boolean(user?._id || user?.id || user?.token);
   const ownReview = reviews.find((review) => review.isMine);
   const openStatus = getStoreOpenStatus(store);
@@ -110,6 +114,7 @@ function StoreDetails({ loader, toaster }) {
         if (!active) return;
         if (response?.status && response?.data) {
           setStore(response.data);
+          setSelectedPhotoIndex(0);
           loadComments(router.query.id);
           loadReviews(router.query.id);
           if (viewRecordedRef.current !== router.query.id) {
@@ -271,9 +276,9 @@ function StoreDetails({ loader, toaster }) {
           ) : store ? (
             <div>
               <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
-                <div className="relative h-64 bg-[#edf6ef] md:h-96">
-                  {store.image ? (
-                    <img src={store.image} alt={title} className="h-full w-full object-cover" />
+                <div id="store-main-photo" className="relative h-64 bg-[#edf6ef] md:h-96">
+                  {mainPhoto ? (
+                    <img src={mainPhoto} alt={title} className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-[#206B3A]">
                       <Tag size={88} strokeWidth={1.2} />
@@ -285,7 +290,24 @@ function StoreDetails({ loader, toaster }) {
                     </span>
                   )}
                 </div>
-                <div className="p-6 md:p-10">
+                <div className={`px-6 pb-6 md:px-10 md:pb-10 ${storePhotos.length > 1 ? "pt-4" : "pt-6 md:pt-10"}`}>
+                  {storePhotos.length > 1 && (
+                    <div role="group" aria-label={t("Store photos")} className="mb-4 grid max-w-[28rem] grid-cols-5 gap-1.5 sm:gap-3">
+                      {storePhotos.map((photo, index) => (
+                        <button
+                          key={`${photo}-${index}`}
+                          type="button"
+                          aria-label={t("Show photo {{number}}", { number: index + 1 })}
+                          aria-controls="store-main-photo"
+                          aria-pressed={index === selectedPhotoIndex}
+                          onClick={() => setSelectedPhotoIndex(index)}
+                          className="h-11 overflow-hidden rounded-lg border border-gray-200 bg-white p-0.5 transition hover:border-[#206B3A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A] aria-pressed:border-[#206B3A] aria-pressed:ring-1 aria-pressed:ring-[#206B3A] sm:h-14"
+                        >
+                          <img src={photo} alt="" className="h-full w-full rounded-md object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">{title}</h1>

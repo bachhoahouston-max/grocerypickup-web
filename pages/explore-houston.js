@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import {
@@ -11,6 +13,8 @@ import {
   Camera,
   Car,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   Coffee,
   Cookie,
@@ -100,6 +104,7 @@ const ICON_MAP = {
 };
 
 const DEFAULT_ICON_BACKGROUND = "#edf6ef";
+const PHOTO_ARROW_CLASS = "absolute top-1/2 z-10 flex size-9 sm:size-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#1f6b3a]/85 text-white shadow-sm transition hover:bg-[#1f6b3a]/95 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white";
 
 // Pastel icon tones cycled across category cards when a category has no custom color.
 const CATEGORY_TONES = [
@@ -118,6 +123,62 @@ const normalizeSearchText = (value) =>
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[đĐ]/g, "d")
     .toLowerCase();
+
+function StoreCardCarousel({ photos, href, detailsLabel }) {
+  const { t } = useTranslation();
+  const [viewportRef, carousel] = useEmblaCarousel({
+    loop: true,
+    breakpoints: { "(prefers-reduced-motion: reduce)": { duration: 0 } },
+  });
+  const [currentPhoto, setCurrentPhoto] = useState(0);
+
+  useEffect(() => {
+    if (!carousel) return;
+    const updateCurrentPhoto = () => setCurrentPhoto(carousel.selectedScrollSnap());
+    updateCurrentPhoto();
+    carousel.on("select", updateCurrentPhoto).on("reInit", updateCurrentPhoto);
+    return () => {
+      carousel.off("select", updateCurrentPhoto).off("reInit", updateCurrentPhoto);
+    };
+  }, [carousel]);
+
+  return (
+    <div role="group" aria-label={t("Store photos")} className="absolute inset-0">
+      <Link href={href} prefetch={false} tabIndex={-1} draggable={false} aria-label={detailsLabel} className="block h-full">
+        <div ref={viewportRef} className="h-full overflow-hidden">
+          <div className="flex h-full [touch-action:pan-y_pinch-zoom]">
+            {photos.map((photo, index) => (
+              <div key={`${photo}-${index}`} className="min-w-0 flex-[0_0_100%]">
+                <img src={photo} alt="" draggable={false} loading={index > 0 ? "lazy" : undefined} className="h-full w-full object-cover" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </Link>
+      <button
+        type="button"
+        aria-label={t("Previous photo")}
+        disabled={!carousel}
+        onClick={() => carousel?.scrollPrev()}
+        className={`${PHOTO_ARROW_CLASS} left-1.5 sm:left-2`}
+      >
+        <ChevronLeft size={20} aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        aria-label={t("Next photo")}
+        disabled={!carousel}
+        onClick={() => carousel?.scrollNext()}
+        className={`${PHOTO_ARROW_CLASS} right-1.5 sm:right-2`}
+      >
+        <ChevronRight size={20} aria-hidden="true" />
+      </button>
+      <span className="sr-only" role="status">
+        {t("Photo {{current}} of {{total}}", { current: currentPhoto + 1, total: photos.length })}
+      </span>
+    </div>
+  );
+}
 
 function ExploreHouston({ loader, toaster }) {
   const router = useRouter();
@@ -236,9 +297,6 @@ function ExploreHouston({ loader, toaster }) {
     });
   }, [category, search, sortBy, stores, categoryById]);
 
-  // Back button: first press clears active filters, next press leaves the page.
-  // While a filter is active we push one extra history entry; popping it (back)
-  // clears the filters instead of navigating away.
   const hasFilter = Boolean(category || search.trim());
   const filterEntryRef = useRef(false);
 
@@ -437,39 +495,35 @@ function ExploreHouston({ loader, toaster }) {
                 const storeCategory = getStoreCategory(store);
                 const Icon = ICON_MAP[storeCategory?.icon] || Store;
                 const storeTitle = getText(store, "title", "title_v");
+                const detailsHref = `/explore-houston/${store._id}`;
+                const detailsLabel = `${t("View details for")} ${storeTitle}`;
+                const additionalImages = Array.isArray(store.additionalImages) ? store.additionalImages : [];
+                const photos = [store.image, ...additionalImages].filter(Boolean);
                 const openStatus = getStoreOpenStatus(store);
                 return (
                   <article
                     key={store._id}
-                    role="link"
-                    tabIndex={0}
-                    aria-label={`${t("View details for")} ${storeTitle}`}
-                    onClick={() => router.push(`/explore-houston/${store._id}`)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        router.push(`/explore-houston/${store._id}`);
-                      }
-                    }}
-                    className="group cursor-pointer w-full relative flex items-stretch overflow-hidden rounded-2xl border border-gray-100 bg-white p-1 shadow-sm hover:shadow-md sm:p-1"
+                    className="group relative flex w-full items-stretch rounded-2xl border border-gray-100 bg-white p-1 shadow-sm hover:shadow-md"
                   >
                     <div className="relative min-h-[150px] w-[46%] min-w-[140px] shrink-0 self-stretch overflow-hidden rounded-xl bg-[#edf6ef] sm:min-h-[190px] sm:w-[340px] lg:w-[250px]">
-                      {store.image ? (
-                        <img
-                          src={store.image}
-                          alt={storeTitle}
-                          className="absolute inset-0 h-full w-full object-cover"
-                        />
+                      {photos.length > 1 ? (
+                        <StoreCardCarousel photos={photos} href={detailsHref} detailsLabel={detailsLabel} />
                       ) : (
-                        <div
-                          className="flex h-full items-center justify-center text-[#206B3A]"
-                          style={{ backgroundColor: storeCategory?.iconBackground || DEFAULT_ICON_BACKGROUND }}
-                        >
-                          <Icon size={64} strokeWidth={1.3} />
-                        </div>
+                        <Link href={detailsHref} prefetch={false} tabIndex={-1} aria-label={detailsLabel} className="absolute inset-0">
+                          {photos[0] ? (
+                            <img src={photos[0]} alt="" className="h-full w-full object-cover" />
+                          ) : (
+                            <div
+                              className="flex h-full items-center justify-center text-[#206B3A]"
+                              style={{ backgroundColor: storeCategory?.iconBackground || DEFAULT_ICON_BACKGROUND }}
+                            >
+                              <Icon size={64} strokeWidth={1.3} aria-hidden="true" />
+                            </div>
+                          )}
+                        </Link>
                       )}
                     </div>
-                    <div className="min-w-0 flex-1 px-3 py-2 sm:px-5">
+                    <Link href={detailsHref} prefetch={false} aria-label={detailsLabel} className="min-w-0 flex-1 rounded-xl px-3 py-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#206B3A] sm:px-5">
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <h2 className="min-w-0 max-w-full truncate text-base font-bold text-gray-900 sm:text-xl">
                           {storeTitle}
@@ -520,7 +574,7 @@ function ExploreHouston({ loader, toaster }) {
                           </p>
                         )}
                       </div>
-                    </div>
+                    </Link>
                     {/* <span
                       aria-hidden="true"
                       className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 text-gray-500 shadow-sm transition group-hover:text-[#206B3A]"
