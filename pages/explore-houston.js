@@ -104,7 +104,7 @@ const ICON_MAP = {
 };
 
 const DEFAULT_ICON_BACKGROUND = "#edf6ef";
-const PHOTO_ARROW_CLASS = "absolute top-1/2 z-10 flex size-9 sm:size-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#1f6b3a]/85 text-white shadow-sm transition hover:bg-[#1f6b3a]/95 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white";
+const PHOTO_ARROW_CLASS = "absolute top-1/2 z-10 flex size-0 sm:size-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#1f6b3a]/85 text-white shadow-sm transition hover:bg-[#1f6b3a]/95 focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-white";
 
 // Pastel icon tones cycled across category cards when a category has no custom color.
 const CATEGORY_TONES = [
@@ -498,6 +498,8 @@ function ExploreHouston({ loader, toaster }) {
                 const storeCategory = getStoreCategory(store);
                 const Icon = ICON_MAP[storeCategory?.icon] || Store;
                 const storeTitle = getText(store, "title", "title_v");
+                const specialty = getText(store, "specialty", "specialty_v");
+                const specialtyId = specialty ? `store-specialty-${store._id}` : undefined;
                 const detailsHref = `/explore-houston/${store._id}`;
                 const detailsLabel = `${t("View details for")} ${storeTitle}`;
                 const additionalImages = Array.isArray(store.additionalImages) ? store.additionalImages : [];
@@ -526,7 +528,7 @@ function ExploreHouston({ loader, toaster }) {
                         </Link>
                       )}
                     </div>
-                    <Link href={detailsHref} prefetch={false} aria-label={detailsLabel} className="min-w-0 flex-1 rounded-xl px-3 py-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#206B3A] sm:px-5">
+                    <Link href={detailsHref} prefetch={false} aria-label={detailsLabel} aria-describedby={specialtyId} className="min-w-0 flex-1 rounded-xl px-3 py-2 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#206B3A] sm:px-5">
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <h2 className="min-w-0 max-w-full truncate text-base font-bold text-gray-900 sm:text-xl">
                           {storeTitle}
@@ -537,6 +539,11 @@ function ExploreHouston({ loader, toaster }) {
                           </span>
                         )}
                       </div>
+                      {specialty && (
+                        <p id={specialtyId} className="mt-1.5 w-fit max-w-full rounded-md bg-amber-100 px-2 py-1 text-xs break-words text-amber-950">
+                          <span className="font-semibold">{t("Specialty")}:</span> {specialty}
+                        </p>
+                      )}
                       <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold text-gray-500 sm:text-sm">
                         <span className="inline-flex items-center gap-1 text-amber-500">
                           <Star size={15} fill="currentColor" />

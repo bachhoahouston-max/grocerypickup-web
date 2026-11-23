@@ -240,6 +240,7 @@ function StoreDetails({ loader, toaster }) {
       .finally(() => setReviewSubmitting(false));
   };
 
+  const specialty = getText("specialty", "specialty_v");
   const details = [
     { label: t("Address"), value: store?.address, icon: MapPin },
     { label: t("Phone"), value: store?.phone, icon: Phone, href: `tel:${store?.phone}` },
@@ -322,6 +323,11 @@ function StoreDetails({ loader, toaster }) {
                   <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
                     {getText("shortDescription", "shortDescription_v")}
                   </p>
+                  {specialty && (
+                    <p className="mt-3 w-fit max-w-full rounded-md bg-amber-100 px-3 py-2 text-sm break-words text-amber-950">
+                      <span className="font-semibold">{t("Specialty")}:</span> {specialty}
+                    </p>
+                  )}
                   <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
                     <p className="inline-flex items-center gap-2 text-sm font-medium text-gray-600">
                       <Eye size={18} className="text-[#206B3A]" />
