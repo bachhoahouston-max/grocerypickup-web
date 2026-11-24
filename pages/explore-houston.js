@@ -522,7 +522,7 @@ export default function ExploreHouston({ loader, toaster }) {
             </div>
           )}
 
-          <p className="my-4 rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-sm leading-snug text-gray-900">
+          <p className="my-4 rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-xs md:text-sm leading-snug text-gray-900">
             {t("Restaurant listings notice")}
           </p>
 
