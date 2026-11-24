@@ -290,6 +290,11 @@ export default function ExploreHouston({ loader, toaster }) {
       const personalOrder = Number(second.isPersonal === true) - Number(first.isPersonal === true);
       if (personalOrder) return personalOrder;
 
+      if (first.isPersonal === true) {
+        const markedOrder = (Date.parse(second.personalMarkedAt) || 0) - (Date.parse(first.personalMarkedAt) || 0);
+        if (markedOrder) return markedOrder;
+      }
+
       if (sortBy === "oldest") {
         return new Date(first.createdAt || 0) - new Date(second.createdAt || 0);
       }

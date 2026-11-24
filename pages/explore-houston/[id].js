@@ -402,8 +402,8 @@ export default function StoreDetails({ loader, toaster }) {
               <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
                 <div className="flex flex-wrap items-center gap-3">
                   <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Live chat")}</h2>
-                  <span className="flex items-center gap-1.5 rounded-md bg-[#dff1df] px-3 py-1 text-sm font-bold uppercase tracking-wide text-[#206B3A]">
-                    <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#206B3A]"></span>
+                  <span className="flex items-center gap-1.5 rounded-md bg-[#dff1df] px-3 py-1 text-lg font-bold uppercase tracking-wide text-[#206B3A]">
+                    <span className="h-3 w-3 animate-pulse rounded-full bg-[#206B3A]"></span>
                     {t("Live")}
                   </span>
                   <span className="text-sm text-gray-500">({comments.length})</span>
