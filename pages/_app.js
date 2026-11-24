@@ -254,7 +254,7 @@ function App({ Component, pageProps }) {
           version: APP_VERSION || "0.1.0",
         },
         body: JSON.stringify({ items, platform: "WEB" }),
-      }).catch(() => {});
+      }).catch(() => { });
     };
     const onVisibility = () => {
       if (document.visibilityState === "hidden") flush();
@@ -453,8 +453,8 @@ function App({ Component, pageProps }) {
 
       {/* Chatbot widget */}
       <Script
-        src="https://grocery-aichatbot.vercel.app/widget.js"
-        data-api="https://grocery-aichatbot.vercel.app/api/chat"
+        src="https://aichatbot.bachhoahouston.com/widget.js"
+        data-api="https://aichatbot.bachhoahouston.com/api/chat"
         data-title="Bach Hoa Houston"
         data-greeting="Hi! How can I help you today?"
         data-color="#2D7D32"
