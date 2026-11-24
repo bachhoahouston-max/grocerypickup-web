@@ -53,7 +53,7 @@ function MobileFooter() {
             </span>
           )}
         </button>
-        <p className={`text-[11px] mt-0 ${isCartActive ? "text-custom-green font-medium" : "text-black"}`}>
+        <p className={`text-[11px] mt-1.5 ${isCartActive ? "text-custom-green font-medium" : "text-black"}`}>
           {t("Cart")}
         </p>
       </div>

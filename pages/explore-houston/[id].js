@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import {
@@ -13,17 +14,15 @@ import {
   MapPin,
   MessageCircle,
   Phone,
-  Send,
   SendHorizonal,
   Star,
   Tag,
   X,
 } from "lucide-react";
 import { Api } from "@/services/service";
-import { userContext } from "@/pages/_app";
 import { getStoreOpenStatus, formatTime } from "@/services/storeHours";
 import { getStoreModulePageProps } from "@/services/storeModule";
-import RequireStorefrontSignIn from "@/components/RequireStorefrontSignIn";
+import { StoreBookmarkButton, StoreBookmarksError, useStoreBookmarks } from "@/components/StoreBookmarks";
 
 export const getServerSideProps = getStoreModulePageProps;
 
@@ -43,14 +42,16 @@ const timeAgo = (value) => {
   return date.toLocaleDateString();
 };
 
-function StoreDetails({ loader, toaster }) {
+export default function StoreDetails({ loader, toaster }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
-  const [user] = useContext(userContext);
+  const { isSignedIn, signInHref } = useStoreBookmarks();
   const [store, setStore] = useState(null);
+  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(0);
   const [comments, setComments] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [selectedRating, setSelectedRating] = useState(0);
+  const [reviewFeedback, setReviewFeedback] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const chatListRef = useRef(null);
@@ -73,7 +74,9 @@ function StoreDetails({ loader, toaster }) {
     ? category?.v_name || category?.name
     : category?.name || category?.v_name;
   const title = getText("title", "title_v") || t("Store details");
-  const isLoggedIn = Boolean(user?._id || user?.id || user?.token);
+  const additionalImages = Array.isArray(store?.additionalImages) ? store.additionalImages : [];
+  const storePhotos = [store?.image, ...additionalImages].filter(Boolean);
+  const mainPhoto = storePhotos[selectedPhotoIndex] || storePhotos[0];
   const ownReview = reviews.find((review) => review.isMine);
   const openStatus = getStoreOpenStatus(store);
   const hasHours = Array.isArray(store?.openingHours) && store.openingHours.length > 0;
@@ -110,6 +113,7 @@ function StoreDetails({ loader, toaster }) {
         if (!active) return;
         if (response?.status && response?.data) {
           setStore(response.data);
+          setSelectedPhotoIndex(0);
           loadComments(router.query.id);
           loadReviews(router.query.id);
           if (viewRecordedRef.current !== router.query.id) {
@@ -159,11 +163,7 @@ function StoreDetails({ loader, toaster }) {
   const submitComment = (event) => {
     event.preventDefault();
     const comment = commentText.trim();
-    if (!isLoggedIn) {
-      router.push(`/signIn?redirect=${encodeURIComponent(router.asPath)}`);
-      return;
-    }
-    if (!comment) return;
+    if (!isSignedIn || !comment) return;
 
     setCommentSubmitting(true);
     Api("post", `createStoreComment/${router.query.id}`, { comment }, router)
@@ -182,16 +182,12 @@ function StoreDetails({ loader, toaster }) {
 
   const submitReview = (event) => {
     event.preventDefault();
-    if (!isLoggedIn) {
-      router.push(`/signIn?redirect=${encodeURIComponent(router.asPath)}`);
-      return;
-    }
-    if (!selectedRating) return;
+    if (!isSignedIn || !selectedRating) return;
     setReviewSubmitting(true);
     Api(
       "post",
       `createStoreReview/${router.query.id}`,
-      { rating: selectedRating },
+      { rating: selectedRating, feedback: reviewFeedback.trim() },
       router
     )
       .then((response) => {
@@ -211,12 +207,17 @@ function StoreDetails({ loader, toaster }) {
   };
 
   const openReviewModal = () => {
+    if (!isSignedIn) {
+      router.push(signInHref);
+      return;
+    }
     setSelectedRating(ownReview?.rating || 0);
+    setReviewFeedback(ownReview?.feedback || "");
     setReviewModalOpen(true);
   };
 
   const deleteReview = () => {
-    if (!ownReview?._id || !window.confirm(t("Delete your review?"))) return;
+    if (!isSignedIn || !ownReview?._id || !window.confirm(t("Delete your review?"))) return;
     setReviewSubmitting(true);
     Api("delete", `deleteStoreReview/${ownReview._id}`, null, router)
       .then((response) => {
@@ -235,6 +236,7 @@ function StoreDetails({ loader, toaster }) {
       .finally(() => setReviewSubmitting(false));
   };
 
+  const specialty = getText("specialty", "specialty_v");
   const details = [
     { label: t("Address"), value: store?.address, icon: MapPin },
     { label: t("Phone"), value: store?.phone, icon: Phone, href: `tel:${store?.phone}` },
@@ -271,9 +273,9 @@ function StoreDetails({ loader, toaster }) {
           ) : store ? (
             <div>
               <article className="overflow-hidden rounded-3xl bg-white shadow-sm">
-                <div className="relative h-64 bg-[#edf6ef] md:h-96">
-                  {store.image ? (
-                    <img src={store.image} alt={title} className="h-full w-full object-cover" />
+                <div id="store-main-photo" className="relative h-64 bg-[#edf6ef] md:h-96">
+                  {mainPhoto ? (
+                    <img src={mainPhoto} alt={title} className="h-full w-full object-cover" />
                   ) : (
                     <div className="flex h-full items-center justify-center text-[#206B3A]">
                       <Tag size={88} strokeWidth={1.2} />
@@ -285,7 +287,25 @@ function StoreDetails({ loader, toaster }) {
                     </span>
                   )}
                 </div>
-                <div className="p-6 md:p-10">
+                <div className={`px-6 pb-6 md:px-10 md:pb-10 ${storePhotos.length > 1 ? "pt-4" : "pt-6 md:pt-10"}`}>
+                  {storePhotos.length > 1 && (
+                    <div role="group" aria-label={t("Store photos")} className="mb-4 grid max-w-[28rem] grid-cols-5 gap-1.5 sm:gap-3">
+                      {storePhotos.map((photo, index) => (
+                        <button
+                          key={`${photo}-${index}`}
+                          type="button"
+                          aria-label={t("Show photo {{number}}", { number: index + 1 })}
+                          aria-controls="store-main-photo"
+                          aria-pressed={index === selectedPhotoIndex}
+                          onClick={() => setSelectedPhotoIndex(index)}
+                          className="h-11 overflow-hidden rounded-lg border border-gray-200 bg-white p-0.5 transition hover:border-[#206B3A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A] aria-pressed:border-[#206B3A] aria-pressed:ring-1 aria-pressed:ring-[#206B3A] sm:h-14"
+                        >
+                          <img src={photo} alt="" className="h-full w-full rounded-md object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <StoreBookmarksError />
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div>
                       <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">{title}</h1>
@@ -296,10 +316,16 @@ function StoreDetails({ loader, toaster }) {
                       </p>
                     )} */}
                     </div>
+                    <StoreBookmarkButton storeId={store._id} storeName={title} showLabel className="px-3 text-sm font-semibold" />
                   </div>
                   <p className="mt-6 max-w-3xl text-base leading-7 text-gray-600">
                     {getText("shortDescription", "shortDescription_v")}
                   </p>
+                  {specialty && (
+                    <p className="mt-3 w-fit max-w-full rounded-md bg-amber-100 px-3 py-2 text-sm break-words text-amber-950">
+                      <span className="font-semibold">{t("Specialty")}:</span> {specialty}
+                    </p>
+                  )}
                   <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
                     <p className="inline-flex items-center gap-2 text-sm font-medium text-gray-600">
                       <Eye size={18} className="text-[#206B3A]" />
@@ -372,67 +398,88 @@ function StoreDetails({ loader, toaster }) {
                 </div>
               </article>
 
-              <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Live chat")}</h2>
-                  <span className="flex items-center gap-1.5 rounded-md bg-[#dff1df] px-3 py-1 text-sm font-bold uppercase tracking-wide text-[#206B3A]">
-                    <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-[#206B3A]"></span>
-                    {t("Live")}
-                  </span>
-                  <span className="text-sm text-gray-500">({comments.length})</span>
+              <section aria-labelledby="store-chat-title" className="my-6 overflow-hidden rounded-3xl border border-[#b7c8ae] bg-[#fffcf6] shadow-md shadow-green-950/10">
+                <div className="relative isolate overflow-hidden bg-linear-to-r from-[#163a20] to-[#24502a] px-5 py-4 text-white sm:px-7 md:px-10 md:py-5">
+                  <div aria-hidden="true" className="pointer-events-none absolute -right-10 -bottom-12 -z-10 h-20 w-44 -rotate-18 rounded-[50%] border-t-[7px] border-[#b4cf64]/35 shadow-[0_-6px_0_#a3c45133]" />
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <h2 id="store-chat-title" className="text-2xl font-bold tracking-tight md:text-4xl">{t("Live chat")}</h2>
+                    <div className="flex items-center gap-2.5">
+                      <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#ffdc8d] px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-[#173c23] md:text-sm">
+                        <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-current" />
+                        {t("Live")}
+                      </span>
+                      <span className="text-sm tabular-nums text-white/90">({comments.length})</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-base font-medium text-gray-500">{t("Join the Conversation")}</p>
-                <div ref={chatListRef} className="mt-5 max-h-[420px] space-y-3 overflow-y-auto pr-1">
-                  {commentsLoading ? (
-                    <p className="text-sm text-gray-500">{t("Loading live chat...")}</p>
-                  ) : comments.length ? (
-                    comments.map((item) => {
-                      const name =
-                        [item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
-                        t("Customer");
-                      return (
-                        <div key={item._id} className="flex items-start gap-3">
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-base font-semibold text-white md:h-12 md:w-12">
-                            {name.charAt(0).toUpperCase()}
+                <div className="px-5 pt-3 pb-5 sm:px-7 md:px-10 md:pb-7">
+                  <p className="text-base font-medium text-gray-600">{t("Join the Conversation")}</p>
+                  <div ref={chatListRef} className="mt-4 max-h-[420px] space-y-4 overflow-y-auto pr-1" aria-busy={commentsLoading}>
+                    {commentsLoading ? (
+                      <p className="text-sm text-gray-500">{t("Loading live chat...")}</p>
+                    ) : comments.length ? (
+                      comments.map((item) => {
+                        const name =
+                          [item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
+                          t("Customer");
+                        const createdAt = new Date(item.createdAt ?? "");
+                        const hasTimestamp = Number.isFinite(createdAt.getTime());
+                        return (
+                          <div key={item._id} className="flex items-start gap-3">
+                            <div aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#2f7846] to-[#194b2b] text-base font-semibold text-white md:size-12">
+                              {name.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-semibold text-[#1f3d1f] [overflow-wrap:anywhere] md:text-base">{name}</p>
+                              {hasTimestamp && (
+                                <time dateTime={createdAt.toISOString()} className="block text-xs text-gray-600">
+                                  {createdAt.toLocaleString(isVietnamese ? "vi-VN" : "en-US", {
+                                    dateStyle: "medium",
+                                    timeStyle: "short",
+                                    timeZone: "America/Chicago",
+                                  })}
+                                </time>
+                              )}
+                              <p className="mt-1 inline-block max-w-full rounded-2xl rounded-tl-sm bg-[#e9f5e8] px-3.5 py-1.5 text-sm leading-relaxed whitespace-pre-wrap text-[#203729] [overflow-wrap:anywhere] md:text-base">
+                                {item.comment}
+                              </p>
+                            </div>
                           </div>
-                          <div className="min-w-0">
-                            <p className="flex items-center flex-wrap gap-x-2 text-sm leading-4">
-                              <span className="font-semibold text-[#1f3d1f]">{name}</span>
-                              <span className="bg-gray-400 w-1 h-1 rounded-full"></span>
-                              <span className="text-xs text-gray-400">{timeAgo(item.createdAt)}</span>
-                            </p>
-                            <p className="mt-0.5 inline-block max-w-full whitespace-pre-wrap break-words rounded-lg bg-green-50 px-4 py-0.5 text-sm leading-5 text-gray-800">
-                              {item.comment}
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })
+                        );
+                      })
+                    ) : (
+                      <p className="rounded-xl border border-dashed border-[#c8d8c2] bg-[#f3f8ee] p-5 text-center text-sm text-gray-600">
+                        {t("No messages yet")}
+                      </p>
+                    )}
+                  </div>
+                  {isSignedIn ? (
+                    <form onSubmit={submitComment} className="mt-5 flex items-center gap-2.5 sm:gap-3">
+                      <input
+                        type="text"
+                        value={commentText}
+                        onChange={(event) => setCommentText(event.target.value)}
+                        placeholder={t("Add a comment...")}
+                        aria-label={t("Write a message")}
+                        disabled={commentSubmitting}
+                        maxLength={2000}
+                        className="h-12 min-w-0 flex-1 rounded-2xl border border-gray-300 bg-white px-4 text-base text-gray-800 shadow-sm placeholder:text-gray-500 focus:border-[#206B3A] focus:ring-2 focus:ring-[#206B3A]/25 focus:outline-none disabled:bg-gray-100 md:h-14"
+                      />
+                      <button
+                        type="submit"
+                        disabled={commentSubmitting || !commentText.trim()}
+                        aria-label={t("Send live chat")}
+                        className="inline-flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#194b2b] text-white shadow-sm transition enabled:hover:bg-[#206B3A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A] disabled:cursor-not-allowed disabled:bg-[#4d7056] md:size-14"
+                      >
+                        <SendHorizonal aria-hidden="true" size={24} strokeWidth={1.8} />
+                      </button>
+                    </form>
                   ) : (
-                    <p className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-500">
-                      {t("No messages yet")}
-                    </p>
+                    <Link href={signInHref} className="mt-5 inline-flex min-h-11 items-center rounded-xl bg-[#194b2b] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#206B3A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A]">
+                      {t("Sign in to live chat")}
+                    </Link>
                   )}
                 </div>
-                <form onSubmit={submitComment} className="mt-6 flex items-center gap-3">
-                  <input
-                    type="text"
-                    value={commentText}
-                    onChange={(event) => setCommentText(event.target.value)}
-                    placeholder={isLoggedIn ? t("Add a comment...") : t("Sign in to live chat")}
-                    disabled={!isLoggedIn || commentSubmitting}
-                    maxLength={2000}
-                    className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-white px-5 py-3.5 text-sm text-gray-700 placeholder-gray-500 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A] disabled:bg-gray-100"
-                  />
-                  <button
-                    type="submit"
-                    disabled={commentSubmitting || (isLoggedIn && !commentText.trim())}
-                    aria-label={isLoggedIn ? t("Send live chat") : t("Sign in to live chat")}
-                    className="inline-flex cursor-pointer p-3 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-white hover:bg-[#104936] disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    <SendHorizonal size={25} strokeWidth={1.8} />
-                  </button>
-                </form>
               </section>
 
               <section className="mt-1 rounded-3xl bg-white p-6 shadow-sm md:p-10">
@@ -448,7 +495,7 @@ function StoreDetails({ loader, toaster }) {
                     onClick={openReviewModal}
                     className="rounded-lg bg-[#206B3A] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#18532d]"
                   >
-                    {ownReview ? t("Edit your review") : t("Add Review")}
+                    {isSignedIn ? (ownReview ? t("Edit your review") : t("Add Review")) : t("Sign in to review")}
                   </button>
                 </div>
                 <div className="mt-1 space-y-1">
@@ -478,7 +525,7 @@ function StoreDetails({ loader, toaster }) {
                   }) : <p className="text-sm text-gray-500">{t("No reviews yet")}</p>}
                 </div>
               </section>
-              {reviewModalOpen && (
+              {isSignedIn && reviewModalOpen && (
                 <div
                   className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6"
                   role="presentation"
@@ -506,7 +553,7 @@ function StoreDetails({ loader, toaster }) {
                       </button>
                     </div>
                     <p className="mt-5 text-sm font-medium text-gray-600">
-                      {isLoggedIn ? t("Rate this store") : t("Sign in to review this store")}
+                      {t("Rate this store")}
                     </p>
                     <form onSubmit={submitReview}>
                       <div className="mt-3 flex items-center justify-center gap-2" role="radiogroup" aria-label={t("Store rating")}>
@@ -515,7 +562,7 @@ function StoreDetails({ loader, toaster }) {
                             key={rating}
                             type="button"
                             onClick={() => setSelectedRating(rating)}
-                            disabled={!isLoggedIn || reviewSubmitting}
+                            disabled={reviewSubmitting}
                             aria-label={`${rating} ${t("stars")}`}
                             className="rounded p-1 text-amber-400 transition hover:scale-110 disabled:cursor-not-allowed disabled:opacity-50"
                           >
@@ -523,16 +570,25 @@ function StoreDetails({ loader, toaster }) {
                           </button>
                         ))}
                       </div>
+                      <label htmlFor="store-review-feedback" className="mt-5 block text-sm font-medium text-gray-600">
+                        {t("Feedback")} <span className="font-normal text-gray-400">({t("optional")})</span>
+                      </label>
+                      <textarea
+                        id="store-review-feedback"
+                        value={reviewFeedback}
+                        onChange={(event) => setReviewFeedback(event.target.value)}
+                        maxLength={2000}
+                        rows={4}
+                        placeholder={t("Share your feedback")}
+                        disabled={reviewSubmitting}
+                        className="mt-2 w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 outline-none focus:border-[#206B3A] disabled:bg-gray-100"
+                      />
                       <button
                         type="submit"
                         disabled={reviewSubmitting}
                         className="mt-6 w-full rounded-lg bg-[#206B3A] px-4 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
                       >
-                        {isLoggedIn
-                          ? ownReview
-                            ? t("Update review")
-                            : t("Submit review")
-                          : t("Sign in to review")}
+                        {ownReview ? t("Update review") : t("Submit review")}
                       </button>
                       {ownReview && (
                         <button
@@ -558,13 +614,5 @@ function StoreDetails({ loader, toaster }) {
         </div>
       </main>
     </>
-  );
-}
-
-export default function StoreDetailsPage(props) {
-  return (
-    <RequireStorefrontSignIn>
-      <StoreDetails {...props} />
-    </RequireStorefrontSignIn>
   );
 }

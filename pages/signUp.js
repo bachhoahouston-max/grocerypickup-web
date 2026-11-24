@@ -35,15 +35,17 @@ const SignUp = (props) => {
   const validateField = (name, value) => {
     switch (name) {
       case "name":
-        if (!value.trim()) return "First name is required";
-        if (!/^[A-Za-z]+$/.test(value)) return "Only letters allowed";
-        if (value.length < 2) return "Minimum 2 characters required";
+      case "lastname": {
+        const trimmedName = value.trim();
+        if (!trimmedName) {
+          return name === "name" ? t("First name is required") : t("Last name is required");
+        }
+        if (!/^\p{L}[\p{L}\p{M}]*(?: +\p{L}[\p{L}\p{M}]*)*$/u.test(trimmedName)) {
+          return t("Use letters and spaces only");
+        }
+        if (trimmedName.normalize().length < 2) return t("Minimum 2 characters required");
         return "";
-      case "lastname":
-        if (!value.trim()) return "Last name is required";
-        if (!/^[A-Za-z]+$/.test(value)) return "Only letters allowed";
-        if (value.length < 2) return "Minimum 2 characters required";
-        return "";
+      }
       case "email":
         if (!value) return "Email is required";
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
@@ -94,6 +96,9 @@ const SignUp = (props) => {
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
+    if (name === "name" || name === "lastname") {
+      setUserDetail((details) => ({ ...details, [name]: value.trim() }));
+    }
     const error = validateField(name, value);
     setErrors({
       ...errors,
@@ -129,10 +134,10 @@ const SignUp = (props) => {
     props?.loader?.(true);
     const data = {
       email: userDetail.email.toLowerCase(),
-      username: userDetail.name,
+      username: userDetail.name.trim(),
       password: userDetail.password,
       number: userDetail.number,
-      lastname: userDetail.lastname,
+      lastname: userDetail.lastname.trim(),
       type: "USER",
     };
 

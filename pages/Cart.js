@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useCallback, useEffect, useState, useRef, useContext } from "react";
 import constant from "../services/constant";
 import { useRouter } from "next/router";
-import { CheckCircle, ChevronDown, ChevronUp, Mail, Package, Trash, X } from "lucide-react";
+import { CheckCircle, ChevronDown, ChevronUp, Mail, Package, Trash, TriangleAlert, X } from "lucide-react";
 import { IoIosArrowBack, IoIosClose } from "react-icons/io";
 import { produce } from "immer";
 import { cartContext, userContext } from "@/pages/_app";
@@ -32,6 +32,9 @@ function Cart(props) {
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [mainTotal, setMainTotal] = useState(0);
   const [pickupOption, setPickupOption] = useState("");
+  const [receiveAvailability, setReceiveAvailability] = useState(null);
+  const [receiveOptionsError, setReceiveOptionsError] = useState(false);
+  const hasReceiveOptions = Object.values(receiveAvailability || {}).some(Boolean);
   const [baseCartTotal, setBaseCartTotal] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(false);
@@ -403,20 +406,22 @@ function Cart(props) {
   const [isOpen, setIsOpen] = useState(false);
   console.log(user);
 
-  const handleOptionChange = (event) => {
-    setPickupOption(event.target.value);
+  const selectReceiveOption = (option) => {
+    setPickupOption(option);
     setDiscount(0);
     setDiscountCode(0);
     setAppliedCoupon(false);
     setSearchTerm("");
-    console.log("pickup option", event.target.value);
-    if (user.zipcode) {
-      if (event.target.value === "localDelivery") {
-        checkawailability(user.zipcode);
-      } else {
-        setExtrafees(0);
-      }
+    if (option === "localDelivery" && user.zipcode) {
+      checkawailability(user.zipcode);
+    } else {
+      setExtrafees(0);
     }
+  };
+
+  const handleOptionChange = (event) => {
+    const option = event.target.value;
+    if (receiveAvailability?.[option]) selectReceiveOption(option);
   };
 
   const handleIconClick = () => {
@@ -456,6 +461,20 @@ function Cart(props) {
     getShippingCost();
     getClosureDate();
   }, []);
+
+  const loadReceiveOptions = useCallback(async () => {
+    setReceiveOptionsError(false);
+    try {
+      const { data } = await Api("get", "web-receive-options", null, router);
+      setReceiveAvailability(data);
+    } catch {
+      setReceiveOptionsError(true);
+    }
+  }, [router]);
+
+  useEffect(() => {
+    loadReceiveOptions();
+  }, [loadReceiveOptions]);
 
   const getAllPincodes = () => {
     Api("get", "getPinCode", null, router)
@@ -879,6 +898,13 @@ function Cart(props) {
       });
     }
 
+    if (!receiveAvailability?.[pickupOption]) {
+      return props.toaster({
+        type: "error",
+        message: t("Your selected receive option is currently unavailable."),
+      });
+    }
+
     if (pickupOption === "localDelivery") {
       if (!localAddress.dateOfDelivery) {
         return props.toaster({
@@ -1103,6 +1129,15 @@ function Cart(props) {
       }
     } catch (err) {
       props.loader && props.loader(false);
+      if (err?.code === "WEB_RECEIVE_OPTION_UNAVAILABLE") {
+        setReceiveAvailability(err.availability);
+        selectReceiveOption("");
+        props.toaster({
+          type: "error",
+          message: t("Your selected receive option is currently unavailable."),
+        });
+        return;
+      }
       let errorMsg = err?.message || t("Order save failed");
       if (
         i18n.language?.startsWith("vi") &&
@@ -1429,6 +1464,23 @@ function Cart(props) {
                     {t("Choose how to receive")}
                   </h4>
 
+                  {receiveOptionsError ? (
+                    <p role="alert" className="mb-3 text-sm text-gray-700">
+                      {t("Unable to load receive options.")}{" "}
+                      <button type="button" onClick={loadReceiveOptions} className="font-semibold underline">
+                        {t("Retry")}
+                      </button>
+                    </p>
+                  ) : !receiveAvailability ? (
+                    <p role="status" className="mb-3 text-sm text-gray-700">
+                      {t("Loading receive options…")}
+                    </p>
+                  ) : !hasReceiveOptions ? (
+                    <p role="status" className="mb-3 text-sm text-gray-700">
+                      {t("All receive options are currently unavailable.")}
+                    </p>
+                  ) : null}
+
                   <div className="space-y-3">
                     <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
                       {[
@@ -1465,7 +1517,9 @@ function Cart(props) {
                           type: "delivery",
                         },
                       ].map((opt) => {
-                        const selected = pickupOption === opt.id;
+                        const enabled = receiveAvailability?.[opt.id] === true;
+                        const unavailable = receiveAvailability?.[opt.id] === false;
+                        const selected = enabled && pickupOption === opt.id;
 
                         return (
                           <label
@@ -1473,7 +1527,7 @@ function Cart(props) {
                             className={`flex flex-col border-gray-300 shadow-md border-2 items-start md:p-4 p-2 rounded-lg  ${selected
                               ? "border-green-400 shadow-md border-3"
                               : "border-gray-200 border"
-                              } cursor-pointer bg-white`}
+                              } ${enabled ? "cursor-pointer bg-white" : "cursor-not-allowed bg-gray-50"} focus-within:ring-2 focus-within:ring-green-600`}
                           >
                             <div className="flex items-center justify-between w-full">
                               <div className="flex items-center gap-3">
@@ -1488,12 +1542,14 @@ function Cart(props) {
                                   name="pickupOption"
                                   value={opt.id}
                                   checked={selected}
+                                  disabled={!enabled}
+                                  aria-describedby={unavailable ? `${opt.id}-unavailable` : undefined}
                                   onChange={handleOptionChange}
-                                  className="hidden mt-1 form-radio h-4 w-4 text-green-600"
+                                  className="sr-only"
                                 />
 
                                 <div className="border-l-2 pl-3">
-                                  <div className="font-semibold text-base md:text-lg text-orange-600">
+                                  <div className={`font-semibold text-base md:text-lg ${enabled ? "text-orange-600" : "text-gray-700"}`}>
                                     {opt.title}
                                   </div>
                                   {!(selected && opt.id === "ShipmentDelivery") && (
@@ -1501,11 +1557,21 @@ function Cart(props) {
                                       {opt.subtitle}
                                     </div>
                                   )}
+                                  {unavailable && (
+                                    <span
+                                      id={`${opt.id}-unavailable`}
+                                      className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-[#E8BD8C] bg-[#FFF3E3] px-2.5 py-1 text-xs font-semibold leading-tight text-[#783F17]"
+                                    >
+                                      <TriangleAlert aria-hidden="true" className="h-3.5 w-3.5 shrink-0" />
+                                      {t("Currently unavailable")}
+                                    </span>
+                                  )}
                                 </div>
                               </div>
 
                               <div
-                                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selected ? "border-green-600" : "border-black"
+                                aria-hidden="true"
+                                className={`w-5 h-5 shrink-0 rounded-full border-2 flex items-center justify-center ${selected ? "border-green-600" : enabled ? "border-black" : "border-gray-400"
                                   }`}
                               >
                                 <div
@@ -1988,7 +2054,8 @@ function Cart(props) {
                       <div className="mt-4">
                         {isLoggedIn ? (
                           <button
-                            className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold"
+                            className="w-full cursor-pointer bg-custom-green text-white py-3 rounded-lg font-semibold disabled:cursor-not-allowed disabled:opacity-50"
+                            disabled={!hasReceiveOptions}
                             onClick={proceedToCheckout}
                           >
                             {t("Proceed To Checkout")}
