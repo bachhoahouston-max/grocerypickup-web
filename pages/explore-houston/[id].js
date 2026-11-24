@@ -14,7 +14,6 @@ import {
   MapPin,
   MessageCircle,
   Phone,
-  Send,
   SendHorizonal,
   Star,
   Tag,
@@ -399,85 +398,88 @@ export default function StoreDetails({ loader, toaster }) {
                 </div>
               </article>
 
-              <section className="mt-6 rounded-3xl bg-white p-6 shadow-sm md:p-10">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h2 className="text-3xl font-bold text-[#1f3d1f] md:text-4xl">{t("Live chat")}</h2>
-                  <span className="flex items-center gap-1.5 rounded-md bg-[#dff1df] px-3 py-1 text-lg font-bold uppercase tracking-wide text-[#206B3A]">
-                    <span className="h-3 w-3 animate-pulse rounded-full bg-[#206B3A]"></span>
-                    {t("Live")}
-                  </span>
-                  <span className="text-sm text-gray-500">({comments.length})</span>
+              <section aria-labelledby="store-chat-title" className="mt-6 overflow-hidden rounded-3xl border border-[#b7c8ae] bg-[#fffcf6] shadow-md shadow-green-950/10">
+                <div className="relative isolate overflow-hidden bg-linear-to-r from-[#163a20] to-[#24502a] px-5 py-4 text-white sm:px-7 md:px-10 md:py-5">
+                  <div aria-hidden="true" className="pointer-events-none absolute -right-10 -bottom-12 -z-10 h-20 w-44 -rotate-18 rounded-[50%] border-t-[7px] border-[#b4cf64]/35 shadow-[0_-6px_0_#a3c45133]" />
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                    <h2 id="store-chat-title" className="text-2xl font-bold tracking-tight md:text-4xl">{t("Live chat")}</h2>
+                    <div className="flex items-center gap-2.5">
+                      <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#ffdc8d] px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-[#173c23] md:text-sm">
+                        <span aria-hidden="true" className="size-2 shrink-0 rounded-full bg-current" />
+                        {t("Live")}
+                      </span>
+                      <span className="text-sm tabular-nums text-white/90">({comments.length})</span>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-base font-medium text-gray-500">{t("Join the Conversation")}</p>
-                <div ref={chatListRef} className="mt-5 max-h-[420px] space-y-3 overflow-y-auto pr-1">
-                  {commentsLoading ? (
-                    <p className="text-sm text-gray-500">{t("Loading live chat...")}</p>
-                  ) : comments.length ? (
-                    comments.map((item) => {
-                      const name =
-                        [item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
-                        t("Customer");
-                      const createdAt = new Date(item.createdAt ?? "");
-                      const hasTimestamp = Number.isFinite(createdAt.getTime());
-                      return (
-                        <div key={item._id} className="flex items-start gap-3">
-                          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-base font-semibold text-white md:h-12 md:w-12">
-                            {name.charAt(0).toUpperCase()}
-                          </div>
-                          <div className="min-w-0">
-                            <p className="flex items-center flex-wrap gap-x-2 text-sm leading-4">
-                              <span className="font-semibold text-[#1f3d1f]">{name}</span>
+                <div className="px-5 pt-3 pb-5 sm:px-7 md:px-10 md:pb-7">
+                  <p className="text-base font-medium text-gray-600">{t("Join the Conversation")}</p>
+                  <div ref={chatListRef} className="mt-4 max-h-[420px] space-y-4 overflow-y-auto pr-1" aria-busy={commentsLoading}>
+                    {commentsLoading ? (
+                      <p className="text-sm text-gray-500">{t("Loading live chat...")}</p>
+                    ) : comments.length ? (
+                      comments.map((item) => {
+                        const name =
+                          [item.posted_by?.username, item.posted_by?.lastname].filter(Boolean).join(" ") ||
+                          t("Customer");
+                        const createdAt = new Date(item.createdAt ?? "");
+                        const hasTimestamp = Number.isFinite(createdAt.getTime());
+                        return (
+                          <div key={item._id} className="flex items-start gap-3">
+                            <div aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#2f7846] to-[#194b2b] text-base font-semibold text-white md:size-12">
+                              {name.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-sm font-semibold text-[#1f3d1f] [overflow-wrap:anywhere] md:text-base">{name}</p>
                               {hasTimestamp && (
-                                <>
-                                  <span className="bg-gray-400 w-1 h-1 rounded-full" aria-hidden="true"></span>
-                                  <time dateTime={createdAt.toISOString()} className="text-xs text-gray-400">
-                                    {createdAt.toLocaleString(isVietnamese ? "vi-VN" : "en-US", {
-                                      dateStyle: "medium",
-                                      timeStyle: "short",
-                                      timeZone: "America/Chicago",
-                                    })}
-                                  </time>
-                                </>
+                                <time dateTime={createdAt.toISOString()} className="block text-xs text-gray-600">
+                                  {createdAt.toLocaleString(isVietnamese ? "vi-VN" : "en-US", {
+                                    dateStyle: "medium",
+                                    timeStyle: "short",
+                                    timeZone: "America/Chicago",
+                                  })}
+                                </time>
                               )}
-                            </p>
-                            <p className="mt-0.5 inline-block max-w-full whitespace-pre-wrap break-words rounded-lg bg-green-50 px-4 py-0.5 text-sm leading-5 text-gray-800">
-                              {item.comment}
-                            </p>
+                              <p className="mt-1 inline-block max-w-full rounded-2xl rounded-tl-sm bg-[#e9f5e8] px-3.5 py-1.5 text-sm leading-relaxed whitespace-pre-wrap text-[#203729] [overflow-wrap:anywhere] md:text-base">
+                                {item.comment}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })
+                        );
+                      })
+                    ) : (
+                      <p className="rounded-xl border border-dashed border-[#c8d8c2] bg-[#f3f8ee] p-5 text-center text-sm text-gray-600">
+                        {t("No messages yet")}
+                      </p>
+                    )}
+                  </div>
+                  {isSignedIn ? (
+                    <form onSubmit={submitComment} className="mt-5 flex items-center gap-2.5 sm:gap-3">
+                      <input
+                        type="text"
+                        value={commentText}
+                        onChange={(event) => setCommentText(event.target.value)}
+                        placeholder={t("Add a comment...")}
+                        aria-label={t("Write a message")}
+                        disabled={commentSubmitting}
+                        maxLength={2000}
+                        className="h-12 min-w-0 flex-1 rounded-2xl border border-gray-300 bg-white px-4 text-base text-gray-800 shadow-sm placeholder:text-gray-500 focus:border-[#206B3A] focus:ring-2 focus:ring-[#206B3A]/25 focus:outline-none disabled:bg-gray-100 md:h-14"
+                      />
+                      <button
+                        type="submit"
+                        disabled={commentSubmitting || !commentText.trim()}
+                        aria-label={t("Send live chat")}
+                        className="inline-flex size-12 shrink-0 cursor-pointer items-center justify-center rounded-full bg-[#194b2b] text-white shadow-sm transition enabled:hover:bg-[#206B3A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A] disabled:cursor-not-allowed disabled:bg-[#4d7056] md:size-14"
+                      >
+                        <SendHorizonal aria-hidden="true" size={24} strokeWidth={1.8} />
+                      </button>
+                    </form>
                   ) : (
-                    <p className="rounded-xl border border-dashed border-gray-200 p-5 text-center text-sm text-gray-500">
-                      {t("No messages yet")}
-                    </p>
+                    <Link href={signInHref} className="mt-5 inline-flex min-h-11 items-center rounded-xl bg-[#194b2b] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#206B3A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#206B3A]">
+                      {t("Sign in to live chat")}
+                    </Link>
                   )}
                 </div>
-                {isSignedIn ? (
-                  <form onSubmit={submitComment} className="mt-6 flex items-center gap-3">
-                    <input
-                      type="text"
-                      value={commentText}
-                      onChange={(event) => setCommentText(event.target.value)}
-                      placeholder={t("Add a comment...")}
-                      disabled={commentSubmitting}
-                      maxLength={2000}
-                      className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-white px-5 py-3.5 text-sm text-gray-700 placeholder-gray-500 outline-none focus:border-[#206B3A] focus:ring-1 focus:ring-[#206B3A] disabled:bg-gray-100"
-                    />
-                    <button
-                      type="submit"
-                      disabled={commentSubmitting || !commentText.trim()}
-                      aria-label={t("Send live chat")}
-                      className="inline-flex cursor-pointer p-3 shrink-0 items-center justify-center rounded-full bg-[#206B3A] text-white hover:bg-[#104936] disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      <SendHorizonal size={25} strokeWidth={1.8} />
-                    </button>
-                  </form>
-                ) : (
-                  <Link href={signInHref} className="mt-6 inline-block rounded-lg bg-[#206B3A] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#18532d]">
-                    {t("Sign in to live chat")}
-                  </Link>
-                )}
               </section>
 
               <section className="mt-1 rounded-3xl bg-white p-6 shadow-sm md:p-10">

@@ -522,6 +522,10 @@ export default function ExploreHouston({ loader, toaster }) {
             </div>
           )}
 
+          <p className="mb-2 rounded-xl border border-[#cfe8cf] bg-[#f2f8ef] px-4 py-3 text-sm leading-snug text-gray-900">
+            {t("Restaurant listings notice")}
+          </p>
+
           {loading ? null : filteredStores.length > 0 ? (
             <div className="mx-auto grid max-w-7xl grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
               {filteredStores.map((store) => {

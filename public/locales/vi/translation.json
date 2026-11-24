@@ -86,6 +86,9 @@
   "Unable to load store reviews": "Không thể tải đánh giá cửa hàng",
   "Unable to record store view": "Không thể ghi nhận lượt xem cửa hàng",
   "Live chat": "Trò chuyện trực tiếp",
+  "Live": "Trực tiếp",
+  "Join the Conversation": "Tham gia cuộc trò chuyện",
+  "Add a comment...": "Thêm bình luận...",
   "Customer": "Khách hàng",
   "Loading live chat...": "Đang tải trò chuyện trực tiếp...",
   "No messages yet": "Chưa có tin nhắn nào",
@@ -619,5 +622,6 @@
   "Applied": "Đã áp dụng",
   "Explore Houston": "Khám phá Houston",
   "Local businesses and places recommended by the community": "Doanh nghiệp địa phương được cộng đồng giới thiệu tin dùng",
+  "Restaurant listings notice": "Xin lưu ý rằng danh sách nhà hàng trên trang này chỉ nhằm cung cấp thông tin. Bách Hóa Houston không có mối liên kết chính thức hay quan hệ đối tác với các cơ sở này. Việc đưa các cơ sở vào danh sách không đồng nghĩa với việc Bách Hóa Houston bảo chứng cho họ. Danh sách và các đề xuất dựa trên những đánh giá độc lập về giá cả và chất lượng dịch vụ.",
   "Explore": "Khám phá"
 }
