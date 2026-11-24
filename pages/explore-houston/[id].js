@@ -398,7 +398,7 @@ export default function StoreDetails({ loader, toaster }) {
                 </div>
               </article>
 
-              <section aria-labelledby="store-chat-title" className="mt-6 overflow-hidden rounded-3xl border border-[#b7c8ae] bg-[#fffcf6] shadow-md shadow-green-950/10">
+              <section aria-labelledby="store-chat-title" className="my-6 overflow-hidden rounded-3xl border border-[#b7c8ae] bg-[#fffcf6] shadow-md shadow-green-950/10">
                 <div className="relative isolate overflow-hidden bg-linear-to-r from-[#163a20] to-[#24502a] px-5 py-4 text-white sm:px-7 md:px-10 md:py-5">
                   <div aria-hidden="true" className="pointer-events-none absolute -right-10 -bottom-12 -z-10 h-20 w-44 -rotate-18 rounded-[50%] border-t-[7px] border-[#b4cf64]/35 shadow-[0_-6px_0_#a3c45133]" />
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
