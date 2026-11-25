@@ -610,6 +610,7 @@
   "Loading receive options…": "Đang tải các phương thức nhận hàng…",
   "Retry": "Thử lại",
   "Your selected receive option is currently unavailable.": "Phương thức nhận hàng bạn chọn hiện không khả dụng.",
+  "Your selected receive option is unavailable on this date.": "Phương thức nhận hàng bạn chọn không khả dụng vào ngày này.",
   "Remove out-of-stock items and review updated prices before continuing. Sale prices may have ended. Click “Proceed to Checkout” again to continue.": "Vui lòng xóa các sản phẩm hết hàng và kiểm tra lại giá đã cập nhật trước khi tiếp tục. Giá khuyến mãi có thể đã kết thúc. Nhấn “Tiến hành thanh toán” lần nữa để tiếp tục.",
   "Remove all": "Xóa tất cả",
   "Order save failed": "Lưu đơn hàng thất bại",
