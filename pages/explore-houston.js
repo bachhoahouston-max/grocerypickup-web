@@ -181,7 +181,7 @@ function StoreCardCarousel({ photos, href, detailsLabel }) {
   );
 }
 
-export default function ExploreHouston({ loader, toaster }) {
+export default function ExploreHouston({ loader, toaster, listingNotice }) {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const { bookmarks, showBookmarks, setShowBookmarks, isSignedIn, signInHref } = useStoreBookmarks();
@@ -352,6 +352,7 @@ export default function ExploreHouston({ loader, toaster }) {
   }, [router]);
 
   const isVietnamese = i18n.language?.toLowerCase().startsWith("vi");
+  const notice = isVietnamese ? listingNotice?.vi : listingNotice?.en;
   const getText = (store, englishKey, vietnameseKey) =>
     isVietnamese
       ? store?.[vietnameseKey] || store?.[englishKey]
@@ -522,10 +523,6 @@ export default function ExploreHouston({ loader, toaster }) {
             </div>
           )}
 
-          <p className="my-4 rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-xs md:text-sm leading-snug text-gray-900">
-            {t("Restaurant listings notice")}
-          </p>
-
           {loading ? null : filteredStores.length > 0 ? (
             <div className="mx-auto grid max-w-7xl grid-cols-1 gap-2 lg:grid-cols-2 lg:gap-3">
               {filteredStores.map((store) => {
@@ -638,6 +635,12 @@ export default function ExploreHouston({ loader, toaster }) {
                 {t("Try a different search or category")}
               </p>
             </div>
+          )}
+
+          {notice && (
+            <p className="my-4 whitespace-pre-wrap break-words rounded-xl border border-green-300 bg-green-50 px-4 py-3 text-xs leading-snug text-gray-900 md:text-sm">
+              {notice}
+            </p>
           )}
         </div>
       </main>

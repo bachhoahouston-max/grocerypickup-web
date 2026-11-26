@@ -610,6 +610,7 @@
   "Loading receive options…": "Đang tải các phương thức nhận hàng…",
   "Retry": "Thử lại",
   "Your selected receive option is currently unavailable.": "Phương thức nhận hàng bạn chọn hiện không khả dụng.",
+  "Your selected receive option is unavailable on this date.": "Phương thức nhận hàng bạn chọn không khả dụng vào ngày này.",
   "Remove out-of-stock items and review updated prices before continuing. Sale prices may have ended. Click “Proceed to Checkout” again to continue.": "Vui lòng xóa các sản phẩm hết hàng và kiểm tra lại giá đã cập nhật trước khi tiếp tục. Giá khuyến mãi có thể đã kết thúc. Nhấn “Tiến hành thanh toán” lần nữa để tiếp tục.",
   "Remove all": "Xóa tất cả",
   "Order save failed": "Lưu đơn hàng thất bại",
@@ -626,6 +627,5 @@
   "Applied": "Đã áp dụng",
   "Explore Houston": "Khám phá Houston",
   "Local businesses and places recommended by the community": "Doanh nghiệp địa phương được cộng đồng giới thiệu tin dùng",
-  "Restaurant listings notice": "Xin lưu ý rằng danh sách nhà hàng trên trang này chỉ nhằm cung cấp thông tin. Bách Hóa Houston không có mối liên kết chính thức hay quan hệ đối tác với các cơ sở này. Việc đưa các cơ sở vào danh sách không đồng nghĩa với việc Bách Hóa Houston bảo chứng cho họ. Danh sách và các đề xuất dựa trên những đánh giá độc lập về giá cả và chất lượng dịch vụ.",
   "Explore": "Khám phá"
 }

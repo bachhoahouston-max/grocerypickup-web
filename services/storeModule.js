@@ -1,6 +1,6 @@
 import { APP_PLATFORM, ConstantsUrl } from "@/services/service";
 
-export async function isStoreModuleVisible(signal = AbortSignal.timeout(5000)) {
+async function getStoreModuleSettings(signal = AbortSignal.timeout(5000)) {
   const response = await fetch(`${ConstantsUrl}storeModuleVisibility?platform=${APP_PLATFORM}`, {
     cache: "no-store",
     signal,
@@ -11,10 +11,15 @@ export async function isStoreModuleVisible(signal = AbortSignal.timeout(5000)) {
   if (!result.status || typeof result.data?.isVisible !== "boolean") {
     throw new Error("Invalid store module visibility.");
   }
-  return result.data.isVisible;
+  return result.data;
+}
+
+export async function isStoreModuleVisible(signal) {
+  return (await getStoreModuleSettings(signal)).isVisible;
 }
 
 export async function getStoreModulePageProps({ res }) {
   res.setHeader("Cache-Control", "no-store");
-  return (await isStoreModuleVisible()) ? { props: {} } : { notFound: true };
+  const { isVisible, listingNotice } = await getStoreModuleSettings();
+  return isVisible ? { props: { listingNotice: listingNotice ?? null } } : { notFound: true };
 }

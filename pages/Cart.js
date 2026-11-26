@@ -32,8 +32,17 @@ function Cart(props) {
   const [deliveryCharge, setDeliveryCharge] = useState(0);
   const [mainTotal, setMainTotal] = useState(0);
   const [pickupOption, setPickupOption] = useState("");
-  const [receiveAvailability, setReceiveAvailability] = useState(null);
+  const [globalReceiveAvailability, setGlobalReceiveAvailability] = useState(null);
+  const [receiveSchedule, setReceiveSchedule] = useState(null);
   const [receiveOptionsError, setReceiveOptionsError] = useState(false);
+  const isUnavailableOnDate = (option, day) => receiveSchedule?.dates.some(
+    ({ date, unavailableOptions }) => date === day && unavailableOptions.includes(option),
+  );
+  const receiveAvailability = globalReceiveAvailability && receiveSchedule && {
+    ...globalReceiveAvailability,
+    ShipmentDelivery: globalReceiveAvailability.ShipmentDelivery &&
+      !isUnavailableOnDate("ShipmentDelivery", receiveSchedule.today),
+  };
   const hasReceiveOptions = Object.values(receiveAvailability || {}).some(Boolean);
   const [baseCartTotal, setBaseCartTotal] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
@@ -57,7 +66,6 @@ function Cart(props) {
   const [successPopup, setSuccessPopup] = useState(false);
   const [shipcCost, setShipCost] = useState({});
   const [serviceFee, setServiceFee] = useState(0);
-  const [closureDates, setClosureDates] = useState([]);
   const [extraFees, setExtrafees] = useState(0);
   const [ExtraFeesObj, setExtraFeesObj] = useState({});
   const [pointsPerDollar, setPointsPerDollar] = useState(10);
@@ -408,6 +416,10 @@ function Cart(props) {
 
   const selectReceiveOption = (option) => {
     setPickupOption(option);
+    setIsOpen(false);
+    if (date && isUnavailableOnDate(option, moment(date).format("YYYY-MM-DD"))) {
+      setDate(null);
+    }
     setDiscount(0);
     setDiscountCode(0);
     setAppliedCoupon(false);
@@ -459,14 +471,17 @@ function Cart(props) {
   useEffect(() => {
     getAllPincodes();
     getShippingCost();
-    getClosureDate();
   }, []);
 
   const loadReceiveOptions = useCallback(async () => {
     setReceiveOptionsError(false);
     try {
-      const { data } = await Api("get", "web-receive-options", null, router);
-      setReceiveAvailability(data);
+      const [availability, schedule] = await Promise.all([
+        Api("get", "web-receive-options", null, router),
+        Api("get", "receive-option-schedule", null, router),
+      ]);
+      setGlobalReceiveAvailability(availability.data);
+      setReceiveSchedule(schedule.data);
     } catch {
       setReceiveOptionsError(true);
     }
@@ -513,24 +528,6 @@ function Cart(props) {
             setExtrafees(0);
           }
           // setPincodes(res.pincodes || []); // Make sure it's an array
-        }
-      })
-      .catch((err) => {
-        props.loader(false);
-        props.toaster({
-          type: "error",
-          message: err?.message || "Failed to fetch pincodes",
-        });
-      });
-  };
-
-  const getClosureDate = () => {
-    Api("get", "getClosureDates", null, router)
-      .then((res) => {
-        if (res?.error) {
-          props.toaster({ type: "error", message: res?.error });
-        } else {
-          setClosureDates(res.data.map((d) => new Date(d.closureDate)));
         }
       })
       .catch((err) => {
@@ -678,19 +675,8 @@ function Cart(props) {
     };
   }, []);
 
-  const checkAvailabilityAndAddToCart = (mdate) => {
-    let cDate = moment(new Date(mdate)).format("YYYY-MM-DD");
-    const fdate = closureDates.find(
-      (e) => cDate.toString() === moment(new Date(e)).format("YYYY-MM-DD"),
-    );
-    if (fdate) {
-      const cdate = new Date(mdate);
-      cdate.setDate(mdate.getDate() + 1);
-      checkAvailabilityAndAddToCart(cdate);
-    } else {
-      return mdate;
-    }
-  };
+  const isReceiveDateAvailable = (day) =>
+    !isUnavailableOnDate(pickupOption, moment(day).format("YYYY-MM-DD"));
 
   const minDate = (() => {
     const now = new Date();
@@ -699,9 +685,9 @@ function Cart(props) {
     if (currentHour >= 17) {
       const tomorrow = new Date();
       tomorrow.setDate(now.getDate() + 1);
-      return checkAvailabilityAndAddToCart(tomorrow);
+      return tomorrow;
     }
-    return checkAvailabilityAndAddToCart(now);
+    return now;
   })();
 
   useEffect(() => {
@@ -952,6 +938,17 @@ function Cart(props) {
         });
       }
     }
+    const selectedDate = pickupOption === "localDelivery" ? localAddress.dateOfDelivery : date;
+    const orderDate = pickupOption !== "ShipmentDelivery" && selectedDate
+      ? moment(selectedDate).format("YYYY-MM-DD")
+      : null;
+    if (orderDate && isUnavailableOnDate(pickupOption, orderDate)) {
+      return props.toaster({
+        type: "error",
+        message: t("Your selected receive option is unavailable on this date."),
+      });
+    }
+
     let data = [];
     let cart = localStorage.getItem("addCartDetail");
 
@@ -996,7 +993,6 @@ function Cart(props) {
     const isLocalDelivery = pickupOption === "localDelivery";
     const isOrderPickup = pickupOption === "orderPickup";
     const isDriveUp = pickupOption === "driveUp";
-    const dateOfDelivery = (isDriveUp || isOrderPickup) && date ? date : null;
     const isShipmentDelivery = pickupOption === "ShipmentDelivery";
 
     const unavailableProducts = data.filter(
@@ -1094,7 +1090,7 @@ function Cart(props) {
       isDriveUp,
       isLocalDelivery,
       isShipmentDelivery,
-      dateOfDelivery: date || localAddress.dateOfDelivery,
+      dateOfDelivery: orderDate,
       Deliverytip: deliveryTip.toString(),
       serviceFee: servicefee.toString(),
       extraFees,
@@ -1130,11 +1126,21 @@ function Cart(props) {
     } catch (err) {
       props.loader && props.loader(false);
       if (err?.code === "WEB_RECEIVE_OPTION_UNAVAILABLE") {
-        setReceiveAvailability(err.availability);
+        setGlobalReceiveAvailability(err.availability);
         selectReceiveOption("");
         props.toaster({
           type: "error",
           message: t("Your selected receive option is currently unavailable."),
+        });
+        return;
+      }
+      if (err?.code === "RECEIVE_OPTION_DATE_UNAVAILABLE") {
+        setDate(null);
+        setLocalAddress((previous) => ({ ...previous, dateOfDelivery: "" }));
+        loadReceiveOptions();
+        props.toaster({
+          type: "error",
+          message: t("Your selected receive option is unavailable on this date."),
         });
         return;
       }
@@ -1611,7 +1617,7 @@ function Cart(props) {
                                           onChange={handleDateChange}
                                           inline
                                           minDate={minDate}
-                                          excludeDates={closureDates}
+                                          filterDate={isReceiveDateAvailable}
                                         />
                                       </div>
                                     )}
@@ -1691,7 +1697,7 @@ function Cart(props) {
                                             onChange={handleDateChange1}
                                             inline
                                             minDate={minDate1}
-                                            excludeDates={closureDates}
+                                            filterDate={isReceiveDateAvailable}
                                           />
                                         </div>
                                       )}
