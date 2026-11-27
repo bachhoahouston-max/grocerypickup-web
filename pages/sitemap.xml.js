@@ -1,5 +1,6 @@
 import axios from "axios";
-import "@/services/service";
+import { ConstantsUrl } from "@/services/service";
+import { isCategoryModuleVisible } from "@/services/categoryModule";
 
 const staticPages = [
     { url: "https://www.bachhoahouston.com/", priority: 1.0 },
@@ -25,12 +26,13 @@ const staticPages = [
     { url: "https://www.bachhoahouston.com/Favourite", priority: 0.6 },
 ];
 
-function generateSiteMap(products, categories) {
+function generateSiteMap(products, categories, categoriesVisible) {
     return `<?xml version="1.0" encoding="UTF-8"?>
    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
      
      <!-- Static Pages -->
      ${staticPages
+            .filter((page) => categoriesVisible || !page.url.endsWith("/AllCategory"))
             .map(
                 (page) => `
        <url>
@@ -77,15 +79,16 @@ const SiteMap = () => {
 export async function getServerSideProps({ res }) {
     try {
 
-        const [productsRes, categoriesRes] = await Promise.all([
-            axios.get("https://api.bachhoahouston.com/v1/api/getProduct"),
-            axios.get("https://api.bachhoahouston.com/v1/api/getCategory"),
+        const [productsRes, categoriesRes, categoriesVisible] = await Promise.all([
+            axios.get(`${ConstantsUrl}getProduct`),
+            axios.get(`${ConstantsUrl}getCategory`),
+            isCategoryModuleVisible().catch(() => true),
         ]);
 
         const products = productsRes.data?.data || [];
         const categories = categoriesRes.data?.data || [];
 
-        const sitemap = generateSiteMap(products, categories);
+        const sitemap = generateSiteMap(products, categories, categoriesVisible);
 
         res.setHeader("Content-Type", "text/xml");
         res.write(sitemap);

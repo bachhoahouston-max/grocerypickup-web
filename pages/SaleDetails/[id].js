@@ -1,4 +1,5 @@
 import GroceryCategories from "@/components/GroceryCatories";
+import { useCategoryVisibility } from "@/components/CategoryVisibility";
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { IoRemoveSharp } from "react-icons/io5";
 import { IoAddSharp } from "react-icons/io5";
@@ -25,6 +26,7 @@ import Head from "next/head";
 import Image from "next/image";
 
 function ProductDetails(props) {
+  const categoriesVisible = useCategoryVisibility();
   const { t } = useTranslation();
   const router = useRouter();
   const { lang } = useContext(languageContext);
@@ -483,8 +485,12 @@ function ProductDetails(props) {
               <p className="font-medium cursor-pointer" onClick={() => router.push('/')}>{t("Home")}</p>
               <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4 cursor-pointer" onClick={() => router.push('/')} />
 
-              <p className="font-medium cursor-pointer" onClick={() => router.push(`/categories/${productsId?.category?.slug}`)}>{productsId?.category?.name}</p>
-              <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4 cursor-pointer" onClick={() => router.push(`/categories/${productsId?.category?.slug}`)} />
+              {categoriesVisible && productsId?.category?.slug && productsId.category.isVisible !== false && (
+                <>
+                  <p className="font-medium cursor-pointer" onClick={() => router.push(`/categories/${productsId.category.slug}`)}>{productsId.category.name}</p>
+                  <SlArrowRight className="text-gray-400 w-3 h-3 md:w-4 md:h-4 cursor-pointer" onClick={() => router.push(`/categories/${productsId.category.slug}`)} />
+                </>
+              )}
 
               <p className="font-semibold truncate max-w-xs md:max-w-sm">
                 {lang === "en" ? productsId?.name : productsId?.vietnamiesName}

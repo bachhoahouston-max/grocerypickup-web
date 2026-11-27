@@ -7,9 +7,11 @@ import { Api } from "@/services/service";
 import { useTranslation } from "react-i18next";
 import { languageContext } from "@/pages/_app";
 import { useContext } from "react";
+import { useCategoryVisibility } from "./CategoryVisibility";
 
 const HeaderFirst = (props) => {
   const router = useRouter();
+  const categoriesVisible = useCategoryVisibility();
   const [selectedTab, setSelectedTab] = useState("home");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [category, setCategory] = useState([]);
@@ -29,8 +31,9 @@ const HeaderFirst = (props) => {
   }, []);
 
   useEffect(() => {
-    CategoryData();
-  }, []);
+    if (categoriesVisible) CategoryData();
+    else setDropdownOpen(false);
+  }, [categoriesVisible]);
 
   const CategoryData = () => {
     // props.loader(true);
@@ -86,7 +89,7 @@ const HeaderFirst = (props) => {
             >
               {t("Home")}
             </p>
-            <div className=" ml-4 relative flex transition-transform duration-300 hover:-translate-y-[5px]" ref={dropdownRef}>
+            <div className={categoriesVisible ? "ml-4 relative flex transition-transform duration-300 hover:-translate-y-[5px]" : "hidden"} ref={dropdownRef}>
               <button
                 className={`text-[16px] font-medium cursor-pointer inline-flex items-center ${selectedTab === "AllCategory"
                   ? "text-custom-green"

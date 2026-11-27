@@ -18,9 +18,11 @@ import NewArrival from "@/components/NewArrival";
 import { usePathname } from "next/navigation";
 import ComboOfferCards from "@/components/ComboOffer";
 import ExploreHoustonBanner from "@/components/ExploreHoustonBanner";
+import { useCategoryVisibility } from "@/components/CategoryVisibility";
 
 export default function Home(props) {
   const { t } = useTranslation();
+  const categoriesVisible = useCategoryVisibility();
   const [user] = useContext(userContext);
   const router = useRouter();
   const [setFavorite] = useContext(favoriteProductContext);
@@ -66,11 +68,13 @@ export default function Home(props) {
           <Suspense fallback={<div>Loading.....</div>}>
             <MainHeader />
           </Suspense>
-          <div className="mb-2">
-            <Suspense fallback={<div>Loading.....</div>}>
-              <ShopByCategory loader={props.loader} toaster={props.toaster} />
-            </Suspense>
-          </div>
+          {categoriesVisible && (
+            <div className="mb-2">
+              <Suspense fallback={<div>Loading.....</div>}>
+                <ShopByCategory loader={props.loader} toaster={props.toaster} />
+              </Suspense>
+            </div>
+          )}
           <ExploreHoustonBanner />
           <div className="">
             <Suspense fallback={<div>Loading.....</div>}>
@@ -124,6 +128,7 @@ export default function Home(props) {
 
 
 function AllProducts(props) {
+  const categoriesVisible = useCategoryVisibility();
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -352,9 +357,11 @@ function AllProducts(props) {
         <h1 className=" text-[20px] md:text-2xl font-bold pt-5 text-[#2E7D32]">
           ⭐ {t("BHH Picks")}
         </h1>
-        <div className="hidden md:block">
-          <CategoryDropdown />
-        </div>
+        {categoriesVisible && (
+          <div className="hidden md:block">
+            <CategoryDropdown />
+          </div>
+        )}
       </div>
 
 
