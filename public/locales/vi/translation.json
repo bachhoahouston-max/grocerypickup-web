@@ -57,7 +57,6 @@
   "Unable to load store": "Không thể tải cửa hàng",
   "Address": "Địa chỉ",
   "Phone": "Điện thoại",
-  "Email": "E-mail",
   "Website": "Trang web",
   "Specialty": "Đặc sản",
   "City": "Thành phố",
@@ -68,7 +67,7 @@
   "Add Review": "Thêm đánh giá",
   "Close": "Đóng",
   "Feedback": "Nhận xét",
-  "optional": "không bắt buộc",
+  "optional": "tùy chọn",
   "Share your feedback": "Chia sẻ nhận xét của bạn",
   "Edit your review": "Chỉnh sửa đánh giá",
   "Update review": "Cập nhật đánh giá",
@@ -345,7 +344,6 @@
   "Join our delivery team": "Hãy tham gia đội ngũ giao hàng của chúng tôi",
   "⁠Product Recall Information": "⁠Thông tin thu hồi sản phẩm",
   "Quick delivery in next day": "Giao hàng nhanh trong ngày hôm sau",
-  "Customer": "Khách hàng",
   "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee": "*Bách Hóa Houston sẽ giữ đơn hàng của bạn đến hết ngày làm việc kế tiếp nếu bạn không đến nhận hàng vào ngày đã đăng ký. Sau thời gian này, đơn hàng sẽ bị hủy và bạn sẽ được hoàn tiền sau khi trừ 5% phí nhập kho",
   "Cart Summary": "Thông Tin Giỏ Hàng",
   "Subtotal": "Tổng phụ",
@@ -374,7 +372,6 @@
   "At least 20 characters": "Vui lòng nhập ít nhất 20 ký tự",
   "What did you like or dislike about it?": "Bạn thích hoặc không thích điều gì ở sản phẩm này?",
   "Add photos": "Thêm ảnh",
-  "optional": "tùy chọn",
   "Upload up to 6 photos": "Tải lên tối đa 6 ảnh",
   "Tap to add photos": "Nhấn để thêm ảnh",
   "Submit Review": "Gửi đánh giá của bạn",
@@ -627,5 +624,9 @@
   "Applied": "Đã áp dụng",
   "Explore Houston": "Khám phá Houston",
   "Local businesses and places recommended by the community": "Doanh nghiệp địa phương được cộng đồng giới thiệu tin dùng",
-  "Explore": "Khám phá"
+  "Explore": "Khám phá",
+  "BUY": "MUA",
+  "FREE": "MIỄN PHÍ",
+  "SAVE": "Tiết Kiệm",
+  "Save amount": "Tiết Kiệm"
 }

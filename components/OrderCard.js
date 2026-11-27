@@ -148,7 +148,7 @@ const ComboBanner = ({ combo }) => {
         </span>
         {savings > 0 && (
           <span className="ml-auto bg-white text-green-700 text-xs font-black px-2 py-0.5 rounded-full">
-            Save ${savings.toFixed(2)}
+            {t("Save amount")} ${savings.toFixed(2)}
           </span>
         )}
       </div>
@@ -163,7 +163,7 @@ const ComboBanner = ({ combo }) => {
               key={i}
               className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full border border-green-200"
             >
-              🎁 FREE · {fp.slot?.unit}
+              🎁 {t("FREE")} · {fp.slot?.unit}
               <span className="font-normal text-green-500">
                 (${fp.slot?.our_price?.toFixed(2)} value)
               </span>
@@ -389,7 +389,7 @@ const RewardProductRow = ({ product, index, total, booking, lang, router, t }) =
       <p className="text-xs font-bold text-[#0B4F8A]">
         {rewardPointsOf(product).toLocaleString()} {t("pts")}
       </p>
-      <span className="text-xs font-black text-green-700">FREE</span>
+      <span className="text-xs font-black text-green-700">{t("FREE")}</span>
     </div>
   </div>
 );
@@ -526,7 +526,7 @@ const FreeItemRow = ({ fp, lang, isLast }) => {
       className={`flex items-center p-2 relative bg-green-50/50 ${!isLast ? "border-b border-gray-200" : ""}`}
     >
       <span className="absolute top-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-        🎁 FREE
+        🎁 {t("FREE")}
       </span>
 
       <div className="flex-shrink-0">
@@ -561,7 +561,7 @@ const FreeItemRow = ({ fp, lang, isLast }) => {
         <p className="text-xs text-gray-400 line-through">
           ${parseFloat(slot?.our_price || 0).toFixed(2)}
         </p>
-        <p className="text-xs font-black text-green-700">FREE</p>
+        <p className="text-xs font-black text-green-700">{t("FREE")}</p>
       </div>
     </div>
   );
