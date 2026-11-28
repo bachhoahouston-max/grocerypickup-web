@@ -348,7 +348,7 @@ const SaleProduct = ({ item, i, url, loader, toaster }) => {
         )}
         {!isVendorClosed && item.product?.Quantity < 5 && (
           <p className="text-red-600 font-bold text-[12px]">
-            Only {item.product?.Quantity} left in stock
+            {t("Only {{count}} left in stock", { count: item.product?.Quantity })}
           </p>
         )}
 

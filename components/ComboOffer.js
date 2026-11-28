@@ -527,7 +527,7 @@ const OfferCard = ({
                 onClick={() => handleAddToCart(offer)}
               >
                 <IoAddSharp className="text-[#1F5D3A] w-6 h-6" />
-                {"Add Combo Now"}
+                {t("Add Combo Now")}
               </button>
 
               {/* </div> */}
