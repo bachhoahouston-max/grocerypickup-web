@@ -631,5 +631,7 @@
   "BUY": "BUY",
   "FREE": "FREE",
   "SAVE": "SAVE",
-  "Save amount": "Save"
+  "Save amount": "Save",
+  "Add Combo Now": "Add Combo Now",
+  "Only {{count}} left in stock": "Only {{count}} left in stock"
 }

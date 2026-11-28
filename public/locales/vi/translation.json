@@ -628,5 +628,7 @@
   "BUY": "MUA",
   "FREE": "MIỄN PHÍ",
   "SAVE": "Tiết Kiệm",
-  "Save amount": "Tiết Kiệm"
+  "Save amount": "Tiết Kiệm",
+  "Add Combo Now": "Thêm combo ngay",
+  "Only {{count}} left in stock": "Chỉ còn {{count}} sản phẩm"
 }
