@@ -14,6 +14,7 @@ import Drawer from "@mui/material/Drawer";
 import { useTranslation } from "react-i18next";
 import Head from "next/head";
 import { Filter } from "lucide-react";
+import { useCategoryVisibility } from "@/components/CategoryVisibility";
 
 const sortByData = [
   {
@@ -52,6 +53,7 @@ const sortByData = [
 
 function Categories(props) {
   const router = useRouter();
+  const categoriesVisible = useCategoryVisibility();
   const { t } = useTranslation();
   const [productList, SetProductList] = useState([]);
   const [category, setCategory] = useState({});
@@ -305,30 +307,29 @@ function Categories(props) {
                   </div>
 
                   {/* Categories */}
-                  <div className="flex justify-center items-center gap-4">
-                    <label
-                      htmlFor="categories"
-                      className="text-gray-700 font-medium text-md "
-                    >
-                      {t("Categories")}:
-                    </label>
-                    <select
-                      id="categories"
-                      className="min-w-[220px] border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 text-gray-800 cursor-pointer font-medium focus:outline-none focus:ring-2 focus:ring-custom-green/50"
-                      value={selectedCategories}
-                      onChange={(e) => {
-                        router.replace(`/categories/${e.target.value}`);
-                        setSelectedCategories(e.target.value);
-                      }}
-                    >
-                      <option value="">{t("Select")}</option>
-                      {categoryList.map((item, i) => (
-                        <option key={i} value={item.slug}>
-                          {item?.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  {categoriesVisible && (
+                    <div className="flex justify-center items-center gap-4">
+                      <label htmlFor="categories" className="text-gray-700 font-medium text-md">
+                        {t("Categories")}:
+                      </label>
+                      <select
+                        id="categories"
+                        className="min-w-[220px] border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 text-gray-800 cursor-pointer font-medium focus:outline-none focus:ring-2 focus:ring-custom-green/50"
+                        value={selectedCategories}
+                        onChange={(e) => {
+                          router.replace(`/categories/${e.target.value}`);
+                          setSelectedCategories(e.target.value);
+                        }}
+                      >
+                        <option value="">{t("Select")}</option>
+                        {categoryList.map((item) => (
+                          <option key={item._id} value={item.slug}>
+                            {item?.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -365,24 +366,26 @@ function Categories(props) {
                   </div>
 
                   {/* Categories */}
-                  <div>
-                    <p className="text-gray-700 font-medium mb-2">{t("Categories")}</p>
-                    <select
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 text-gray-800"
-                      value={selectedCategories}
-                      onChange={(e) => {
-                        router.replace(`/categories/${e.target.value}`);
-                        setSelectedCategories(e.target.value);
-                      }}
-                    >
-                      <option value="">{t("Select")}</option>
-                      {categoryList.map((item, i) => (
-                        <option key={i} value={item.slug}>
-                          {item?.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  {categoriesVisible && (
+                    <div>
+                      <p className="text-gray-700 font-medium mb-2">{t("Categories")}</p>
+                      <select
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 text-gray-800"
+                        value={selectedCategories}
+                        onChange={(e) => {
+                          router.replace(`/categories/${e.target.value}`);
+                          setSelectedCategories(e.target.value);
+                        }}
+                      >
+                        <option value="">{t("Select")}</option>
+                        {categoryList.map((item) => (
+                          <option key={item._id} value={item.slug}>
+                            {item?.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

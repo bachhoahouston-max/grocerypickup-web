@@ -57,7 +57,6 @@
   "Unable to load store": "Unable to load store",
   "Address": "Address",
   "Phone": "Phone",
-  "Email": "Email",
   "Website": "Website",
   "Specialty": "Specialty",
   "City": "City",
@@ -346,7 +345,6 @@
   "Join our delivery team": "Join our delivery team",
   "⁠Product Recall Information": "⁠Product Recall Information",
   "Quick delivery in next day": "Quick delivery in next day",
-  "Customer": "Customer",
   "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee": "*Note: Bach Hoa Houston will hold your order until close of the next business day if your order isn’t picked up within your scheduled pick up date, after that your order will be cancelled and refunded less 5% restocking fee",
   "Cart Summary": "Cart Summary",
   "Subtotal": "Subtotal",
@@ -373,7 +371,6 @@
   "At least 20 characters": "At least 20 characters",
   "What did you like or dislike about it?": "What did you like or dislike about it?",
   "Add photos": "Add photos",
-  "optional": "optional",
   "Upload up to 6 photos": "Upload up to 6 photos",
   "Tap to add photos": "Tap to add photos",
   "Submit Review": "Submit Review",
@@ -630,5 +627,9 @@
   "Applied": "Applied",
   "Explore Houston": "Explore Houston",
   "Local businesses and places recommended by the community": "Local businesses and places recommended by the community",
-  "Explore": "Explore"
+  "Explore": "Explore",
+  "BUY": "BUY",
+  "FREE": "FREE",
+  "SAVE": "SAVE",
+  "Save amount": "Save"
 }

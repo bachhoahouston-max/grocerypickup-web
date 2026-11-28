@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { languageContext } from "@/pages/_app";
 import { useTranslation } from "react-i18next";
 import ShopByCategoryHeader from "./ShopByCategoryHeader";
+import { useCategoryVisibility } from "./CategoryVisibility";
 
 const LeftLayout = (props) => {
     const [isLanguage, setIsLanguage] = useState(false);
@@ -11,6 +12,7 @@ const LeftLayout = (props) => {
     const { lang, changeLang } = useContext(languageContext);
     const { i18n, t } = useTranslation();
     const router = useRouter();
+    const categoriesVisible = useCategoryVisibility();
     const [shipmentCostMessage, setShipmentCostMessage] = useState("");
 
     useEffect(() => {
@@ -102,7 +104,7 @@ const LeftLayout = (props) => {
                 </div>
             </div>
 
-            {!props?.showAnnouncement && <ShopByCategoryHeader {...props} />}
+            {categoriesVisible && !props?.showAnnouncement && <ShopByCategoryHeader {...props} />}
         </div>
 
 

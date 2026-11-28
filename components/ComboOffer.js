@@ -160,7 +160,7 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
                 ✕
               </button>
               <div className="bg-red-500 text-white font-black text-sm px-3 py-1 rounded-full shadow-lg">
-                SAVE {savingsPct}%
+                {t("SAVE")} {savingsPct}%
               </div>
             </div>
           </div>
@@ -240,7 +240,7 @@ const OfferModal = ({ offer, onClose, onAddToCart, inCart }) => {
                       ${fp.slot.our_price.toFixed(2)}
                     </p>
                     <span className="bg-green-700 text-white text-xs font-black px-2 py-0.5 rounded-full">
-                      FREE
+                      {t("FREE")}
                     </span>
                   </div>
                 </div>
@@ -425,7 +425,7 @@ const OfferCard = ({
         >
           <ProductAvatar product={offer.main_product} className="w-52 h-52 " />
           <span className="bg-[#F6E27A] absolute -bottom-3 left-1/4 text-[#1F6B3A] text-base font-black px-2.5 py-0.5 rounded-full shadow">
-            BUY
+            {t("BUY")}
           </span>
         </div>
         <div className="">
@@ -457,7 +457,7 @@ const OfferCard = ({
               ></div>
               <ProductAvatar product={fp.product} className="w-52 h-52" />
               <span className="bg-green-700 absolute -bottom-3 left-1/4 text-white text-base font-black px-2.5 py-0.5 rounded-full shadow">
-                FREE
+                {t("FREE")}
               </span>
             </div>
           ))}
@@ -480,7 +480,7 @@ const OfferCard = ({
                 ${retail.toFixed(2)}
               </span>
               <span className="inline-block bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded mt-0.5">
-                Save ${savings.toFixed(2)}
+                {t("Save amount")} ${savings.toFixed(2)}
               </span>
             </div>
           </div>

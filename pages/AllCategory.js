@@ -7,6 +7,16 @@ import Image from "next/image";
 import { languageContext } from "./_app";
 import { BUY_IT_AGAIN_SLUG } from "@/services/buyItAgain";
 import { ShoppingBag as Handbag } from "lucide-react";
+import { isCategoryModuleVisible } from "@/services/categoryModule";
+
+export async function getServerSideProps({ res }) {
+  res.setHeader("Cache-Control", "no-store");
+  const visible = await isCategoryModuleVisible().catch(() => true);
+  if (!visible) {
+    return { redirect: { destination: "/", permanent: false } };
+  }
+  return { props: {} };
+}
 
 const Category = (props) => {
   const { t } = useTranslation();

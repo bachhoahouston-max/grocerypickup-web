@@ -164,7 +164,7 @@ function Myhistory(props) {
         <p className="text-xs font-bold text-[#0B4F8A]">
           {rewardPointsOf(product).toLocaleString()} {t("pts")}
         </p>
-        <span className="text-xs font-black text-green-700">FREE</span>
+        <span className="text-xs font-black text-green-700">{t("FREE")}</span>
         <button
           className="bg-custom-green text-white px-3 py-1.5 rounded-md text-xs font-medium hover:shadow-md transition-all duration-200"
           onClick={(e) => {
@@ -424,7 +424,7 @@ function Myhistory(props) {
         }`}
       >
         <span className="absolute top-2 right-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-          🎁 FREE
+          🎁 {t("FREE")}
         </span>
 
         <div className="flex-shrink-0">
@@ -461,7 +461,7 @@ function Myhistory(props) {
               ${price.toFixed(2)}
             </p>
           )}
-          <p className="text-xs font-black text-green-700">FREE</p>
+          <p className="text-xs font-black text-green-700">{t("FREE")}</p>
         </div>
       </div>
     );

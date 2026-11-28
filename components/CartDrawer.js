@@ -305,7 +305,7 @@ const StockIssueRow = ({ item, i, lang, cartClose, setLineQty, otherLinesQty, fo
           </span>
           <span className="font-medium">
             {isRewardItem(item)
-              ? "FREE"
+              ? t("FREE")
               : `${constant.currency}${formatPrice(item?.price)}`}
           </span>
         </div>
@@ -400,7 +400,7 @@ const RewardCartRow = ({ item, i, lang, pickupOption, pickupConfig, decreaseQty,
                   {item.price_slot.other_price}
                 </span>
               )}
-              <span className="font-black text-green-700 text-base md:text-xs">FREE</span>
+              <span className="font-black text-green-700 text-base md:text-xs">{t("FREE")}</span>
             </div>
             <PickupAvailability pickupConfig={pickupConfig} pickupOption={pickupOption} />
           </div>
@@ -653,13 +653,13 @@ const FreeGiftRow = ({ item, lang, t }) => {
         </div>
         <div className="flex-1 min-w-0">
           <span className="text-[10px] font-bold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
-            🎁 FREE
+            🎁 {t("FREE")}
           </span>
           <p className="text-xs text-gray-600 mt-1 truncate">
             {item?.promo_text || t("Free gift included")}
           </p>
         </div>
-        <p className="text-xs font-black text-green-700 flex-shrink-0">FREE</p>
+        <p className="text-xs font-black text-green-700 flex-shrink-0">{t("FREE")}</p>
       </div>
     );
   }
@@ -701,7 +701,7 @@ const FreeGiftRow = ({ item, lang, t }) => {
             {/* Info */}
             <div className="flex-1 min-w-0">
               <span className="text-[10px] font-bold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
-                🎁 FREE
+                🎁 {t("FREE")}
               </span>
               <p className="text-xs text-gray-700 font-medium mt-0.5 truncate">
                 {name}
@@ -720,7 +720,7 @@ const FreeGiftRow = ({ item, lang, t }) => {
                   {parseFloat(slot.our_price).toFixed(2)}
                 </p>
               )}
-              <p className="text-xs font-black text-green-700">FREE</p>
+              <p className="text-xs font-black text-green-700">{t("FREE")}</p>
             </div>
           </div>
         );

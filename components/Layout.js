@@ -8,6 +8,7 @@ import { userContext } from "@/pages/_app.js";
 import AnnouncementBar from "./announcementBar.js";
 import LeftLayout from "./LeftLayout.js";
 import ScrollToTop from "./ScrollToTo.js";
+import { CategoryVisibilityProvider } from "./CategoryVisibility";
 
 const Layout = ({ children, loader, toaster }) => {
   const [user, setUser] = useContext(userContext);
@@ -42,7 +43,7 @@ const Layout = ({ children, loader, toaster }) => {
   }, []);
 
   return (
-    <>
+    <CategoryVisibilityProvider>
 
       <div className="flex-1 flex-col bg-[var(--web-background)] relative">
         <div className="fixed w-full top-0 z-50 bg-white transition-all duration-300">
@@ -98,7 +99,7 @@ const Layout = ({ children, loader, toaster }) => {
           </div>
         )}
       </div>
-    </>
+    </CategoryVisibilityProvider>
   );
 };
 

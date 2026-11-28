@@ -353,7 +353,7 @@ const SellProduct = ({ loader, toaster }) => {
                           100
                         )}
                         % OFF */}
-                            Save $
+                            {t("Save amount")} $
                             {(item.price_slot?.our_price - item.price).toFixed(2)}
                           </span>
                         )}
